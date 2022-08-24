@@ -90,6 +90,11 @@ void main()
 
 # 等待结束
 
+## 返回值
+
+> [note|style:flat]
+> `std::thread` 开启的线程，不能直接得到回调实体的返回值，`std::async` 可以。
+
 ## 汇入与分离
 
 ```cpp
@@ -324,7 +329,7 @@ int main()
 std::thread::id id = threadObj.get_id();
 
 // 获取当前运行线程的 id
-id = std::thread::get_id();
+id = std::this_thread::get_id();
 
 // std::thread 没有与任何线程绑定
 if (id == std::thread::type)
