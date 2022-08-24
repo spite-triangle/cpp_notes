@@ -76,6 +76,8 @@ target_include_directories(demo ${PROJECT_SOURCE_DIR}/include)
 add_library(lib_name STATIC ${file_cpp})
 # 创建动态库
 add_library(lib_name SHARED ${file_cpp})
+# 链接第三方库
+target_link_libraries(lib_name ${THIRD_LIBS})
 ```
 # 命令行传参
 
