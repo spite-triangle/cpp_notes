@@ -175,32 +175,36 @@ std::shared_future<int> sf1(p1.get_future().share())
 
 ## 时钟
 
-- **当前时间**：可以通过时钟对象的`_clock::now()`方法获取，例如 `std::chrono::system_clock::now()` 获取当前系统时间
+- **当前时间**：可以通过时钟对象的`_clock::now()`方法获取，例如 `std::chrono::system_clock::now()` 获取当前系统时间（windows 右下角那个时间）
 - **时钟节拍**：一秒钟有多少下。例如 1 秒钟 25 下，就是 1 个节拍 `1 / 25` 秒，即`std::ratio<1,25>`；时钟节拍为 2.5 秒一次，就是 1 个节拍 2.5 秒，写分数得 1 个节拍 `5 / 2` 秒，即`std::ratio<5,2>`。这个有系统决定
 - **稳定时钟**：时钟节拍均匀分布(无论是否与周期匹配)，并且不可修改。通过 `is_steady` 可以查看
 
 ```cpp
 #include <chrono> 
 
-// 系统时钟，是不稳定的，可以调节时钟节拍，这就导致 now() 的延迟或者超前
+// 系统时钟，可以自定义时间，有些会出问题
 std::chrono::system_clock
 
-// 稳定时钟
+// 稳定时钟，固定不变，不能修改，从 boot 启动开始计时
 std::chrono::steady_clock
 
 // 精度最高的时钟，具有最小的时钟节拍
 std::chrono::high_resolution_clock
 ```
 
+> [note]
+> - 系统时钟：就是windows右下角那个时间，生活中使用的时间，可以修改
+> - 稳定时钟：从 boot 启动开始计时，由机器计算，不能人为修改，用来统计程序运行时长更准确
+
 ## 时间段
 
 ```cpp
 std::chrono::duration<rep,period>
 ```
-- **rep** : 表示时间段的数值类型，例如`int,double,long`等。
-- **period** : 一个时间段的单位时间，即`std::ratio<60,1>`表示的两个节拍之间的间隔时间。
+**作用：** 表示一段时间，即有多少个时间单位`period`，并且能进行时间段的运算。
+- **rep:** 表示时间段的数值类型，例如`int,double,long`等。
+- **period:** 一个时间段的单位时间，即`std::ratio<60,1>`表示的两个节拍之间的间隔时间。
 
-**作用：** 表示一段时间，那么就能定义时间单位。
 
 ```cpp
 // 毫秒：1秒钟1000个节拍，就是0.001秒1个节拍
@@ -212,6 +216,10 @@ typedef duration<long long,std::ratio<1,1> > seconds;
 // 分：60秒钟1个节拍
 typedef duration<int, std::ratio<60,1> > minutes;
 
+// 获取时间单位的数值
+minutes minu(5); // 5 个单位时间，这里就是 5 分钟
+minu.count(); // minu 时间段是多少个单位时间，返回的就是 5
+
 // 系统库自带
 std::chrono::milliseconds
 std::chrono::seconds
@@ -221,7 +229,52 @@ std::chrono::minutes
 td::chrono::milliseconds ms(54802);
 std::chrono::seconds s = std::chrono::duration_cast<std::chrono::seconds>(ms);
 ```
- 
+
+## 时间点
+
+
+```cpp
+template< class Clock, class Duration = typename Clock::duration > 
+class time_point;
+```
+
+**作用：**时间点就是`_clock::now()`的返回值，它和时间精度与时钟有关
+- **时间精度：** 即 `std::chrono::duration`，利用时间段就表明这个时间点是精确到分、秒还是小时
+- **时钟：** 这个时间点是用什么钟看的，例如手表、手机等。
+
+```cpp
+// 正确：
+std::chrono::system_clock::time_point tp = std::chrono::system_clock::now();
+
+// 错误，每个时钟的时间点，时钟自己才清楚，不能瞎定义
+std::chrono::time_point<std::chrono::system_clock,std::chrono::nanoseconds> time_point;
+time_point = std::chrono::system_clock::now();
+
+```
+
+显示当前系统时间
+
+```cpp
+// 显示当前系统时间
+auto time = std::chrono::system_clock::now();
+
+// time_since_epoch：获取从 1970-01-01T00:00:00 到现在时间点的 std::chrono::duration
+// 再将 std::chrono::duration 转换为以 std::chrono::seconds 为单位的 std::chrono::duration
+// 然后获取 count() ，就能知道从 1970-01-01T00:00:00 到现在过了多少秒
+std::time_t duration = std::chrono::duration_cast<std::chrono::seconds>(time.time_since_epoch()).count();
+// 与上面的操作等价
+std::time_t duration = std::chrono::system_clock::to_time_t(time);
+
+// 将秒转换为实际时间
+std::string strTime = std::ctime(&duration);
+```
+
+> [note]
+> `time_since_epoch()` 在不同时钟里的区别
+> - `system_clock`：从 1970-01-01T00:00:00 到现在时间点的时间段
+> - `steady_clock`: 从 boot 启动到现在时间点的时间段
+
+
 ## 等待超时
 
 - `wait_for`：等待一个时间段
@@ -232,4 +285,30 @@ std::chrono::seconds s = std::chrono::duration_cast<std::chrono::seconds>(ms);
     // 等待超时返回：std::future_status::timeout 
     f.wait_for(std::chrono::milliseconds(35));
     ```
-- `wait_unit`：等待一个绝对时间
+- `wait_unit`：等待一个时间点
+   ```cpp
+    std::future<int> f=std::async(some_task);
+
+    // 从现在开始，经过 500ms 后的时间点
+    std::chrono::steady_clock::time_point timeout= std::chrono::steady_clock::now() + std::chrono::milliseconds(500);
+
+    // 等待成功返回：std::future_status::ready
+    // 等待超时返回：std::future_status::timeout 
+    f.wait_unit(timeout);
+   ```
+
+<p style="text-align:center;"><img src="./../../image/concurrency/for_unit.png" width="75%" align="middle" /></p>
+
+# 通讯顺序进程
+
+**概念：** 通讯顺序进程 (CSP，Communicating Sequential Processer) 其思路就是将业务流程划分为一个个完全独立的子模块，子模块之间的交流只剩输入与输出，**即各个子模块按照一定顺序执行，且各个模块运行期间不进行通讯，最终所有模块的运行情况可以描述成一个状态机模型**。
+
+<p style="text-align:center;"><img src="../../image/concurrency/states.png" width="75%" align="middle" /></p>
+
+矩形框描述的功能就是各个互不相关的子模块，只有输入和输出的交流，且具有执行顺序。
+
+**优点：** 
+- 结构清晰，功能解耦
+- 没有共享数据到处传递，也就不存在多线程竞争问题
+
+
