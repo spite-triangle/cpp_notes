@@ -49,11 +49,11 @@ REST (Representational State Transfe) 只是一种基于HTTP协议的接口设�
 
 ```
 // 查询
-GET /index.php HTTP/1.1
+GET /user HTTP/1.1
 Host: localhost
 
 // 插入
-POST /testPost.php HTTP/1.1
+POST /user HTTP/1.1
 Host: localhost
 Content-type: application/x-www-form-urlencoded // 请求主体的类型
 Content-length: 10 // 请求主体的长度
