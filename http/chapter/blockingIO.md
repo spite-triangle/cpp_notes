@@ -174,8 +174,8 @@ int epoll_create(int size);
 ```cpp
  int epoll_wait(int epfd, struct epoll_event * events, int maxevents, int timeout);
 ```
-- `events`：从内核得到事件的集合
-- `maxevents`：事件数组的长度
+- `events`：用于拷贝事件的数组
+- `maxevents`：事件数组的最大长度；当就绪事件比这个多时，那就下一次拷贝
 - 返回值`cnt`：
   - 0：超时时间，无就绪列表
   - **大于0：就绪列表个数，从`0 ~ cnt-1`的事件都是就绪的**
