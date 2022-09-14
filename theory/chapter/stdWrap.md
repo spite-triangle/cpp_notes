@@ -283,43 +283,93 @@ int main(int argc, char *argv[]) {
 }
 ```
 
-## 移动构造函数
+# 移动语义
 
 > [note|style:flat]
-> 只实现一个移动构造函数，在匿名传参时，拷贝构造函数会失效。
+> - 只实现一个移动构造函数，在匿名传参时，拷贝构造函数会失效。
+> - 当子类的移动构造，移动赋值设置为`default`时，会调用父类的实现
 
 ```cpp
-class Student
+#include <iostream>
+
+class Person
 {
 public:
-    Student(int age)
+    Person(int age)
     {
-        m_pnAge = new int(age);
+        m_age = new int(age); 
     }
-
-    ~Student()
+    ~Person()
     {
-        if(m_pnAge != nullptr)
+        if (m_age != nullptr)
         {
-            delete m_pnAge;
-            m_pnAge = nullptr;
+            delete m_age;
+            m_age = nullptr;
         }
     }
 
-    Student(const Student & cst)
-    {
-        // 重新申请一片空间
-        m_pnAge = new int( *cst.m_pnAge );
+    Person(Person && other){
+        if (m_age != nullptr)
+        {
+            delete m_age;
+            m_age = nullptr;
+        }
+
+        m_age = other.m_age;
+        other.m_age = nullptr;
     }
 
-    Student(Student && cst)
+    Person& operator= (Person && other) 
     {
-        // 直接用别人的
-        m_pnAge = cst.m_pnAge;
-        cst.m_pnAge = nullptr;
+        // 判断是否自己传自己
+        if (this != &other)
+        {
+            if (m_age != nullptr)
+            {
+                delete m_age;
+                m_age = nullptr;
+            }
+
+            m_age = other.m_age;
+            other.m_age = nullptr;
+        }
+        return *this;
     }
 
-private:
-    int * m_pnAge;
+    // 删除拷贝
+    Person(const Person &) = delete;
+    Person& operator= (const Person & );
+
+public:
+    int * m_age;
+};
+
+class Student : public Person
+{
+public:
+    Student(int age) : Person(age)
+    {
+
+    }
+
+    // 调用父类的
+    Student(Student && ) = default;
+
+    // 调用父类的
+    Student& operator= (Student && ) = default;
+};
+
+int main(int argc, char const *argv[])
+{
+    Student st(10);
+    Student st1(11);
+
+    st1 = std::move(st);
+
+    std::cout << st.m_age << '\n';
+    std::cout << st1.m_age << '\n';
+    std::cout << *st1.m_age << '\n';
+    return 0;
 }
+
 ```
