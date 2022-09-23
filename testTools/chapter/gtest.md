@@ -342,3 +342,42 @@ TEST_F(TestObject, TestName) {
 }
 ```
 
+# 测试私有函数
+
+```cpp
+
+class Student
+{
+private:
+    int GetAge()
+    {
+        return m_nAge;
+    }
+    int m_nAge;
+
+    // 允许与 (TestObject, TestName) 命名相同的测试宏访问私有属性和方法
+    FRIEND_TEST(TestObject, TestName);
+}
+
+class TestObject::public testing::Test
+{
+public:
+    // 单个 TEST_F 测试开始前运行
+    virtual void SetUp()
+    {
+        st = new Student();
+    }
+
+    // 单个 TEST_F 测试结束后运行
+    virtual void TearDown()
+    {
+        delete st;
+    }
+
+    Student* st;
+}
+
+TEST_F(TestObject, TestName) {
+    st->GetAge();
+}
+```
