@@ -3,7 +3,7 @@
 # 资源管理
 
 ## 内核资源共用
-<p style="text-align:center;"><img src="./../../image/theory/handle_sys.png" width="50%" align="middle" /></p>
+<p style="text-align:center;"><img src="../../image/theory/handle_sys.png" width="50%" align="middle" /></p>
 
 内核管理系统资源，对于系统资源结构描述的数据结构内存占用可能十分大。当进程去使用系统资源时，不可能一个进程就生成一个资源描述数据结构。内核里就放了一个公共点资源数据结构，每个进程要使用这个资源时，就向系统申请使用该结构。
 
