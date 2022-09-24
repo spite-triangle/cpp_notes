@@ -1,6 +1,6 @@
 # 计算任务
 
-# 排序任务
+# 1. 排序任务
 
 ```cpp
 // 并行排序
@@ -25,9 +25,9 @@ output = task->get_output();
 - 当计算线程没有被100%占满，所有任务都是实时调起，队列名没有任何影响
 - 一个队列名字下，所有任务的被调度的顺序与提交顺序一致（应该就是都被放到了同一个 series 里面了）
 
-# 自定义计算任务
+# 2. 自定义计算任务
 
-## 定义
+## 2.1. 定义
 
 计算任务包含三个部分
 - input: 任务的输出参数
@@ -44,7 +44,7 @@ class WFThreadTask
 };
 ```
 
-## 创建
+## 2.2. 创建
 
 ```cpp
 template <class INPUT, class OUTPUT>
@@ -70,9 +70,9 @@ using MMFactory = WFThreadTaskFactory<MMInput, MMOutput>;
 MMTask * task = MMFactory::create_thread_task("queue_name", routine, callback);
 ```
 
-# go task
+# 3. go task
 
-## 使用
+## 3.1. 使用
 
 ```cpp
 #include "workflow/WFTaskFactory.h"
@@ -101,7 +101,7 @@ task->set_callback(std::function<void (WFGoTask *task)>);
 
 **利用 go task 就能将 workflow 当线程池使用。**
 
-## 时间限制
+## 3.2. 时间限制
 
 ```cpp
 class WFTaskFactory
@@ -120,7 +120,7 @@ class WFTaskFactory
 
 func 的运行时间到达 seconds+nanosconds 时限，task 直接 callback，但是 func 仍在后台继续运行，且结束后不会再调用 callback。**这就会导致 series 提前结束，但是 func 继续运行。**
 
-# 配置计算线程
+# 4. 配置计算线程
 
 ```cpp
 #include "workflow/WFGlobal.h"

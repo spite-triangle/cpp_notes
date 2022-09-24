@@ -2,7 +2,7 @@
 
 - [玩转Google开源C++单元测试框架Google Test系列(gtest)](https://www.cnblogs.com/coderzh/archive/2009/04/06/1426758.html)
 - [单元测试其一：gtest](https://zhuanlan.zhihu.com/p/522916368)
-# 断言
+# 1. 断言
 
 ##　断言类型
 
@@ -11,7 +11,7 @@
 - `fatal failure`：测试结果不符合预期，程序直接崩溃
 - `non-fatal failure`：测试结果不符合预期，但是不会崩溃
 
-## 断言函数
+## 1.1. 断言函数
 
 gtest 又提供了两类断言宏函数：
 - `EXPECT_XXX(expected, actual)`：会产生 non-fatal failure 结果
@@ -27,18 +27,18 @@ EXPECT_XXX(expected, actual) << "error message";
 ```
 
 **`bool` 条件检测**
-<p style="text-align:center;"><img src="../../image/gtest/compare1.png" width="75%" align="middle" /></p>
+<p style="text-align:center;"><img src="/cpp_notes/image/gtest/compare1.png" width="75%" align="middle" /></p>
 
 **数值比较**
-<p style="text-align:center;"><img src="../../image/gtest/compare2.png" width="75%" align="middle" /></p>
+<p style="text-align:center;"><img src="/cpp_notes/image/gtest/compare2.png" width="75%" align="middle" /></p>
 
 **字符串比较**
-<p style="text-align:center;"><img src="../../image/gtest/compareStr.png" width="75%" align="middle" /></p>
+<p style="text-align:center;"><img src="/cpp_notes/image/gtest/compareStr.png" width="75%" align="middle" /></p>
 
 **浮点数比较**
-<p style="text-align:center;"><img src="../../image/gtest/compareFloat.png" width="75%" align="middle" /></p>
+<p style="text-align:center;"><img src="/cpp_notes/image/gtest/compareFloat.png" width="75%" align="middle" /></p>
 
-## 案例
+## 1.2. 案例
 
 ```cpp
 #include <gtest/gtest.h>
@@ -57,9 +57,9 @@ int main(int argc, char const *argv[]) {
 }
 ```
 
-# 测试宏
+# 2. 测试宏
 
-## TEST
+## 2.1. TEST
 
 对于简单数量的测试案例，只需罗列断言函数`EXPECT_XXX`就行了，但是如果测试案例太多，全部都罗列在一起，看着就很蛋痛
 
@@ -95,7 +95,7 @@ TEST(TestSuiteName2, TestName2) {
 - **测试宏中也是可以定义变量的**
 
 
-## TEST_F 
+## 2.2. TEST_F 
 
 `TEST_F` 中的 `F` 为 `fixture` ，即固定设施。由于 `TEST` 的功能仅仅只是对测试用例（断言函数）进行分类，如果需要对一个类实例进行测试时，利用 `TEST` 就需要在每一个分组中创建待检测的实例对象
 
@@ -145,7 +145,7 @@ TEST_F(TestObject, TestName) {
 > [!tip]
 > 也可以利用 `TestObject` 来管理公共资源，实现对公共资源的测试
 
-## TEST_P
+## 2.3. TEST_P
 
 ```cpp
 TEST(IsPrimeTest, HandleTrueReturn)  
@@ -193,9 +193,9 @@ INSTANTIATE_TEST_CASE_P(
 ```
 
 **参数生成器**
-<p style="text-align:center;"><img src="../../image/gtest/parameter.png" width="75%" align="middle" /></p>
+<p style="text-align:center;"><img src="/cpp_notes/image/gtest/parameter.png" width="75%" align="middle" /></p>
 
-## TYPED_TEST
+## 2.4. TYPED_TEST
 
 `TYPED_TEST` 实现像泛型一样来测试各种各样的参数。
 
@@ -260,7 +260,7 @@ typedef testing::Types<char, int, unsigned int> MyTypes;
 INSTANTIATE_TYPED_TEST_CASE_P(My, FooTest, MyTypes);
 ```
 
-## 启用测试宏
+## 2.5. 启用测试宏
 
 ```cpp
 int main(int argc, char **argv) {
@@ -269,9 +269,9 @@ int main(int argc, char **argv) {
 }
 ```
 
-# 事件
+# 3. 事件
 
-## 全局事件
+## 3.1. 全局事件
 
 所有的测试宏前后都会执行
 
@@ -298,7 +298,7 @@ int main(int argc, _TCHAR* argv[])
 }
 ```
 
-## TestSuite事件
+## 3.2. TestSuite事件
 
 继承`testing::Test`的所有测试类都能使用
 
@@ -320,7 +320,7 @@ TEST_F(TestObject, TestName) {
 }
 ```
 
-## TestCase事件
+## 3.3. TestCase事件
 
 继承`testing::Test`的所有测试类都能使用
 
@@ -342,7 +342,7 @@ TEST_F(TestObject, TestName) {
 }
 ```
 
-# 测试私有函数
+# 4. 测试私有函数
 
 ```cpp
 

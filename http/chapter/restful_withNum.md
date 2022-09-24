@@ -1,14 +1,14 @@
 # restful 规范
 
-# restful
+# 1. restful
 
-## 简介
+## 1.1. 简介
 
 REST (Representational State Transfe) 只是一种基于HTTP协议的接口设计规范，并不是什么具体的程序库、协议等。
 
-## 思想
+## 1.2. 思想
 
-<p style="text-align:center;"><img src="../../image/http/http.png" width="25%" align="middle" /></p>
+<p style="text-align:center;"><img src="/cpp_notes/image/http/http.png" width="25%" align="middle" /></p>
 
 - **资源为核心**：HTTP协议的核心内容就是客户端发送请求，服务端给出响应，其内容就是资源，要么获取资源，要么操作资源。
 - **state**：资源的状态，在客户端与服务端的请求-响应的过程中，操作的是资源的状态
@@ -18,7 +18,7 @@ REST (Representational State Transfe) 只是一种基于HTTP协议的接口设�
 > [!tip]
 > 基于 restful 设计的接口，就是利用`url`描述资源，**请求报文**中描述对资源的操作。
 
-# 接口设计
+# 2. 接口设计
 
 **未采用 Restful 接口设计**：
 

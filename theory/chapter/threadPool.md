@@ -2,7 +2,7 @@
 
 # 基本原理
 
-<p style="text-align:center;"><img src="./../../image/theory/threadPool.jpg" width="50%" align="middle" /></p>
+<p style="text-align:center;"><img src="../../image/theory/threadPool.jpg" width="50%" align="middle" /></p>
 
 **线程池：** 管理一个任务队列，一个线程队列，然后每次去一个任务分配给一个线程去做，循环往复。
 
@@ -12,6 +12,6 @@
 
 # 线程池结构
 
-##　工作队列
+## 工作队列
 
 

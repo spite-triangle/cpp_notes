@@ -1,8 +1,8 @@
 # http 协议
 
-# 基本概念
+# 1. 基本概念
 
-## 简介
+## 1.1. 简介
 
 HTTP协议(超文本传输协议HyperText Transfer Protocol)，它是基于TCP协议的应用层传输协议，简单来说就是客户端和服务端进行数据传输的一种规则。并且http是一种无状态 (stateless) 协议, HTTP协议本身不会对发送过的请求和相应的通信状态进行持久化处理。
 
@@ -10,9 +10,9 @@ HTTP协议的实际过程：
 - **请求**: 客户端发送给服务器
 - **响应**：服务器接收客户端的请求，并处理
 
-## 请求报文
+## 1.2. 请求报文
 
-<p style="text-align:center;"><img src="../../image/http/requestionMessage.png" width="50%" align="middle" /></p>
+<p style="text-align:center;"><img src="/cpp_notes/image/http/requestionMessage.png" width="50%" align="middle" /></p>
 
 报文结构：
 - 请求行
@@ -23,9 +23,9 @@ HTTP协议的实际过程：
 - **空行**：<span style="color:red;font-weight:bold"> 空两行 </span>
 - 请求主体
 
-## 响应报文
+## 1.3. 响应报文
 
-<p style="text-align:center;"><img src="../../image/http/responseMessage.png" width="50%" align="middle" /></p>
+<p style="text-align:center;"><img src="/cpp_notes/image/http/responseMessage.png" width="50%" align="middle" /></p>
 
 报文结构：
 - 响应行
@@ -36,15 +36,15 @@ HTTP协议的实际过程：
 - **空行**: <span style="color:red;font-weight:bold"> 空两行 </span>
 - 响应主体信息
 
-# 请求方法
+# 2. 请求方法
 
-## 测试环境
+## 2.1. 测试环境
 
 测试请求头：
 - 服务器：利用 [phpstudy](https://www.xp.cn/download.html) 快速搭建一个本地服务器 <span style="color:red;font-weight:bold"> (2018 旧版比较稳定) </span>
 - 客户端：利用 `telnet` 进行远程连接。`ctrl + ]` 显示打印信息
 
-## GET
+## 2.2. GET
 
 **作用：** 向服务器请求数据，并获取服务端数据
 
@@ -67,7 +67,7 @@ Content-Type: text/html
 Hello World
 ```
 
-## POST
+## 2.3. POST
 
 **作用：** 就是发送、提交。向服务器提交/发送要被处理的数据。
 
@@ -90,7 +90,7 @@ Content-Length: 10
 Content-Type: text/html
 ```
 
-## HEAD
+## 2.4. HEAD
 
 **作用：** 向服务器确认数据是否存在，不要返回内容
 
@@ -108,7 +108,7 @@ X-Powered-By: PHP/5.4.45
 Content-Type: text/html
 ```
 
-## 其他方法
+## 2.5. 其他方法
 
 > [!tip]
 > 这些方法，服务器可能不支持
@@ -117,9 +117,9 @@ Content-Type: text/html
 - **TRACE**：用代理上网时，查看代理是否修改了原始的 HTTP 请求
 - **OPTIONS**：返回服务器支持哪些方法
 
-# 状态码
+# 3. 状态码
 
-<p style="text-align:center;"><img src="../../image/http/httpCode.png" width="50%" align="middle" /></p>
+<p style="text-align:center;"><img src="/cpp_notes/image/http/httpCode.png" width="50%" align="middle" /></p>
 
 <div style="margin: 0 auto;padding:1rem;width: 30rem;">
 

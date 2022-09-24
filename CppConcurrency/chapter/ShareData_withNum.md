@@ -1,8 +1,8 @@
 # 数据共享
 
-# 锁
+# 1. 锁
 
-## 互斥量
+## 1.1. 互斥量
 
 ```cpp
 #include <mutex>
@@ -37,7 +37,7 @@ std::scoped_lock guard(m1,m2); // 一次性锁多个
 
 
 
-## 层级锁
+## 1.2. 层级锁
 ```cpp
 class CHierarchicalMutext
 {
@@ -118,7 +118,7 @@ CHierarchicalMutext::m_ulThreadHierarchy(ULONG_MAX); // 初始化一个最大值
 > - 上述版本，可以使用`std::lock_guard()`进行管理：实现了 `lock()、unlock()、try_lock()`函数
 
 
-## unique_lock
+## 1.3. unique_lock
 
 `std::unique_lock` 可以伪装成`std::mutex`，其实现了 `lock()、unlock()、try_lock()`函数，**并且`std::unique_lock`是可移动（转移锁的所有权），但不可赋值的类型**。`std::unique_lock` 比 `std::lock_guard` 灵活，但是性能消耗更高。
 
@@ -145,7 +145,7 @@ std::unique_lock<std::mutex> lockC;
 lockC = std::move(lockB);
 ```
 
-## 嵌套锁
+## 1.4. 嵌套锁
 
 **作用：** 很简单粗暴的处理一个`std::mutex`被多次上锁的问题，执行多少次`lock()`，就得执行多少次`unlock()`。**太简单粗暴，不建议使用**。
 
@@ -155,9 +155,9 @@ std::lock_guard<std::recursive_mutex> guard(rm);
  std::unique_lock<std::recursive_mutex> lock(rm); 
 ```
 
-# 共享数据保护
+# 2. 共享数据保护
 
-## 初始化保护
+## 2.1. 初始化保护
 
 > [!note]
 > **双重检查初始化** 存在风险，刚好产生对象指针，但是对象本身没有创建完毕，就有线程就使用了该对象，就会导致出错。
@@ -202,7 +202,7 @@ int main()
 > [!tip]
 > 利用 `static` 变量在程序开始时就初始化，就完全不用担心多线程问题了。
 
-## 不常更新数据保护
+## 2.2. 不常更新数据保护
 
 不常更新数据特点：读频繁，写很少。`c++14` 之后，可以利用 `std::shared_mutex`、`std::shared_timed_mutex` 进保护，性能要优于 `std::mutex`。
 

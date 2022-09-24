@@ -1,6 +1,6 @@
 # 原子操作
 
-# 基本概念
+# 1. 基本概念
 
 **对象储存：** 真正描述一个对象的信息是属性，这些属性都是各式各样的变量，均储存在内存中。对共享内存进行读写，就会导致多线程竞争。
 
@@ -9,9 +9,9 @@
 **原子操作**: 一个代码段中的所有操作，要么都成功，要么都失败。
 
 
-# 标准原子类型
+# 2. 标准原子类型
 
-## 定义原子类型
+## 2.1. 定义原子类型
 
 **作用：** `std::atomic` 可以用来定义一个原子类型。**支持`bool、int、char`等数据数据类型，但是不支持浮点数类型**。
 
@@ -31,9 +31,9 @@ std::atomic_init(&value,10);
 std::atomic<int64_t> value(10);
 ```
 
-<p style="text-align:center;"><img src="../../image/concurrency/atomicType.png" width="75%" align="middle" /></p>
+<p style="text-align:center;"><img src="/cpp_notes/image/concurrency/atomicType.png" width="75%" align="middle" /></p>
 
-## 原子操作
+## 2.2. 原子操作
 
 ```cpp
 #include <atomic>
@@ -59,11 +59,11 @@ value.store(x,std::memory_order_relaxed);
 - `ptr`：针对指针类型的操作
 - `triv`：针对其他类型的操作
 
-<p style="text-align:center;"><img src="../../image/concurrency/atomicOperation.png" width="75%" align="middle" /></p>
+<p style="text-align:center;"><img src="/cpp_notes/image/concurrency/atomicOperation.png" width="75%" align="middle" /></p>
 
-<p style="text-align:center;"><img src="../../image/concurrency/atomic_fcn.png" width="75%" align="middle" /></p>
+<p style="text-align:center;"><img src="/cpp_notes/image/concurrency/atomic_fcn.png" width="75%" align="middle" /></p>
 
-## atomic_flag
+## 2.3. atomic_flag
 
 `std::atomic_flag` 最简单的原子类型，表示两种状态（特殊的`bool`）：设置和清除，其操作函数绝对是原子的。
 
@@ -102,7 +102,7 @@ private:
 };
 ```
 
-## CAS
+## 2.4. CAS
 
 **CAS:** `Compare And Swap` 对比之后交换数据
 

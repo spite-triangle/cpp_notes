@@ -1,8 +1,8 @@
 # 任务
 
-# http 请求任务
+# 1. http 请求任务
 
-## 创建
+## 1.1. 创建
 
 ```cpp
 // 任务处理的回调函数
@@ -21,7 +21,7 @@ task->set_receive_timeout(30 * 1000);
 task->start();
 ```
 
-## 请求与响应
+## 1.2. 请求与响应
 
 请求与响应均继承`HttpMessage`，相关方法基本类似。框架会自动添`request_uri`，`Host`，`Content-Length`，`HTTP/1.1`等报文信息。
 
@@ -79,9 +79,9 @@ req_cursor.find(name, value);
 req_cursor.rewind();
 ```
 
-# 任务序列
+# 2. 任务序列
 
-## 任务启动
+## 2.1. 任务启动
 
 ```cpp
 
@@ -132,7 +132,7 @@ public:
 };
 ```
 
-## 任务序列创建
+## 2.2. 任务序列创建
 
 SeriesWork 不能 new，delete，也不能派生。只能通过`Workflow::create_series_work()` 接口创建
 
@@ -173,7 +173,7 @@ series->start();
 > [!tip]
 > 一般而言 context 都是堆上的指针，因此可以在 series 的回调函数中进行销毁
 
-# 并行任务
+# 3. 并行任务
 
 **原理：** 并行任务，即 `ParallelWork`，实现多个 series 的并行，所有 series 结束，parallel 结束。
 

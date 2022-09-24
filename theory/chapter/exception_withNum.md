@@ -1,14 +1,14 @@
 # 异常
 
-# 异常介绍
+# 1. 异常介绍
 
-## 异常机制注意事项
+## 1.1. 异常机制注意事项
 
 - 性能问题
 - 指针和动态分配导致的内存回收问题：动态内存不会自动回收
 - 函数的异常抛出列表：如果没有写 `noexcept`，意味着你可以抛出任何异常
 
-## 基本语法
+## 1.2. 基本语法
 
 异常捕获
 ```cpp
@@ -33,7 +33,7 @@ catch( ... )
 throw "异常";
 ```
 
-# 异常捕获
+# 2. 异常捕获
 
 ```cpp
 try{
@@ -65,7 +65,7 @@ catch(exceptionType){
   - const 转换：例如将 char * 转换为 const char *
   - 数组或函数指针转换
 
-# 抛出异常
+# 3. 抛出异常
 
 > [!note]
 > 异常必须显式地抛出，即`throw 异常`。如果没有显式的抛出，即使有异常也检测不到。
@@ -81,11 +81,11 @@ throw 异常数据;
 > double func (char param) throw (int, char, exception);
 > ```
 
-# exception 类
+# 4. exception 类
 
-## 定义
+## 4.1. 定义
 
-<p style="text-align:center;"><img src="../../image/http/exception.png" width="50%" align="middle" /></p>
+<p style="text-align:center;"><img src="/cpp_notes/image/http/exception.png" width="50%" align="middle" /></p>
 
 C++语言本身或者标准库抛出的异常都是 exception 的子类
 ```cpp
@@ -110,7 +110,7 @@ try{
 }
 ```
 
-## 标准异常
+## 4.2. 标准异常
 
 **异常类型**:
 
@@ -155,7 +155,7 @@ try{
 
 
 
-# 构造函数异常
+# 5. 构造函数异常
 
 构造函数中抛出异常的特点
 - 构造函数抛出异常之后，对象将不被创建

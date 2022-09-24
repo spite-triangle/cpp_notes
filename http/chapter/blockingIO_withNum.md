@@ -1,10 +1,10 @@
 # 阻塞IO
 
-# 概念
+# 1. 概念
 
-## 阻塞IO
+## 1.1. 阻塞IO
 
-<p style="text-align:center;"><img src="../../image/http/blockingIO.png" width="50%" align="middle" /></p>
+<p style="text-align:center;"><img src="/cpp_notes/image/http/blockingIO.png" width="50%" align="middle" /></p>
 
 **阻塞IO (BlockingIO):** 任务处理线程承包所有内容，读数据时会产生阻塞过程：
 - 内核等待数据
@@ -14,9 +14,9 @@
 - server 能分配的线程有限
 - 大量线程上下文切换，消耗性能
 
-## 非阻塞IO
+## 1.2. 非阻塞IO
 
-<p style="text-align:center;"><img src="../../image/http/NoBlockingIO.png" width="50%" align="middle" /></p>
+<p style="text-align:center;"><img src="/cpp_notes/image/http/NoBlockingIO.png" width="50%" align="middle" /></p>
 
 **非阻塞IO (NoBlockingIO) :** 将等待数据的阻塞过程从任务处理线程中分离，承包给其他线程处理。
 
@@ -25,7 +25,7 @@
 - 不同客户端各自管各自的
 
 
-## 非阻塞IO实现
+## 1.3. 非阻塞IO实现
 
 **非阻塞IO需要内核辅助实现**
 
@@ -39,19 +39,19 @@ int fcntl(int socketfd, int cmd, ...);
 fcntl(socket,F_SETFL, flags| O_NONBLOCK);
 ```
 
-# IO多路复用I
+# 2. IO多路复用I
 
-## 概念
+## 2.1. 概念
 
 非阻塞IO中，各个客户端服务线程会进行大量的「系统调用」去查询数据的准备情况。**IO多路复用I的目的就是减少这些系统调用。**
 
-<p style="text-align:center;"><img src="../../image/http/select.png" width="50%" align="middle" /></p>
+<p style="text-align:center;"><img src="/cpp_notes/image/http/select.png" width="50%" align="middle" /></p>
 
 改进思路：
 - 单个客户端服务线程查询，改为多客户端线程查询，并且由 `select` 进行统一管理
 - 数据准备好之后，由内核通知上层引用，就不需要大量的系统调用去查询
 
-## select
+## 2.2. select
 
 ```cpp
 #include <sys/select.h>
@@ -95,10 +95,10 @@ int select(
 - `maxfdp1`：能够被 `select` 管理的 socket 个数，**值为 socket 描述符最大值 + 1 （`0`也可以作为一个描述符）**。最大描述符就是服务器描述符
 
 
-<p style="text-align:center;"><img src="../../image/http/selectcode.jpg" width="100%" align="middle" /></p>
+<p style="text-align:center;"><img src="/cpp_notes/image/http/selectcode.jpg" width="100%" align="middle" /></p>
 
 
-## poll
+## 2.3. poll
 
 ```cpp
 #include <poll.h>
@@ -122,26 +122,26 @@ struct pollfd{
 - `fdarray`: 每个元素为 `pollfd` 的数组
 - `nfds`：数组长度
 
-<p style="text-align:center;"><img src="../../image/http/pollEvent.png" width="75%" align="middle" /></p>
+<p style="text-align:center;"><img src="/cpp_notes/image/http/pollEvent.png" width="75%" align="middle" /></p>
 
-<p style="text-align:center;"><img src="../../image/http/pollcode.jpg" width="100%" align="middle" /></p>
+<p style="text-align:center;"><img src="/cpp_notes/image/http/pollcode.jpg" width="100%" align="middle" /></p>
 
-## 缺陷
+## 2.4. 缺陷
 
 每次集中系统调用
 1. 将所有的 `fd_set` 或者 `fdarray` 从用户态拷贝到内核态；
 2. 当发生事件时，又将所有的 `fd_set` 或者 `fdarray` 从内核态拷贝到用户态；
 3. 然后在用户态遍历数组，去找哪些描述符发生了变化。(模糊通知)
 
-# IO多路复用II
+# 3. IO多路复用II
 
-## 概念
+## 3.1. 概念
 
 将第一版本中的模糊通知变成明确通知，不用在遍历描述数组了，并且取消描述数组在用户态、内核态之间的来回拷贝。
 
-<p style="text-align:center;"><img src="../../image/http/epoll.png" width="75%" align="middle" /></p>
+<p style="text-align:center;"><img src="/cpp_notes/image/http/epoll.png" width="75%" align="middle" /></p>
 
-## epoll创建
+## 3.2. epoll创建
 
 
 ```cpp
@@ -152,7 +152,7 @@ int epoll_create(int size);
 - `size`：必须大于 0
 - epoll 句柄：指向内核中的资源，需要使用 `close()` 关闭
 
-## epoll管理
+## 3.3. epoll管理
 
 >[!tip]
 > 将哪个客户端 (fd) 的哪些事件 (event) 交给哪个 epoll (epfd) 管理 (op)
@@ -167,9 +167,9 @@ int epoll_create(int size);
     - **EPOLL_CTL_DEL**：从epfd中删除一个fd；
 - `event`：事件
 
-<p style="text-align:center;"><img src="../../image/http/epollEvent.png" width="75%" align="middle" /></p>
+<p style="text-align:center;"><img src="/cpp_notes/image/http/epollEvent.png" width="75%" align="middle" /></p>
 
-## epoll等待
+## 3.4. epoll等待
 
 ```cpp
  int epoll_wait(int epfd, struct epoll_event * events, int maxevents, int timeout);
@@ -181,9 +181,9 @@ int epoll_create(int size);
   - **大于0：就绪列表个数，从`0 ~ cnt-1`的事件都是就绪的**
   - -1：发生错误，通过`errno`进行确认
 
-## ET与LT
+## 3.5. ET与LT
 
-<p style="text-align:center;"><img src="../../image/http/et_lt.png" width="75%" align="middle" /></p>
+<p style="text-align:center;"><img src="/cpp_notes/image/http/et_lt.png" width="75%" align="middle" /></p>
 
 **ET触发与LT触发：** 描述的是判断是否有事件发生的方式
 
@@ -199,19 +199,19 @@ int epoll_create(int size);
   1. 低电平 -> 高电平
 
 
-## 案例
+## 3.6. 案例
 
-<p style="text-align:center;"><img src="../../image/http/epollCode1.png" width="75%" align="middle" /></p>
+<p style="text-align:center;"><img src="/cpp_notes/image/http/epollCode1.png" width="75%" align="middle" /></p>
 
-<p style="text-align:center;"><img src="../../image/http/epollCode2.png" width="75%" align="middle" /></p>
+<p style="text-align:center;"><img src="/cpp_notes/image/http/epollCode2.png" width="75%" align="middle" /></p>
 
 
-# 扩展
+# 4. 扩展
 
 - 异步IO
 - 信号IO
 
-# 网络问题
+# 5. 网络问题
 
 **linux惊群效应：** 类似条件量的`broadcast`，进来了一个资源，但是叫醒了一大堆人
 

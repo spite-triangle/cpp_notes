@@ -1,8 +1,8 @@
 # 同步操作
 
-# 等待
+# 1. 等待
 
-## 睡眠等待
+## 1.1. 睡眠等待
 
 睡眠等待防止了线程在CPU上长时间忙等（死循环检测条件达成情况），通过睡眠一段时间来让线程安静一会儿。
 
@@ -26,7 +26,7 @@ void WaitCondition()
 }
 ```
 
-## 条件量
+## 1.2. 条件量
 
 当条件满足后，才会唤醒等待线程，线程不用一直死循环等待条件完成。
 
@@ -56,9 +56,9 @@ void WaitCondition()
 }
 ```
 
-# future
+# 2. future
 
-## 线程返回值
+## 2.1. 线程返回值
 
 ```cpp
 #include <future>
@@ -95,7 +95,7 @@ auto f8 = std::async(
 
 
 
-## promise
+## 2.2. promise
 将`std::promise`对象放入一个线程1，关联的`std::future`对象放入线程2，就能实现线程1通过`std::promise`发送数据，线程2通过`std::future`获取数据。
 
 ```cpp
@@ -109,7 +109,7 @@ std::future<T> ft = pr.get_future();
 pr.set_value(T);
 ```
 
-## packaged_task
+## 2.3. packaged_task
 
 `std::packaged_task` 只是将调用实体进行封装，然后将返回值放入 `std::future` 。**本质上就是std::promise`函数实体传递的简化版。**
 
@@ -126,7 +126,7 @@ std::future<void> res = task.get_future();
 task(args);
 ```
 
-## 返回异常
+## 2.4. 返回异常
 
 - `std::async` 与 `std::packaged_task` 中的回调实体在子线程发生异常时，可以通过 `std::future`返回异常。
 - `std::promise` 需要返回异常时，则需要用 `set_exception()`传递异常
@@ -146,7 +146,7 @@ task(args);
     }
    ```
 
-## shared_future
+## 2.5. shared_future
 
 <p style="text-align:center;"><img src="./../../image/concurrency/shared_future.png" width="50%" align="middle" /></p>
 
@@ -171,9 +171,9 @@ std::promise<int> p1;
 std::shared_future<int> sf1(p1.get_future().share())
 ```
 
-# 超时等待
+# 3. 超时等待
 
-## 时钟
+## 3.1. 时钟
 
 - **当前时间**：可以通过时钟对象的`_clock::now()`方法获取，例如 `std::chrono::system_clock::now()` 获取当前系统时间（windows 右下角那个时间）
 - **时钟节拍**：一秒钟有多少下。例如 1 秒钟 25 下，就是 1 个节拍 `1 / 25` 秒，即`std::ratio<1,25>`；时钟节拍为 2.5 秒一次，就是 1 个节拍 2.5 秒，写分数得 1 个节拍 `5 / 2` 秒，即`std::ratio<5,2>`。这个有系统决定
@@ -196,7 +196,7 @@ std::chrono::high_resolution_clock
 > - 系统时钟：就是windows右下角那个时间，生活中使用的时间，可以修改
 > - 稳定时钟：从 boot 启动开始计时，由机器计算，不能人为修改，用来统计程序运行时长更准确
 
-## 时间段
+## 3.2. 时间段
 
 ```cpp
 std::chrono::duration<rep,period>
@@ -230,7 +230,7 @@ td::chrono::milliseconds ms(54802);
 std::chrono::seconds s = std::chrono::duration_cast<std::chrono::seconds>(ms);
 ```
 
-## 时间点
+## 3.3. 时间点
 
 
 ```cpp
@@ -275,7 +275,7 @@ std::string strTime = std::ctime(&duration);
 > - `steady_clock`: 从 boot 启动到现在时间点的时间段
 
 
-## 等待超时
+## 3.4. 等待超时
 
 - `wait_for`：等待一个时间段
     ```cpp
@@ -299,11 +299,11 @@ std::string strTime = std::ctime(&duration);
 
 <p style="text-align:center;"><img src="./../../image/concurrency/for_unit.png" width="75%" align="middle" /></p>
 
-# 通讯顺序进程
+# 4. 通讯顺序进程
 
 **概念：** 通讯顺序进程 (CSP，Communicating Sequential Processer) 其思路就是将业务流程划分为一个个完全独立的子模块，子模块之间的交流只剩输入与输出，**即各个子模块按照一定顺序执行，且各个模块运行期间不进行通讯，最终所有模块的运行情况可以描述成一个状态机模型**。
 
-<p style="text-align:center;"><img src="../../image/concurrency/states.png" width="75%" align="middle" /></p>
+<p style="text-align:center;"><img src="/cpp_notes/image/concurrency/states.png" width="75%" align="middle" /></p>
 
 矩形框描述的功能就是各个互不相关的子模块，只有输入和输出的交流，且具有执行顺序。
 

@@ -1,6 +1,6 @@
 # Cmake
 
-# 项目 CMakeLists 配置
+# 1. 项目 CMakeLists 配置
 
 ```php
 # cmake 版本
@@ -67,7 +67,7 @@ target_link_libraries(demo ${OpenCV_LIBS})
 target_include_directories(demo ${PROJECT_SOURCE_DIR}/include)
 ```
 
-# 子目录 CMakeLists 配置
+# 2. 子目录 CMakeLists 配置
 
 ```php
 # 创建静态库
@@ -77,15 +77,15 @@ add_library(lib_name SHARED ${file_cpp})
 # 链接第三方库
 target_link_libraries(lib_name ${THIRD_LIBS})
 ```
-# 命令行传参
+# 3. 命令行传参
 
 ```term
 triangle@LEARN:~$ cmake .. -DVAR_NAME=value
 ```
 
-# install
+# 4. install
 
-## 定义
+## 4.1. 定义
 
 **作用：** 用于指定在安装时运行的规则。它可以用来安装很多内容，可以包括目标二进制、动态库、静态库以及文件、目录、脚本等。
 
@@ -99,7 +99,7 @@ install(
 - 文件类型
     - `FILES`：普通文本
     - `PROGRAMS`：非目标文件的可执行程序(如脚本文件)
-    <p style="text-align:center;"><img src="../../image/theory/installType.png" width="75%" align="middle" /></p>
+    <p style="text-align:center;"><img src="/cpp_notes/image/theory/installType.png" width="75%" align="middle" /></p>
 
 - `option`可以指定
   - DESTINATION：指定磁盘上要安装文件的目录
@@ -112,9 +112,9 @@ install(
   - 默认安装根目录由 `CMAKE_INSTALL_PREFIX` 指定
   - 当采用 DESTINATION 可以自定义安装路径
 
-<p style="text-align:center;"><img src="../../image/theory/cmakePath.png" width="75%" align="middle" /></p>
+<p style="text-align:center;"><img src="/cpp_notes/image/theory/cmakePath.png" width="75%" align="middle" /></p>
 
-## 案例
+## 4.2. 案例
 
 **指定安装路径：**
 
@@ -143,7 +143,7 @@ install(TARGETS target
 > [!note]
 > `CONFIGURATIONS` 指定的值仅适用于此选项之后列出的选项
 
-## 执行安装
+## 4.3. 执行安装
 
 ```term
 triangle@LEARN:~$ cmake ..
