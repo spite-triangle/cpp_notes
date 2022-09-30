@@ -102,7 +102,9 @@ private:
 };
 ```
 
-## CAS
+## 比较-交换
+
+### CAS
 
 **CAS:** `Compare And Swap` 对比之后交换数据
 
@@ -123,13 +125,43 @@ bool cas(V,A,B){
 }
 ```
 
-原子操作中的实现：
+### compare_exchange
+
+```cpp
+bool expected = false;
+bool update = true;
+atomic<bool> current;
+bool ret = current.compare_exchange_weak(expected, update);
+```
+`compare_exchange_weak` 函数的工作原理
+- 当 `current == expected` 时，会将 `update` 的值储存到 `current` 中
+- 当 `current != expected` 时，会将 `expected` 的值设置为 `current` 的值
+- 返回值：`bool`
+  - true：更新成功
+  - false：未更新成功 
+
+对于`compare_exchange_weak()`而言，原始值与预期值一致时，存储也可能会不成功。可能有机器缺少对 CAS 操作原语的支持，不能保证函数的原子性，在这种情况下，由于多线程切换造成的提交失败称之为 **伪失败**。为了防止伪失败，所以写成了`while`循环。
+
 ```cpp
 bool expected=false;
-extern atomic<bool> b; // 设置些什么
+extern atomic<bool> b; 
+
+// 当发生伪失败时，继续更新
 while(!b.compare_exchange_weak(expected,true) && !expected);
 ```
 
-> [!note]
-> 对于`compare_exchange_weak()`而言，原始值与预期值一致时，存储也可能会不成功。可能有机器缺少对 CAS 操作原语的支持，不能保证函数的原子性，在这种情况下，由于多线程切换造成的提交失败称之为伪失败。为了防止伪失败，所以写成了`while`循环。
+未了修正这个缺陷，又打了个补丁
 
+```cpp
+// 用法同上
+compare_exchange_strong();
+```
+
+> [!tip]
+> `compare_exchange` 操作在原子操作中属于「读-改-写」操作
+
+## 原子指针
+
+```cpp
+
+```

@@ -35,6 +35,11 @@ public:
     }
 }
 
+class CBar {
+public:
+  void Run() {}
+};
+
 int main()
 {
     // 创建线程
@@ -42,6 +47,9 @@ int main()
 
     CRun cRun;
     std::thread threadObj(cRun);
+
+    CBar cBar;
+    std::thread threadObj(&CBar::Run, cBar);
 
     std::thread threadLambda(
         []{
