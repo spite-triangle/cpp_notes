@@ -148,7 +148,7 @@ task(args);
 
 ## 2.5. shared_future
 
-<p style="text-align:center;"><img src="./../../image/concurrency/shared_future.png" width="50%" align="middle" /></p>
+<p style="text-align:center;"><img src="/cpp_notes/image/concurrency/shared_future.png" width="50%" align="middle" /></p>
 
 **作用**：`std::future` 是转移类型，且只能获取一次返回值，如果在多个线程中调用`get()`就会导致异常。`std::shared_future` 就是为了解决该问题，`shared_future`的实现是拷贝类型，允许子线程能拥有自己的`shared_future`对象，那就不存在抢占问题了。
 
@@ -297,7 +297,7 @@ std::string strTime = std::ctime(&duration);
     f.wait_unit(timeout);
    ```
 
-<p style="text-align:center;"><img src="./../../image/concurrency/for_unit.png" width="75%" align="middle" /></p>
+<p style="text-align:center;"><img src="/cpp_notes/image/concurrency/for_unit.png" width="75%" align="middle" /></p>
 
 # 4. 通讯顺序进程
 
