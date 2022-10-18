@@ -166,6 +166,8 @@ int main()
 ## 其他操作
 
 ```cpp
+#include <memory>
+
 // 返回该对象所管理的指针，同时释放其所有权
 std::unique_ptr::release();
 
@@ -239,6 +241,8 @@ public:
 共享指针的创建
 
 ```cpp
+#include <memory>
+
 // 构造函数创建
 std::shared_ptr<Student> ptr1(new Student(name,age));
 

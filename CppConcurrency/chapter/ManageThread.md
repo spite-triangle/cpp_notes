@@ -1,5 +1,9 @@
 # 线程管理
 
+- [cpp并发编程笔记（比书简单）](https://github.com/downdemo/Cpp-Concurrency-in-Action-2ed)
+- [cpp并发编程翻译](https://github.com/xiaoweiChen/CPP-Concurrency-In-Action-2ed-2019)
+
+
 # 开发环境
 
 > [!note]
