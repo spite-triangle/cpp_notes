@@ -73,23 +73,3 @@ cache 除了会引起多个处理器之间的乒乓缓存，还会导致同一�
 
     Data some_array[256];
     ```
-
-# 子线程异常
-
-```cpp
-void run()
-{
-    ....
-    throw "exception";
-    ...
-    return -1;
-}
-
-int main(int argn, char* argv[])
-{
-    .....
-    std::thread(run);
-    .....
-}
-
-```

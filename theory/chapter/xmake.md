@@ -98,6 +98,27 @@ target("hello")
 
 ```
 
+# 选项
+
+```lua
+
+-- 自定义选项
+option("test")
+    set_default(false)
+    set_showmenu(true)
+    add_defines("TEST")
+
+target("demo")
+    -- 启动选项
+    add_options("test")
+```
+
+手动开启选项
+
+```term
+triangle@LEARN:~$ xmake f --test=y
+triangle@LEARN:~$ xmake
+```
 # 配置项
 
 ```lua
