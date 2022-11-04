@@ -264,8 +264,11 @@ INSTANTIATE_TYPED_TEST_CASE_P(My, FooTest, MyTypes);
 
 ```cpp
 int main(int argc, char **argv) {
-  testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();   
+    // 初始化
+    testing::InitGoogleTest(&argc, argv);
+    // 只启动指定的单元测试，不指定该选项，就会执行所有的测试宏
+    testing::FLAGS_gtest_filter = "TestSuiteName.TestName";
+    return RUN_ALL_TESTS();   
 }
 ```
 

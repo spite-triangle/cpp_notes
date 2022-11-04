@@ -255,9 +255,9 @@ ptr2 = make_shared<Student>(name,age);
 ptr1.use_count();
 ```
 
-> [!note]
-> 不要使用同一个指针对象去初始化多个 shared_ptr ，得用「拷贝语义」实现。
-
+> [!note|style:flat]
+> - 不要使用同一个指针对象去初始化多个 shared_ptr ，得用「拷贝语义」实现。
+> - shared_ptr 中的计数器是原子类型线程安全，但数据部分不是
 
 
 # weak_ptr
