@@ -201,5 +201,65 @@ target("hello")
     set_kind("binary")
     add_files("src/*.c")
 ```
+# 自定义脚本
+
+xmake 允许用户通过脚本自定义各个流程的具体逻辑，例如在 `target` 中可以编写基于lua的 [事件](https://xmake.io/#/zh-cn/manual/project_target?id=targeton_load) 回调函数
+
+```lua
+target("event")
+    -- 在链接时候执行
+    on_link(function (target)
+        print("link it")
+    end)
+
+    -- build 后执行
+    after_build(function(target)
+        -- 脚本内容
+    end)
+```
+
+回调函数的参数有
+- [`target` 目标实案](https://xmake.io/#/zh-cn/manual/target_instance) 
+- [`option` 选项实例](https://xmake.io/#/zh-cn/manual/option_instance)
+- [`package` 包实例](https://xmake.io/#/zh-cn/manual/package_instance)
+- 等
+
+通过参数可以获取全局的信息
+
+```lua
+target("event")
+    after_build(function(target)
+        -- 获取目标文件路径
+        print(target:targetfile())
+        -- 获取目标程序类型
+        print("target type is" .. target:kind())
+    end)
+```
+
+此外，还能通过 xmake 与 lua 提供的 [模块接口](https://xmake.io/#/zh-cn/manual/builtin_modules) 与 [内置变量](https://xmake.io/#/zh-cn/manual/builtin_variables) 完成系列复杂的操作
+
+```lua
+target("event")
+    -- 编译后，拷贝库与头文件
+    after_build(function (target) 
+        -- 文件目录
+        local srcLibPath = path.join("$(scriptdir)", target:get("targetdir"))
+        local destPath = path.join("$(scriptdir)", "bin/out/")
+
+        -- 需要拷贝的文件
+        local libs = {"add.dll","add.lib","add.pdb"}
+        local headers = {"add.h", "addType.h"}
+
+        -- 拷贝文件
+        for i, file in pairs(libs) do
+            os.cp(path.join(srcLibPath, file), path.join(destPath, "lib")) 
+        end
+
+        for i, file in pairs(headers) do
+            os.cp(path.join("$(scriptdir)", "src/add/", file), path.join(destPath, "include")) 
+        end
+    end)
+
+```
 
 

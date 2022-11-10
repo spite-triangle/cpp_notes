@@ -217,6 +217,19 @@ File Type: LIBRARY
            8 .idata$6
 ```
 
+**查看库或者可执行文件的依赖**
+```term
+triangle@LEARN:~$ dumpbin /dependents main.exe
+Dump of file main.exe
+
+File Type: EXECUTABLE IMAGE
+
+  Image has the following dependencies:
+
+    add.dll
+    KERNEL32.dll
+```
+
 **查看lib类型：**
 ```term
 triangle@LEARN:~$ lib /list add.lib // 查看静态库
