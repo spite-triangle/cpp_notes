@@ -646,6 +646,33 @@ private:
 
 利用 `const` 修饰的函数对外的含义是：**当前 const 函数被调用的话，不会修改当前类的内部状态**。但是添加了 `mutable` 之后，也能修改内部属性状态。 <span style="color:red;font-weight:bold"> 这就导致在多线程下，const 函数的语言根本不能保证线程安全，因此还是得加锁保护。</span>
 
+> [!note]
+> const 成员函数的本质，其实是在非静态成员函数中的 this 变量上，添加了 const 变成了 const this
+> - 静态成员函数不能使用 const 修饰（因为没有 this）； 
+> - 将 this 显式的传递给 const 成员函数也能修改对象属性（因为编译器管不着）。
+
+```cpp
+class Test
+{
+public:
+    // 合法，编译通过
+    void setVal(Test* t, int v) const
+    {
+        t->val = v; 
+    } 
+
+    // 编译报错
+    static void setValStatic(Test* t, int v) const
+    {
+        t->val = v;
+    }
+
+private:
+    int val;
+}
+```
+
+
 
 # 特殊成员函数
 

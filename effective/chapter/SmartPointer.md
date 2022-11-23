@@ -99,6 +99,26 @@ int main(int argc, char const *argv[])
 - Reference Count : 引用计数，变为 0 就释放对象
 - Deleter：存放自定义释放函数 
 
+## 自定义释放
+
+```cpp
+void Deleter(int * ptr)
+{
+    printf("release\n");
+}
+
+int main(int argc, char const *argv[])
+{
+    // 不同于 unique_ptr ，shared_ptr 的自定义释放函数是一个变量
+    std::shared_ptr<int> a(new int(14), Deleter); 
+    return 0;
+}
+```
+
+> [!note]
+> **unique_ptr：** 自定义释放函数为类型定义的一部分，通过模板生成
+> **shared_ptr：** 自定义的释放函数为类型的一个参数，并非类型定义的一部分
+
 ## 防止重释放
 
 ```cpp
@@ -227,6 +247,8 @@ int main(int argc, char const *argv[])
     std::vector<std::shared_ptr<Student>> students;
 
     // 创建一个 shared_ptr 的 Student 对象
+    // 并且初始化 enable_shared_from_this 中的 weak_ptr ，将其指向 shared_ptr
+    // 这样通过 shared_from_this() 就能获取 weak_ptr 转化而来的 shared_ptr 了
     std::shared_ptr<Student> pSt = Student::GetInstance(); 
 
     // 把当前指针放到 students 容器中
@@ -352,7 +374,7 @@ int main()
     //  shared_ptr的控制块与对象只执行一次 new
     std::make_shared<Object>();
     ```
-- make_xxx 不能指定自定义释放函数
+- make_xxx 不能指定自定义释放函数，只能使用默认自带的
 
 
 ## shared_ptr 控制块释放
@@ -382,3 +404,208 @@ int main()
 ```
 
 采用裸指针构造器创建`shared_ptr`时，对象与控制块时分开创建的，因此在 1 作用域结束时会释放对象；2 作用域结束时，会释放控制块。
+
+# Pimpl 
+
+## 原理
+
+**Piml(Pointer to implementation)**：一种减少代码依赖和编译时间的C++编程技巧，其基本思想是将一个外部可见类(visible class)的实现细节（一般是所有私有的非虚成员）放在一个单独的实现类(implementation class)中，而在可见类中通过一个私有指针来间接访问该实现类。
+
+
+**头文件 Student.h ：**
+```cpp
+#ifndef STUDENT_H
+#define STUDENT_H
+
+// 对外调用的接口类
+class Student
+{
+public:
+    Student();
+    ~Student();
+
+    // 对外调用的接口函数
+    void PrintName();
+
+private:
+    // 声明具体实现类
+    class StudentImpl;
+private:
+    StudentImpl * st; // 具体实现类的指针
+};
+#endif /* STUDENT_H */
+```
+
+**源文件 Student.cpp ：**
+```cpp
+#include "Student.h"
+
+// 依赖
+#include <string>
+#include <iostream>
+
+// 具体实现类
+class Student::StudentImpl
+{
+public:
+    StudentImpl(std::string name):m_name(name){};
+
+    // 具体实现
+    void PrintName(){
+        std::cout << "name : " << m_name << std::endl;
+    }
+private:
+    std::string m_name;
+};
+
+Student::Student() {
+    st = new StudentImpl("fuck");
+}
+Student::~Student() {
+    delete st;
+}
+
+void Student::PrintName() {
+    st->PrintName();
+}
+```
+
+> [!tip]
+> 使用 Pimpl 设计方法就能实现将类对象的「依赖」放到 cpp 文件中，而非 h 头文件。这就使得外部使用 Student 类对象时，只引用 Student.h 这一个头文件，并不会查找到 string 、iostream 这两个头文件，因为 string 、iostream 被放到了 cpp 中。
+
+## 引入智能指针
+
+**头文件 Student.h ：**
+```cpp
+#ifndef STUDENT_H
+#define STUDENT_H
+
+#include <memory>
+
+// 对外调用的接口类
+class Student
+{
+public:
+
+    Student();
+
+    // 对外调用的接口函数
+    void PrintName();
+
+private:
+    // 声明具体实现类
+    class StudentImpl;
+private:
+    // 引入智能指针
+    std::unique_ptr<StudentImpl> st;
+};
+#endif /* STUDENT_H */
+```
+
+**源文件 Student.cpp ：**
+```cpp
+#include "Student.h"
+
+// 依赖
+#include <string>
+#include <iostream>
+
+// 具体实现类
+class Student::StudentImpl
+{
+public:
+    StudentImpl(std::string name):m_name(name){};
+
+    // 具体实现
+    void PrintName(){
+        std::cout << "name : " << m_name << std::endl;
+    }
+private:
+    std::string m_name;
+};
+
+// 构造函数
+Student::Student():st(std::make_unique<Student::StudentImpl>("fuck")){}
+
+void Student::PrintName() {
+    st->PrintName();
+}
+```
+
+但是这么改进后，编译器又TMD罢工了。 
+
+```term
+triangle@LEARN:~$ g++ main.cpp Student.cpp
+./unique_ptr.h:79:16: error: invalid application of 'sizeof' to incomplete type 'Test'
+  static_assert(sizeof(_Tp)>0,
+                ^~~~~~~~~~~
+```
+**这是由于 `std::unique_ptr` 中的默认释放函数会调用 `sizeof` 检测类型的大小。这个步骤在「编译阶段」就会执行，然而在 Student.h 头文件中，`class StudentImpl;` 只是一个声明，根本不可能知道 `class StudentImpl` 有多大。**
+
+**[解决方案](https://www.jianshu.com/p/1a73d8a59781)：**
+- 方法一：改用 `std::shared_ptr`，这个的默认析构不会检测，但是性能要弱一些
+- 方法二：自定义释放函数，但是这个麻烦
+- 方法三：**自定义特殊成员函数（一定要有构造函数与析构函数），并且只在头文件声明，在源文件实现**。为啥可以这么做，不清楚。。。
+
+**头文件 Student.h ：**
+```cpp
+#ifndef STUDENT_H
+#define STUDENT_H
+
+#include <memory>
+
+// 对外调用的接口类
+class Student
+{
+public:
+
+    // NOTE - 只声明，且一定要有构造函数与析构函数
+    Student();
+    ~Student(); // 定义了析构，移动语义又全没了，所有要用移动还得显示定义
+
+    // 对外调用的接口函数
+    void PrintName();
+
+private:
+    // 声明具体实现类
+    class StudentImpl;
+private:
+    // 引入智能指针
+    std::unique_ptr<StudentImpl> st;
+};
+#endif /* STUDENT_H */
+```
+
+**源文件 Student.cpp ：**
+```cpp
+#include "Student.h"
+
+// 依赖
+#include <string>
+#include <iostream>
+
+// 具体实现类
+class Student::StudentImpl
+{
+public:
+    StudentImpl(std::string name):m_name(name){};
+
+    // 具体实现
+    void PrintName(){
+        std::cout << "name : " << m_name << std::endl;
+    }
+private:
+    std::string m_name;
+};
+
+// 构造函数
+Student::Student():st(std::make_unique<Student::StudentImpl>("fuck")){}
+// 析构函数
+Student::~Student() = default;
+
+void Student::PrintName() {
+    st->PrintName();
+}
+```
+
+
