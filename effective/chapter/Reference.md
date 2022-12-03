@@ -348,3 +348,241 @@ int
 
 利用 `std::is_integral` 来判断输入数据的类型，然后通过标签 `std::false_type` 与 `std::true_type` 来进行区分。
 
+## 类型限定
+
+```cpp
+// std::enable_if<>::type ：是否启用模板
+// std::is_same<>::value ：判断类型是否一样
+// std::decay<T>::type：移除掉类型的所有修饰，例如 const , & 等
+template<typename T,
+         typename = typename std::enable_if< 
+                            std::is_same<int, std::decay<T>::type>::value>::type >
+void Run(T && param)
+{
+    printf("T &&\n");
+}
+
+// 排除某个类型 !std::is_same
+template<typename T,
+         typename = typename std::enable_if< 
+                            !std::is_same<int, std::decay<T>::type>::value>::type >
+void Run(T && param)
+{
+    printf("T &&\n");
+}
+
+// 多个类型组合
+template<typename T,
+        typename = typename std::enable_if< 
+        std::is_same<int，std::decay<T>::type>::value ||
+        std::is_same<float，std::decay<T>::type>::value
+        >::type >
+void Run(T && param)
+{
+    printf("T &&\n");
+}
+
+// std::is_base_of<>::type：是否为子类
+template<typename T,
+        typename = typename std::enable_if< 
+        std::is_base_of<Parent，std::decay<T>::type>::value
+        >::type >
+void Run(T && param)
+{
+    printf("T &&\n");
+}
+
+// 是否能构造成目标对象
+std::is_constructible<>::value
+```
+
+**工作原理：** 
+- 当 `std::enable_if<condition, type>` 判断成功，会返回给定的`type`类型 (当不指定时，返回默认类型`void`)， 这样一个匿名的模板类型`typename = `就会生成。这样就能正常生成模板函数了
+- 当 `std::enable_if<condition, type>` 判断失败，就不能生成匿名的模板类型 `typename = `，也就不能产生模板函数
+
+```cpp
+template<typename T,
+        typename A = typename std::enable_if< 
+                            std::is_same<int, std::decay<T>::type>::value
+                            >::type  >
+void Run(T && param, A* ptr)
+{
+}
+
+// 限定多个类型
+template<typename T1,
+        typename T2,
+        typename = typename std::enable_if< 
+                            std::is_same<int, std::decay<T1>::type>::value
+                            >::type,
+        typename = typename std::enable_if< 
+                            std::is_same<float, std::decay<T2>::type>::value
+                            >::type  >
+void Run(T1 && param1, T2 param2)
+{
+
+}
+
+int main()
+{
+    void * ptr = nullptr;
+    // 是能编译成功的，因为 A 的类型为 void
+    // void Run<int, void>(int &&param, void *par)
+    Run(10, ptr)
+
+    float fNum = 1.0f;
+    // void Run<int, float, void, void>(int &&param1, float param2)
+    Run(10, &fNum);
+    return 0;
+}
+
+```
+
+
+# 引用折叠
+
+```cpp
+template<typename T>
+void run(T && param)
+{
+    printf("%d\n",std::is_same<int,T>::value);
+    printf("%d\n",std::is_same<int&,T>::value);
+    printf("%d\n",std::is_same<int&&,T>::value);
+}
+
+int main(int argc, char const *argv[])
+{
+    int a = 10;
+    printf("========= left value ===============\n");
+    run(a);
+
+    printf("========= right value ==============\n");
+    run(std::move(a));
+    return 0;
+}
+```
+```term
+triangle@LEARN:~$ ./a.out
+========= left value ===============
+0
+1
+0
+========= right value ==============
+1
+0
+0
+```
+**工作原理：**
+- 传入左值时，`T` 被推导为 `int&`，这样参数列表就是 `int& &&`，后面两个引用就会抵消，变成 `int&`
+- 传入右值时，`T` 被推导为 `int`，这样参数列表就是 `int &&`
+
+**会产生引用折叠的情况：**
+
+```CPP
+// ====== 万能引用传参 =============
+template<typename T>
+void Run(T && param)
+{}
+
+// ====== 万能引用接收值=========
+auto&& param = fcn();
+
+// ========== 模板类 ===========
+template<typename T>
+class Object
+{
+public:
+    // 重命名右值
+    typedef T && type;
+};
+// NOTE - 这里的 type 其实是左值引用，而非右值 
+typename Object<int &>::type;
+
+// ===== Lambda 表达式 ======
+[](auto && param)
+{
+    // auto && 也是万能引用
+    fcn(std::forward<decltype(param)>(param));
+}
+```
+
+# 完美转发
+
+```cpp
+void Fcn(int && param)
+{}
+
+void Fcn(int & param)
+{}
+
+template<typename T>
+void FcnForward(T && param)
+{
+    Fcn(std::forward<T>(param));
+}
+```
+
+**完美转发就是利用 `std::forward` 配合万能引用转发引用**。但是完美转发并不完美，也存在失效的情况：
+
+```cpp
+
+// ========== 初始化列表 ===========
+void Fcn(std::vector<int> & param);
+
+// error - 因为 {} 本身没有类型，就不能进行模板实例化
+FcnForward({1,2,3,4});
+
+// solution - 产生一个临时变量，然后再进行模板实例化，
+auto vec = {1,2,3,4};
+FcnForward(vec);
+
+// ========== NULL ================
+using HANDLE = void *;
+void Fcn(HANDLE & param);
+
+// error - 在 c++ 中，NULL 是 int ，这样就导致参数类型不匹配
+FcnForward(NULL);
+
+// ========== 常量成员变量 =========
+class Object
+{
+public:
+    // NOTE - 只声明，其实是常量表达式，只在编译阶段能使用 
+    static const int num = 10;
+};
+
+void Fcn(const int & param);
+
+// error - 由于 num 只声明，没有定义。据说会链接失败，不知道咋实现
+FcnForward(Object::num);
+
+// =========== 函数指针 ============
+using FcnType = int(*)(int);
+void Fcn(FcnType & fcn);
+
+int Process(int val);
+int Process(int val, int val);
+
+// error - 对于万能引用而言，Process 具有二义性，不能推导出用哪个类型
+FcnForward(Process);
+
+// solution - 进行类型转换，明确告知编译器类型
+FcnForward(std::static_cast<FcnType>(Process));
+
+// =========== 位域 ===============
+struct Test
+{
+    unsigned char width:4, height: 4; 
+};
+
+void Fcn(const int & param);
+
+// error - 位域是对数据精确到位，并且无法取地址，然而 c/c++ 的数据类型都是以字节为单位，因此无法推导确位域的类型
+Test st;
+FcnForward(st.width);
+```
+
+
+
+
+
