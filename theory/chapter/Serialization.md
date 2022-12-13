@@ -552,3 +552,91 @@ str fuck
   - **stringstream**：两者
 
 
+# Qt 序列化
+
+- **定义：**
+```cpp
+#include <QDataStream>
+ 
+#include <QString>
+#include <QList>
+#include <QMap>
+#include <QVector>
+
+#include <QDebug>
+
+/* ========================== 结构体内部 ========================= */
+struct TestA
+{
+    QList<int> lst;
+    QMap<int,QString> map;
+    std::vector<int> vec;
+
+    // 序列化
+    friend QDataStream &operator<<(QDataStream &output , const TestA &dataInfo)
+    {
+        output << dataInfo.lst << dataInfo.map ;
+        return output;
+    }
+
+    // 反序列化
+    friend QDataStream &operator>>(QDataStream &input , TestA &dataInfo)
+    {
+        input >> dataInfo.lst >> dataInfo.map;
+        return input;
+    }
+};
+
+/* ========================== 结构体外部 ========================= */
+struct TestB
+{
+    QList<int> lst;
+    QMap<int,QString> map;
+    std::vector<int> vec;
+
+};
+
+// 序列化
+QDataStream &operator<<(QDataStream &output , const TestB &dataInfo)
+{
+    output << dataInfo.lst << dataInfo.map;
+    return output;
+}
+
+// 反序列化
+QDataStream &operator>>(QDataStream &input , TestB &dataInfo)
+{
+    input >> dataInfo.lst >> dataInfo.map;
+    return input;
+}
+```
+
+Qt 中，序列化与反序列化是通过重写函数 `QDataStream &operator<<` 与 `QDataStream &operator>>` 实现。<span style="color:red;font-weight:bold"> Qt 序列化不支持标准库容器、标准字符串等类型。 </span>
+
+- **使用：**
+```cpp
+int main(int argc, char const *argv[])
+{
+    TestA stA;
+    stA.lst.push_back(1);
+    stA.lst.push_back(2);
+    stA.map.insert(1,"fuck");
+    stA.map.insert(2,"you");
+
+    QByteArray send_data;
+
+    // 序列化
+    QDataStream outd(&send_data,QIODevice::ReadWrite);
+    outd << stA;
+
+    TestB stB;
+    // 反序列化
+    QDataStream intd(&send_data,QIODevice::ReadWrite);
+    intd >> stB;
+
+    qDebug() << stA.map[1];
+    qDebug() << stB.map[1];
+    return 0;
+}
+```
+

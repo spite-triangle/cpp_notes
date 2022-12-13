@@ -794,3 +794,20 @@ st2 name is fuck
 st3 name is fuck
 ```
 
+# emplace
+
+emplace 可以通过直接调用元素的构造器创建元素对象
+
+```cpp
+std::vecter<std::string> vec;
+
+// 首先创建一个临时变量：temp = std::string("fuck you")
+// 然后再将 temp 拷贝赋值放入容器：vec.push_back(temp)
+vec.push_back("fuck you");
+
+// 直接在 vec 中通过 "fuck you" 创建 std::string
+vec.emplace_back("fuck you");
+```
+
+**直接调用容器内部构造器，且容器不会拒绝新元素（map 会拒绝，当 key 重复时），emplace_back 会优于 push_back，其他情况 push_back 更好。**
+
