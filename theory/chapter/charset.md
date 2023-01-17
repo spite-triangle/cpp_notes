@@ -115,8 +115,13 @@ char 硬编码
 wchar_t 硬编码后，又进行本地化策略
 大写的L是告诉编译器：这是宽字符串。所以，这时候是需要编译器根据locale来进行翻译的。在Windows环境中，编译器的翻译策略是GB2312到UCS-2BE；Linux环境中的策略是UTF-8到UTF-32BE
 
+
 > [!tip]
 > MinGW运行win32下，所以只有 GB2312系统才认；而MinGW却用gcc编写，所以自己只认UTF-8，所以结果就是，MinGW的宽字符被废掉了
+
+内部编码与外部编码
+外部编码：源文件中，字符串的编码
+内部编码：二进制程序中，字符串的编码。char 和外部编码一样；wchar_t 会将外部编码通过 locale 转化为程序内的编码
 
 ## 字符集
 
@@ -140,7 +145,7 @@ BOM：
 在文件最开始的部分，表明文件的编码格式，0xFE 0xFF表示UTF-16BE，0xFF 0xFE 0x00 0x00表示UTF-32LE。UTF-8 可以不要DOM，但是为了一致性，还是可以加上
 
 
-## c/c++库函数转换
+## c库函数转换
 
 字符与宽字符的之间的转换，依赖于本地化策略(locale)，程序在运行之前并不知道系统的本地化策略集是什么，程序只有在运行之后才通过locale获得当时的本地化策略集。
 
@@ -160,7 +165,7 @@ std::locale C_loc("C");
 std::locale old_loc = std::locale::global(new_loc);
 ```
 
-char 与 wchar_t 之间的相互转换
+- 通过 c 接口实现 char 与 wchar_t 之间的相互转换
 
 ```cpp
 const std::wstring s2ws(const std::string& s)
@@ -197,9 +202,265 @@ const std::string ws2s(const std::wstring& ws)
 ```
 char是用1个或多个对象，也就是1个或者多个字节来表示各种符号；wchar_t是用1个对象（2字节或者4字节）来表示各种符号；因此，表示同样的字符串，宽字符串的大小（也就是wchar_t对象的数量）总是小于或者等于窄字符串大小（char对象数量）的。+1 是为了在最后预留一个值为0的对象
 
-# 字符
+## c++ 库函数转换
 
-彻底解密C++宽字符
+c++ 除了笼统的 locale ，还可以修改 locale 的具体实现模块 facet，因此，可以通过 facet 定制 locale 或者直接使用 facet 进行宽窄字符的转换。
 
-https://www.jianshu.com/p/9901f2cc303c
+```cpp
+// 通过指定具体的 facet 将 old_loc 改造成 new_loc
+std::locale new_loc(old_loc, new facet);
+
+// 把 locale 中的 facet 取出来
+const Facet& facet = use_facet<Facet>(locale);
+
+// 标准 facet 模版
+template <class I,      // 内部编码
+          class E,      // 外部编码 
+          class State>  // 不同转换方式的标识
+class std::codecvt : public locale, public codecvt_base
+{
+    // 将外部编码转换为内部编码
+    result in(State& s,
+              const E* from,        // 字符首地址
+              const E* from_end,    // 字符尾地址 
+              const E*& from_next,  // 出现错误时候的停点
+              I* to,
+              I* to_end,
+              I*& to_next) const;
+              
+    // 将内部编码转换为外部编码
+    result out(State& s,
+               const I* from,
+               const I* from_end,
+               const I*& from_next,
+               E* to,
+               E* to_end,
+               E*& to_next) const;
+};
+```
+
+对于 `std::codecvt::in` 与 `std::codecvt::out` 都会使用到转换标识 `State`，用于保存转换位移状态信息，但具体操作是在运行时库中进行的，其执行可能是异步的，为了保证转换的正常执行，需要将 `State` 定义为全局变量
+
+```cpp
+#include <string>
+#include <iostream>
+
+mbstate_t in_cvt_state;
+mbstate_t out_cvt_state;
+
+const std::wstring s2ws(const std::string& s)
+{
+    std::locale sys_loc("");
+
+    const char* src_str = s.c_str();
+    const size_t BUFFER_SIZE = s.size() + 1;
+
+    wchar_t* intern_buffer = new wchar_t[BUFFER_SIZE];
+    wmemset(intern_buffer, 0, BUFFER_SIZE);
+
+    const char* extern_from = src_str;
+    const char* extern_from_end = extern_from + s.size();
+    const char* extern_from_next = 0;
+    wchar_t* intern_to = intern_buffer;
+    wchar_t* intern_to_end = intern_to + BUFFER_SIZE;
+    wchar_t* intern_to_next = 0;
+
+    // 定义 facet
+    typedef std::codecvt<wchar_t, char, mbstate_t> CodecvtFacet;
+
+    CodecvtFacet::result cvt_rst =
+        std::use_facet<CodecvtFacet>(sys_loc).in(
+            in_cvt_state,
+            extern_from, extern_from_end, extern_from_next,
+            intern_to, intern_to_end, intern_to_next);
+    if (cvt_rst != CodecvtFacet::ok) {
+        switch(cvt_rst) {
+            case CodecvtFacet::partial:
+                std::cerr << "partial";
+                break;
+            case CodecvtFacet::error:
+                std::cerr << "error";
+                break;
+            case CodecvtFacet::noconv:
+                std::cerr << "noconv";
+                break;
+            default:
+                std::cerr << "unknown";
+        }
+        std::cerr    << ", please check in_cvt_state."
+                    << std::endl;
+    }
+    std::wstring result = intern_buffer;
+
+    delete []intern_buffer;
+
+    return result;
+}
+
+const std::string ws2s(const std::wstring& ws)
+{
+    std::locale sys_loc("");
+
+    const wchar_t* src_wstr = ws.c_str();
+    const size_t MAX_UNICODE_BYTES = 4;
+    const size_t BUFFER_SIZE =
+                ws.size() * MAX_UNICODE_BYTES + 1;
+
+    char* extern_buffer = new char[BUFFER_SIZE];
+    memset(extern_buffer, 0, BUFFER_SIZE);
+
+    const wchar_t* intern_from = src_wstr;
+    const wchar_t* intern_from_end = intern_from + ws.size();
+    const wchar_t* intern_from_next = 0;
+    char* extern_to = extern_buffer;
+    char* extern_to_end = extern_to + BUFFER_SIZE;
+    char* extern_to_next = 0;
+
+    typedef std::codecvt<wchar_t, char, mbstate_t> CodecvtFacet;
+
+    CodecvtFacet::result cvt_rst =
+        std::use_facet<CodecvtFacet>(sys_loc).out(
+            out_cvt_state,
+            intern_from, intern_from_end, intern_from_next,
+            extern_to, extern_to_end, extern_to_next);
+    if (cvt_rst != CodecvtFacet::ok) {
+        switch(cvt_rst) {
+            case CodecvtFacet::partial:
+                std::cerr << "partial";
+                break;
+            case CodecvtFacet::error:
+                std::cerr << "error";
+                break;
+            case CodecvtFacet::noconv:
+                std::cerr << "noconv";
+                break;
+            default:
+                std::cerr << "unknown";
+        }
+        std::cerr    << ", please check out_cvt_state."
+                    << std::endl;
+    }
+    std::string result = extern_buffer;
+
+    delete []extern_buffer;
+
+    return result;
+}
+```
+
+## stream与locale
+
+c++ 流具有一定的智能，能识别一些内容，甚至做一些基础类型之间的转化
+
+```cpp
+// 字符串 --> int
+std::string str("123");
+int i;
+std::stringstream sstr(str);
+sstr >> i;
+
+// int --> 字符串
+std::stringstream sstr;
+sstr << i;
+str = sstr.str();
+```
+
+为了拓展 c++ 流的转换能力，流也在使用 locale 中的 facet，决定流使用哪个 facet 由流中的缓存 basic_streambuf 及其子类 basic_stringbuf 与 basic_filebuf 所决定。其中 codecvt会被 basic_filebuf 调用，因此就能使用 fstream 来实现 char 与 wchar_t 之间的转换。
+
+```cpp
+ #include <string>
+ #include <fstream>
+
+const std::wstring s2ws(const std::string& s)
+{
+    // 使用默认的 locale 将字符串转换为流: char -> char
+    // 存放到 cvt_buf 缓冲区
+    std::ofstream ofs("cvt_buf");
+    ofs << s;
+    ofs.close();
+
+    // 创建宽字符流
+    std::wifstream wifs("cvt_buf");
+    // 设定系统本地化策略集
+    std::locale sys_loc("");
+    wifs.imbue(sys_loc);
+    std::wstring wstr;
+    // 从 cvt_buf 缓冲区读取，并通过 locale 实现 char -> wchar_t
+    wifs >> wstr;
+    wifs.close();
+
+    return wstr;
+}
+
+const std::string ws2s(const std::wstring& s)
+{
+
+    std::wofstream wofs("cvt_buf");
+    // cvt_buf 对程序而言是外部编码，因此保存wchar_t，得先转成char
+    // wchar_t 写入到 cvt_buf 的时候，就通过 locale 进行翻译
+    std::locale sys_loc("");
+    wofs.imbue(sys_loc);
+    wofs << s;
+    wofs.close();
+
+    std::ifstream ifs("cvt_buf");
+    std::string str;
+    ifs >> str;
+    ifs.close();
+    return str;
+}
+```
+
+# 字符编译
+
+
+分别用 MSVC 与 GNU 编译器编译下面的字符串
+
+```cpp
+const char* str1 = "卧槽";
+const char* str2 = u8"卧槽"; 
+```
+
+MSVC 编译器，文件格式为 UTF-8
+
+```term
+triangle@LEARN:~$ cl /c main.cpp
+triangle@LEARN:~$ xxd main.obj
+# "卧槽"
+e5 8d a7 e6 a7 bd 
+# u8"卧槽"
+e9 8d 97 d1 84 d0 ab
+```
+
+GNU 编译器，文件格式为 GB2312
+
+```term
+triangle@LEARN:~$ g++ -c main.cpp
+triangle@LEARN:~$ xxd main.o
+# "卧槽"
+ce d4 b2 db 
+# u8"卧槽"
+ce d4 b2 db
+```
+
+可以看出在 GNU 编译器下，`u8` 根本不起作用，而 MSVC 则会对字符串进行编码转换。MSVC 编译，文件格式为 UTF-8，输出 `str2` 字符到 GBK 格式的控制台
+
+```term
+triangle@LEARN:~$ main.exe
+閸椦勑?
+```
+
+然后对上面的字符进行编码
+
+```python
+print(b'\xe5\x8d\xa7\xe6\xa7\xbd'.decode('gbk').encode('utf-8'))
+```
+
+```term
+triangle@LEARN:~$ python code.pyt
+b'\xe9\x8d\x97\xd1\x84\xd0\xab'
+```
+
+从上可知 `u8` 在MSVC中的实现就是一个 `gbk2utf8()` 的函数
+
 

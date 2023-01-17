@@ -171,6 +171,38 @@ std::promise<int> p1;
 std::shared_future<int> sf1(p1.get_future().share())
 ```
 
+**综合案例**
+
+```cpp
+template <typename F, typename... Args>
+auto submit(F &&f, Args &&...args) -> std::future<typename std::result_of<F(Args...)>::type>
+{
+    // 绑定函数
+    std::function<void()> func = std::bind(std::forward<F>(f), std::forward<Args>(args)...); 
+
+    // 获取函数返回值类型        
+    using return_type = typename std::result_of<F(Args...)>::type;
+
+    // 创建一个指向任务的只能指针 
+    // return_type () 定义的是函数类型，例如 void()
+    auto task = std::make_shared< std::packaged_task<return_type ()> >(func);
+
+    // 因为队列是 std::queue< std::function<void()> >，需要在封装一层，才能塞入队列
+    std::function<void()> warpper_func = [task]()
+    {
+        (*task)();
+    };
+
+    // 队列通用安全封包函数，并压入安全队列
+    m_queue.enqueue(warpper_func);
+
+    // 唤醒一个等待中的线程
+    m_conditional_lock.notify_one();
+
+    return task->get_future();
+}
+```
+
 # 超时等待
 
 ## 时钟

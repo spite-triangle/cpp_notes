@@ -257,6 +257,7 @@ triangle@LEARN:~$ chcp <.CPID> // 切换 powershell 的显示字符集
 > - 当源码字符集与执行字符集不统一时，需要将 `/source-charset` 与 `/execution-charset` 全部写明确，不然可能编译不通过
 
 
+
 # 标准库（运行库）
 
 ## 定义
@@ -265,11 +266,11 @@ triangle@LEARN:~$ chcp <.CPID> // 切换 powershell 的显示字符集
 
 - **C++标准库**：包括了C标准库，以及IO流和标准模板库STL
 
-## MT与MD
+## MT 与 MD
 
 - **MT(multithread static version)**：静态运行时库，直接将标准库整合到目标中
 - **MD(multithread and DLL-specific version)**：动态运行时库，由系统加载提前准备好的标准动态库
-- MDd与MTd：调试版本
+- **MDd与MTd**：调试版本，**调试版会加强对错误的检测**
 
 VC6.0、VC2005、VC2008和VC2010等 MSVC 编译器均提供了标准库 MT 与 MD 版本的标准库，例如
 - libcmt.lib ：上述编译器提供的 MT 版本C运行时库
@@ -290,8 +291,220 @@ VC6.0、VC2005、VC2008和VC2010等 MSVC 编译器均提供了标准库 MT 与 M
 - 跨编译器版本编译时，每个模块都得提供各自的库函数静态库，不然会出现未定义错误，因为谁TM没事干装这么多编译器。
 - 程序体积小，但是得依赖 dll
 
-# 杂项
-## 符合模式
+
+# Debug 与 Release
+
+## 配置
+
+Debug 参数配置
+
+```
+/MDd /MLd /MTd      -   使用 Debug runtime library(调试版本的运行时刻函数库)
+/Od                 -   关闭优化开关
+/D "_DEBUG"         -   相当于 #define _DEBUG,打开编译调试代码开关(主要针对assert函数)
+/Z7                 -   生成的对象文件包含调试器会用到的调试信息，若链接器启用了 /DEBUG ，也会从对象文件中抽取出 PDB 文件
+/Zi                 -   对象文件只有程序，调试信息全部放到 PDB 文件中
+/ZI                 -   创建 Edit and continue(编辑继续)数据库，这样在调试过程中如果修改了源代码不需重新编译，
+                        但是会和 __LINE__ 不兼容，且该选项仅适用于面向 x86 和 x64 处理器的编译器
+/GZ                 -   可以帮助捕获内存错误
+/Gm                 -   打开最小化重链接开关，减少链接时间
+```
+
+Release 参数配置
+
+```
+/MD /ML /MT         -   使用发布版本的运行时刻函数库
+/O1  /O2            -   优化开关，使程序最小或最快
+/D "NDEBUG"         -   关闭条件编译调试代码开关(即不编译assert函数)
+/GF                 -   合并重复的字符串，并将字符串常量放到只读内存，防止被修改
+```
+
+## 优化
+
+### 帧指针
+
+函数调用过程中，会将返回值、参数、局部变量放到栈中，组成一个栈帧，而 Debug 与 Release 对与栈帧的调用不同。
+- Debug : 会将函数栈帧放到 EBP 寄存器中，每次进入函数，就会将栈帧的首地址放到该寄存器中，可以规避很多问题
+- Release : 栈帧的访问就靠栈进行访问，这样就要保证栈帧的定义完全没问题，即数组绝对不能越界，函数返回必须写正确。通过 `/Oy-` 也可以实现在 Release 版本中使用 EBP 寄存器
+
+### volatile
+
+`/O1 /O2` 编译器会对程序进行优化，且将所有代码都认为是单线程进行优化，然而对于多线程程序，这就会出现大问题，尤其是全局变量的访问，添加 `volatile` 就能避免编译器对全局变量操作的省略，一定程度上避免奇奇怪怪问题的出现，详见操作系统线程章节。
+
+### /GZ 
+
+添加 `/GZ` 选项，编译器会更严谨的处理程序
+- 初始化内存和变量。
+    - 0xCC : 初始化局部变量
+    - 0xCD (Cleared Data): 初始化堆
+    - 0xDD (Dead Data): 被释放的堆
+    - 0xFD (deFencde Data): 初始化受保护的内存
+- 通过函数指针调用函数时，会通过检查栈指针验证函数调用的匹配性
+-  函数返回前检查栈指针，确认未被修改
+
+`/GZ` 会更严谨的检测程序，因此在 Debug 模式开启该选项，保证检测出程序隐藏问题。
+
+### 符合模式
 
 设置 `/permissive-` 将启用严格语法检测
+
+
+## PDB
+
+- 可执行程序的 PDB 生成
+
+cl 生成 obj 与 vc140.pdb 文件。接着在 link 链接 obj 时，添加 `/DEBUG`，才生成 pdb 文件。其中对于一个 cpp 而言，也可以单独生成自己的 obj 与 pdb 文件，但是需要保证 obj 与 pdb 放到同一文件夹，然后通过 link 将所有的 pdb 合并成一个。
+
+```
+cl.exe /c /Fo"./build/add.obj" /Fd"./build/add.pdb" /Zi .\add.cpp
+```
+
+
+
+```term
+triangle@LEARN:~$ tree
+.
+├── add
+│   ├── add.cpp
+│   └── add.h
+├── bin
+├── build
+└── main.cpp
+triangle@LEARN:~$ cl.exe /c /Fo"./build/" /Fd"./build/" /Zi .\main.cpp .\add\add.cpp 
+triangle@LEARN:~$ tree
+.
+├── add
+│   ├── add.cpp
+│   └── add.h
+├── bin
+├── build
+│   ├── add.obj
+│   ├── main.obj
+│   └── vc140.pdb
+└── main.cpp
+triangle@LEARN:~$ link.exe .\build\main.obj .\build\add.obj /OUT:"./bin/test.exe" /DEBUG 
+triangle@LEARN:~$ tree
+.
+├── add
+│   ├── add.cpp
+│   └── add.h
+├── bin
+│   ├── test.exe
+│   ├── test.ilk
+│   └── test.pdb
+├── build
+│   ├── add.obj
+│   ├── main.obj
+│   └── vc140.pdb
+└── main.cpp
+```
+
+- 静态库的 PDB 生成
+
+```term
+triangle@LEARN:~$ tree
+ .
+├── add
+│   ├── add.cpp 
+│   └── add.h   
+├── bin
+├── build       
+├── lib
+└── main.cpp
+triangle@LEARN:~$ cl /c /Zi /Fo"./build/" /Fd"./build/add.pdb" .\add\add.cpp // 一定要将 obj 与 pdb 放到同一文件夹
+triangle@LEARN:~$ tree
+ .
+├── add
+│   ├── add.cpp 
+│   └── add.h   
+├── bin
+├── build
+│   ├── add.obj
+│   └── add.pdb       
+├── lib
+└── main.cpp
+triangle@LEARN:~$ lib .\build\add.obj /OUT:"./lib/add.lib" 
+triangle@LEARN:~$ tree
+ .
+├── add
+│   ├── add.cpp
+│   └── add.h
+├── bin
+├── build
+│   ├── add.obj
+│   └── add.pdb
+├── lib
+│   └── add.lib
+└── main.cpp
+```
+
+使用 lib 生成静态库时，一定要将 cl 生成的 obj 与 pdb 放在同一文件夹下，这样生成的 lib 库才会正确关联 pdb 文件。之后将 lib 与 pdb 打包给主程序即可。
+
+- 动态库的 PDB 生成
+
+```term
+triangle@LEARN:~$ tree
+ .
+├── add
+│   ├── add.cpp 
+│   └── add.h   
+├── bin
+├── build       
+├── lib
+└── main.cpp
+triangle@LEARN:~$ cl /c /LD /D_WINDLL /Zi /Fo"./build/" /Fd"./build/add.pdb" .\add\add.cpp // 一定要将 obj 与 pdb 放到同一文件夹
+triangle@LEARN:~$ tree
+ .
+├── add
+│   ├── add.cpp 
+│   └── add.h   
+├── bin
+├── build
+│   ├── add.obj
+│   └── add.pdb       
+├── lib
+└── main.cpp
+triangle@LEARN:~$ link /DLL /OUT:"./lib/add.dll" /DEBUG .\build\add.obj
+triangle@LEARN:~$ tree
+ .
+├── add
+│   ├── add.cpp 
+│   └── add.h   
+├── bin
+├── build
+│   ├── add.obj
+│   └── add.pdb       
+├── lib
+│   ├── add.dll
+│   ├── add.exp
+│   ├── add.ilk
+│   ├── add.lib
+│   └── add.pdb
+└── main.cpp
+```
+
+# Devenv 
+
+Devenv 是 visual studio 的可执行程序，所在路径一般为安装路径的 `Microsoft Visual Studio 10.0\Common7\IDE` 下。
+- devenv.exe : visual studio 图形界面的启动程序
+- devenv.com : 在终端中以命令行的形式运行 visual studio 
+- devenv : 默认启动 devenv.com
+- [devenv 指令](https://learn.microsoft.com/zh-cn/visualstudio/ide/reference/devenv-command-line-switches?view=vs-2022)
+
+```term
+triangle@LEARN:~$ // 以 debug 模式，编译 solutionName.sln 中的 projectName 项目 
+triangle@LEARN:~$ devenv solutionName.sln /Project projectName /Build Debug
+```
+想要在终端中使用 devenv，就需要在环境变量中添加 devenv 所在路径，但直接添加 visual studio 的路径到系统环境变量中又不太合理，因此可以写一个 bat 脚本来调用 devenv 命令
+
+```bat
+@echo off 
+
+@REM 配置环境变量，运行 devenv 指令
+set PATH=%PATH%;"C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\IDE"
+
+@REM 运行 sln 进行编译
+devenv  solutionName.sln /Project projectName /Build Release 
+```
+
 
