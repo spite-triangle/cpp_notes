@@ -408,11 +408,9 @@ T1 count is 2
 
 Peterson 算法通过共享内存的方式（`flagT1、flagT2、turn`就是用来实现互斥的全局变量）实现了线程间的互斥。在理论上该算法是正确的，但是由于处理器运行的不可见性，还是会出现问题。
 
-## 状态机绘制
-
-要想论证一个多线程算法对不对，最直接的方法就是枚举出状态机的所有状况。手画状态机的所有状况很麻烦，可以网上找程序实现
-
 ## 自旋锁 
+
+### 原理
 
 解决互斥问题，改变前提：**让硬件提供支持同时 load/store 的指令**，即同一时间只有一个线程能读取并修改共享内存，其他线程不能干涉
 
@@ -440,7 +438,492 @@ void unlock() {
 }
 ```
 
+### lock 指令
 
+<p style="text-align:center;"><img src="../../image/operationSystem/simpleDoubleCPU.png" width="40%" align="middle" /></p>
+
+对于上述的 `lock` 指令，在简单的内存模型上，可以通过硬件实现：CPU1 与 CPU2 直接访问内存，无缓存；CPU1 要实现对蓝色区域内存的原子操作，就直接在物理上给这片内存区域上一个锁；在 CPU1 访问这片内存期间，CPU2 无法访问蓝色区域内存，直到 CPU1 解除锁定。
+
+<p style="text-align:center;"><img src="../../image/operationSystem/complexDoubleCPU.png" width="40%" align="middle" /></p>
+
+但是这种设计在现代内存模型上，就不太合理。现代内存模型，CPU 与内存之间还存在 cache ，CPU 会经过 cache 来访问内存，cache 会拷贝内存上的内容。通过物理封锁内存实现 CPU1 对蓝色区域内存的原子操作，这种方法就行不通了，万一 CPU1 与 CPU2 的 cache 刚好都是蓝色区域的副本，这样程序又乱套了。想要彻底锁着蓝色区域的内存，就需要 CPU1 锁住蓝色区域内存的同时，还要清空掉 CPU2 的 cache ，代价就太大了。观察常见的几种原子操作
+
+```cpp
+/* test and set */
+void TestAndSet(Type & x, Type newVal)
+{ 
+    reg = load(x);        // 读取
+    if(IsCondition(reg))  // 检测状态
+    {
+        store(x, newVal); // 写入
+    }
+}
+
+/* xchg */
+void xchg(Type & x, Type newVal)
+{ 
+    reg = load(x);    // 读取
+    store(x, newVal); // 写入
+}
+
+/* compute */
+void compute(Type & x)
+{
+    reg = load(x); // 读取
+    operate(reg);  // 运算
+    store(x, reg); // 写入
+}
+```
+
+上面三种原子操作的步骤都可以总结为：
+1. load : 读取内存
+2. operate : 各种乱七八糟的计算操作
+3. store : 将修改的内容更新到内存
+
+**确保原子操作能正常运行，就只要保证 `load` 与 `store` 正常就行，`operate` 无所谓，可以随时复现**。RISC-V 提供了另外一种原子操作的设计思路 **Load-Reserved/Store-Conditional(LR/SC)**
+- LR : 原子操作读取内存时，会对被访问的内存添加标记。中断、其他处理器写入内容到标记内存中，都会导致标记清除 
+   ```cpp
+    lr.w  rd, (rs1);
+    {
+        rd = M[rs1];    // 读取内存内容
+        reserve M[rs1]; // 标记当前内存
+    } 
+   ```
+- SC : 若标记没被清除，就将更新内存
+   ```cpp
+    sc.w  rd, rs2, (rs1);
+    {
+        // 标志是否还存在
+        if (IsReserve(rs1) == true)
+        {
+            M[rs1] = rs2; // 将新值写入 M[rs1]
+            rd = 0;       // 清空当前缓存
+        }
+        else
+        {
+            rd = nonzero;
+        }
+    }
+   ```
+
+**实战案例**：通过 LR 与 SC 实现 CAS (compare and swap) 原子操作
+
+```nasm
+cas:
+    lr.w    oldVal, (add)           # 从内存中读取值
+    bne     oldVal, expVal, fail    # 与期望值比较，一样就继续，不一样就返回
+    sc.w    oldval, newVal, (add)   # 往内存中写入新值
+    bnez    oldVal, cas             # oldVal 不为 0 就继续尝试写入
+    li      oldVal, 0               # 操作成功
+    jr      ra
+fail:
+    li      oldVal, 1               # 操作失败
+    jr      ra
+```
+
+### 自旋的使用
+
+**缺陷**
+1. 自旋 (共享变量) 会触发处理器间的缓存同步，
+2. 除了进入临界区的线程，其他处理器上的线程都在空转
+3. 操作系统不知道拿到锁的线程在干啥，万一这个线程跑去 sleep ，那么所有资源就 100% 浪费
+
+**使用要求：**
+1. 临界区的访问基本不会发生冲突
+2. 持有自选锁的线程要一直能工作，不会被打断，例如中断、堵塞、时间片切换出去等
+
+> [!note]
+> 自旋锁的真正使用场景就只剩操作系统内核的并发数据结构 (短临界区)
+
+
+## 睡眠锁
+
+发生共享资源竞争的是用户态下的线程，在用户态下的程序不能很好的实现锁的管理，那就把这些破事扔给权限更高的操作系统来管理。**操作系统底层利用自旋锁实现提供给用户程序的锁是原子的，然后用户程序拿着这些原子锁就能解决自己的互斥问题了，这些操作系统提供给用户的锁就是「睡眠锁」**。
+
+```cpp
+// 系统调用获取一把锁 lk，若获取失败，就把当前线程给睡了
+syscall(SYSCALL_lock, &lk);
+
+// 释放 lk 锁，并唤醒一个正在等待锁的线程
+syscall(SYSCALL_unlock, &lk);
+```
+
+## Futex
+
+**自旋锁**：
+- fast path : 一条原子指令就能拿到锁，并进入临界区
+- slow path : CPU 忙等，浪费性能
+
+**睡眠锁**：
+- fast path : 系统调用去拿锁，浪费性能
+- slow path : 上锁失败后，系统调用阻塞等待，让出 CPU
+
+**Futex**: 对上面两种锁进行优化，也是现代操作系统「互斥锁」的实现
+- fast path : 一条原子指令就能拿到锁，不会产生系统调用
+- slow path : 上锁失败后，就阻塞等待，让出 CPU
+
+```python
+# 锁和等待队列
+locked, waits = '', ''
+
+# 原子操作，获取锁
+def atomic_tryacquire():
+    if not locked:
+        # Test-and-set (cmpxchg)
+        # Same effect, but more efficient than xchg
+        locked = '🔒'
+        return ''
+    else:
+        return '🔒'
+
+# 系统调用唤醒其他等待锁的线程
+def release():
+    if waits:
+       waits = waits[1:]
+    else:
+        self.locked = ''
+
+@thread
+def Run():
+    while True:
+        if atomic_tryacquire() == '🔒':     # User
+            # 拿锁失败，系统调用去内核态睡觉
+            # NOTE - 实际上并没有这个 while 循环，只是示意一下睡眠等待
+            waits = waits + '1'             # Kernel
+            while '1' in waits:             # Kernel
+                pass
+        do_something()                      # User
+        release()                           # Kernel
+```
+
+# 同步
+
+## 生产者-消费者模型
+
+> [!note]
+线程同步：在某个时间点共同达到互相已知的状态。而利用生产者-消费者模型，就能解决 99% 的线程同步问题。
+
+<p style="text-align:center;"><img src="../../image/operationSystem/productConsume.png" width="50%" align="middle" /></p>
+
+生产者-消费者模型：
+- 有一个临界区存放资源
+- 临界区有空闲，生产者才能放入资源
+- 临界区有资源，消费者才能取出资源
+
+
+## 互斥锁
+
+> [!tip]
+> 多线程生成 `()` ，生成的括号满足左右括号匹配关系，且限制括号的最大嵌套层次
+
+```cpp
+int assetMax = 3;   // 最大括号深度
+int assetCount = 0; // 资源个数，临界区仓库
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+
+// 生产
+void Product()
+{
+    int count = 100;
+    while (--count)
+    {
+        pthread_mutex_lock(&mutex);
+        while (assetCount >= assetMax )
+        {
+            // 释放锁，让消费者抢到锁进行消费
+            pthread_mutex_unlock(&mutex);
+
+            // 加锁，查看是否能生产资源
+            pthread_mutex_lock(&mutex);
+        }
+
+        // 生产
+        printf("(");
+
+        // 更新仓库
+        ++assetCount;
+
+        pthread_mutex_unlock(&mutex);
+    }
+}
+
+// 消费 
+void Consume()
+{
+    int count = 100;
+    while (--count)
+    {
+        pthread_mutex_lock(&mutex);
+        while (assetCount <= 0)
+        {
+            // 释放锁，让生产者抢到锁进行生产
+            pthread_mutex_unlock(&mutex);
+
+            // 加锁，查看有没有资源
+            pthread_mutex_lock(&mutex);
+        }
+
+        // 消费
+        printf(")");
+
+        // 更新仓库
+        --assetCount;
+
+        pthread_mutex_unlock(&mutex);
+    }
+}
+```
+
+利用互斥锁实现的生产者消费者模型，消费者线程与生产者线程均是通过 `while()` 循环忙等来实现线程间的同步，这样就十分浪费CPU资源，不合理。
+
+## 条件量
+
+```cpp
+
+int assetMax = 3;   // 最大资源数
+int assetCount = 0; // 资源个数
+
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+
+pthread_cond_t condProduct = PTHREAD_COND_INITIALIZER; // 可以生产的条件
+pthread_cond_t condConsume = PTHREAD_COND_INITIALIZER; // 可以消费的条件
+
+// 生产
+void Product()
+{
+    int count = 100;
+    while (--count)
+    {
+        pthread_mutex_lock(&mutex);
+        if (assetCount >= assetMax )
+        {
+            // 释放锁，让消费者抢到锁进行消费
+            pthread_cond_wait(&condProduct, &mutex);
+        }
+
+        printf("(");
+        ++assetCount;
+
+        pthread_cond_signal(&condConsume); 
+        pthread_mutex_unlock(&mutex);
+    }
+}
+
+// 消费 
+void Consume()
+{
+    int count = 100;
+    while (--count)
+    {
+        pthread_mutex_lock(&mutex);
+        if (assetCount <= 0)
+        {
+            // 释放锁，让生产者抢到锁进行生产
+            pthread_cond_wait(&condConsume, &mutex);
+        }
+
+        printf(")");
+        --assetCount;
+
+        pthread_cond_signal(&condProduct); 
+        pthread_mutex_unlock(&mutex);
+    }
+}
+```
+
+引入条件量，替换互斥锁中的忙等。当条件不满足时，条件量就会将当前线程睡眠，等待条件满足后被唤醒。
+
+```cpp
+while (assetCount >= assetMax )
+{
+    // 释放锁，让消费者抢到锁进行消费
+    pthread_mutex_unlock(&mutex);
+
+    // 加锁，查看是否能生产资源
+    pthread_mutex_lock(&mutex);
+}
+
+/* ================================== */
+
+if (assetCount >= assetMax )
+{
+    // 释放锁，让消费者抢到锁进行消费
+    pthread_cond_wait(&condProduct, &mutex);
+}
+```
+
+上面用两个条件量来实现生产者与消费者的同步，就会增加程序的复杂性。为了代码编写简洁，可以套用模版
+
+```cpp
+/* ================== 等待条件 =================== */
+pthread_mutex_lock(&mutex);
+while ( /* 判断条件 */ )
+{
+    // 释放锁，让消费者抢到锁进行消费
+    pthread_cond_wait(&cond, &mutex);
+}
+
+/* 处理逻辑 */
+
+pthread_mutex_unlock(&mutex);
+
+/* ================== 通知条件成立 ================= */
+pthread_cond_broadcast(&cond); 
+```
+
+改写上面的生产者消费者模型
+
+```cpp
+int assetMax = 3;   // 最大资源数
+int assetCount = 0; // 资源个数
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+
+pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
+
+// 生产
+void Product()
+{
+    int count = 100;
+    while (--count)
+    {
+        pthread_mutex_lock(&mutex);
+        while (assetCount >= assetMax )
+        {
+            // 释放锁，让消费者抢到锁进行消费
+            pthread_cond_wait(&cond, &mutex);
+        }
+
+        printf("(");
+        ++assetCount;
+
+        pthread_mutex_unlock(&mutex);
+        pthread_cond_broadcast(&cond); 
+    }
+}
+
+// 消费 
+void Consume()
+{
+    int count = 100;
+    while (--count)
+    {
+        pthread_mutex_lock(&mutex);
+        while (assetCount <= 0)
+        {
+            // 释放锁，让生产者抢到锁进行生产
+            pthread_cond_wait(&cond, &mutex);
+        }
+
+        printf(")");
+        --assetCount;
+
+        pthread_mutex_unlock(&mutex);
+        pthread_cond_broadcast(&cond); 
+    }
+}
+```
+
+## 信号量
+
+- [基本概念](https://spite-triangle.github.io/computer_theory/#/./OS/chapter/mutex_synchronous_withNum?id=_3-%e4%bf%a1%e5%8f%b7%e9%87%8f)
+
+```cpp
+#include <semaphore.h>
+
+sem_t asset;
+sem_t empty;
+
+// 生产
+void Product()
+{
+    int count = 100;
+    while (--count)
+    {
+        // 等待有空位
+        sem_wait(&empty);
+
+        printf("(");
+        
+        // 生产了一个资源
+        sem_post(&asset);
+    }
+}
+
+// 消费 
+void Consume()
+{
+    int count = 100;
+    while (--count)
+    {
+        // 等待有资源
+        sem_wait(&asset);
+
+        printf(")");
+        
+        // 消费了一个资源
+        sem_post(&empty);
+    }
+}
+```
+
+## 哲学家问题
+
+安全稳妥的解决方案：
+- 通过第三方对象来管理资源
+- 条件变量模版
+
+> [!note]
+> 对于复杂的多线程问题，越简单的方案，越稳妥，少用花里胡哨的技巧；且优先实现功能，再谈性能。
+
+```cpp
+// 人数
+#define NUM (10)
+
+// 筷子
+#define IDLE (0)
+#define USED (1)
+int chopsticks[NUM] = {IDLE};
+
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
+
+void Philosopher(int id)
+{
+    // 左手筷子
+    int lChopstick = (id - 1) % NUM;
+    // 右手筷子
+    int rchopstick = id % NUM;
+
+    while(1)
+    {
+        /* 获取资源 */
+        pthread_mutex_lock(&mutex);
+        // 等待筷子
+        while( chopsticks[lChopstick] == USED || 
+               chopsticks[rchopstick] == USED)
+        {
+            pthread_cond_wait(&cond, &mutex);
+        }
+
+        // 拿筷子
+        chopsticks[lChopstick] = USED;
+        chopsticks[rchopstick] = USED;
+        pthread_mutex_unlock(&mutex);
+
+        /* 处理 */
+        // 使用筷子
+        printf("thread %d get %d %d\n", id, lChopstick ,rchopstick);
+
+        /* 归还资源 */
+        pthread_mutex_lock(&mutex);
+        // 归还筷子
+        chopsticks[lChopstick] = IDLE;
+        chopsticks[rchopstick] = IDLE;
+        pthread_cond_broadcast(&cond);
+        pthread_mutex_unlock(&mutex);
+    }
+}
+```
 
 # 附录
 
