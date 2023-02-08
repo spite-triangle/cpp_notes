@@ -925,6 +925,56 @@ void Philosopher(int id)
 }
 ```
 
+# BUG
+
+## 防御性编程
+1. 明确把自己的想法告诉编译器
+   ```cpp
+    /* 程序运行结果与期望进行对比 */
+    assert(condition());
+   ```
+2. 检测变量的合法性
+
+## 死锁
+
+AA - Deadlock ：在操作系统中，一个线程导致的死锁
+```cpp
+void os_run()
+{
+    spin_lock(&lock);
+    ....
+    // 由于乱起八糟操作，把中断打开了
+    recover_interrupt();
+    ....
+    spin_unlock(&lock);
+}
+
+void interrupt()
+{
+    // os_run 持有 lock 的时候，中断介入获取 lock ，就导致 AA - Deadlock
+    spin_lock(&lock);
+    ....
+    spin_unlock(&lock);
+}
+
+```
+
+ABBA - Deadlock ：多把锁，但是线程获取锁的顺序有问题，导致死锁。
+
+```cpp
+void Run(int i, int j) {
+    spin_lock(&lock[i]);
+    spin_lock(&lock[j]);
+    ...
+    spin_unlock(&lock[j]);
+    spin_unlock(&lock[i]);
+}
+
+// 下面两个线程抢锁
+Run(1,2);
+Run(2,1);
+```
+
 # 附录
 
 ## python 装饰器

@@ -80,11 +80,20 @@ static void VecterAt(benchmark::State & state)
     } 
 }
 
+
 // 注册 
 BENCHMARK(VecterOperator);
 
 // 注册 
 BENCHMARK(VecterAt);
+
+// 添加了 DISABLED_ 将不会执行 benchmark
+void DISABLED_VecterAt(benchmark::State & state)
+{
+
+}
+
+BENCHMARK(DISABLED_VecterAt);
 
 // benchmark 的 main 函数
 BENCHMARK_MAIN();
@@ -102,6 +111,35 @@ Benchmark               Time             CPU   Iterations
 ---------------------------------------------------------
 VecterOperator      0.767 ns        0.767 ns    896000000
 VecterAt            0.764 ns        0.767 ns    896000000
+```
+
+## 命令行
+
+生成的 benchmark 测试程序还可以指定不同的命令行参数
+
+```term
+triangle@LEARN:~$ ./a.out --benchmark_format=<console|json|csv> // 输出格式
+triangle@LEARN:~$ ./a.out --benchmark_out=<filename> // 输出日志文件 
+triangle@LEARN:~$ ./a.out --benchmark_out_format=<json|console|csv> // 输出日志文件的格式
+triangle@LEARN:~$ ./a.out --benchmark_filter=<regex> // 过滤输出 
+triangle@LEARN:~$ ./a.out --help // 查看其余的命令行
+```
+
+## 额外的日志信息
+
+```term
+triangle@LEARN:~$ ./a.out --benchmark_context=info='fuck you too'
+....
+Run on (16 X 2904 MHz CPU s)
+Load Average: 0.52, 0.58, 0.59
+info: fuck you too
+....
+```
+
+在代码中也可以添加
+
+```cpp
+benchmark::AddCustomContext("","");
 ```
 
 ## 计时暂停与恢复
@@ -131,7 +169,7 @@ static void Fcn(benchmark::State & state)
     } 
 }
 ```
-## 传参
+## 整数传参
 
 ```cpp
 static void Fcn(benchmark::State & state)
@@ -238,4 +276,119 @@ BENCHMARK_TEMPLATE(FcnTemplate, int, 5);
 
 // 调用模板进行测试
 BENCHMARK_TEMPLATE(FcnTemplate, std::string, 5);
+
+// c++11 支持 
+BENCHMARK(FcnTemplate<int,5>);
+```
+
+## 其他传参
+
+```cpp
+template<class ... Args>
+void Fcn(benchmark::State & state, Args &&... args)
+{
+    // 解包
+    auto params = std::make_tuple(std::move(args)...);
+    std::cout << std::get<0>(params) << "," << std::get<1>(params) << "\n"; 
+
+    for(auto _:state)
+    {
+
+    }
+}
+
+// 传递其他类型的参数
+BENCHMARK_CAPTURE(Fcn, test_name, 10, "fuck you");
+```
+
+## 事件
+
+```cpp
+void Setup(const benchmark::State & state)
+{
+}
+
+void Teardown(const benchmark::State & state)
+{
+}
+
+void Fcn(benchmark::state & state)
+{
+
+}
+
+// 每次测试开始前，调用 Setup
+// 每次测试结束后，调用 Teardown
+BENCHMARK(Fcn)->Setup(Setup)->Teardown(Teardown);
+```
+
+## fixture
+
+对上面的事件的扩展
+
+```cpp
+
+class Test : public benchmark::Fixture
+{
+public:
+    void SetUp(benchmark::State& state)
+    {
+        printf("setup\n");
+    }
+
+    void TearDown(benchmark::State & state) 
+    {
+        printf("teardown\n");
+    }
+};
+
+// 定义函数并注册
+BENCHMARK_F(Test, fcn1)(benchmark::State & state)
+{
+    for(auto _:state)
+    {
+
+    }
+}
+
+/* ========================== 两种写法等价 ======================= */
+
+// 只定义
+BENCHMARK_DEFINE_F(Test, fcn2)(benchmark::State & state)
+{
+    for(auto _:state)
+    {
+
+    }
+}
+
+// 只注册
+BENCHMARK_REGISTER_F(Test, fcn2);
+```
+
+添加模版
+
+
+```cpp
+template<class T>
+class Test : public benchmark::Fixture
+{
+public:
+    void SetUp(benchmark::State& state)
+    {
+    }
+
+    void TearDown(benchmark::State & state) 
+    {
+    }
+};
+
+// 定义函数并注册
+BENCHMARK_TEMPLATE_F(Test, fcn1, int)(benchmark::State & state)
+{
+    for(auto _:state)
+    {
+
+    }
+}
 ```
