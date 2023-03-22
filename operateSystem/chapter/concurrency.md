@@ -937,6 +937,8 @@ void Philosopher(int id)
 
 ## 死锁
 
+### 问题
+
 AA - Deadlock ：在操作系统中，一个线程导致的死锁
 ```cpp
 void os_run()
@@ -973,6 +975,70 @@ void Run(int i, int j) {
 // 下面两个线程抢锁
 Run(1,2);
 Run(2,1);
+```
+
+### lockdep
+
+为了防止出现 ABBA 死锁，解决方案就是规定一个全局的获取锁的顺序规则，获取锁都根据这个规则来。但是当程序规模太庞大时，就不能确保锁的获取真的根据这个顺序进行，例如多个人组团开发。为了检测出问题，就可以使用 lockdep 方法
+- 每一类锁，给一个唯一标识（注意不是锁实例化的时候，而是锁在程序中被定义的时候），这个标志可以是锁初始化时，程序所在的文件行号
+- 上锁和解锁的时候，打印锁标识，形成日志文件 
+- 将日志文件中的上锁顺序绘制成图，查找是否存在循环边，就能知道是否违法了上锁顺序。
+
+> [!tip]
+> 上面通过程序运行过程中打印日志，再检测日志的程序检测手段，称之为「动态程序分析」
+
+## 数据竞争
+
+> [!tip]
+> 两个及其以上的线程，同时访问同一内存，至少一个线程执行写操作。
+
+**利用「互斥锁」保护好数据，就能避免一切数据竞争。**
+
+
+## 检测工具
+
+- asan (AddressSanitizer) ：内存检测
+- tsan (threadSanitizer) : 数据竞争检测
+- msan (memorySanitizer) : 未初始化的读取
+- ubsan (UBSanitizer) : 未定义行为
+
+```term
+triangle@LEARN:~$ gcc main.c -fsanitize=address // 检测内存
+triangle@LEARN:~$ gcc main.c -fsanitize=thread // 数据竞争
+```
+
+## cannary
+
+在分配的堆内存前后添加缓冲区，用来标记当前堆内存是否发生了越界。
+
+```cpp
+#define MAGIC (0x55558888)
+#define NUM (0x4096)
+
+struct Memory
+{
+    // 开始保护区
+    int32_t headBlock = MAGIC;
+    // 内存使用区域
+    char usageBlock[NUM];
+    // 结束保护区
+    int32_t tailBlock = MAGIC;
+}
+
+// 前后保护区出问题，那就说明这片内存出问题了
+bool cannary_check(Memory * mem)
+{
+    if(mem->headBlock != MAGIC)
+    {
+        return false;
+    }
+    if(mem->tailBlock != MAGIC)
+    {
+        return false; 
+    } 
+    return true;
+}
+
 ```
 
 # 附录

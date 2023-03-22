@@ -31,6 +31,11 @@ triangle@LEARN:~$ xmake config -p [mingw|windows] --sdk=[mingw路径] // -p 代�
 > [note]
 > mingw 路径就设置到mingw文件夹就行，不要带bin，例如 D:\Program\mingw\
 
+- 生成 vs 项目
+```term
+triangle@LEARN:~$ xmake project -k vsxmake -a "x64"
+```
+
 - 查看帮助
 ```term
 triangle@LEARN:~$ xmake [action] -h
