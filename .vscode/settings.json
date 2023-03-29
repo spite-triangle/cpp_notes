@@ -1,3 +1,4 @@
 {
-    "docsifyPreview.indexFile": "index.html"
+    "docsifyPreview.indexFile": "index.html",
+    "docsifyPreview.port": 10813
 }

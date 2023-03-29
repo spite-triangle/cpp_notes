@@ -507,4 +507,167 @@ set PATH=%PATH%;"C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\
 devenv  solutionName.sln /Project projectName /Build Release 
 ```
 
+# 调试
 
+## 显示汇编
+
+启用汇编代码，方便对优化后的代码进行调试
+
+<p style="text-align:center;"><img src="../../image/theory/vs_asm.jpg" width="50%" align="middle" /></p>
+
+
+## dump
+
+- 从任务管理器获取
+
+<p style="text-align:center;"><img src="../../image/theory/attachDump.png" width="45%" align="middle" /></p>
+
+- 程序崩溃生成
+
+```cpp
+
+// 添加 dump 生成器
+#include "CreateDump.h"
+
+int main()
+{
+    // 指定 dump 文件生成路径
+	CCreateDump::Instance()->DeclarDumpFile("./dump/");
+
+	return 0;
+}
+```
+
+<details>
+<summary><span class="details-title">Dump 生成器</span></summary>
+<div class="details-content"> 
+
+
+**头文件：**
+```cpp
+#pragma once
+#include <string>
+#include <memory>
+
+
+#define CreateDumpInstance CCreateDump::Instance()
+
+class CCreateDump
+{
+public:
+	CCreateDump();
+	~CCreateDump(void);
+	static CCreateDump* Instance();
+	static long __stdcall UnhandleExceptionFilter(_EXCEPTION_POINTERS* ExceptionInfo);
+	//声明Dump文件，异常时会自动生成。会自动加入.dmp文件名后缀
+	void DeclarDumpFile(std::string dmpFileName = "");
+private:
+	static std::string					m_strDumpFile;
+	static std::shared_ptr<CCreateDump*>    m_sptrInstance;
+};
+```
+
+**源文件：**
+
+```cpp
+#include "CreateDump.h"
+
+#include <Windows.h>
+#include <DbgHelp.h>
+
+#pragma comment(lib,  "dbghelp.lib")
+ 
+std::shared_ptr<CCreateDump*>  CCreateDump::m_sptrInstance = std::make_shared<CCreateDump*>();
+std::string CCreateDump::m_strDumpFile = "";
+ 
+CCreateDump::CCreateDump()
+{
+}
+ 
+CCreateDump::~CCreateDump(void)
+{
+ 
+}
+ 
+long  CCreateDump::UnhandleExceptionFilter(_EXCEPTION_POINTERS* ExceptionInfo)
+{
+    // 转换字符
+	WCHAR wszClassName[1024];
+	memset(wszClassName,0,sizeof(wszClassName));
+	MultiByteToWideChar(CP_ACP,0,m_strDumpFile.c_str(),strlen(m_strDumpFile.c_str())+1, wszClassName, sizeof(wszClassName)/sizeof(wszClassName[0]));
+
+	HANDLE hFile = CreateFile(wszClassName, GENERIC_WRITE, FILE_SHARE_WRITE, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+	if (hFile != INVALID_HANDLE_VALUE)
+	{
+		MINIDUMP_EXCEPTION_INFORMATION   ExInfo;
+		ExInfo.ThreadId = ::GetCurrentThreadId();
+		ExInfo.ExceptionPointers = ExceptionInfo;
+		ExInfo.ClientPointers = FALSE;
+		//   write   the   dump
+		BOOL   bOK = MiniDumpWriteDump(GetCurrentProcess(), GetCurrentProcessId(), hFile, MiniDumpNormal, &ExInfo, NULL, NULL);
+		CloseHandle(hFile);
+		if (!bOK)
+		{
+			DWORD dw = GetLastError();
+			//写dump文件出错处理,异常交给windows处理
+			return EXCEPTION_CONTINUE_SEARCH;
+		}
+		else
+		{    //在异常处结束
+			return EXCEPTION_EXECUTE_HANDLER;
+		}
+	}
+	else
+	{
+		return EXCEPTION_CONTINUE_SEARCH;
+	}
+}
+ 
+void CCreateDump::DeclarDumpFile(std::string dmpFileName)
+{
+	SYSTEMTIME syt;
+	GetLocalTime(&syt);
+	char szTime[MAX_PATH];
+	sprintf_s(szTime, MAX_PATH, "[%04d-%02d-%02dT%02d-%02d-%02d]", syt.wYear, syt.wMonth, syt.wDay, syt.wHour, syt.wMinute, syt.wSecond);
+	m_strDumpFile = dmpFileName + std::string(szTime);
+	m_strDumpFile += std::string(".dmp");
+	SetUnhandledExceptionFilter(UnhandleExceptionFilter);
+}
+ 
+CCreateDump* CCreateDump::Instance()
+{
+	if (*m_sptrInstance == NULL)
+	{
+		m_sptrInstance = std::make_shared<CCreateDump*>(new CCreateDump);
+	}
+	return *m_sptrInstance;
+}
+```
+
+</div>
+</details>
+
+# 进程单例
+
+```cpp
+int main(int argn, cha* argv[]){
+
+    // 显示已经存在的，然后关闭自己
+	HWND hwnd = FindWindow(0, L"界面标题");
+	if (hwnd && IsWindowVisible(hwnd))
+	{
+		::ShowWindow(hwnd, SW_SHOWNORMAL);
+		::SetForegroundWindow(hwnd);
+		return 0;
+	}
+
+    // 发现已经存在，就关闭当前进程
+    HWND hwnd_home = FindWindow(0, L"界面标题");
+    if (hwnd_home)
+    {
+        ::PostMessage(hwnd_home, WM_USER + 0x804, NULL, NULL);
+        return 0;
+    }
+}	
+
+```
