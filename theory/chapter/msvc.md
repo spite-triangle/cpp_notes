@@ -546,102 +546,261 @@ int main()
 **头文件：**
 ```cpp
 #pragma once
-#include <string>
-#include <memory>
+#include<string>
 
+// 抓取快照的宏，方便快速取消
+#define DumpSnapShot(fileName) Dump::DumpHelper::Snapshot(fileName) 
 
-#define CreateDumpInstance CCreateDump::Instance()
+namespace Dump {
+	class  DumpHelper
+	{
+	public:
+		/// <summary>
+		/// 设置是否记录崩溃转储
+		/// 默认否
+		/// </summary>
+		/// <param name="value">是否记录崩溃转储</param>
+		static void SetIsDumpCrash(bool value);
+		/// <summary>
+		/// 设置崩溃转储路径
+		/// 默认为".\\"
+		/// </summary>
+		/// <param name="directory">崩溃转储路径</param>
+		static void SetDumpDirectory(const std::string& directory);
+		/// <summary>
+		/// 崩溃转储文件数量
+		/// 超过数量自动删除旧文件
+		/// </summary>
+		/// <param name="count">最大文件数量，默认500</param>
+		static void SetDumpMaxFileCount(int count);
+		/// <summary>
+		/// 获取内存快照转储,可以任意时刻记录（包括非崩溃情况下）。
+		/// </summary>
+		/// <param name="path">保存文件名</param>
+		static void Snapshot(const std::string& strFileName);
+	};
+}
 
-class CCreateDump
-{
-public:
-	CCreateDump();
-	~CCreateDump(void);
-	static CCreateDump* Instance();
-	static long __stdcall UnhandleExceptionFilter(_EXCEPTION_POINTERS* ExceptionInfo);
-	//声明Dump文件，异常时会自动生成。会自动加入.dmp文件名后缀
-	void DeclarDumpFile(std::string dmpFileName = "");
-private:
-	static std::string					m_strDumpFile;
-	static std::shared_ptr<CCreateDump*>    m_sptrInstance;
-};
 ```
 
 **源文件：**
 
 ```cpp
-#include "CreateDump.h"
+#include "DumpHelper.h"
 
+#include <io.h>
+#include <time.h>
+#include <vector>
+#include <direct.h> 
+#include <stdint.h>
 #include <Windows.h>
 #include <DbgHelp.h>
 
-#pragma comment(lib,  "dbghelp.lib")
- 
-std::shared_ptr<CCreateDump*>  CCreateDump::m_sptrInstance = std::make_shared<CCreateDump*>();
-std::string CCreateDump::m_strDumpFile = "";
- 
-CCreateDump::CCreateDump()
+#pragma comment(lib,"Dbghelp.lib")
+
+#define MAX_PATH_LEN 512
+#define ACCESS(fileName,accessMode) _access(fileName,accessMode)
+#define MKDIR(path) _mkdir(path)
+
+namespace Dump {
+static std::string _directory = ".\\";
+static int _fileCount = 500;
+//获取文件夹下的所有文件名
+static void GetFolderFiles(const std::string& path, std::vector<std::string>& files)
 {
+	//文件句柄  
+	intptr_t hFile = 0;
+	//文件信息  
+	struct _finddata_t fileinfo;
+	std::string p;
+	if ((hFile = _findfirst(p.assign(path).append("\\*").c_str(), &fileinfo)) != -1)
+		// "\\*"是指读取文件夹下的所有类型的文件，若想读取特定类型的文件，以png为例，则用“\\*.png”
+	{
+		do
+		{
+			//如果是目录,迭代之  
+			//如果不是,加入列表  
+			if ((fileinfo.attrib & _A_SUBDIR))
+			{
+				if (strcmp(fileinfo.name, ".") != 0 && strcmp(fileinfo.name, "..") != 0)
+					GetFolderFiles(p.assign(path).append("\\").append(fileinfo.name), files);
+			}
+			else
+			{
+				files.push_back(path + "\\" + fileinfo.name);
+			}
+		} while (_findnext(hFile, &fileinfo) == 0);
+		_findclose(hFile);
+	}
 }
- 
-CCreateDump::~CCreateDump(void)
-{
- 
+//生成多级目录，中间目录不存在则自动创建
+static bool CreateMultiLevelDirectory(const std::string& directoryPath) {
+	uint32_t dirPathLen = directoryPath.length();
+	if (dirPathLen > MAX_PATH_LEN)
+	{
+		return false;
+	}
+	char tmpDirPath[MAX_PATH_LEN] = { 0 };
+	for (uint32_t i = 0; i < dirPathLen; ++i)
+	{
+		tmpDirPath[i] = directoryPath[i];
+		if (tmpDirPath[i] == '\\' || tmpDirPath[i] == '/')
+		{
+			if (ACCESS(tmpDirPath, 0) != 0)
+			{
+				int32_t ret = MKDIR(tmpDirPath);
+				if (ret != 0)
+				{
+					return false;
+				}
+			}
+		}
+	}
+	return true;
 }
- 
-long  CCreateDump::UnhandleExceptionFilter(_EXCEPTION_POINTERS* ExceptionInfo)
+/// <summary>
+/// 生成dmp文件
+/// </summary>
+/// <param name="exceptionPointers">异常信息</param>
+/// <param name="path">文件路径（包括文件名）</param>
+/// <returns></returns>
+static int GenerateDump(EXCEPTION_POINTERS* exceptionPointers, const std::string& path)
 {
-    // 转换字符
+
+// 转换字符
+#ifdef UNICODE
 	WCHAR wszClassName[1024];
 	memset(wszClassName,0,sizeof(wszClassName));
-	MultiByteToWideChar(CP_ACP,0,m_strDumpFile.c_str(),strlen(m_strDumpFile.c_str())+1, wszClassName, sizeof(wszClassName)/sizeof(wszClassName[0]));
-
+	MultiByteToWideChar(CP_ACP,0,path.c_str(),strlen(path.c_str())+1, wszClassName, sizeof(wszClassName)/sizeof(wszClassName[0]));
 	HANDLE hFile = CreateFile(wszClassName, GENERIC_WRITE, FILE_SHARE_WRITE, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-	if (hFile != INVALID_HANDLE_VALUE)
+#else
+	HANDLE hFile = CreateFile(path.c_str(), GENERIC_WRITE, FILE_SHARE_WRITE, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+#endif
+
+	if (INVALID_HANDLE_VALUE != hFile)
 	{
-		MINIDUMP_EXCEPTION_INFORMATION   ExInfo;
-		ExInfo.ThreadId = ::GetCurrentThreadId();
-		ExInfo.ExceptionPointers = ExceptionInfo;
-		ExInfo.ClientPointers = FALSE;
-		//   write   the   dump
-		BOOL   bOK = MiniDumpWriteDump(GetCurrentProcess(), GetCurrentProcessId(), hFile, MiniDumpNormal, &ExInfo, NULL, NULL);
+		MINIDUMP_EXCEPTION_INFORMATION minidumpExceptionInformation;
+		minidumpExceptionInformation.ThreadId = GetCurrentThreadId();
+		minidumpExceptionInformation.ExceptionPointers = exceptionPointers;
+		minidumpExceptionInformation.ClientPointers = TRUE;
+		bool isMiniDumpGenerated = MiniDumpWriteDump(
+			GetCurrentProcess(),
+			GetCurrentProcessId(),
+			hFile,
+			MINIDUMP_TYPE::MiniDumpNormal,
+			&minidumpExceptionInformation,
+			nullptr,
+			nullptr);
+
 		CloseHandle(hFile);
-		if (!bOK)
+		if (!isMiniDumpGenerated)
 		{
-			DWORD dw = GetLastError();
-			//写dump文件出错处理,异常交给windows处理
-			return EXCEPTION_CONTINUE_SEARCH;
-		}
-		else
-		{    //在异常处结束
-			return EXCEPTION_EXECUTE_HANDLER;
+			printf("MiniDumpWriteDump failed\n");
 		}
 	}
 	else
 	{
-		return EXCEPTION_CONTINUE_SEARCH;
+		printf("Failed to create dump file\n");
 	}
+	return EXCEPTION_EXECUTE_HANDLER;
 }
- 
-void CCreateDump::DeclarDumpFile(std::string dmpFileName)
-{
-	SYSTEMTIME syt;
-	GetLocalTime(&syt);
-	char szTime[MAX_PATH];
-	sprintf_s(szTime, MAX_PATH, "[%04d-%02d-%02dT%02d-%02d-%02d]", syt.wYear, syt.wMonth, syt.wDay, syt.wHour, syt.wMinute, syt.wSecond);
-	m_strDumpFile = dmpFileName + std::string(szTime);
-	m_strDumpFile += std::string(".dmp");
-	SetUnhandledExceptionFilter(UnhandleExceptionFilter);
+
+std::string GetSystemLocalTime() {
+		SYSTEMTIME syt;
+		GetLocalTime(&syt);
+
+		char szTime[MAX_PATH];
+		sprintf_s(szTime, MAX_PATH, "%04d-%02d-%02dT%02d-%02d-%02d", syt.wYear, syt.wMonth, syt.wDay, syt.wHour, syt.wMinute, syt.wSecond);
+
+		return std::string(szTime);
 }
- 
-CCreateDump* CCreateDump::Instance()
+
+//全局异常捕获回调
+static LONG WINAPI ExceptionFilter(LPEXCEPTION_POINTERS lpExceptionInfo)
 {
-	if (*m_sptrInstance == NULL)
+	char ext[MAX_PATH] = { 0 };
+
+	//创建目录
+	if (!CreateMultiLevelDirectory(_directory))
 	{
-		m_sptrInstance = std::make_shared<CCreateDump*>(new CCreateDump);
+		printf("Failed to create directory %s\n", _directory.c_str());
+		return EXCEPTION_EXECUTE_HANDLER;
+	}	
+	//清除多出的文件
+	std::vector<std::string> files;
+	std::vector<std::string> dmpFiles;
+	GetFolderFiles(_directory, files);
+	for (auto i : files)
+	{
+		_splitpath(i.c_str(), NULL, NULL, NULL, ext);
+		if (strcmp(ext, "dmp")==0)
+		{
+			dmpFiles.push_back(i);
+		}
 	}
-	return *m_sptrInstance;
+	if (dmpFiles.size() >= _fileCount)
+	{	
+		if (strcmp(ext, "dmp") == 0 && !DeleteFileA(dmpFiles.front().c_str()))
+		{
+			printf("Failed to delete old file %s\n", dmpFiles.front().c_str());
+		}
+	}
+	//生成文件名
+	std::string strPath = _directory + "crash_" + GetSystemLocalTime() + ".dmp";
+	if (strPath.size() > MAX_PATH)
+	{
+		printf("File path was too long! %s\n", strPath.c_str());
+		return EXCEPTION_EXECUTE_HANDLER;
+	}
+
+	//生成dmp文件
+	return GenerateDump(lpExceptionInfo, strPath);
 }
+void DumpHelper::SetIsDumpCrash(bool value)
+{
+	if (value)
+		SetUnhandledExceptionFilter(ExceptionFilter);
+	else
+	{
+		SetUnhandledExceptionFilter(NULL);
+	}
+}
+void DumpHelper::SetDumpDirectory(const std::string& directory)
+{
+	_directory = directory;
+	if (_directory.size() < 1)
+	{
+		_directory = ".\\";
+	}
+	else if (_directory.back() != '\\')
+	{
+		_directory.push_back('\\');
+	}
+}
+
+void DumpHelper::SetDumpMaxFileCount(int count)
+{
+	_fileCount = count;
+}
+
+void CreateSnapshot(const std::string& strPath)
+{
+	__try
+	{
+		//通过触发异常获取堆栈
+		RaiseException(0xE0000001, 0, 0, 0);
+	}
+	__except (GenerateDump(GetExceptionInformation(), strPath)) {}
+}
+
+void DumpHelper::Snapshot(const std::string& strName)
+{
+	std::string strPath = _directory + strName + "_" + GetSystemLocalTime() + std::string(".dmp");
+	CreateSnapshot(strPath);
+}
+
+}
+
 ```
 
 </div>
