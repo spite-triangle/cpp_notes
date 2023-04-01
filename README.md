@@ -1,5 +1,6 @@
 
-<h1 style="text-align:center;font-size:60px;font-weight:bold">干</h1>
+
+<h1 style="text-align:center;font-size:60px;font-weight:bold;">CPP笔记</h1>
 
 <style>
     #btn{
@@ -49,8 +50,9 @@
         text-align:center;
         border-radius: 10px; 
         margin-bottom: 5px;
-        width:inherit;
         height:80px;
+        margin-left: 25%;
+        margin-right: 25%;
 
         /* 显示为盒子，为了居中 */
         display: -webkit-box;
@@ -84,7 +86,7 @@
     }
 </style>
 
-<div class="container">
+<div class="container" width="100%">
 <a href="https://github.com/spite-triangle" id="btn_link" title="Github">
 <button type="button" id="btn" class="btn_github" ></button>
 </a>

@@ -85,7 +85,7 @@ throw 异常数据;
 
 ## 定义
 
-<p style="text-align:center;"><img src="../../image/http/exception.png" width="50%" align="middle" /></p>
+![alt|c,50](../../image/http/exception.png)
 
 C++语言本身或者标准库抛出的异常都是 exception 的子类
 ```cpp

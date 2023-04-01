@@ -1,11 +1,14 @@
 
-- **http服务器**
-- [目录](http\README.md)
-- [第一章 套接字](http/chapter/socket_tcp_withNum.md)
-- [第二章 http协议](http/chapter/httpProtocol_withNum.md)
-- [第三章 restful规范](http/chapter/restful_withNum.md)
-- [第四章 阻塞IO](http/chapter/blockingIO_withNum.md)
-- [第五章 网络模型](http/chapter/reactor_withNum.md)
+- **Effective C++**
+- [目录](effective/README.md)
+- [第一章 新特性](effective/chapter/Featrue.md)
+- [第二章 类型推断](effective/chapter/TypeDeduction.md)
+- [第三章 引用](effective/chapter/Reference.md)
+- [第四章 智能指针语法](effective/chapter/SmartPointerTheory.md)
+- [第五章 智能指针](effective/chapter/SmartPointer.md)
+- [第六章 封装](effective/chapter/stdWrap.md)
+- [第七章 Lambda](effective/chapter/Lambda.md)
+- [第八章 线程](effective/chapter/thread.md)
 
 
 

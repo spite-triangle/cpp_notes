@@ -6,7 +6,7 @@
 
 RPC（Remote Procedure Call Protocol）远程过程调用协议。一个通俗的描述是：客户端在不知道调用细节的情况下，调用存在于远程计算机上的某个对象，就像调用本地应用程序中的对象一样。
 
-<p style="text-align:center;"><img src="../../image/grpcModel.jpg" width="50%" align="middle" /></p>
+![alt|c,50](../../image/thirdLib/grpc.png)
 
 - **Server**：在RPC规范中，这个Server并不是提供RPC服务器IP、端口监听的模块。而是远程服务方法的具体实现
 - **Client**：RPC协议的调用方
@@ -25,6 +25,7 @@ triangle@LEARN:~$ sudo apt install -y build-essential autoconf libtool pkg-confi
 ```
 
 2. 编译源码
+
 ```bash
 # grpc 编译后的安装路径
 INSTALL_PATH= 

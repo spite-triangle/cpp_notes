@@ -4,7 +4,7 @@
 
 ## 阻塞IO
 
-<p style="text-align:center;"><img src="../../image/http/blockingIO.png" width="50%" align="middle" /></p>
+![alt|c,50](../../image/http/blockingIO.png)
 
 **阻塞IO (BlockingIO):** 任务处理线程承包所有内容，读数据时会产生阻塞过程：
 - 内核等待数据
@@ -16,7 +16,7 @@
 
 ## 非阻塞IO
 
-<p style="text-align:center;"><img src="../../image/http/NoBlockingIO.png" width="50%" align="middle" /></p>
+![alt|c,50](../../image/http/NoBlockingIO.png)
 
 **非阻塞IO (NoBlockingIO) :** 将等待数据的阻塞过程从任务处理线程中分离，承包给其他线程处理。
 
@@ -45,7 +45,7 @@ fcntl(socket,F_SETFL, flags| O_NONBLOCK);
 
 非阻塞IO中，各个客户端服务线程会进行大量的「系统调用」去查询数据的准备情况。**IO多路复用I的目的就是减少这些系统调用。**
 
-<p style="text-align:center;"><img src="../../image/http/select.png" width="50%" align="middle" /></p>
+![alt|c,50](../../image/http/select.png)
 
 改进思路：
 - 单个客户端服务线程查询，改为多客户端线程查询，并且由 `select` 进行统一管理
@@ -95,7 +95,7 @@ int select(
 - `maxfdp1`：能够被 `select` 管理的 socket 个数，**值为 socket 描述符最大值 + 1 （`0`也可以作为一个描述符）**。最大描述符就是服务器描述符
 
 
-<p style="text-align:center;"><img src="../../image/http/selectcode.jpg" width="100%" align="middle" /></p>
+![alt|c,100](../../image/http/selectcode.jpg)
 
 
 ## poll
@@ -122,9 +122,9 @@ struct pollfd{
 - `fdarray`: 每个元素为 `pollfd` 的数组
 - `nfds`：数组长度
 
-<p style="text-align:center;"><img src="../../image/http/pollEvent.png" width="75%" align="middle" /></p>
+![alt|c,75](../../image/http/pollEvent.png)
 
-<p style="text-align:center;"><img src="../../image/http/pollcode.jpg" width="100%" align="middle" /></p>
+![alt|c,100](../../image/http/pollcode.jpg)
 
 ## 缺陷
 
@@ -139,7 +139,7 @@ struct pollfd{
 
 将第一版本中的模糊通知变成明确通知，不用在遍历描述数组了，并且取消描述数组在用户态、内核态之间的来回拷贝。
 
-<p style="text-align:center;"><img src="../../image/http/epoll.png" width="75%" align="middle" /></p>
+![alt|c,75](../../image/http/epoll.png)
 
 ## epoll创建
 
@@ -167,7 +167,7 @@ int epoll_create(int size);
     - **EPOLL_CTL_DEL**：从epfd中删除一个fd；
 - `event`：事件
 
-<p style="text-align:center;"><img src="../../image/http/epollEvent.png" width="75%" align="middle" /></p>
+![alt|c,75](../../image/http/epollEvent.png)
 
 ## epoll等待
 
@@ -183,7 +183,7 @@ int epoll_create(int size);
 
 ## ET与LT
 
-<p style="text-align:center;"><img src="../../image/http/et_lt.png" width="75%" align="middle" /></p>
+![alt|c,75](../../image/http/et_lt.png)
 
 **ET触发与LT触发：** 描述的是判断是否有事件发生的方式
 
@@ -201,9 +201,9 @@ int epoll_create(int size);
 
 ## 案例
 
-<p style="text-align:center;"><img src="../../image/http/epollCode1.png" width="75%" align="middle" /></p>
+![alt|c,75](../../image/http/epollCode1.png)
 
-<p style="text-align:center;"><img src="../../image/http/epollCode2.png" width="75%" align="middle" /></p>
+![alt|c,75](../../image/http/epollCode2.png)
 
 
 # 扩展

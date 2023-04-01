@@ -94,28 +94,28 @@ EXPECT_CALL(mockTurtle, getX())
 **作用：** 限制`EXPECT_CALL`绑定的方法形参的输入，例如限制输入范围，输入类型等。
 
 **常规匹配器：**
-<p style="text-align:center;"><img src="../../image/gtest/matcher_norm.png" width="50%" align="middle" /></p>
+![alt|c,50](../../image/gtest/matcher_norm.png)
 
 **浮点数：**
-<p style="text-align:center;"><img src="../../image/gtest/matcher_float.png" width="50%" align="middle" /></p>
+![alt|c,50](../../image/gtest/matcher_float.png)
 
 **字符串：**
-<p style="text-align:center;"><img src="../../image/gtest/matcher_string.png" width="50%" align="middle" /></p>
+![alt|c,50](../../image/gtest/matcher_string.png)
 
 **容器：**
-<p style="text-align:center;"><img src="../../image/gtest/matcher_contain.png" width="50%" align="middle" /></p>
+![alt|c,50](../../image/gtest/matcher_contain.png)
 
 
 ## 基数(cardinality)
 
 **作用：** 用于 `Time()` 指定方法被调用多少次
-<p style="text-align:center;"><img src="../../image/gtest/cardinalities.png" width="50%" align="middle" /></p>
+![alt|c,50](../../image/gtest/cardinalities.png)
 
 ## 行为(action)
 
 **作用：** 用于指定方法返回类型
 
-<p style="text-align:center;"><img src="../../image/gtest/action.png" width="50%" align="middle" /></p>
+![alt|c,50](../../image/gtest/action.png)
 
 
 

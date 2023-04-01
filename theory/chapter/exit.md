@@ -2,7 +2,7 @@
 
 # 退出方式
 
-<p style="text-align:center;"><img src="../../image/theory/exit.png" width="75%" align="middle" /></p>
+![alt|c,75](../../image/theory/exit.png)
 
 
 - **std::exit：** 用于正常流程退出，由用户显式调用。main 函数返回，也是调用这个

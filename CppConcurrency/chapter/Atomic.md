@@ -31,7 +31,7 @@ std::atomic_init(&value,10);
 std::atomic<int64_t> value(10);
 ```
 
-<p style="text-align:center;"><img src="../../image/concurrency/atomicType.png" width="75%" align="middle" /></p>
+![alt|c,75](../../image/concurrency/atomicType.png)
 
 ## 原子操作
 
@@ -59,9 +59,9 @@ value.store(x,std::memory_order_relaxed);
 - `ptr`：针对指针类型的操作
 - `triv`：针对其他类型的操作
 
-<p style="text-align:center;"><img src="../../image/concurrency/atomicOperation.png" width="75%" align="middle" /></p>
+![alt|c,75](../../image/concurrency/atomicOperation.png)
 
-<p style="text-align:center;"><img src="../../image/concurrency/atomic_fcn.png" width="75%" align="middle" /></p>
+![alt|c,75](../../image/concurrency/atomic_fcn.png)
 
 > [!tip]
 > 为了兼容c语言，也提供了非成员函数的版本
@@ -565,7 +565,7 @@ std::atomic_thread_fence(memory_order_seq_cst)
 ## release fence
 
 
-<p style="text-align:center;"><img src="../../image/concurrency/release_fence.png" width="75%" align="middle" /></p>
+![alt|c,75](../../image/concurrency/release_fence.png)
 
 Release fence 防止 fence 前的内存操作重排到 fence 后的任意 store 之后
 
@@ -594,7 +594,7 @@ void fcn2()
 
 ## acquire fence
 
-<p style="text-align:center;"><img src="../../image/concurrency/acquire_fence.png" width="75%" align="middle" /></p>
+![alt|c,75](../../image/concurrency/acquire_fence.png)
 
 
 acquire fence 可以防止 fence 后的内存操作重排到 fence 前的任意 load 之前
@@ -622,7 +622,7 @@ void fcn2()
 
 ## full fence
 
-<p style="text-align:center;"><img src="../../image/concurrency/full_fence.png" width="75%" align="middle" /></p>  
+![alt|c,75](../../image/concurrency/full_fence.png)  
 
 
 

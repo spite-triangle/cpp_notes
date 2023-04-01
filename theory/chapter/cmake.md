@@ -99,7 +99,7 @@ install(
 - 文件类型
     - `FILES`：普通文本
     - `PROGRAMS`：非目标文件的可执行程序(如脚本文件)
-    <p style="text-align:center;"><img src="../../image/theory/installType.png" width="75%" align="middle" /></p>
+    ![alt|c,75](../../image/theory/installType.png)
 
 - `option`可以指定
   - DESTINATION：指定磁盘上要安装文件的目录
@@ -112,7 +112,7 @@ install(
   - 默认安装根目录由 `CMAKE_INSTALL_PREFIX` 指定
   - 当采用 DESTINATION 可以自定义安装路径
 
-<p style="text-align:center;"><img src="../../image/theory/cmakePath.png" width="75%" align="middle" /></p>
+![alt|c,75](../../image/theory/cmakePath.png)
 
 ## 案例
 
@@ -148,4 +148,109 @@ install(TARGETS target
 ```term
 triangle@LEARN:~$ cmake ..
 triangle@LEARN:~$ make install
+```
+
+# pkg-config
+
+## 配置文件
+
+pkg-config 是一个用来管理库头文件与库文件配置的工具。在编译时，快速生成库的配置。pkg-config 配置文件以 `.pc` 后缀结尾
+
+```config
+# 变量，可以在之后的配置中使用
+prefix=
+libdir=
+sharedlibdir=
+includedir=
+
+# 库描述，没有实质用处，就是方便查看库信息
+Name: 
+Description: 
+
+# 库的版本号
+Version: 
+
+# 可以依赖其他 .pc 配置
+Requires: pc文件名 >= 版本号 
+Requires.private: 不对外暴露，私有的
+
+# 有冲突的库
+Conficts:
+
+# 库编译配置
+Libs: -L${libdir} -L${sharedlibdir} -lz
+Libs.private:
+
+# 头文件编译配置 
+Cflags: -I${includedir}
+```
+
+可以将 pc 文件的所在路径添加到环境变量 `PKG_CONFIG_PATH` 中，这样 pkg-config 就能识别到
+
+```term
+triangle@LEARN:~$ export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig/
+triangle@LEARN:~$ pkg-config test --Libs // 查看 test.pc 中的库配置
+-L/mnt/e/testspace/pkgconfig  -lz
+triangle@LEARN:~$ pkg-config test --Cflags // 查看 test.pc 中的头文件配置
+-I/mnt/e/testspace/pkgconfig
+triangle@LEARN:~$ g++ main.cpp `pkg-config --Libs --Cflags lib` // 编译选项
+```
+
+## cmake 生成配置文件
+
+
+```php
+# 自定义变量
+set(CMAKE_INSTALL_PREFIX "ok")
+set(LIB_DIR ${CMAKE_CURRENT_BINARY_DIR})
+set(INC_DIR "/path")
+
+// 指定 pc 文件安装路径
+set(INSTALL_PKGCONFIG_DIR "path")
+
+// 指定 pc 文件生成路径
+set(ZLIB_PC ${CMAKE_CURRENT_BINARY_DIR}/zlib.pc)
+
+// 将文件从一个位置复制到另外一个位置，并替换调 @var@ 或者 ${var} 的内容
+// @ONLY : 只替换 @var@ 
+configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/zlib.pc.cmakein 
+                ${ZLIB_PC} 
+                @ONLY)
+
+// 生成配置文件
+install(FILES ${ZLIB_PC} DESTINATION "${INSTALL_PKGCONFIG_DIR}")
+```
+
+pc 模版文件
+
+```config
+prefix=@CMAKE_INSTALL_PREFIX@
+libdir=@LIB_DIR@
+includedir=@INC_DIR@
+
+Name: zlib
+Description: zlib compression library
+Version: @VERSION@
+
+Requires:
+Libs: -L${libdir} -L${sharedlibdir} -lz
+Cflags: -I${includedir}
+```
+
+## cmake 导入配置文件
+
+```php
+// 指定 pc 文件所在路径
+set(ENV{PKG_CONFIG_PATH} /usr/lib/pkgconfig)
+// 添加 pkg config
+find_package(PkgConfig)
+
+// 添加包
+pkg_search_module(自定义名 REQUIRED pc文件名)
+
+// 库配置
+MESSAGE(STATUS ${自定义名_LIBRARIES})
+
+// 头文件配置
+MESSAGE(STATUS ${自定义名_INCLUDE_DIRS})
 ```

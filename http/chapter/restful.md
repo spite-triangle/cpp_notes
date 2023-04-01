@@ -8,7 +8,7 @@ REST (Representational State Transfe) 只是一种基于HTTP协议的接口设�
 
 ## 思想
 
-<p style="text-align:center;"><img src="../../image/http/http.png" width="25%" align="middle" /></p>
+![alt|c,25](../../image/http/http.png)
 
 - **资源为核心**：HTTP协议的核心内容就是客户端发送请求，服务端给出响应，其内容就是资源，要么获取资源，要么操作资源。
 - **state**：资源的状态，在客户端与服务端的请求-响应的过程中，操作的是资源的状态

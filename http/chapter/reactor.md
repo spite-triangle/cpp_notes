@@ -2,7 +2,7 @@
 
 # Thread Based
 
-<p style="text-align:center;"><img src="../../image/http/threadBased.png" width="50%" align="middle" /></p>
+![alt|c,50](../../image/http/threadBased.png)
 
 采用阻塞式 I/O 模型获取输入数据；每个连接都需要独立的线程完成数据输入，业务处理，数据返回的完整操作。
 
@@ -15,7 +15,7 @@
 
 ## 概念
 
-<p style="text-align:center;"><img src="../../image/http/http.png" width="25%" align="middle" /></p>
+![alt|c,25](../../image/http/http.png)
 
 对于http协议而言，客户端与服务端的通信规则就是
 - **请求**：客服端向服务器发送数据
@@ -43,7 +43,7 @@
 
 ## 单Reactor单线程
 
-<p style="text-align:center;"><img src="../../image/http/singleReator.png" width="50%" align="middle" /></p>
+![alt|c,50](../../image/http/singleReator.png)
 
 有多个客户端连接到 Reactor，Reactor 单线程处理所有事件
 - `acceptor`：连接事件
@@ -54,7 +54,7 @@ Reactor既负责处理连接请求，又要负责处理读写请求，一般来�
 
 ## 单Reactor多线程
 
-<p style="text-align:center;"><img src="../../image/http/reatorMultiThread.png" width="50%" align="middle" /></p>
+![alt|c,50](../../image/http/reatorMultiThread.png)
 
 
 Reactor 只读取事件，并处理连接（连接处理比较快，没必要开线程了）。然后将读事件、写事件、业务逻辑全部扔到线程池中进行处理。**图中只将读事件和业务逻辑放到了线程池，写事件也可以放到线程池**。
@@ -63,7 +63,7 @@ Reactor 只读取事件，并处理连接（连接处理比较快，没必要开
 ## 多Reactor多线程
 
 
-<p style="text-align:center;"><img src="../../image/http/multireactorMultithread.png" width="50%" align="middle" /></p>
+![alt|c,50](../../image/http/multireactorMultithread.png)
 
 在单Reactor多线程的基础上，引入多个Reactor线程，形成主从结构
 - **mainReactor**：负责接收客户端连接，并将建立的客户端连接进行分发给subReactor进程中

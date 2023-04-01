@@ -27,16 +27,16 @@ EXPECT_XXX(expected, actual) << "error message";
 ```
 
 **`bool` 条件检测**
-<p style="text-align:center;"><img src="../../image/gtest/compare1.png" width="75%" align="middle" /></p>
+![alt|c,75](../../image/gtest/compare1.png)
 
 **数值比较**
-<p style="text-align:center;"><img src="../../image/gtest/compare2.png" width="75%" align="middle" /></p>
+![alt|c,75](../../image/gtest/compare2.png)
 
 **字符串比较**
-<p style="text-align:center;"><img src="../../image/gtest/compareStr.png" width="75%" align="middle" /></p>
+![alt|c,75](../../image/gtest/compareStr.png)
 
 **浮点数比较**
-<p style="text-align:center;"><img src="../../image/gtest/compareFloat.png" width="75%" align="middle" /></p>
+![alt|c,75](../../image/gtest/compareFloat.png)
 
 ## 案例
 
@@ -193,7 +193,7 @@ INSTANTIATE_TEST_CASE_P(
 ```
 
 **参数生成器**
-<p style="text-align:center;"><img src="../../image/gtest/parameter.png" width="75%" align="middle" /></p>
+![alt|c,75](../../image/gtest/parameter.png)
 
 ## TYPED_TEST
 

@@ -1,5 +1,5 @@
 
-<h1 style="text-align:center;font-size:60px;font-weight:bold;font-family:宋体">gtest</h1>
+<h1 style="text-align:center;font-size:60px;font-weight:bold;font-family:宋体">测试工具</h1>
 
 <style>
     #btn{
@@ -49,8 +49,9 @@
         text-align:center;
         border-radius: 10px; 
         margin-bottom: 5px;
-        width:100%;
         height:80px;
+        margin-left: 25%;
+        margin-right: 25%;
 
         /* 显示为盒子，为了居中 */
         display: -webkit-box;

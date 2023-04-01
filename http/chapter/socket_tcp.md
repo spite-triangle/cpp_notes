@@ -6,7 +6,7 @@
  套接字是一种网络API，提供一种进程间的通信方法，使得相同主机或者不同主机上的进程能够使用socket定义的规范进行双向的数据通信。可以实现TCP与UDP方式的通信。
 
 **socket实现的TCP通讯模式：**
-<p style="text-align:center;"><img src="../../image/http/socket.png" width="50%" align="middle" /></p>
+![alt|c,50](../../image/http/socket.png)
 
 # API接口
 

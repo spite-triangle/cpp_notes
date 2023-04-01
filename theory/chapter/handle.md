@@ -3,7 +3,7 @@
 # 资源管理
 
 ## 内核资源共用
-<p style="text-align:center;"><img src="../../image/theory/handle_sys.png" width="50%" align="middle" /></p>
+![alt|c,50](../../image/theory/handle_sys.png)
 
 内核管理系统资源，对于系统资源结构描述的数据结构内存占用可能十分大。当进程去使用系统资源时，不可能一个进程就生成一个资源描述数据结构。内核里就放了一个公共点资源数据结构，每个进程要使用这个资源时，就向系统申请使用该结构。
 
@@ -14,13 +14,13 @@
 
 ## 句柄机制
 
-<p style="text-align:center;"><img src="../../image/theory/memory_old.png" width="50%" align="middle" /></p>
+![alt|c,50](../../image/theory/memory_old.png)
 
 1. 每个进程会有一张“句柄表”，用来存储句柄
 2. 句柄指向的是地址放入了真实对象的指针
 3. 当对象位置发生变化时，就会更新句柄指向的对象指针
 
-<p style="text-align:center;"><img src="../../image/theory/memory_new.png" width="50%" align="middle" /></p>
+![alt|c,50](../../image/theory/memory_new.png)
 
 # 句柄定义
 

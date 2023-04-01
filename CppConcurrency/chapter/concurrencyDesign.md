@@ -12,7 +12,7 @@
 > [tip]
 > 引起乒乓缓存（cache ping-pong）的原因就是多核CPU同时访问修改同一数据，即CPU间底层的"多线程同步"。
 
-<p style="text-align:center;"><img src="../../image/concurrency/multiCPU.png" width="25%" align="middle" /></p>
+![alt|c,25](../../image/concurrency/multiCPU.png)
 
 对于多核处理器，每个核都有自己独立的 cache（高速缓存）用来储存临时数据。若两个核同时读取内存上的同一数据，就需要将数据从内存拷贝到 cache 中，然后再拷贝到 register（寄存器）中进行运算操作。但是其中一个核修改了数据，那么就需要同步其他核的 cache ，将该数据更新到最新值（这样才能在大局上，保证这是同一个数据）。然而更新 cache 是要消耗时间的，若另一个核刚好需要访问这个数据，那么就不得不等待 cache 中数据更新到最新值。
 

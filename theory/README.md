@@ -49,8 +49,9 @@
         text-align:center;
         border-radius: 10px; 
         margin-bottom: 5px;
-        width:100%;
         height:80px;
+        margin-left: 25%;
+        margin-right: 25%;
 
         /* 显示为盒子，为了居中 */
         display: -webkit-box;

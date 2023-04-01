@@ -12,7 +12,7 @@ HTTP协议的实际过程：
 
 ## 请求报文
 
-<p style="text-align:center;"><img src="../../image/http/requestionMessage.png" width="50%" align="middle" /></p>
+![alt|c,50](../../image/http/requestionMessage.png)
 
 报文结构：
 - 请求行
@@ -25,7 +25,7 @@ HTTP协议的实际过程：
 
 ## 响应报文
 
-<p style="text-align:center;"><img src="../../image/http/responseMessage.png" width="50%" align="middle" /></p>
+![alt|c,50](../../image/http/responseMessage.png)
 
 报文结构：
 - 响应行
@@ -119,7 +119,7 @@ Content-Type: text/html
 
 # 状态码
 
-<p style="text-align:center;"><img src="../../image/http/httpCode.png" width="50%" align="middle" /></p>
+![alt|c,50](../../image/http/httpCode.png)
 
 <div style="margin: 0 auto;padding:1rem;width: 30rem;">
 

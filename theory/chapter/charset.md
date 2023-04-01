@@ -6,7 +6,7 @@
 - 可见字符：数字，字母，共 95 个
 - 控制字符：控制打印输出的，例如换行 `\n`，共 33 个
 
-<p style="text-align:center;"><img src="../../image/theory/ascii.png" width="75%" align="middle" /></p>
+![alt|c,75](../../image/theory/ascii.png)
 
 **扩展 ASCII 码**：后来发现 128 个不够用，又把剩下的 `1000 0000 ~ 1111 1111` 都给使用上 
 
@@ -40,12 +40,12 @@ triangle@LEARN:~$ chcp <.CPID> // 切换 powershell 的显示字符集
 - 56 - 87 区：3008 个二级汉字，按照部首/笔画排序
 - 88 - 94 区：空白区 
 
-<p style="text-align:center;"><img src="../../image/theory/gb2312_block.png" width="75%" align="middle" /></p>
+![alt|c,75](../../image/theory/gb2312_block.png)
 
 **码位：** 区号 + 行号 + 列号。例如 16 区的「半」，行号为 7，列号为 5，则码位为 `1675`
 
 **编码：** 将区号与行列号拆分开，分别加上 `0xA0` (高字节、低字节均大于 `127`，用来兼容原版ASCII编码)， 然后再拼接到一起。
-<p style="text-align:center;"><img src="../../image/theory/gb2312_encode.png" width="25%" align="middle" /></p>
+![alt|c,25](../../image/theory/gb2312_encode.png)
 
 ## GBK
 
@@ -80,7 +80,7 @@ Unicode 只是一套准则，还是需要通过具体的字符集进行实现：
 
 首先获取到字符在 UCS-4 中的码位，然后根据上面的表，将码位二进制填入到对应位置，形成 UTF-8 编码
 
-<p style="text-align:center;"><img src="../../image/theory/utf8_encode.png" width="50%" align="middle" /></p>
+![alt|c,50](../../image/theory/utf8_encode.png)
 
 ## DOM
 

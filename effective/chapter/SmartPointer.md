@@ -65,7 +65,7 @@ triangle@LEARN:~$ ./a.out
 
 ## 内存结构
 
-<p style="text-align:center;"><img src="../../image/effective/shared_ptr.png" width="40%" align="middle" /></p>
+![alt|c,40](../../image/effective/shared_ptr.png)
 
 shared_ptr 的内存大小就是两个指针
 - **对象指针**：指向对象

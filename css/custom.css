@@ -1,13 +1,4 @@
 :root {
-    --theme-hue: random(0, 255);
-    --cover-button-border: 1px solid black;
-    --cover-button-color: black;
-    --cover-button-primary-color: rgb(255, 255, 255);
-    --cover-button-primary-background: black;
-    --cover-heading-color: black;
-    --code-inline-color: rgb(133, 52, 135);
-    --blockquote-border-color: #0b87da;
-    --theme-color: #0b87da;
     /* Panel Left */
     --docsify-example-panels-left-panel-background: transparent;
     --docsify-example-panels-left-panel-width: 60%;
@@ -43,7 +34,7 @@ summary{
     margin-bottom:1.5%;
 }
 .details-title {
-    background-color: var(--theme-color);
+    background-color: rgb(71, 159, 155);
     border-radius: 0.2em;
     box-shadow: 0 2px 2px 0 rgb(0 0 0 / 14%),
         0 3px 1px -2px rgb(0 0 0 / 12%),

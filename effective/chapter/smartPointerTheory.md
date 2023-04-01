@@ -2,7 +2,7 @@
 
 - [C++智能指针](https://zhuanlan.zhihu.com/p/54078587)
 
-# 1. auto_ptr
+# auto_ptr
 
 早期`auto_ptr`的实现思路：
 - 移除原来对象的关于指针的所有权
@@ -53,9 +53,9 @@ private:
 - auto_ptr 并没有移动语义机制（`c++11`才添加的）。**进行赋值操作 `ptr2 = ptr1;` （拷贝语义）后，ptr1 丧失对指针对象的所有权，再次利用 ptr1 访问原对象，就会导致段错误。**
 - auto_ptr 不能管理数组指针，没有`delete []`释放功能
 
-# 2. unique_ptr
+# unique_ptr
 
-## 2.1. 基本实现
+## 基本实现
 
 **作用**：对原来的 auto_ptr 进行改进，删除「拷贝语义」，添加「移动语义」。**明确使用「移动语义」，让所有权的转移在代码层面展示出来，让程序猿更清楚自己在干啥（有点鸡肋，智能还是重点在人工）**
 
@@ -109,7 +109,7 @@ private:
 };
 ```
 
-## 2.2. 数组
+## 数组
 
 unique_ptr 能够实现对数组指针的管理
 
@@ -136,7 +136,7 @@ unique_ptr 能够实现对数组指针的管理
     }
    ```
 
-## 2.3. 创建
+## 创建
 
 ```cpp
 // 注意：无法处理数组
@@ -163,9 +163,11 @@ int main()
 > [!note]
 > 不要使用同一个指针对象去初始化多个 unique_ptr ，违背了设计初衷。
 
-## 2.4. 其他操作
+## 其他操作
 
 ```cpp
+#include <memory>
+
 // 返回该对象所管理的指针，同时释放其所有权
 std::unique_ptr::release();
 
@@ -182,7 +184,7 @@ std::unique_ptr::get();
 std::unique_ptr::get_deleter();
 ```
 
-# 3. shared_ptr
+# shared_ptr
 
 **作用：** 对每一个指针计数，每拷贝一份计数加一，每析构一次计数减一，这就可以避免多次释放。 **删除移动语义，又改用了拷贝语义，因为共享就是要实现多次拷贝。**
 
@@ -239,6 +241,8 @@ public:
 共享指针的创建
 
 ```cpp
+#include <memory>
+
 // 构造函数创建
 std::shared_ptr<Student> ptr1(new Student(name,age));
 
@@ -251,14 +255,14 @@ ptr2 = make_shared<Student>(name,age);
 ptr1.use_count();
 ```
 
-> [!note]
-> 不要使用同一个指针对象去初始化多个 shared_ptr ，得用「拷贝语义」实现。
+> [!note|style:flat]
+> - 不要使用同一个指针对象去初始化多个 shared_ptr ，得用「拷贝语义」实现。
+> - shared_ptr 中的计数器是原子类型线程安全，但数据部分不是
 
 
+# weak_ptr
 
-# 4. weak_ptr
-
-## 4.1. 死锁
+## 死锁
 
 ```cpp
 class Person
@@ -318,7 +322,7 @@ int main()
 }
 ```
 
-## 4.2. weak_ptr
+## weak_ptr
 
 **作用：** 利用 weak_ptr 获取 shared_ptr 的对象，不会导致 shared_ptr 计数器的增加。
 
