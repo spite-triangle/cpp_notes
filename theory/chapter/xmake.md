@@ -13,22 +13,25 @@ triangle@LEARN:~$ xmake create -l [language] -p [path]
 ```
 
 - 编译工程
+
 ```term
 triangle@LEARN:~$ xmake build [target]
 triangle@LEARN:~$ xmake clean // 删除
 ```
 
 - 运行
+
 ```term
 triangle@LEARN:~$ xmake run [target]
 ```
 - 切换编译器
+
 ```term
 triangle@LEARN:~$ xmake globle --mingw=[mingw路径] // 配置编译器路径
 triangle@LEARN:~$ xmake config -p [mingw|windows] --sdk=[mingw路径] // -p 代表 plat 
 ```
 
-> [note]
+> [!note]
 > mingw 路径就设置到mingw文件夹就行，不要带bin，例如 D:\Program\mingw\
 
 - 生成 vs 项目

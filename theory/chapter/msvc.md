@@ -497,7 +497,7 @@ triangle@LEARN:~$ devenv solutionName.sln /Project projectName /Build Debug
 ```
 想要在终端中使用 devenv，就需要在环境变量中添加 devenv 所在路径，但直接添加 visual studio 的路径到系统环境变量中又不太合理，因此可以写一个 bat 脚本来调用 devenv 命令
 
-```bat
+```batch
 @echo off 
 
 @REM 配置环境变量，运行 devenv 指令

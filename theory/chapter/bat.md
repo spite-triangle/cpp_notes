@@ -60,7 +60,7 @@ triangle@LEARN:~$ del // 删除文件
 
 **脚本格式：**
 
-```bat
+```batch
 @REM 不会进行命令打印
 @echo off 
 
@@ -73,7 +73,7 @@ pause
 
 **变量：**
 
-```bat
+```batch
 @REM 定义变量
 set var=value
 set /a res=10 + 12
@@ -108,14 +108,15 @@ set /p var=[提示文字]
 ```
 
 **调用指令：**
-```bat
+
+```batch
 @REM 批处理，exe
 call 可执行文件
 ```
 
 **条件：**
 
-```bat
+```batch
 @REM 语法格式，括号不能换行
 if [not] condition (
 
@@ -142,7 +143,7 @@ if defined var () else ()
 
 **循环：**
 
-```bat
+```batch
 @REM 基本语法。索引必须为单个字母
 for %%i in (data) do ( echo %%i)
 
