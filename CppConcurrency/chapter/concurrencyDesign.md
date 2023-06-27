@@ -9,7 +9,7 @@
 
 ## 乒乓缓存
 
-> [tip]
+> [!tip]
 > 引起乒乓缓存（cache ping-pong）的原因就是多核CPU同时访问修改同一数据，即CPU间底层的"多线程同步"。
 
 ![alt|c,25](../../image/concurrency/multiCPU.png)
@@ -39,7 +39,7 @@ void f() {
 - **low contention**：处理器之间很少要互相等待
 - **cache ping-pong**：需要始终维持一致的数据（例如原子变量）在多核的 cache 之间来回传递的情况。<span style="color:blue;font-weight:bold">除了上述多处理器访问原子变量会引起乒乓缓存外，mutex 也会引起这个问题，因为锁需要在不同的线程中传递，并且保持始终一致 </span>
 
-> [note]
+> [!note]
 > 要避免乒乓缓存，就要尽量减少多个线程对同一内存位置的竞争。
 
 ## 伪共享
