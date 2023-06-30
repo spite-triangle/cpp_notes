@@ -55,8 +55,8 @@ void Fcn(ParamType param);
 
 ## 万能引用
 
-> [tip]
-**作用**：用来接收「引用参数」的，左值识别为左值引用，右值识别为右值引用
+> [!tip]
+> **作用**：用来接收「引用参数」的，左值识别为左值引用，右值识别为右值引用
 
 ```cpp
 template<typename T>
@@ -290,61 +290,93 @@ triangle@LEARN:~$ ./a.out
 
 # decltype
 
-## 作用
 
-**作用：** 推导类型
+## 值类别
+
+**表达式** (带有操作数的操作符、字面量、变量名等)都有两种独立的特性：类型、值类别。值类别有三种**基本类型**：
+- 纯右值（prvalue）: 返回类型非引用的函数、重载运算符的表达式、数字、临时变量
+- 亡值（xvalue）: 经过 `std::move()` 强转得到的值
+- 左值（lvalue）: 通常定义的变量
+
+根据 **表达式** 的值类别，`decltype` 推导的类型不同：
+- 亡值：T&&
+- 左值：T&
+- 纯右值：T
+
+
+
+## 使用
+
+
+> [!tip]
+> - decltype ( entity )：对于 entity，推测结果就是 entity 的类型
+> - decltype ( expression )：对于 expression 就是上面的三条规则
+> - decltype ( ( entity ) ): entity 加上括号，就会变成表达式
+
 ```cpp
-int x; // decltype(x) 的结果为 int
+int fcn(){}
 
-const int & cx = 1; // decltype(cs) 的结果为 const int &
+int main(int argc, char const *argv[])
+{
+    /* ================= decltype ========================= */
+    // entity
+    int a;
+    using T = decltype(a); // int
+    using T = decltype(argc);// int
 
-void Test(int a, double b); // decltype(Test) 的结果为 void (*fcn1)(int,int)
+    // expression
+    using T = decltype((a)); // int&
+    using T = decltype((argc)); // int&
+
+    /* ================= expression ===================== */
+    // 纯右值 int
+    using T = decltype((34));
+    using T = decltype(fcn());
+
+    // 左值 int&
+    using T = decltype((a));
+    using T = decltype((argv));
+
+    // 亡值 int&&
+    using T = decltype(std::move(a));
+    using T = decltype(std::move(fcn()));
+
+    return 0;
+}
 ```
-- **推导结果**
-   ```cpp
-    // auto 充当占位符号，decltype(res) 将返回结果推导出来后，会补上去
-    // 由于 auto 占位，不会丢 &
-    template<typename T>
-    auto Get(T) -> decltype(res)
-    {
-        ...
-        int & rest;
 
-        return res;
-    }
 
-    // c++14 特性，将上面的简写了，但是存在歧义，auto 会丢 &
-    template<typename T>
-    auto Get(T)
-    {
-        ...
-        return res;
-    }
+**函数返回值推导**
 
-    // auto 继续充当占位符号
-    template<typename T>
-    decltype(auto) Get(T)
-    {
-        ...
-        return res;
-    }
+```cpp
+// auto 充当占位符号，decltype(res) 将返回结果推导出来后，会补上去
+// 由于 auto 占位，不会丢 &
+template<typename T>
+auto Get(T) -> decltype(res)
+{
+    ...
+    int & res;
 
-   ```
-- **赋值**
-   ```cpp
-    Student st;
-    Student & st1 = st;
-    auto st2 = st1; // Student st2
-    decltype(auto) st3 = st1; // Student & st3
-   ```
-- **扯淡用法**
-   ```cpp
-    int x;
-    decltype((x)) xx; // int & xx，两个括号会折腾个 & 符号出来
-   ```
+    return res;
+}
 
-> [note]
-> decltype 会原封不动的保留下类型，包括引用符号 &
+// c++14 特性，将上面的简写了，但是存在歧义，auto 会丢 &
+template<typename T>
+auto Get(T)
+{
+    ...
+    return res;
+}
+
+// auto 继续充当占位符号
+template<typename T>
+decltype(auto) Get(T)
+{
+    ...
+    return res;
+}
+
+```
 
 ## 查看推导结果
 

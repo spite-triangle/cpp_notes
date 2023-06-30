@@ -5,5 +5,6 @@
 - [第二章 grpc](ThirdLib/chapter/grpc.md)
 - [第三章 workflow](workflow/README.md)
 - [第四章 SQLite](ThirdLib/chapter/sqlite.md)
+- [附加](ThirdLib/chapter/other.md)
 
 

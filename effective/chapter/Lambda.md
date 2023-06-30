@@ -357,3 +357,77 @@ auto fcn = std::bind(
         return 0;
     }
    ```
+
+# 类型转换函数
+
+
+```cpp
+int(*p)(int) = [](auto n) {return n; };
+```
+
+问：lambda 表达式在底层是一个类实现，那么如何实现用函数指针进行接收？
+
+这是由于lambda 还生成了一个静态函数。**该静态类会生成一个 lambda 类实列，然后仿函数调用。**
+
+> [!tip]
+> [反编译](cppinsights.io)
+
+```cpp
+int main()
+{
+      
+  class __lambda_2_17
+  {
+    public: 
+    template<class type_parameter_0_0>
+    inline /*constexpr */ auto operator()(type_parameter_0_0 n) const
+    {
+      return n;
+    }
+    
+    #ifdef INSIGHTS_USE_TEMPLATE
+    template<>
+    inline /*constexpr */ int operator()<int>(int n) const
+    {
+      return n;
+    }
+    #endif
+    
+    // NOTE - 静态转换函数 
+    #ifdef INSIGHTS_USE_TEMPLATE
+    using retType_2_17 = int (*)(int);
+    template<>
+    inline constexpr operator retType_2_17 () const noexcept
+    {
+      return __invoke;
+    }
+    #endif
+    
+    private: 
+    template<class type_parameter_0_0>
+    static inline /*constexpr */ auto __invoke(type_parameter_0_0 n)
+    {
+      // 生成一个 lambda 类，然后仿函数调用
+      return __lambda_2_17{}.operator()<type_parameter_0_0>(n);
+    }
+    
+    #ifdef INSIGHTS_USE_TEMPLATE
+    template<>
+    static inline /*constexpr */ int __invoke<int>(int n)
+    {
+      return __lambda_2_17{}.operator()<int>(n);
+    }
+    #endif
+    
+    
+    public:
+    // /*constexpr */ __lambda_2_17() = default;
+    
+  };
+  
+  using FuncPtr_2 = int (*)(int);
+  FuncPtr_2 p = static_cast<int (*)(int)>(__lambda_2_17{}.operator __lambda_2_17::retType_2_17());
+  return 0;
+}
+
+```

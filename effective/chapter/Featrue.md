@@ -1,23 +1,12 @@
 # 新特性
 
 
-# 统一初始化
+# 概念
 
-## 介绍
-**目的：** 所有对象的初始化方式均不同，C++11 想要统一初始化方式，因此设计了`{}`和`std::initializer_list`，即统一初始化
+## 初始化
 
-```cpp
-// 初始化数组
-int values[]{1,2,3,4};
 
-// 初始化 vector
-std::vector<int> vec{1,2,3,4};
-
-// 初始化复数对象
-std::comples<double> c{3.0, 1.0};
-```
-
-## 工作原理
+### 花括号初始化器列表
 
 ```cpp
 class Student
@@ -63,8 +52,7 @@ int main(int argc, char const *argv[])
 }
 ```
 
-> [!note]
-> 上面的 {"fuck",18} 生成的初始化列表临时变量其实在程序中是无法定义的。显示定义 initialized_list，需要列表中元素类型一样
+### 初始化器列表
 
 ```cpp
 // 对于初始化列表，元素类型要一样，个数可以随便加
@@ -76,7 +64,29 @@ lst.begin();
 lst.end();
 ```
 
-## 注意事项
+### 聚合体初始化
+
+聚合体定义：
+- 数组
+- 无用户自定义构造函数、无父类、无私有的类（通常定义的结构体就是）
+
+```cpp
+struct Test
+{
+    int a;
+    float b;
+};
+
+int main()
+{
+    Test t = {1,1.58};
+
+    int b[] = {1,2,3,4};
+    return 0;
+}
+```
+
+### 注意事项
 
 - **区分无参数构造**
    ```cpp
@@ -118,7 +128,375 @@ lst.end();
     initialize_list<int> ls = {1,2,4,5.0};
    ```
 
-# nullptr
+## 默认实参
+
+- 默认实参不一定非要写在一个函数声明中，只要当前函数声明之前有写右边的形参的默认实参，就能编译通过。
+
+```cpp
+void fcn(int a, int b, int c = 1);
+
+void fcn(int a, int b = 2, int c);
+
+void fcn(int a = 1, int b, int c);
+```
+
+- 类外定义通过默认实参变成了 **默认构造/拷贝/移动** 时，会编译不通过
+
+```cpp
+class CTest{
+public:
+    // 显示定义了默认构造
+    CTest() = default;
+
+    CTest(int a);
+
+    int m_a;
+};
+
+CTest::CTest(int a = 10)
+{
+    m_a = a;
+}
+
+int main(int argc, char const *argv[])
+{
+    // 两个构造函数冲突，不能编译通过
+    CTest t;
+    return 0;
+}
+```
+
+- 默认实参与静态类型相关，而非继承实现
+
+<!-- panels:start -->
+<!-- div:left-panel -->
+
+```cpp
+#include <iostream>
+
+class CParent
+{
+public:
+    virtual void show(int a = 1) = 0;
+};
+
+class CSon : public CParent
+{
+public:
+    virtual void show(int a = 2)
+    {
+        printf("%d\n", a);
+    }
+};
+
+int main(int argc, char const *argv[])
+{
+    CParent * p = new CSon;
+    p->show();
+    
+    CSon * s = new CSon;
+    s->show();
+    return 0;
+}
+```
+<!-- div:right-panel -->
+
+```term
+triangle@LEARN:~$ g++ test.cpp && ./a.out
+1
+2
+```
+<!-- panels:end -->
+
+
+
+## 成员指针
+
+成员指针分为两类
+- 成员函数指针：`&X::fcn`
+- 数据成员指针：`&X::val`
+
+> [!note]
+> - 数据成员指针与虚函数成员指针只是一个**占位符号**，表示存在于这个类中，其值类似一个偏移量
+> - 成员函数指针内容则是函数首地址
+> - **成员指针不是一般意义上的指针**
+
+
+```cpp
+#include <iostream>
+class CTest
+{
+public:
+    void fcn()
+    {
+        printf("hello\n");
+    }
+};
+struct Data
+{
+    int nVal;
+};
+int main(int argc, char const *argv[])
+{
+    // 成员函数指针
+    void(CTest::*pFcn)() = &CTest::fcn;
+
+    // NOTE - 必须要一个实列，才能去调用成员函数指针
+    CTest t1;
+    (t1.*pFcn)();
+    CTest* t2 = new CTest;
+    (t2->*pFcn)();
+
+    // 数据成员指针
+    int Data::* pVal = &Data::nVal;
+
+    Data st1;
+    st1.*pVal = 10;
+    Data * st2 = new Data;
+    st2->*pVal = 12;
+
+    return 0;
+}
+```
+
+## 字面量
+
+[user literals](https://en.cppreference.com/w/cpp/language/user_literal)：字面量，根据用户给定的后缀，将整形、浮点、字符串、字符类型创建成新的对象类型 (具体支持哪些类型查手册)。
+
+```cpp
+#include <chrono>
+int main(int argc, char const *argv[])
+{
+    // 时间相关的字面量
+    using namespace std::literals::chrono_literals;
+    
+    // 通过后缀 ms 创建了一个 milliseconds 对象
+    std::chrono::milliseconds mill = 12ms;
+    return 0;
+}
+```
+
+用户自定义的字面量后缀必须以 `_` 作为起始，防止与官方定义的字面量冲突。
+
+```cpp
+struct Data
+{
+     long double dVal;
+};
+
+// 自定义字面量
+Data  operator""_data( long double dVal) { 
+    return  Data{dVal};
+}
+
+int main(int argc, char const *argv[])
+{
+    // 使用
+    Data st = 12.4_data;
+    return 0;
+}
+```
+
+**原始字面量**: 完全将字符当字符串，不考虑转义字符 `R"(xxxx)"`。
+
+```cpp
+const std::string str = R"(\n\n)";
+```
+
+## 数组
+
+- 数组是一种类型
+
+```cpp
+    // false
+    std::is_same<int[2], int[3]>();
+
+    // true
+    std::is_same<int[3], int[3]>();
+
+    int a[10];
+    decltype(a) b; // b 的是 int b[10]
+```
+
+- 变长数组: 非常量大小的数组(VLA)。 **不能为结构体的成员变量；变成变量不能为 `extern` 修饰；`msvc` 不支持**
+
+```cpp
+#include <iostream>
+int main(int argc, char const *argv[])
+{
+    for (size_t i = 0; i < 10; i++)
+    {
+        int a[i];
+        printf("%d\n", sizeof(a) / sizeof(int));
+    }
+    return 0;
+}
+```
+
+## 特殊成员函数
+
+特殊的成员函数有以下几类：
+```cpp
+class People
+{
+    // 构造函数
+    People();
+    // 析构函数
+    ~People();
+    // 拷贝构造
+    People(const People & other);
+    // 拷贝赋值
+    People& operator=(const People & other);
+    // 移动构造: 纯右值与亡值都能触发
+    People(People && other);
+    // 移动赋值：纯右值与亡值都能触发
+    People& operator=(People && other);
+}
+```
+
+**当一个类中根本没有上面的「特殊成员函数」事，编译器会都挨生成一份默认的**
+```cpp
+#include <iostream>
+
+class Name
+{
+public:
+    Name & operator=(const Name & other)
+    {
+        this->str = other.str;
+    }
+
+    Name & operator=(Name && other)
+    {
+        this->str = other.str;
+        other.str = nullptr;
+    }
+
+    const char * str;
+};
+
+// 编译器会生成默认的特殊成员函数
+class Student
+{
+public:
+    Name name;
+};
+
+int main(int argc, char const *argv[])
+{
+    Student st1;
+    st1.name.str = "fuck";
+
+    // 拷贝赋值
+    Student st2 ;
+    st2 = st1;
+
+    // 移动赋值
+    Student st3;
+    st3 = std::move(st1);
+
+    printf("st1 name is %s\n", st1.name.str);
+    printf("st2 name is %s\n", st2.name.str);
+    printf("st3 name is %s\n", st3.name.str);
+    return 0;
+}
+```
+```term
+triangle@LEARN:~$ ./a.out
+st1 name is (null)
+st2 name is fuck
+st3 name is fuck
+```
+
+<span style="color:red;font-weight:bold"> 在类中，自己实现了其中的某一个特殊成员函数，那么编译器就「可能」不会提供其余的特殊成员函数，尤其是「析构函数」，以及移动语义与拷贝语义。</span>
+
+```cpp
+class Student
+{
+public:
+    // 添加析构函数
+    ~Student(){};
+    Name name;
+};
+```
+
+```term
+triangle@LEARN:~$ ./a.out
+st1 name is fuck    ## 移动赋值已经失效
+st2 name is fuck
+st3 name is fuck
+```
+
+> [!note]
+> **为了稳妥起见，想要使用编译器提供的默认特种函数，最好显示的写出来**
+
+```cpp
+class Student
+{
+public:
+    // 添加析构函数
+    ~Student(){};
+
+    // 启用移动赋值
+    Student & operator=(Student && other) = default;
+
+    // NOTE - 当启用移动赋值，拷贝赋值就不在生成，所以还要定义一个拷贝赋值，不然编译报错
+    Student & operator=(const Student & other) = default;
+    Name name;
+};
+```
+
+```term
+triangle@LEARN:~$ ./a.out
+st1 name is (null)   ## 移动赋值又有了
+st2 name is fuck
+st3 name is fuck
+```
+
+## 函数引用限定
+
+> [!note]
+> 函数引用限定，限定的是 **实列类型**
+
+```cpp
+#include <iostream>
+class Test
+{
+public:
+    // 默认
+    void fcn() & {printf("&\n");}
+
+    // 右值限定
+    void fcn() && { printf("&&\n"); }
+
+    // 低保，当上面两种方式都没有时，左值、右值都可以调用这个
+    void fcn() const & {printf("const &\n");}
+};
+
+int main(int argc, char const *argv[])
+{
+    Test t;
+    t.fcn(); 
+
+    Test().fcn();
+
+    const Test t1;
+    t1.fcn();
+    return 0;
+}
+```
+
+```term
+triangle@LEARN:~$ g++ test.cpp && ./a.out
+&
+&&
+const &
+```
+
+
+# 关键字
+
+## nullptr
 
 ```cpp
 // NULL 的定义
@@ -181,7 +559,7 @@ lst.end();
     ```
     **在模板函数中，`NULL` 均被推测成了整型变量，就导致与原来函数的形参类型不统一。**
 
-# using
+## using
 **利用 `using` 代替 `typename` 为类型取别名更简洁**
 - 模板类型
    ```cpp
@@ -236,7 +614,7 @@ lst.end();
     std::remove_reference_t<T> // c++14
    ```
 
-# enum class 
+## enum class 
 
 enum class 与 enum 的区别：
 
@@ -332,7 +710,7 @@ constexpr typename std::underlying_type<T>::type ToEnumType(T enVal) noexcept
 array[ToEnumType(Index::two)];
 ```
 
-# delete
+## delete
 
 **利用 `delete` 代替 `private` 禁止函数接口**
 
@@ -374,30 +752,54 @@ template<>
 void Test::Fcn<void>(void* ptr) = delete;
 ```
 
-# noexcept
-
+## noexcept
+### 使用
 **`noexcept` 为 `c++11` 用于替代 `throw()` 的关键字，用于声明函数可能抛出的异常。**
 
-- 函数声明
-   ```cpp
-    // ============= 无异常 =================
-    void Fcn() throw() {} // 旧版，不推荐使用
-    void Fcn() noexcept {} // c++11 之后的版本
+```cpp
+// ============= 无异常 =================
+void Fcn() throw() {} // 旧版，不推荐使用
+void Fcn() noexcept {} // c++11 之后的版本
 
-    // ============= 可能会抛出异常 ============
-    void Fcn() throw(int ,float) {}  // 不推荐使用，可能会抛出 int，float 类型的异常
-    void Fcn() noexcept(常量表达式){} // 根据「常量表达式」的结果来判断是否会抛出异常
-                                     // ture : 不会，这里 ture 是指所有可以墙砖为 bool 的值
-                                     // false : 会抛出异常
-    
-    // ============= 骚操作：利用外部函数决定当前函数是否抛出异常 ==========
-    template<typename T>
-    // T 函数会抛出异常，noexcept(T()) 返回 false
-    // T 函数不会抛出异常， noexcept(T()) 返回 true
-    void Fcn() noexcept(noexcept(T())){}
-   ```
-    「常量表达式」见 `constexpr`
-- **noexcept 标记的函数内部抛出异常，会阻止异常的传播，直接调用 `std::terminate`**
+// ============= 可能会抛出异常 ============
+void Fcn() throw(int ,float) {}  // 不推荐使用，可能会抛出 int，float 类型的异常
+void Fcn() noexcept(常量表达式){} // 根据「常量表达式」的结果来判断是否会抛出异常
+                                    // ture : 不会，这里 ture 是指所有可以墙砖为 bool 的值
+                                    // false : 会抛出异常
+
+// ============= 骚操作：利用外部函数决定当前函数是否抛出异常 ==========
+template<typename T>
+// T 函数会抛出异常，noexcept(T()) 返回 false
+// T 函数不会抛出异常， noexcept(T()) 返回 true
+void Fcn() noexcept(noexcept(T())){}
+```
+
+ `noexcept` 有两种用法
+- 说明符: 声明函数会不会抛出异常
+- 运算符: 检验函数是否会抛出异常
+
+```cpp
+
+// 说明符，函数会抛出异常
+void fcn() noexcept(flase)
+{
+}
+
+// 外部是说明符，内部是运算符
+void fcn1 noexcept(noexcept(fcn()))
+{
+}
+
+int main()
+{
+    // 运算符
+    if(noexcept(fcn()) == true)
+    {
+    }
+}
+```
+
+**noexcept 标记的函数内部抛出异常，会阻止异常的传播，直接调用 `std::terminate`**
    ```cpp
     #include <iostream>
     using namespace std;
@@ -424,6 +826,12 @@ void Test::Fcn<void>(void* ptr) = delete;
    triangle@LEARN:~$ ./a.out
    terminate called after throwing an instance of 'int'
    ```
+
+>[!tip]
+> **不求值表达式**：只检验表达式内容，不会运行表达式 `typeid, sizeof, noexcept, decltype`
+
+### 影响
+
 - **析构函数默认为 `noexcept(ture)`，即不会抛出异常，要是抛出异常就直接终止程序**
 - **标记`noexcept`可以使得编译器最大化的优化函数**
 - 移动构造标记了 `noexcept` 会影响 `std::vector` 的数据迁移
@@ -447,9 +855,12 @@ void Test::Fcn<void>(void* ptr) = delete;
         }
     }
    ```
-# constexpr
 
-## 定义
+
+
+## constexpr
+
+### 定义
 
 **常量表达式 `const expression`： 能够在编译时进行运算的表达式，可以是一个值，也可以是一个函数。**
 
@@ -474,7 +885,7 @@ int main(int argc, char const *argv[])
 
 上面的 n1 与 n2 的类型均是 `const int` 但是前者是常量表达式，而后者不是，这样就可以看出仅仅通过`const` 来区分常量表达式是不靠谱的。为了明确的区分出常量表达式，c++11 引入了关键字 `cosntexpr`，在程序中明确指出哪些是程序猿认为的常量表示，然后再让编译器来检测。
 
-## 修饰变量
+### 修饰变量
 
 - 可以在代码中直接写出来的字面值，例如数字，字符，布尔等。
    ```cpp
@@ -511,7 +922,7 @@ int main(int argc, char const *argv[])
     }
    ```
 
-## 与 const 的区别
+### 与 const 的区别
 
 - **constexpr**：描述的是常量表达式，在编译阶段就能运行
 - **const**：提供的是 readonly 语义，但是可能会有点常量的意思 (毕竟先有的const 然后才有的 constexpr)
@@ -542,7 +953,7 @@ main.cpp:11:11: error: assignment of read-only location '* b2'
            ^~
 ```
 
-## 修饰函数
+### 修饰函数
 
 **constexpr函数**：指能用于常量表达式的函数，即可以在编译阶段直接获取结果的函数。
 
@@ -579,7 +990,7 @@ triangle@LEARN:~$ as -alhnd main.s
   33      000000
   11:main.cpp      ****     constexpr int c = add(a,b);
   34                            .loc 1 11 19
-  35 0022 C745F41E              mov     DWORD PTR -12[rbp], 30 # 已经将结果计算出来了
+  35 0022 C745F41E              mov     DWORD PTR -12[rbp], 30 ## 已经将结果计算出来了
 ```
 **传入的参数非常量表达式参数，那么常量表达式函数将作为普通函数**
 
@@ -613,10 +1024,10 @@ triangle@LEARN:~$ as -alhnd main.s
   67 0022 8B55F8                mov     edx, DWORD PTR -8[rbp]
   68 0025 8B45FC                mov     eax, DWORD PTR -4[rbp]
   69 0028 89C1                  mov     ecx, eax
-  70 002a E8000000              call    _Z3addii                # 调用定义的函数，在运行时计算
+  70 002a E8000000              call    _Z3addii                ## 调用定义的函数，在运行时计算
 ```
 
-# const 函数
+## const 函数
 
 ```cpp
 class People
@@ -674,127 +1085,8 @@ private:
 
 
 
-# 特殊成员函数
 
-特殊的成员函数有以下几类：
-```cpp
-class People
-{
-    // 构造函数
-    People();
-    // 析构函数
-    ~People();
-    // 拷贝构造
-    People(const People & other);
-    // 拷贝赋值
-    People& operator=(const People & other);
-    // 移动构造
-    People(People && other);
-    // 移动赋值
-    People& operator=(People && other);
-}
-```
-
-**当一个类中根本没有上面的「特殊成员函数」事，编译器会都挨生成一份默认的**
-```cpp
-#include <iostream>
-
-class Name
-{
-public:
-    Name & operator=(const Name & other)
-    {
-        this->str = other.str;
-    }
-
-    Name & operator=(Name && other)
-    {
-        this->str = other.str;
-        other.str = nullptr;
-    }
-
-    const char * str;
-};
-
-// 编译器会生成默认的特殊成员函数
-class Student
-{
-public:
-    Name name;
-};
-
-int main(int argc, char const *argv[])
-{
-    Student st1;
-    st1.name.str = "fuck";
-
-    // 拷贝赋值
-    Student st2 ;
-    st2 = st1;
-
-    // 移动赋值
-    Student st3;
-    st3 = std::move(st1);
-
-    printf("st1 name is %s\n", st1.name.str);
-    printf("st2 name is %s\n", st2.name.str);
-    printf("st3 name is %s\n", st3.name.str);
-    return 0;
-}
-```
-```term
-triangle@LEARN:~$ ./a.out
-st1 name is (null)
-st2 name is fuck
-st3 name is fuck
-```
-
-<span style="color:red;font-weight:bold"> 在类中，自己实现了其中的某一个特殊成员函数，那么编译器就「可能」不会提供其余的特殊成员函数，尤其是「析构函数」，以及移动语义与拷贝语义。</span>
-
-```cpp
-class Student
-{
-public:
-    // 添加析构函数
-    ~Student(){};
-    Name name;
-};
-```
-
-```term
-triangle@LEARN:~$ ./a.out
-st1 name is fuck    # 移动赋值已经失效
-st2 name is fuck
-st3 name is fuck
-```
-
-> [!note]
-> **为了稳妥起见，想要使用编译器提供的默认特种函数，最好显示的写出来**
-
-```cpp
-class Student
-{
-public:
-    // 添加析构函数
-    ~Student(){};
-
-    // 启用移动赋值
-    Student & operator=(Student && other) = default;
-
-    // NOTE - 当启用移动赋值，拷贝赋值就不在生成，所以还要定义一个拷贝赋值，不然编译报错
-    Student & operator=(const Student & other) = default;
-    Name name;
-};
-```
-
-```term
-triangle@LEARN:~$ ./a.out
-st1 name is (null)   # 移动赋值又有了
-st2 name is fuck
-st3 name is fuck
-```
-
-# emplace
+## emplace
 
 emplace 可以通过直接调用元素的构造器创建元素对象
 
