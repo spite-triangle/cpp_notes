@@ -9,6 +9,9 @@
 - [第六章 封装](effective/chapter/stdWrap.md)
 - [第七章 Lambda](effective/chapter/Lambda.md)
 - [第八章 线程](effective/chapter/thread.md)
+- [第九章 异常](effective/chapter/exception.md)
+- [第十章 Cpp17](effective/chapter/cpp17.md)
+- [第十一章 Cpp20](effective/chapter/cpp20.md)
 
 
 
