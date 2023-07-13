@@ -195,6 +195,9 @@ private:
 }
 ```
 
+> [!tip]
+> `std::nothrow` 只能屏蔽系统分配内存时产生的 `std::bad_alloc` 异常，其他异常还是要 `try catch`
+
 # 退出方式
 
 ![alt|c,75](../../image/theory/exit.png)

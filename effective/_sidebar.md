@@ -10,8 +10,9 @@
 - [第七章 Lambda](effective/chapter/Lambda.md)
 - [第八章 线程](effective/chapter/thread.md)
 - [第九章 异常](effective/chapter/exception.md)
-- [第十章 Cpp17](effective/chapter/cpp17.md)
-- [第十一章 Cpp20](effective/chapter/cpp20.md)
+- [第十章 模板](effective/chapter/template.md)
+- [第十一章 Cpp17](effective/chapter/cpp17.md)
+- [第十二章 Cpp20](effective/chapter/cpp20.md)
 
 
 

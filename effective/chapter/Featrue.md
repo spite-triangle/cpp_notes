@@ -3,6 +3,53 @@
 
 # 概念
 
+## 名字查找
+
+- 有限定名字查找
+
+```cpp
+#include <iostream>
+namespace T
+{
+    int x;
+};
+
+namespace B{
+    int x;
+};
+int main(int argc, char const *argv[])
+{
+    struct std
+    {
+        int x;
+    };
+
+    // 区分全局和局部
+    ::std::printf("");
+    
+    // 区分同名
+    T::x;
+    B::x;
+    return 0;
+}
+```
+
+- 实参依赖查找
+
+```cpp
+namespace T{
+    struct A{};
+    void fcn(A a){}
+};
+
+int main(int argc, char const *argv[])
+{
+    // 函数就不用写作用域
+    fcn(T::A());
+    return 0;
+}
+```
+
 ## 初始化
 
 
