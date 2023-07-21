@@ -101,5 +101,24 @@ int main(int argc, char const *argv[])
     Data<int,4> t{1,2,3,4};
     return 0;
 }
+```
 
+# 带初始化的 if
+
+```cpp
+#include <map>
+
+int main(int argc, char const *argv[])
+{
+    std::map<int,int> m = {{1,1}, {2,2}};
+
+    // it 作用区域是 if 的所有选择块
+    if( auto it = m.find(1); it != m.end() )
+    {
+
+    }else{
+
+    }
+    return 0;
+}
 ```

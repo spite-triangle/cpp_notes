@@ -85,9 +85,10 @@ triangle@LEARN:~$ cl /EHsc /nologo /O1 /GF /Feout /std:c++11 main.cpp add.cpp
     会生成预处理后的 `test.i` 文件
     - **/C**：保留注释
     - **/P**：预处理输出到文件，不会再进行后续步骤
-    - **/Fi<filename|outpath>**：`.i` 文件的文件名或者输出路径
+    - **/Fi<filename|outpath>** ： `.i` 文件的文件名或者输出路径
 
-- 汇编：**/Fxx** 类型的指令均是将文件保存下来，编译器会跑完所有的流程
+
+- 汇编：/Fxx 类型的指令均是将文件保存下来，编译器会跑完所有的流程
     - **/FA**：程序集的列表 `.asm` 无源码注释
     - **/FAc**：带机器码的程序集 `.cod` 带有指令码
     - **/FAs**：带源待码的程序集 `.asm` 有源码注释
@@ -98,16 +99,16 @@ triangle@LEARN:~$ cl /EHsc /nologo /O1 /GF /Feout /std:c++11 main.cpp add.cpp
     ```
     生成编译后的二进制文件 `test.obj` 
     - **/c**：生成二进制文件，不会再进行后续步骤
-    - **/Fo<filename|outpath>**：二进制文件名或者输出路径
+    - **/Fo<filename|outpath>** ：二进制文件名或者输出路径
 - 链接：
     ```term
     triangle@LEARN:~$ cl /c /EHsc add.cpp main.cpp // 生成 add.obj 与 main.obj 
     triangle@LEARN:~$ link .\add.obj .\main.obj /OUT:test.exe // 将obj链接起来
     ```
-    - **cl.exe**：是编译器，对应的是vs项目 `属性 -> c/c++` 选项
-    - **link.exe**：是链接器，对应的是vs项目 `属性 -> 链接器` 选项
-    - **/OUT:<path>**：目标文件输出路径
-    - **/LIBPATH:<path>**：库文件存放目录，类似于 `g++ -L./`
+    - **cl.exe** ：是编译器，对应的是vs项目 `属性 -> c/c++` 选项
+    - **link.exe** ：是链接器，对应的是vs项目 `属性 -> 链接器` 选项
+    - **/OUT:<path>** ：目标文件输出路径
+    - **/LIBPATH:<path>** ：库文件存放目录，类似于 `g++ -L./`
 
 ## 文件目录编译
 

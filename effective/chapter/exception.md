@@ -198,6 +198,24 @@ private:
 > [!tip]
 > `std::nothrow` 只能屏蔽系统分配内存时产生的 `std::bad_alloc` 异常，其他异常还是要 `try catch`
 
+# 函数 try 块
+
+函数直接处理异常，不用在函数外部进行捕获
+
+```cpp
+int Fcn(int a)try
+{
+   throw 1;
+   return 10;
+}
+catch(int e)
+{
+    std::cout << e << std::endl;
+    // 可以进行值返回
+    return 11;
+}
+```
+
 # 退出方式
 
 ![alt|c,75](../../image/theory/exit.png)

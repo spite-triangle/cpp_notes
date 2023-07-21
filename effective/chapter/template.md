@@ -1,5 +1,150 @@
 # 模板
 
+# 变量模块 (C++14)
+
+```cpp
+#include <iostream>
+
+// 变量模板实例化后就是一个全局变量
+template<class T>
+ T v;
+
+int main(int argc, char const *argv[])
+{
+    v<int> = 10;
+
+    printf("%d\n",v<int>);
+    return 0;
+}
+```
+
+# 名字查找
+
+## 定义
+
+- **名字**(name): 代码中调用资源的字段名 (非声明)，例如函数名、变量名、作用域名等
+- **限定名**(qualified name): 出现在 `::` 右边的名字，以及通过 `.` 与 `->` 指向的类成员名
+- **非限定名**(unqualified name): 不是限定名的，都是非限定名
+- **待决名**(dependent name): 依赖非确定的模板变量的名字，只针对模板而言
+
+```cpp
+namespace My
+{
+    int val;
+
+    template<class T>
+    struct TestB{
+        int val; 
+    };
+
+    template<class T>
+    struct TestA {
+        void fcn (T arg)
+        {
+            int a = arg; // arg 依赖 T ，待决名
+            int b = TestB<T>::val; // val 依赖 T ，待决名
+
+            // val 明确，非待决名
+            // My 非限定名
+            // val 由 My 确定，限定名
+            int c = My::val;
+        }
+    };
+} // namespace My
+```
+
+## 常规查找
+
+### 普通查找
+
+> [!tip]
+> 一般编程所遵守的规则都是普通查找，直觉上是没有障碍的
+
+```cpp
+int n = 1;
+
+namespace A{
+    int m = 2;
+    int n = 10;
+    namespace B{
+        int x = n; // 查找 A::n
+        int x1 = ::n; // 查找全局变量 n
+        int y = m; // 查找 A::m
+        int b = a; // 错误，声明滞后
+    }
+    int a = 100;
+}
+```
+
+### ADL
+
+**参数依赖查找**，即 ADL (argument dependent lookup)，该规则用于**非限定函数名**的查找，会根据参数的作用域查找函数名。
+
+```cpp
+namespace A{
+    template<class T>
+    void fcn(T arg){
+        std::cout << "A" << std::endl;
+    }
+}
+
+namespace B{
+    struct Test{
+    };
+
+    void fcn(Test t){
+        std::cout << "B" << std::endl;
+    }
+}
+
+int main(int argc, char const *argv[])
+{
+    B::Test t;
+    using namespace A;
+    // fcn : 非限定函数名
+    // t : 在 B 作用域
+    // 结果：根据 ADL 规则，会查找到 B::fcn ，打印 B
+    fcn(t);
+    return 0;
+}
+```
+
+## 模板查找
+
+> [!note]
+> 模板的名字查找会划分为两个阶段 (two-phase lookup)
+> 1. 针对 `nondependent name` 采用普通查找与ADL；针对 `unqualified dependent name` 采用普通查找，并在模板实例化时，进行ADL
+> 2. `qualified dependent name` 均在模板实例化时，进行名字查找
+
+```cpp
+template <class T>
+class Base{
+public:
+    void fcnB(T arg)
+    {
+        std::cout << "base fcnB" << std::endl;
+    } 
+};
+
+template<class T>
+class Test : public Base<T> 
+{
+public:
+    void fcn(){
+        T a;
+        // fcnB: unqualified dependent name
+        // 模板实例化前，普通查找找不到
+        // 模板实例化后，ADL也查找不到
+        // 结果：报错
+        fcnB(a);
+
+        // 添加 this-> 将其变为 qualified dependent name
+        // 模板实例化后，普通查找成功，编译通过
+        this->fcnB(a);
+    };
+};
+```
+
 # 特化
 
 ## 全特化
@@ -63,6 +208,58 @@ int main(int argc, char const *argv[])
     return 0;
 }
 ```
+## is_same
+
+```cpp
+#include <iostream>
+
+// 类型不一样
+template<class A, class B>
+struct is_same{
+    const static bool value = false;
+};
+
+// 类型一样，是上面的特化情况
+template<class T>
+struct is_same<T,T>{
+    const static bool value = true;
+};
+
+// tip - 利用模板变量(c++14) 可以进一步实现 is_same_v
+template<class A, class B>
+constexpr bool is_same_v = is_same<A,B>::value;
+
+int main(int argc, char const *argv[])
+{
+
+    bool bflag = is_same<int,int>::value;
+    std::cout << bflag << std::endl;
+
+    bflag = is_same<bool,int>::value;
+    std::cout << bflag << std::endl;
+    return 0;
+}
+```
+
+# enable_if
+
+```cpp
+
+// 模板，无类型
+template<bool _Test, class _Ty>
+struct enable_if{
+};
+
+// 特化，条件成功，定义 type
+template<class _Ty>
+struct enable_if<true, _Ty>{
+    using type = _Ty;
+};
+
+// 使用 using 进行简化
+template<bool _Test, class _Ty>
+using enable_if_t = typename enable_if<_Test, _Ty>::type;
+```
 
 # 模板模板形参
 
@@ -93,23 +290,7 @@ int main(int argc, char const *argv[])
 }
 ```
 
-# 变量模块 (C++14)
 
-```cpp
-#include <iostream>
-
-// 变量模板实例化后就是一个全局变量
-template<class T>
- T v;
-
-int main(int argc, char const *argv[])
-{
-    v<int> = 10;
-
-    printf("%d\n",v<int>);
-    return 0;
-}
-```
 
 
 # 形参包
@@ -435,3 +616,4 @@ int main(int argc, char const *argv[])
     return 0;
 }
 ```
+
