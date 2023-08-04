@@ -170,52 +170,7 @@ int main(int argc, char const *argv[], char const * envp[])
 }
 ```
 
-# 附加
 
-## 环境变量
-
-一个程序的入口 `main` 函数有三个参数
-
-```cpp
-#include <iostream>
-/* 
-    argc - 命令行参数个数
-    argv - 命令行参数
-    envp - 环境变量
- */
-int main(int argc, char const *argv[], char const * envp[])
-{
-    printf("%s\n", envp[0]);
-    printf("%s\n", envp[1]);
-    return 0;
-}
-```
-
-```term
-triangle@LEARN:~$ ./a.out 
-SHELL=/bin/bash
-COLORTERM=truecolor
-triangle@LEARN:~$ env | head
-SHELL=/bin/bash
-COLORTERM=truecolor
-WSL2_GUI_APPS_ENABLED=1
-....
-```
-
-并且在启动程序的时候也可以自定义环境变量列表 `envp` 
-
-```term
-triangle@LEARN:~$ TEST=fuck ./a.out
-TEST=fuck
-SHELL=/bin/bash
-```
-
-环境变量分类：
-- PATH: 可执行文件搜索路径
-- PWD: 当前路径
-- HOME: home 目录
-- DISPLAY: 图形输出
-- PS1: shell 的提示符
 
 # 地址空间
 
@@ -425,3 +380,49 @@ with open('/dev/sda', 'rb') as fp:
 ```
 
 
+# 附加
+
+## 环境变量
+
+一个程序的入口 `main` 函数有三个参数
+
+```cpp
+#include <iostream>
+/* 
+    argc - 命令行参数个数
+    argv - 命令行参数
+    envp - 环境变量
+ */
+int main(int argc, char const *argv[], char const * envp[])
+{
+    printf("%s\n", envp[0]);
+    printf("%s\n", envp[1]);
+    return 0;
+}
+```
+
+```term
+triangle@LEARN:~$ ./a.out 
+SHELL=/bin/bash
+COLORTERM=truecolor
+triangle@LEARN:~$ env | head
+SHELL=/bin/bash
+COLORTERM=truecolor
+WSL2_GUI_APPS_ENABLED=1
+....
+```
+
+并且在启动程序的时候也可以自定义环境变量列表 `envp` 
+
+```term
+triangle@LEARN:~$ TEST=fuck ./a.out
+TEST=fuck
+SHELL=/bin/bash
+```
+
+环境变量分类：
+- PATH: 可执行文件搜索路径
+- PWD: 当前路径
+- HOME: home 目录
+- DISPLAY: 图形输出
+- PS1: shell 的提示符
