@@ -24,6 +24,8 @@ lrwxrwxrwx  1 root root        20 Mar 15 23:04 init -> /lib/systemd/systemd*
 
 ## fork
 
+### 功能
+
 调用 `fork()` 时，会将当前进程的**状态完全复制**，然后创建一个新进程。复制流程为写时复制，即要修改内容的时候，才回去真正的复制一份内存。
 
 <!-- panels:start -->
@@ -68,6 +70,20 @@ hello
 
 
 上面的例子出现了一个奇怪现象，直接运行程序会打印 6 个 hello，但是利用管道进行输出就是 8 个 hello。在程序直接运行时，`printf()` 是 `line buffer`，即遇到换行符就会刷新缓冲区；在管道输出与文本输出时，`printf()` 是 `full buffer`，即只有达到缓冲区大小时，才会刷新缓冲区。通过管道打印 hello ，第二次调用 `fork()` 时，缓冲区的 `hello\n` 并未输出，也被一起复制，因此就多了两次 hello 的打印。
+
+### 文件描述符
+
+![fork|c,45](../../image/operationSystem/fork_fd.png)
+
+文件描述符是一个指向系统流对象的一个指针。 `fork()`时，进程文件描述符也会进行复制。
+
+> [!tip]
+文件描述符的系统调用
+> - open: 打开文件描述符
+> - dup: 复制文件描述符
+> - close: 释放文件描述符
+> - write: 写
+> - read: 读
 
 ## execve
 

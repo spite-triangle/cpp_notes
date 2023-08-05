@@ -1,11 +1,11 @@
-# shell
+# 用户接口
 
-# 概念
+# shell
 
 ![shell|c,40](./../../image/operationSystem/shell.jpg)
 
-- **kernal** : 提供操作系统的系统调用
-- **shell** : 与人交互的程序，用户客户通过 shell 来使用操作系统的 kernal
+- **kernel** : 提供操作系统的系统调用
+- **shell** : 与人交互的程序，用户客户通过 shell 来使用操作系统的 kernel
 
 ```term
 triangle@LEARN:~$ main sh // 最简单的 linux shell 文档
@@ -346,3 +346,150 @@ void runcmd(struct cmd* cmd){
     ...
 }
 ```
+
+# 终端
+
+
+![terminal |c,50](./../../image/operationSystem/terminal.png)
+
+终端是一个抽象的设备，连接用户与 shell 的交互，能够实现响应标准输入流与标准输出流，展示输出与读取键盘等功能，**可以简单理解成一个专门用于展示编辑的文件文件**。
+
+```term
+triangle@LEARN:~$ tty // 查看终端名
+/dev/pts/0
+triangle@LEARN:~$ echo > /dev/pts/1 // 将打印信息重定向到 1 终端
+triangle@LEARN:~$ tmux // 创建多个终端，实现界面分屏
+```
+
+# Session
+
+![Session |c,50](./../../image/operationSystem/session.png)
+
+当前一个 shell 启动会创建一个 `Session`，Session 里面又会存放许多的 `process group`，进程组按照类型进一步划分为 `background group` 与 `foreground group`。**子进程会继承父进程的组，且只有 「前台进程组」 能连接上 「终端」**。
+
+```term
+triangle@LEARN:~$ find / -name password & // & 将进程放入后台执行
+triangle@LEARN:~$ jobs // 查看后台进程
+[1] + 1903 运行中          find / -name password &
+triangle@LEARN:~$ fg %n // 将后台进程前置 
+triangle@LEARN:~$ bg %n // 将任务放回后台进程
+```
+
+> [!tip]
+> 综上所述，在终端发起 `signal` 只要是在「前台进程组」 的进程都会响应。
+
+# C 标准库
+
+## 功能
+
+```cpp
+long syscall(int num, ...) {
+  va_list ap;
+  va_start(ap, num);
+  register long a0 asm ("rax") = num;
+  register long a1 asm ("rdi") = va_arg(ap, long);
+  register long a2 asm ("rsi") = va_arg(ap, long);
+  register long a3 asm ("rdx") = va_arg(ap, long);
+  register long a4 asm ("r10") = va_arg(ap, long);
+  va_end(ap);
+  asm volatile("syscall"
+    : "+r"(a0) : "r"(a1), "r"(a2), "r"(a3), "r"(a4)
+    : "memory", "rcx", "r8", "r9", "r11");
+  return a0;
+}
+```
+查看上面的 shell 实现代码可知，源码中都是使用 `syscall(int num, ...)` 来与操作系统的 kernel 进行交互，但是这样对于编程而言太过麻烦。为了提高编码效率，c语言又将操作系统 kernel 提供的功能进行二次封装且对功能进行扩展，最终得到的一个工具包就是「标准库」。
+
+- 文件描述符封装 `stdio.h`
+- 计算 `math.h`
+- 操作系统信号 `signal.h`
+- 数值类型限制值 `limits.h`
+- 环境变量
+
+  ```cpp
+    #include <iostream>
+    extern char ** environ; // libc 库给的全局变量，可以访问所有的环境变量
+    int main(int argc, char const *argv[])
+    {
+        for (int i = 0; environ[i] != NULL; i++)
+        {
+            printf("%s\n", environ[i]);
+        }
+        return 0;
+    }
+  ```
+- ...
+
+## 内存分配
+
+### 目标
+
+```cpp
+#include <stdlib.h>
+void *malloc(size_t size);
+void free(void *ptr);
+```
+
+标准库的内存分配目标主要确保两件事：
+1. 快速准确的从堆区拿出一块内存 `malloc`
+2. 将内存放回堆区 `free`
+
+实现这两个目标，就不可避免的会遇到「多线程」问题。因此标准库首先要保证内存分配操作是线程安全的，其次速度还要尽可能的快。
+
+### 设计理念
+
+最粗暴的方式是一把大锁保平安，但性能堪忧；想设计的精巧一点，就会考虑采用数据结构来实现，例如红黑树、区间树等，但是这些数据结构追求的性能极限一般都是 `log(n)` 。 **就能发现这些设计的思考方式从根源就是有问题的！**
+
+> [!note|style:flat]
+> [1] Premature optimization is the root of all evil.   —— D. E. Knuth
+>
+> [2] 脱离 Workload 做优化就是耍流氓。 —— JYY
+
+**Workload 分析：**
+- 小对象分配十分频繁，且生存周期短，例如字符串、临时对象，几到几百字节大小，用完就可能回收；
+- 中等对象分配较为频繁，且生存周期相对更长，例如数组、复杂类对象等；
+- 大对象分配分配低频，且生存周期基本会和一次任务或者进程运行时间持平，例如大容器，算法模型等
+- 并行、并发。
+
+综上所述:
+1. 内存分配频率极高，得优先保证中小对象分配速度；
+2. 线程并发不可避免，保证性能的同时，可能保证线程安全；
+
+大量加锁来保证线程安全绝对不可取，且中小对象的分配一定要限定到单线程中进行处理。
+
+**解决方案:** 
+
+> [!note]
+> 构建两套系统
+> - **Fast Path:** 解决大部分情况，性能好，并行度高
+> - **Slow Path:** 解决特殊情况，性能一般，专注解决难题
+
+- 内存分配 Fast Path 
+
+![page](../../image/operationSystem/page.png)
+
+每个线程都会持有一定大小的 page 内存，要分配的中小对象都反复使用这页 page。并且 page 页根据不同尺寸的 slab 又可以被拆分成尺寸不同的 slab 链表 (字节对齐的意义)。每次内存分配，就给几个 slab 内存就行。
+
+- 内存分配 Slow Path
+
+![malloc](../../image/operationSystem/malloc.png)
+
+直接对堆区的中 page 页添加大锁进行保护，当线程的当前持有的 page 分配完毕时，才会去堆区获取一页新的空闲内存。
+
+## 编译统一
+
+![libc|c,45](../../image/operationSystem/libc.png)
+
+由于如今所有软件基本都是基于 libc 开发，操作系统只要兼容对应的 libc 就能运行对应的程序，在二进制层面就将软件进行统一。
+
+
+
+
+
+
+
+
+
+
+
+
