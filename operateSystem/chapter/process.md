@@ -85,6 +85,63 @@ hello
 > - write: 写
 > - read: 读
 
+### 写时拷贝
+
+![memory|c,40](../../image/operationSystem/one_process.png)
+
+1. 一个进程访问内存，会根据地址指针去访问真实内存映射的「虚拟内存」，然后通过内存管理单元 `MMU` 操作真实内存。
+
+![memory|c,40](../../image/operationSystem/two_process.png)
+
+2. 当进程 `fork` 后，子进程也会持有同样的虚拟内存地址映射，**并且操作系统会偷偷将父进程可写的内存写权限收回**
+
+![memory|c,40](../../image/operationSystem/two_process_w.png)
+
+3. 都进程对可写的内存页发生「写」行为时，由于权限不对，就会产生中断，操作系统介入就会检查写行为是否合规。合规的话，就赶紧复制一份新内存页给进程完成写操作，并恢复内存页的写权限。
+
+### 使用技巧
+
+- 复杂模块一次初始化，多进程复用，例如安卓应用秒开，就是将 java 运行环境提前初始化好，然后运行 app 时， fork 进程复用已经初始化好的环境就行。
+
+    ```cpp
+    int main(){
+        // 模块初始化
+        module_init();
+        // 启动进程
+        for(int i=0; i < count; i++){
+            if(fork() == 0){
+                // 启动新进程
+                execve("new process");
+                // 使用初始化好的模块 
+                module_start();
+            }
+        } 
+    } 
+    ```
+
+- **建立平行世界**：根据操作系统是状态机的特点，建立某个状态的快照，实现状态回退以及读档
+
+    ![parallel](../../image/operationSystem/parallel_fork.png)
+
+
+### 问题
+
+操作系统内容增多，`fork` 发展至今，累积了诸多问题
+- 操作系统内部对象增多，这些对象是否应该 fork ?
+- fork 违背了设计的初衷，变得更加复杂
+- fork 很慢
+- 。。。
+
+更加安全的 `fork` 实现接口：
+
+```cpp
+#include <spawn.h>
+int posix_spawn(pid_t *pid, const char *path,
+            const posix_spawn_file_actions_t *file_actions,
+            const posix_spawnattr_t *attrp,
+            char *const argv[], char *const envp[]);
+```
+
 ## execve
 
 ```cpp
