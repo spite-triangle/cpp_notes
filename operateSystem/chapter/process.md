@@ -499,3 +499,20 @@ SHELL=/bin/bash
 - HOME: home 目录
 - DISPLAY: 图形输出
 - PS1: shell 的提示符
+
+
+在程序中获取所有环境变量
+
+```cpp
+  #include <iostream>
+  extern char ** environ; // libc 库给的全局变量，可以访问所有的环境变量
+  int main(int argc, char const *argv[])
+  {
+      for (int i = 0; environ[i] != NULL; i++)
+      {
+          printf("%s\n", environ[i]);
+      }
+      return 0;
+  }
+
+```

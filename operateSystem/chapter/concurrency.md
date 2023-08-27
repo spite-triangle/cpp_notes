@@ -442,6 +442,7 @@ void unlock() {
 
 ![alt|c,40](../../image/operationSystem/simpleDoubleCPU.png)
 
+
 对于上述的 `lock` 指令，在简单的内存模型上，可以通过硬件实现：CPU1 与 CPU2 直接访问内存，无缓存；CPU1 要实现对蓝色区域内存的原子操作，就直接在物理上给这片内存区域上一个锁；在 CPU1 访问这片内存期间，CPU2 无法访问蓝色区域内存，直到 CPU1 解除锁定。
 
 ![alt|c,40](../../image/operationSystem/complexDoubleCPU.png)
