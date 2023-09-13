@@ -490,6 +490,10 @@ int main(int argc, char const *argv[])
 
 ## 递归解包
 
+> [!note]
+> 形参包展开函数的特化函数，一定要在形参包函数之前声明。
+
+
 ```cpp
 #include <iostream>
 
@@ -617,3 +621,42 @@ int main(int argc, char const *argv[])
 }
 ```
 
+# 标签分发
+
+> [!note]
+> - 形参包展开函数的特化函数，一定要在形参包函数之前声明
+> - 标签分发，一定要有额外的形参，不然编译不通过
+
+```cpp
+#include <iostream>
+
+/* 结果处理 */
+void FcnResult(int a, std::true_type){
+    std::cout << "true" << std::endl;
+}
+
+void FcnResult(int b, std::false_type){
+    std::cout << "false" << std::endl;
+}
+
+/* 特化，最后一个参数退出递归 */
+template<class T>
+void Fcn(T arg){
+    FcnResult(1, typename std::is_same<T,int>::type());
+}
+
+/* 形参包展开 */
+template<class T, class...Args>
+void Fcn(T arg, Args...args){
+    std::cout << sizeof...(args) << "  "  << arg << std::endl;
+    Fcn(args...);
+}
+
+int main(int argc, char const *argv[])
+{
+    Fcn(10, 11, 12, 12.5);
+
+    Fcn(11, 11, 12, 12);
+    return 0;
+}
+```
