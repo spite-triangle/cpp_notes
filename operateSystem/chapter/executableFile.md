@@ -623,3 +623,112 @@ Hello 1
 
 > [!note]
 > 加载器保证了 GOT 表数据的操作系统全局唯一，此外还有 stdout、stdin、environ 等。
+
+## 动态库重定义
+
+```cpp
+// 全局的符号表和动态库
+static struct symbol *libs[16], syms[128];
+
+/**
+ * 将动态库符号表存储到 syms 中，供 dlsym 查询
+*/
+static void dlexport(const char *name, void *addr) {
+  for (int i = 0; i < LENGTH(syms); i++)
+    if (!syms[i].name[0]) {
+      syms[i].offset = (uintptr_t)addr; // load-time offset
+      strcpy(syms[i].name, name);
+      return;
+    }
+  assert(0);
+}
+```
+
+上文自定义加载器的实现中，会用一个全局符号表数组 `syms` 来存储所有动态库的符号。加载器加载动态库时，便会往这个全局的符号表中添加符号，用于可执行问卷的动态库重定向。
+
+> [!tip]
+> **若两个动态库中，都有一个相同名称的符号表，那又如何处理？**
+
+```cpp
+/* add.h */
+extern int add(int a, int b);
+
+/* add1.c */
+#include "add.h"
+#include <stdio.h>
+int add(int a, int b)
+{
+    printf("add1\n");
+    return a+b;
+}
+
+/* add2.c */
+#include "add.h"
+#include <stdio.h>
+int add(int a, int b)
+{
+    printf("add2\n");
+    return a+b;
+}
+
+/* main.c */
+#include "add.h"
+int main(int argc, char const *argv[])
+{
+    add(101,11);
+    return 0;
+}
+```
+
+```term
+triangle@LEARN:~$ tree
+.
+├── add.h
+├── add1.c
+├── add2.c
+└── main.c
+triangle@LEARN:~$ gcc add1.c -I. -shared -fPIC  -o libadd1.so
+triangle@LEARN:~$ gcc add2.c -I. -shared -fPIC  -o libadd2.so
+triangle@LEARN:~$ gcc main.c -L. -ladd1 -ladd2 -Wl,-rpath=./
+triangle@LEARN:~$ ./a.out
+add1
+triangle@LEARN:~$ gcc main.c -L. -ladd2 -ladd1 -Wl,-rpath=./
+triangle@LEARN:~$ ./a.out
+add2
+```
+
+通过实际案列测试，已经很清楚了：**先链接的动态库符号，优先被采纳。且同样名称的函数并不会报重定义。**  `gcc` 与 `msvc` 均存在这样的情况。通过这样特性，就能去自定义 `libc` 中的基础函数，例如谷歌的 `tcmalloc`。
+
+##  特殊环境变量
+
+- `LD_LIBRARY_PATH`: **临时**提供动态库查找路径。
+- `LD_PRELOAD`：加载可执行文件时，优先搜索该环境变量下的动态库。主要用于程序测试，重定向 `libc`。
+- `LD_DEBUG`：打印加载器日志
+  - files，显示整个装载过程；
+  - libs，显示共享库查找过程；
+  - symbols，显示符号的查找过程；
+  - bindings，显示动态链接的符号绑定过程；
+  - versions，显示符号的版本依赖关系；
+  - reloc，显示重定位信息
+
+```term
+triangle@LEARN:~$ ldd a.out 
+libadd1.so => not found 
+triangle@LEARN:~$ export LD_LIBRARY_PATH=./
+triangle@LEARN:~$ ldd a.out 
+libadd1.so => ./libadd1.so (0x00007fdc07e90000)
+triangle@LEARN:~$ LD_DEBUG=libs ./a.out 
+      3576:     find library=libadd1.so [0]; searching
+      3576:      search path=./tls/haswell/x86_64:./tls/haswell:./tls/x86_64:./tls:./haswell/x86_64:./haswell:./x86_64:.                (LD_LIBRARY_PATH)
+      3576:       trying file=./tls/haswell/x86_64/libadd1.so
+      3576:       trying file=./tls/haswell/libadd1.so
+      3576:       trying file=./tls/x86_64/libadd1.so
+      3576:       trying file=./tls/libadd1.so
+      3576:       trying file=./haswell/x86_64/libadd1.so
+      3576:       trying file=./haswell/libadd1.so
+      3576:       trying file=./x86_64/libadd1.so
+      3576:       trying file=./libadd1.so
+
+      ...
+```
+
