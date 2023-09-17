@@ -122,3 +122,80 @@ int main(int argc, char const *argv[])
     return 0;
 }
 ```
+
+而在 c 语言中存在一个低配版的初始化写法: 逗号运算符, 区别是不能声明变量。
+
+```cpp
+#include <map>
+
+int main(int argc, char const *argv[])
+{
+    std::map<int,int> m = {{1,1}, {2,2}};
+
+     std::map<int,int>::iterator it;
+    if( (it = m.find(1), it != m.end()) )
+    {
+
+    }else{
+
+    }
+    return 0;
+}
+```
+
+逗号运算符是二元运算符
+
+```txt
+(表达式1 , 表达式2)
+```
+
+- **可以处理多个表达式** ：虽然是二元，但是逗号两边的 `表达式` 也可以是逗号运算符的表达式
+- **从左向右依次运算**
+- **最右边的返回值，作为表达式的返回值**
+- **最好添加括号，确保语法正确**
+
+
+```cpp
+#include <stdio.h>
+#include <math.h>
+
+int main(int argc, char const *argv[])
+{
+    int x;
+    int a = (x=0, x+=2, pow(x,2)); 
+
+    for ( int i = (x = 1,  x * 2); i < 2; i++)
+    {
+        /* code */
+    }
+    return 0;
+}
+```
+
+配合宏，还可以定义一个函数块，方便使用 `break` 实现函数块退出
+
+```cpp
+#include <stdio.h>
+
+void init(){
+    printf("init\n");
+}
+
+void uninit(){
+    printf("uninit\n");
+}
+
+#define CODE_BLOCK \
+    for(int _i = (init(), 0); _i < 1; (uninit(), ++_i) )
+
+int main(int argc, char const *argv[])
+{
+    CODE_BLOCK {
+        printf("1\n");
+    }
+    return 0;
+}
+```
+
+
+

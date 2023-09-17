@@ -6,8 +6,9 @@
 - [第三章 操作系统](operateSystem/chapter/operateSystem.md)
 - [第四章 进程管理](operateSystem/chapter/process.md)
 - [第五章 用户接口](operateSystem/chapter/interface.md)
-- [第六章 可执行接口](operateSystem/chapter/executableFile.md)
+- [第六章 可执行文件管理](operateSystem/chapter/executableFile.md)
 - [第七章 XV6](operateSystem/chapter/xv6.md)
+- [第八章 IO设备](operateSystem/chapter/IOdevice.md)
 
 
 

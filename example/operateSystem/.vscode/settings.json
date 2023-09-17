@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "*.vue": "html",
+        "*.m": "matlab",
+        "kernel.h": "c",
+        "fs.h": "c",
+        "module.h": "c",
+        "const.h": "c"
+    }
+}
