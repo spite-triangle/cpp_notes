@@ -1,4 +1,11 @@
 {
     "docsifyPreview.indexFile": "index.html",
-    "docsifyPreview.port": 10813
+    "docsifyPreview.port": 10813,
+    "files.associations": {
+        "*.vue": "html",
+        "*.m": "matlab",
+        "istream": "c",
+        "ostream": "c",
+        "streambuf": "c"
+    }
 }
