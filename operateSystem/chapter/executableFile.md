@@ -751,4 +751,24 @@ bin\demo.exe : fatal error LNK1169: 找到一个或多个多重定义的符号
 
 **但是相同的源码符号，直接写在被调用的源文件里面，就能正常编译。**
 
+## MSVC 重定义问题
+
+在 `MSVC` 中，动态库与静态库的符号名相同时，链接也会出错。解决方案就有：
+- 方案一：重命名
+- 方案二：将静态库封装成一个新的动态库，并将同名符号封装在新的动态库内部
+
+> [!note]
+>「标准库」的动态链接与静态链接同样存在该问题，即 `MT` 与 `MD` 冲突
+
+```term
+triangle@LEARN:~$ xmake b 
+error: add.lib(add.cpp.obj) : error LNK2038: 检测到“RuntimeLibrary”的不匹配项: 值“MT_StaticRelease”不匹配值“MD_DynamicRelease”(main.cpp.obj 中)
+LINK : warning LNK4098: 默认库“LIBCMT”与其他库的使用冲突；请使用 /NODEFAULTLIB:library
+bin\main\main.exe : fatal error LNK1319: 检测到 1 个不匹配项
+```
+
+解决方案：
+- 方案一：统一编译方式，要么是 `MT`，要么是 `MD`
+- 方案二：将静态库全部转换成动态库，`MT` 静态库就转 `MT` 动态库，`MD` 静态库就转 `MD` 动态库
+
 
