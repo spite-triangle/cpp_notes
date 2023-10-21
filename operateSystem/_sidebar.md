@@ -9,6 +9,7 @@
 - [第六章 可执行文件管理](operateSystem/chapter/executableFile.md)
 - [第七章 XV6](operateSystem/chapter/xv6.md)
 - [第八章 IO设备](operateSystem/chapter/IOdevice.md)
+- [第九章 文件系统](operateSystem/chapter/filesystem.md)
 
 
 
