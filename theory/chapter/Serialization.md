@@ -399,7 +399,7 @@ b2 10
 str fuck
 ```
 > [!note]
-> TestB 接收 TestA 数据的顺序发生了变化，这是因为 TestB 中 `serialize` 定义的变量序列化顺序发生了改变。**序列化与反序列化的本质就是根据用户在 `serialize` 中定义的变量顺序进行单纯的 `memorycpy`**。
+> TestB 接收 TestA 数据的顺序发生了变化，这是因为 TestB 中 `serialize` 定义的变量序列化顺序发生了改变。 **序列化与反序列化的本质就是根据用户在 `serialize` 中定义的变量顺序进行单纯的 `memorycpy`** 。
 
 ## 序列化函数
 
@@ -555,16 +555,15 @@ str fuck
 # Qt 序列化
 
 - **定义：**
+  
 ```cpp
 #include <QDataStream>
- 
 #include <QString>
 #include <QList>
 #include <QMap>
 #include <QVector>
-
 #include <QDebug>
-
+  
 /* ========================== 结构体内部 ========================= */
 struct TestA
 {
@@ -586,23 +585,22 @@ struct TestA
         return input;
     }
 };
-
+  
 /* ========================== 结构体外部 ========================= */
 struct TestB
 {
     QList<int> lst;
     QMap<int,QString> map;
     std::vector<int> vec;
-
 };
-
+  
 // 序列化
 QDataStream &operator<<(QDataStream &output , const TestB &dataInfo)
 {
     output << dataInfo.lst << dataInfo.map;
     return output;
 }
-
+  
 // 反序列化
 QDataStream &operator>>(QDataStream &input , TestB &dataInfo)
 {
@@ -614,6 +612,7 @@ QDataStream &operator>>(QDataStream &input , TestB &dataInfo)
 Qt 中，序列化与反序列化是通过重写函数 `QDataStream &operator<<` 与 `QDataStream &operator>>` 实现。<span style="color:red;font-weight:bold"> Qt 序列化不支持标准库容器、标准字符串等类型。 </span>
 
 - **使用：**
+  
 ```cpp
 int main(int argc, char const *argv[])
 {
