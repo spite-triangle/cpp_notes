@@ -1,0 +1,30 @@
+
+k // 查看程序异常堆栈程序
+Child-SP          RetAddr               Call Site
+000000720bcfe6c8 00007fff8dd7c90b     demo!main$filt$0 [E:\testspace\cpp\src\main.cpp  74]
+000000720bcfe6d0 00007fffbfc923af     VCRUNTIME140D!_C_specific_handler+0x16b
+000000720bcfe780 00007fffbfc414b4     ntdll!RtlpExecuteHandlerForException+0xf
+000000720bcfe7b0 00007fffbfc90ebe     ntdll!RtlDispatchException+0x244 
+000000720bcfeec0 00007ff74ff219c2     ntdll!KiUserExceptionDispatch+0x2e // 异常分发
+000000720bcff5d0 00007ff74ff23ab9     demo!main+0x22 [E:\testspace\cpp\src\main.cpp  72]
+000000720bcff620 00007ff74ff2395e     demo!invoke_main+
+triangle@LEARN:~$ bu demo!filter // 在 filter 函数设置断点，u 是符号，p 是地址
+triangle@LEARN:~$ g // 继续运行
+Breakpoint 0 hit
+demo!filter:
+00007ff7-4ff217d0 89542410        mov     dword ptr [rsp+10h],edx ss:000000a0-7aafe868=bfc21040
+triangle@LEARN:~$ t // 单步运行
+triangle@LEARN:~$ dv // 展示局部变量
+          pInfo = 0x000000a0-7aafe920
+          nCode = 0xc0000094
+           nRes = 0n0
+triangle@LEARN:~$ dd 0x000000a07aafe920 // 查看内存地址
+000000a0-7aafe920  7aaff570 000000a0 7aaff080 000000a0
+000000a0-7aafe930  7aafe940 000000a0 bfc923af 00007fff
+000000a0-7aafe940  7aaff570 000000a0 7aaff780 000000a0
+000000a0-7aafe950  7aaff080 000000a0 7aafef00 000000a0
+000000a0-7aafe960  7aafef00 000000a0 bfc414b4 00007fff
+000000a0-7aafe970  00000000 00000000 7aafeeb0 000000a0
+triangle@LEARN:~$ dx -r1 ((demo!_EXCEPTION_POINTERS *)0xa07aafe920) // 查看结构体
+    [+0x000] ExceptionRecord  : 0xa07aaff570 [Type: _EXCEPTION_RECORD *]
+    [+0x008] ContextRecord    : 0xa07aaff080 [Type: _CONTEXT *]
