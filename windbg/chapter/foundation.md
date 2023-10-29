@@ -105,18 +105,112 @@ while(WaitForDebugEvent(&Event, INFINITE)){
 }
 ```
 
-事件类型
+
+# 调试事件
+
+```term
+triangle@LEARN:~$ x nt!Dbgk* // x 展示符号。nt!Dbgk* 为内核中用于支持用户态调试的函数
+triangle@LEARN:~$ x nt!kd* // nt!kd* 内核相关的调试函数
+triangle@LEARN:~$ dt _EPROCESS // dt 查看数据结构内容，_EPROCESS 操作系统管理进程的主要结构体
+ntdll!_EPROCESS
+   +0x000 Pcb              : _KPROCESS
+   +0x438 ProcessLock      : _EX_PUSH_LOCK
+   +0x440 UniqueProcessId  : Ptr64 Void
+   +0x448 ActiveProcessLinks : _LIST_ENTRY
+   +0x458 RundownProtect   : _EX_RUNDOWN_REF
+   +0x460 Flags2           : Uint4B
+   ...
+   +0x578 DebugPort        : Ptr64 Void # 用于给用户态访问 debug 对象
+   +0x580 WoW64Process     : Ptr64 _EWOW64PROCESS
+   ....
+```
+
+内核产生调试事件，并将调试事件封装成 debug 对象，存放在内核的一个队列中。用户态的调试器可以通过系统 API 从 debug 对象队列中，获取 debug 对象，并解析调试事件。
+
+![debug object|c,60](../../image/windbg/debugObject.jpg)
+
+
+事件类型:
 
 ```cpp
-EXCEPTION_DEBUG_EVENT // 异常debug事件
-CREATE_THREAD_DEBUG_EVENT  //创建线程debug事件
-CREATE_PROCESS_DEBUG_EVENT // 创建进程debug事件
-EXIT_THREAD_DEBUG_EVENT // 退出线程debug事件
-EXIT_PROCESS_DEBUG_EVENT // 退出进程debug事件
-LOAD_DLL_DEBUG_EVENT // 加载动态链接库debug事件
-UNLOAD_DLL_DEBUG_EVENT // 卸载动态链接库debug事件
-OUTPUT_DEBUG_STRING_EVENT // 输出debug内容事件
+typedef struct _DEBUG_EVENT {
+    DWORD dwDebugEventCode;
+    DWORD dwProcessId;
+    DWORD dwThreadId;
+    union {
+        EXCEPTION_DEBUG_INFO Exception;// 异常debug事件
+        CREATE_THREAD_DEBUG_INFO CreateThread; //创建线程debug事件
+        CREATE_PROCESS_DEBUG_INFO CreateProcessInfo;// 创建进程debug事件
+        EXIT_THREAD_DEBUG_INFO ExitThread;// 退出线程debug事件
+        EXIT_PROCESS_DEBUG_INFO ExitProcess; // 退出进程debug事件
+        LOAD_DLL_DEBUG_INFO LoadDll;// 加载动态链接库debug事件
+        UNLOAD_DLL_DEBUG_INFO UnloadDll;// 卸载动态链接库debug事件
+        OUTPUT_DEBUG_STRING_INFO DebugString;// 输出debug内容事件
+        RIP_INFO RipInfo;
+    } u;
+} DEBUG_EVENT, *LPDEBUG_EVENT;
 ```
+
+> [!note]
+> 只有异常调试事件 `EXCEPTION_DEBUG_INFO` 才存在两轮处理
+
+```term
+triangle@LEARN:~$ sx // 显示 debuger 的异常和事件
+# 事件
+  ct - Create thread - ignore
+  et - Exit thread - ignore
+ cpr - Create process - ignore
+ epr - Exit process - break
+  ld - Load module - output // 加载动态库
+  ud - Unload module - ignore
+ ser - System error - ignore
+ ibp - Initial breakpoint - break
+ iml - Initial module load - break
+ out - Debuggee output - output
+
+# 异常
+  av - Access violation - break - not handled
+asrt - Assertion failure - break - not handled
+ aph - Application hang - break - not handled
+ bpe - Break instruction exception - break
+bpec - Break instruction exception continue - handled
+  eh - C++ EH exception - second-chance break - not handled
+ clr - CLR exception - second-chance break - not handled
+clrn - CLR notification exception - second-chance break - handled
+ cce - Control-Break exception - break
+ ...
+triangle@LEARN:~$ sxe ld // 修改 ld 事件状态，事件发生就会在 first chance handling 中断程序
+triangle@LEARN:~$ sx 
+  ...
+  ld - Load module - break // ld 事件的处理由 output 改为 break
+  ...
+triangle@LEARN:~$ g
+# 捕获到 comdlg32.dll 加载
+ModLoad: 00007fff-be9d0000 00007fff-beaaa000   C:\Windows\System32\comdlg32.dll
+ntdll!NtMapViewOfSection+0x14:
+00007fff-bfc8d4e4 c3              ret
+triangle@LEARN:~$ sxn ld // 将 ld 事件状态改为 output
+
+```
+
+修改事件或异常的状态：
+
+| Command | Status name                   | Description                                                                                                                                                                                                                                                                      |
+| :------ | :---------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| sxe     | Break(Enabled)                | When this exception occurs, the target immediately breaks into the debugger before any other error handlers are activated. This kind of handling is called first chance handling.                                                                                                |
+| sxd     | Second chance break(Disabled) | The debugger does not break for a first-chance exception of this type (although a message is displayed). If other error handlers do not address this exception, execution stops and the target breaks into the debugger. This kind of handling is called second chance handling. |
+| sxn     | Output(Notify)                | When this exception occurs, the target application does not break into the debugger at all. However, a message is displayed that notifies the user of this exception.                                                                                                            |
+| sxi     | Ignore                        | When this exception occurs, the target application does not break into the debugger at all, and no message is displayed.                                                                                                                                                         |
+
+不同状态对事件状态的处理：
+
+| Command     | Status name | Description                                                 |
+| :---------- | :---------- | :---------------------------------------------------------- |
+| sxe         | Handled     | The event is considered handled when execution resumes.     |
+| sxd,sxn,sxi | Not Handled | The event is considered not handled when execution resumes. |
+
+
+
 
 ## linux 调试
 
@@ -223,22 +317,6 @@ ntdll!DbgBreakPoint+0x8:
 778c4f2a cc              int     3
 triangle@LEARN:~$ bp ntdll!NtReadFile ".echo fuck;k;" // 为断点设置命中后执行的脚本
 triangle@LEARN:~$ .restart /f // 重启进程
-triangle@LEARN:~$ sx // 显示 debuger 的异常和事件
-  ct - Create thread - ignore
-  et - Exit thread - ignore
- cpr - Create process - ignore
- epr - Exit process - break
-  ld - Load module - output // 加载动态库
-  ud - Unload module - ignore
- ser - System error - ignore
- ibp - Initial breakpoint - break
- iml - Initial module load - break
- out - Debuggee output - output
-triangle@LEARN:~$ sxe ld // 监视指定异常或事件，并在 first chance handling 返回
-# 捕获到 comdlg32.dll 加载
-ModLoad: 00007fff-be9d0000 00007fff-beaaa000   C:\Windows\System32\comdlg32.dll
-ntdll!NtMapViewOfSection+0x14:
-00007fff-bfc8d4e4 c3              ret
 ```
 
 
@@ -525,9 +603,8 @@ test.cpp                                       6              0x114d            
 - **编译期间**
     - 语法错误
     - 静态分析
-- **运行期间** Run-Time Error Check (RTC) : 往编译的程序添加额外的检查逻辑
+- **运行期间** Run-Time Error Check (RTC) : **往编译的程序添加额外的检查逻辑**
     - 栈指针被破坏
     - 局部缓冲区越界
     - 栈被破坏
     - 依赖未初始化的局部变量
-
