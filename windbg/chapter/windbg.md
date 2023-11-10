@@ -1,4 +1,4 @@
-# windbg
+# Windbg
 
 # 调试器命令
 

@@ -25,37 +25,6 @@
 - `Event Tracing Session` : ETW 框架的核心，作为 Provider 与 Consumer 的中介，负责事件的转发。
 - `Controller` : 控制 ETW 框架的启动和停止。**官方推荐 `Windows Performance Recorder (WPR)`**
 
-## Windows Performance
-
-**命令行工具：**
-- xperf : 捕捉和预处理数据
-- xperfview: 可视化结果
-- xbootmgr: 捕捉启动过程
-- wpr: 代替 xperf 的新工具
-
-**界面工具：**
-- wprui: `Windows Performance Recorder (WPR)`
-- wpa : `Windows Performance Analyzer (WPA)`
-
-
-**使用:**
-1. 使用 `WPR` 生成事件报告 `.etl`
-
-![wpr|c,60](../../image/windbg/wpr.jpg)
-
-2. 使用 `WPA` 打开 `.etl` 文件。[Windows SDK](https://developer.microsoft.com/zh-cn/windows/downloads/windows-sdk/) 版无法使用，则需要下载微软商店的 `preview` 版
-
-![wpa|c,60](../../image/windbg/wpa.jpg)
-
-1. 配置 `pdb`。**只配置目标进程的，不然会下载全部的符号文件。**
-
-![wpa config|c,60](../../image/windbg/wpa_config.jpg)
-
-4. 点击 `Load Symbols` 就能查看结果了
-
-![wpa result |c,60](../../image/windbg/wpa_result.jpg)
-
-
 # 转储
 
 - 对象转储：将问题对象序列化到本地
