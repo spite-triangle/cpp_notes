@@ -154,7 +154,7 @@ triangle@LEARN:~$ r $t1 = 128*poi(MyVar)
 
 ```term
 triangle@LEARN:~$ `[[Module!]Filename][:LineNumber]` // 只能 MASM 表达式使用
-triangle@LEARN:~$ bp demo.exe!demo.cpp:10 // 打断点
+triangle@LEARN:~$ bp `demo.exe!demo.cpp:10` // 打断点
 ```
 
 ## 地址

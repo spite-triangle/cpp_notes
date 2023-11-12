@@ -27,8 +27,8 @@
 
 # 进程切换
 
-<!-- panels:start -->
-<!-- div:left-panel -->
+
+
 
 在 `riscv` 中，一个进程的虚拟内存模型在高地址会有两块特殊内存
 - `trampoline`：用于保存进程当前运行状态的代码，全局共享
@@ -36,9 +36,9 @@
 
 当前发生中断、系统调用时，会首先调用 `trampoline` 将当前进程的寄存器、内存信息保存到 `trapframe` 内存中，然后才让操作系统介入，处理业务。当前要恢复某个进程时，就只需将 `trapframe` 的信息重新恢复到寄存器、内存就行。
 
-<!-- div:right-panel -->
+
 ![memory|c,50](../../image/operationSystem/xv6-process-memory.png)
-<!-- panels:end -->
+
 
 
 # 任务调度

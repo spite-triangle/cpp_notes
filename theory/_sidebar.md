@@ -2,7 +2,7 @@
 - [目录](theory/README.md)
 - **基础理论**
     - [计算机原理](https://spite-triangle.github.io/computer_theory/#/)
--   - [操作系统](operateSystem/README.md)
+    - [操作系统](operateSystem/README.md)
     - [调试原理](windbg/README.md)
 - **编译工具**
     - [bat](theory/chapter/bat.md)
