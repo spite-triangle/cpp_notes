@@ -154,7 +154,7 @@ triangle@LEARN:~$ r $t1 = 128*poi(MyVar)
 
 ```term
 triangle@LEARN:~$ `[[Module!]Filename][:LineNumber]` // 只能 MASM 表达式使用
-triangle@LEARN:~$ bp demo.exe!demo.cpp:10 // 打断点
+triangle@LEARN:~$ bp `demo.exe!demo.cpp:10` // 打断点
 ```
 
 ## 地址
@@ -224,6 +224,52 @@ triangle@LEARN:~$ .printf /D "Click <link cmd=\".chain /D\">here</link> to see e
 
 # 常用命令
 
+## 程序运行指令
+
+```term
+triangle@LEARN:~$ g // 运行
+triangle@LEARN:~$ gh // go handled
+triangle@LEARN:~$ gn // go not handled
+triangle@LEARN:~$ gc // go Condition
+triangle@LEARN:~$ gu // go up
+triangle@LEARN:~$ p // step 汇编单步
+triangle@LEARN:~$ pa // step to address
+triangle@LEARN:~$ pc // step to next call
+triangle@LEARN:~$ t // trace 源码单步
+triangle@LEARN:~$ ta // trace to address
+triangle@LEARN:~$ tc // trace to next call
+triangle@LEARN:~$ tb // trace to next branch
+triangle@LEARN:~$ wt // 给出运行报告
+```
+
+## 内存与寄存器
+
+```term
+triangle@LEARN:~$ d* // 展示内存
+triangle@LEARN:~$ dv // 局部变量
+triangle@LEARN:~$ e* // 编辑内存
+triangle@LEARN:~$ ~2 r // 展示线程 2 的寄存器
+triangle@LEARN:~$ ~* r eax // 展示所有线程的 eax 寄存器
+triangle@LEARN:~$ r eax = @ebx // 将 ebx 寄存器值赋值给 eax
+```
+
+## 断点
+
+```term
+triangle@LEARN:~$ bp breakpoint [commands] // 设置断点
+triangle@LEARN:~$ bu // 延迟断点
+triangle@LEARN:~$ bm // 匹配模式
+triangle@LEARN:~$ ba // 硬件断点
+triangle@LEARN:~$ bc // 删除断点
+triangle@LEARN:~$ bl // 断点展示
+```
+
+## 栈
+
+```term
+triangle@LEARN:~$ k* // 展示栈的信息
+```
+
 ## 路径设置
 
 ```term
@@ -258,4 +304,24 @@ start             end                 module name
 
 ```
 
+> [!note]
+> [离线机下载符号文件](https://learn.microsoft.com/zh-cn/windows-hardware/drivers/debugger/using-a-manifest-file-with-symchk)
 
+
+# 远程调试
+
+- 服务端
+
+```term
+triangle@LEARN:~$ // 通过 windbg 启动服务
+triangle@LEARN:~$ .server tcp:Port=2000 // 创建debug服务
+Server started.  Client can connect with any of these command lines
+0: <debugger> -remote npipe:Pipe=DbgX_32f8418120a34dcebd0f7c2ede22df96,Password=*,Server=DESKTOP-3J5K69
+1: <debugger> -remote tcp:Port=1222,Server=DESKTOP-3J5K69
+triangle@LEARN:~$ // 通过 Dbgsrv 启动服务
+triangle@LEARN:~$ Dbgsrv -t tcp:port=1222 // 被调试机启动调试服务
+```
+
+- 客户端
+
+![remote|c,60](../../image/operationSystem/remote.jpg)

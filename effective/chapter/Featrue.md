@@ -215,8 +215,8 @@ int main(int argc, char const *argv[])
 
 - 默认实参与静态类型相关，而非继承实现
 
-<!-- panels:start -->
-<!-- div:left-panel -->
+
+
 
 ```cpp
 #include <iostream>
@@ -246,14 +246,14 @@ int main(int argc, char const *argv[])
     return 0;
 }
 ```
-<!-- div:right-panel -->
+
 
 ```term
 triangle@LEARN:~$ g++ test.cpp && ./a.out
 1
 2
 ```
-<!-- panels:end -->
+
 
 
 

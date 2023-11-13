@@ -28,9 +28,6 @@ lrwxrwxrwx  1 root root        20 Mar 15 23:04 init -> /lib/systemd/systemd*
 
 调用 `fork()` 时，会将当前进程的**状态完全复制**，然后创建一个新进程。复制流程为写时复制，即要修改内容的时候，才回去真正的复制一份内存。
 
-<!-- panels:start -->
-<!-- div:left-panel -->
-
 ```cpp
 #include <iostream>
 #include <unistd.h>
@@ -45,7 +42,6 @@ int main(int argc, char const *argv[])
     return 0;
 }
 ```
-<!-- div:right-panel -->
 
 ```term
 triangle@LEARN:~$ ./a.out 
@@ -66,7 +62,6 @@ hello
 hello
 ```
 
-<!-- panels:end -->
 
 
 上面的例子出现了一个奇怪现象，直接运行程序会打印 6 个 hello，但是利用管道进行输出就是 8 个 hello。在程序直接运行时，`printf()` 是 `line buffer`，即遇到换行符就会刷新缓冲区；在管道输出与文本输出时，`printf()` 是 `full buffer`，即只有达到缓冲区大小时，才会刷新缓冲区。通过管道打印 hello ，第二次调用 `fork()` 时，缓冲区的 `hello\n` 并未输出，也被一起复制，因此就多了两次 hello 的打印。
@@ -155,8 +150,8 @@ int execve(const char *pathname, char *const argv[], char *const envp[]);
 
 每次新进程的启动，主进程 `fork()` 出子进程后会调用 `execve` 加载新进程，并将状态初始化为新进程的状态。
 
-<!-- panels:start -->
-<!-- div:left-panel -->
+
+
 ```cpp
 int main(int argc, char const *argv[])
 {
@@ -175,13 +170,13 @@ int main(int argc, char const *argv[])
 }
 ```
 
-<!-- div:right-panel -->
+
 
 ```term
 triangle@LEARN:~$ ./a.out
 1 + 2 = 3
 ```
-<!-- panels:end -->
+
 
 在执行完 `execve()` 之后，程序并没有打印 `printf()`，这是因为 `execve()` 已将当前进程的运行状态由 `a.out` 切换到了 `add` 程序的状态，当 `add` 运行完毕，就直接退出进程。
 

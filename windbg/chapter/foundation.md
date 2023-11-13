@@ -1,7 +1,9 @@
 # 理论基础
 
 
-[windbg](http://download.microsoft.com/download/A/6/A/A6AC035D-DA3F-4F0C-ADA4-37C8E5D34E3D/setup/WinSDKDebuggingTools_amd64/dbg_amd64.msi)
+- [windbg](http://download.microsoft.com/download/A/6/A/A6AC035D-DA3F-4F0C-ADA4-37C8E5D34E3D/setup/WinSDKDebuggingTools_amd64/dbg_amd64.msi)
+
+- [调试原理](https://blog.hawkhai.com/blog/2021/05/22/Visual-Studio-msvc#ms-visual-c-%E7%AE%80%E5%8F%B2)
 
 # x86调试支持
 
@@ -382,8 +384,8 @@ triangle@LEARN:~$ .restart /f // 重启进程
 
 异常分发由内核中的 `ntoskrnl!KiDispatchException` 实现
 
-<!-- panels:start -->
-<!-- div:left-panel -->
+
+
 
 ```cpp
 // first chance handling. 第一轮异常分发
@@ -418,11 +420,11 @@ if(DbgForwardException(Tf, FALSE, LastChanece) != 0) return;
 ZwTerminateProcess(NtCurrentThread(), Er->ExceptionCode);
 ```
 
-<!-- div:right-panel -->
+
 
 ![altKiDispatchException|c,60](../../image/windbg/KiDispatchException.jpg)
 
-<!-- panels:end -->
+
 
 
 ## 实操
