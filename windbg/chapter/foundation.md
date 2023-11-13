@@ -608,3 +608,10 @@ test.cpp                                       6              0x114d            
     - 局部缓冲区越界
     - 栈被破坏
     - 依赖未初始化的局部变量
+
+
+# 附加
+
+## 辅助工具
+
+- [Process Explorer](https://learn.microsoft.com/en-us/sysinternals/downloads/process-explorer): 比任务管理器更适合用来程序开发，可查看的进程信息更多且可以查看堆栈信息
