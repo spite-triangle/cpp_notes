@@ -110,11 +110,27 @@ triangle@LEARN:~$ prefview collect  /nogui // 开始收集，并不展示界面�
 - `Cols` : 对事件内容列表的列进行过滤，**按照先后顺序选择需要的列，然后回车确认**
 - `Text Filter` : 对文本进行过滤
 
-## 时间
+## 时间轴
 
 ![histogram](../../image/windbg/perfview_histogram.jpg)
 
 x 轴为事件采样时间；y 轴为当前时间有多少事件的数字。选中数字后，在左下角会展示当前数字对应的时间
+
+## 阻塞时间分析
+
+- `Thread Time View`: 线程的执行状态。
+  - `BLOCKED`: 阻塞态，阻塞等待 CPU 执行、锁、网络、磁盘读写等
+  - `READIED`: 等待CPU
+- `wall clock time` : 每个线程在某个栈上的消耗时间。不管线程在运行还是阻塞，都会和一个栈相关，`wall clock time` 就是用来度量这个时间的。
+
+![thread time](../../image/windbg/perfview_threadTime.jpg)
+
+当启用 `thread time` 时，PerfView 会收集的内容有：
+1. 每毫秒正在 CPU 上运行的栈
+2. 线程上下文切换
+3. 线程创建和销毁的时间
+
+
 
 
 

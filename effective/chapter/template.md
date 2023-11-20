@@ -134,12 +134,12 @@ public:
         T a;
         // fcnB: unqualified dependent name
         // 模板实例化前，普通查找找不到
-        // 模板实例化后，ADL也查找不到
+        // 模板实例化时，ADL也查找不到
         // 结果：报错
         fcnB(a);
 
         // 添加 this-> 将其变为 qualified dependent name
-        // 模板实例化后，普通查找成功，编译通过
+        // 模板实例化时，普通查找成功，编译通过
         this->fcnB(a);
     };
 };

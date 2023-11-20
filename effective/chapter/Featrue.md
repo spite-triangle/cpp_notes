@@ -50,6 +50,43 @@ int main(int argc, char const *argv[])
 }
 ```
 
+## 平凡
+
+[trivial](https://cplusplus.com/reference/type_traits/is_trivial/) 类需要满足 `trivially default constructible` 与 `trivially copyable` 两种特性，即`trivial` 类型可以直接通过 `memcopy` 函数实现数据的转移，而不用考虑深拷贝和浅拷贝问题。需要满足的条件有：
+
+- 拷贝、移动、复制、析构都是默认定义，用户不额外定义（类似于一个单纯结构体）
+- 没有 `virtual` 成员函数
+- 静态成员变量不用等号和大括号进行初始化
+- 父类和非静态变量都是 `trivial` 类型
+
+可知 `trivial / non-trivial` 只针对三类操作而言:
+- `constructible`: 构造
+- `assignable`: 复制
+- `destructible` : 析构
+
+```cpp
+#include <type_traits>
+
+std::is_trivially_assignable
+std::is_trivially_constructible
+std::is_trivially_copy_assignable                                            
+std::is_trivially_copy_constructible                                         
+std::is_trivially_destructible
+std::is_trivially_move_assignable                                            
+std::is_trivially_move_constructible	
+```
+
+## POD
+
+[POD (Plain Old Data)](https://cplusplus.com/reference/type_traits/is_pod/) 是类 C 语言的数据结构，POD 的数据结构能与 C 语言的 `struct` 与 `union` 兼容，其既有 `trivial` 的特性，又有 `standard-layout` 的特性。
+
+```cpp
+#include <type_traits>
+
+std::is_pod
+```
+
+
 ## 初始化
 
 
