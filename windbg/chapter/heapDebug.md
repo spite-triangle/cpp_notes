@@ -343,3 +343,405 @@ Entry     User      Heap      Segment       Size  PrevSize  Unused    Flags
 -----------------------------------------------------------------------------
 010704a8  010704b0  01070000  01070000       118       4a8         1  busy extra fill  internal
 ```
+
+# 堆调试
+
+```cpp
+#include <malloc.h>
+#include <Windows.h>
+
+// 填充内存使用
+void fill(char* p, int len, char ch){
+    for (size_t i = 0; i < len; i++)
+    {
+        p[i] = ch;
+    }
+}
+
+int main(int argc, char const *argv[])
+{
+    int len = 12;
+    char * buffer = nullptr;
+
+    // malloc
+    buffer = (char *) malloc(10);
+    fill(buffer,len,'w');
+    free(buffer);
+    buffer = nullptr;
+
+    // new
+    buffer = new char[len]();
+    fill(buffer, len , 'x');
+    delete [] buffer;
+    buffer = nullptr;
+
+    // 系统堆 
+    HANDLE heap = HeapCreate(0,1024, 0);
+    buffer = (char*)HeapAlloc(heap, 0, len);
+    fill(buffer,len, 'y');
+    HeapFree(heap, 0, buffer);
+    HeapDestroy(heap);
+
+    return 0;
+}
+
+```
+
+```term
+triangle@LEARN:~$ // 编译器使用的是 msvc 2017，因此 crt 堆就是用的默认堆
+triangle@LEARN:~$ !heap
+        Heap Address      NT/Segment Heap
+
+              7c0000              NT Heap # crt 堆和默认堆是同一个
+triangle@LEARN:~$ // 执行 malloc
+triangle@LEARN:~$ dt buffer
+Local var @ 0x73f814 Type char*
+0x007c5538  "wwwwwwwwwwww???"
+triangle@LEARN:~$ !heap 7c0000 -a 
+        ...
+        007c52d0: 00078 . 001e8 [107] - busy (1cc), tail fill
+        007c54b8: 001e8 . 00078 [107] - busy (60), tail fill
+        # busy (a) : 0xa 就是 10，表示该 HEAP_ENTRY 申请了 10 的内存空间
+        007c5530: 00078 . 00030 [107] - busy (a), tail fill 
+        007c5560: 00030 . 00028 [107] - busy (10), tail fill
+        007c5588: 00028 . 00018 [104] free fill
+        007c55a0: 00018 . 00068 [107] - busy (4a), tail fill
+        ....
+triangle@LEARN:~$ dt _HEAP_ENTRY 007c5530 // 查看块
+# 信息乱码，这是因为内存中的结构体存在编码，需要对内存信息解码才能得到正确的结构体信息
+ntdll!_HEAP_ENTRY 
+   +0x000 UnpackedEntry    : _HEAP_UNPACKED_ENTRY
+   +0x000 Size             : 0x694c
+   +0x002 Flags            : 0xfe ''
+   +0x003 SmallTagIndex    : 0xd0 ''
+   ...
+triangle@LEARN:~$ dd 007c5538 // buffer 内存，填充了 'w'
+007c5538  77777777 77777777 77777777 abababab
+007c5548  feeeabab feeefeee feeefeee feeefeee
+007c5558  00000000 00000000 d3fe694f 1800aa1a
+007c5568  007c5568 007c51b8 007c4100 007c4fe8
+triangle@LEARN:~$ dd 007c5530 // 块内存
+# d0fe694c 2600aa13 : HEAP_ENTRY 内容，进行过编码
+# abababab : 堆尾填充，防止溢出。再释放前进行检测
+# baadf00d : 堆刚被申请出来时的默认填充值
+# feeefeee : free 块填充的残留
+007c5530  d0fe694c 2600aa13 77777777 77777777
+007c5540  77777777 abababab feeeabab feeefeee
+007c5550  feeefeee feeefeee 00000000 00000000
+007c5560  d3fe694f 1800aa1a 007c5568 007c51b8
+007c5570  007c4100 007c4fe8 abababab abababab
+triangle@LEARN:~$ // 执行 new
+triangle@LEARN:~$ !heap 7c0000 -a 
+...
+# busy (c) : 0xc 就是 12
+# 00df3dc0 : 重新启动过程序，内存地址有变，不用太过纠结 
+00df3dc0: 00040 . 00028 [107] - busy (c), tail fill
+...
+triangle@LEARN:~$ dd 00df3dc0 // 查看块内存
+00df3dc0  f9d69a3d 1c0072b2 78787878 78787878
+00df3dd0  78787878 abababab abababab feeefeee
+00df3de0  00000000 00000000 fdd59a3a 000072bf
+00df3df0  00df4028 00df00c0 f9d69a3d 180072b8
+00df3e00  00df40f8 00df4fe8 00df3e08 00df3b08
+triangle@LEARN:~$ !heap 7c0000 -a // delete [] 后再次查看
+..
+# new 的堆块已经变成的 free 块
+00df3dc0: 00040 . 00038 [104] free fill
+..
+triangle@LEARN:~$ dd 00df3dc0 // delete [] 后再次查看
+# 堆块已经全部由 feeefeee 进行填充。delete 会立即执行 ，而 free 没有
+00df3dc0  f8d59a3f 000072b2 00df5650 00df5590
+00df3dd0  feeefeee feeefeee feeefeee feeefeee
+00df3de0  feeefeee feeefeee feeefeee feeefeee
+00df3df0  feeefeee feeefeee f9d69a3d 180072bd
+00df3e00  00df40f8 00df4fe8 00df3e08 00df3b08
+triangle@LEARN:~$ // 执行 HeapCreate
+triangle@LEARN:~$ dt heap
+Local var @ 0xcffc98 Type void*
+0x01340000 
+triangle@LEARN:~$ !heap
+        Heap Address      NT/Segment Heap
+
+              df0000              NT Heap
+             1340000              NT Heap # 通过 HeapCreate 创建的堆
+triangle@LEARN:~$ dd 013405c0 // 执行 HeapFree
+013405c0  8297a836 00005f34 013400c0 013400c0
+013405d0  feeefeee feeefeee feeefeee feeefeee
+013405e0  feeefeee feeefeee feeefeee feeefeee
+013405f0  feeefeee feeefeee feeefeee feeefeee
+```
+
+# 堆溢出
+
+## TAIL 填充
+
+```cpp
+#include <malloc.h>
+#include <Windows.h>
+
+void fill(char* p, int len, char ch){
+    for (size_t i = 0; i < len; i++)
+    {
+        p[i] = ch;
+    }
+}
+
+int main(int argc, char const *argv[])
+{
+    int len = 12;
+    char * buffer = nullptr;
+
+    // new
+    buffer = new char[len]();
+    fill(buffer, len + 2 , 'x'); // 存在越界
+    delete [] buffer;
+    buffer = nullptr;
+
+    return 0;
+}
+```
+
+```term
+triangle@LEARN:~$ !heap
+        Heap Address      NT/Segment Heap
+
+             15c0000              NT Heap
+triangle@LEARN:~$ !heap 15c0000 -a
+015c3dc0: 00040 . 00028 [107] - busy (c), tail fill
+triangle@LEARN:~$ dd 015c3dc0 // fill(buffer, len + 2 , 'x') 执行后
+015c3dc0  7475e0ea 1c00f683 78787878 78787878
+# abab7878 : 检测标记位被覆盖
+015c3dd0  78787878 abab7878 abababab feeefeee
+015c3de0  00000000 00000000 7076e0ed 0000f68e
+015c3df0  015c4028 015c00c0 7475e0ea 1800f689
+015c3e00  015c40f8 015c4fe8 015c3e08 015c3b08
+015c3e10  abababab abababab 00000000 00000000
+triangle@LEARN:~$ g // 运行 delete [] buffer;
+# 释放内存之前，检测到内存释放异常。
+HEAP[demo.exe]: Heap block at 015C3DC0 modified at 015C3DD4 past requested size of c
+WARNING: This break is not a step/trace completion.
+The last command has been cleared to prevent
+accidental continuation of this unrelated event.
+... 
+triangle@LEARN:~$ g // 不管 WARNING 继续运行 buffer = nullptr;
+triangle@LEARN:~$ dd 015c3dc0 // 查看块释放情况，可以看到内存根本没有释放
+015c3dc0  7475e0ea 1c00f683 78787878 78787878
+015c3dd0  78787878 abab7878 abababab feeefeee
+015c3de0  00000000 00000000 7076e0ed 0000f68e
+015c3df0  015c4028 015c00c0 7475e0ea 1800f689
+triangle@LEARN:~$ !heap 15c0000 -v // 手动执行堆检查
+    ...
+    Heap block at 015c3dc0 modified at 015c3dd4 past requested size of c (5 * 8 - 1c)
+##The above errors were found in segment at 0x015C0000
+```
+
+> [!note]
+> 采用末尾填充 `abababab` 检测堆块内存异常情况，只会在内存释放时进行检测（**存在延迟**），且检测到异常后并不会继续释放内存，导致内存泄漏。
+
+## 页堆
+
+**页堆：** TAIL 填充存在问题，为了更高效的检测堆溢出问题，专门引入「页堆（DPH）」。**页堆大量使用内存页，以性能为代价，能实时检测堆溢出问题。** 
+
+页堆又提供的两种方式
+- 完全页堆 `full page heap`
+- 准页堆 `normal page heap`
+
+### 完全页堆
+
+
+![DPH|c,30](../../image/windbg/DPH.jpg)
+
+**工作原理：** 完全堆页会为数据堆块分配一个额外的「栅栏页」且用户数据区紧挨着栅栏页，并将栅栏页属性设置为「不可访问」。当对用户数据访问越界时，就会进入到栅栏页并抛出异常，系统捕获到异常后会试图中断执行并将该异常上报。
+- 读越界，但只是访问了块尾填充部分数据，那么系统不会报错
+- 写越界，但只篡改了图中块尾填充的部分，那么在堆块释放的时候会报错
+- 读越界，且超过了块尾填充的部分，访问到了栅栏页，那么系统会立即抛出一个异常并中断执行
+- 写越界，且超过了块尾填充部分，写到了栅栏页，那么系统会立即抛出一个异常并中断执行
+
+完全堆页的结构同普通堆不同。`HEAP_ENTRY` 由 `DPH_BLOCK_INFORMATION` 代替，**当 `DPH_BLOCK_INFORMATION` 被破坏时，在释放内存块的时候系统会报错**。
+
+> [!note]
+> `尾填充` 的目的是用于保证内存分配大小为分配粒度的整数倍，即内存对齐。**因此 `尾填充` 部分不一定存在**。
+
+
+```cpp
+#include <malloc.h>
+#include <Windows.h>
+
+void fill(char* p, int len, char ch){
+    for (size_t i = 0; i < len; i++)
+    {
+        p[i] = ch;
+    }
+}
+
+int main(int argc, char const *argv[])
+{
+    int len = 12;
+    char * buffer = nullptr;
+
+    // 系统堆 
+    HANDLE heap = HeapCreate(0,1024, 0);
+    buffer = (char*)HeapAlloc(heap, 0, len);
+    fill(buffer,len + 2, 'y');
+    HeapFree(heap, 0, buffer);
+    HeapDestroy(heap);
+
+    return 0;
+}
+
+```
+
+
+```term
+triangle@LEARN:~$ .\gflags.exe -i demo.exe +hpa // 指定程序启用 DPH
+triangle@LEARN:~$ .\gflags.exe -i demo.exe -hpa // 撤销 DPH
+triangle@LEARN:~$ .restart // gflags 的设置重启进程后生效
+triangle@LEARN:~$ !gflag // 查看启用状态
+Current NtGlobalFlag contents: 0x02000000
+    hpa - Place heap allocations at ends of pages
+triangle@LEARN:~$  dv heap // 创建的堆
+           heap = 0x05e10000
+triangle@LEARN:~$  dv buffer // 申请的内存
+         buffer = 0x05e15ff0 "???"
+triangle@LEARN:~$ dd 0x05e15ff0 // 查看内存
+# c0 : 用户内存初始值
+# d0 : 填充值
+# ?? : 不可访问
+05e15ff0  c0c0c0c0 c0c0c0c0 c0c0c0c0 d0d0d0d0
+05e16000  ???????? ???????? ???????? ????????
+05e16010  ???????? ???????? ???????? ????????
+05e16020  ???????? ???????? ???????? ????????
+triangle@LEARN:~$ g // 检测堆溢出
+
+
+===========================================================
+VERIFIER STOP 0000000F: pid 0x352C: corrupted suffix pattern 
+
+	05E11000 : Heap handle
+	05E15FF0 : Heap block
+	0000000C : Block size
+	05E15FFC : corruption address
+===========================================================
+This verifier stop is not continuable. Process will be terminated 
+when you use the `go' debugger command.
+===========================================================
+
+(352c.2f58): Break instruction exception - code 80000003 (first chance)
+eax=009d8000 ebx=00000000 ecx=00000001 edx=00aff188 esi=6f3daa40 edi=00000000
+eip=6f3ddab2 esp=00aff128 ebp=00aff130 iopl=0         nv up ei pl nz na po nc
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b     
+```
+
+
+> [!note]
+> `GFlags` 的设置均保存在注册表表中，只有重启相关进程后，设置才会生效
+
+
+### 准页堆
+
+完全页堆会增加一个内存页性能消耗较大，准页堆则在完全页堆与 TAIL 填充之前取了一个折中：**不再利用内存页充当隔离区，而是采用8或16字节的 `0xA0` 充当隔离区，且在释放堆块时进行堆溢出检查。检测到溢出后，会产生异常上报调试器**。
+
+
+![normal page heap|c,40](../../image/windbg/normalPageHeap.jpg)
+
+
+
+# 内存泄漏
+
+## CRT 堆
+
+CRT 堆有自带的内存泄漏检测机制，会在程序结束时给出内存泄漏报告。**但是该机制只能在 `debug` 标准库中使用，即 `/MDd` `/MTd`；且只有在程序被 `debug` 时，才会输出报告结果** 。 内存检测控制，主要靠 [_crtDbgFlag](https://learn.microsoft.com/zh-cn/cpp/c-runtime-library/reference/crtsetdbgflag?view=msvc-170) 进行控制。
+
+```cpp
+#include <Windows.h>
+#include <crtdbg.h>
+
+void fill(char* p, int len, char ch){
+    for (size_t i = 0; i < len; i++)
+    {
+        p[i] = ch;
+    }
+}
+
+int main(int argc, char const *argv[])
+{
+    // 修改 _crtDbgFlag
+    int nFlag = _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF|_CRTDBG_LEAK_CHECK_DF);
+
+    // 设置 _CrtCheckMemory 检查频率。
+    nFlag = (nFlag & 0x0000FFFF) | _CRTDBG_CHECK_EVERY_16_DF;
+
+    // 重新更新标志
+    _CrtSetDbgFlag(nFlag);
+
+    int len = 12;
+    char * buffer = nullptr;
+
+
+    buffer = new char[len]();
+    fill(buffer, len, 'x');
+
+    return 0;
+}
+```
+
+```term
+triangle@LEARN:~$ g
+ModLoad: 759a0000 759af000   C:\Windows\SysWOW64\kernel.appcore.dll
+ModLoad: 76ae0000 76b9f000   C:\Windows\SysWOW64\msvcrt.dll
+ModLoad: 76a20000 76adf000   C:\Windows\SysWOW64\RPCRT4.dll
+Detected memory leaks!
+Dumping objects ->
+{61} normal block at 0x05E44FF0, 12 bytes long.
+ Data: <xxxxxxxxxxxx> 78 78 78 78 78 78 78 78 78 78 78 78 
+Object dump complete.
+eax=00000000 ebx=00000000 ecx=00000004 edx=00000000 esi=00000000 edi=77dc5b40
+eip=77d12e6c esp=0099f614 ebp=0099f6e8 iopl=0         nv up ei pl nz na pe nc
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000206
+ntdll!NtTerminateProcess+0xc:
+77d12e6c c20800          ret     8
+```
+
+
+```txt
+{61} normal block at 0x05E44FF0, 12 bytes long.
+ Data: <xxxxxxxxxxxx> 78 78 78 78 78 78 78 78 78 78 78 78 
+Object dump complete.
+```
+报告格式：
+- `{61}` : CRT 堆里面块的序号
+- `normal block` : 块类型。普通、客户、CRT
+- `0x05E44FF0, 12 bytes long.` : 内存地址和长度
+- `<...>` : 问题块的前16个字节 ASCII 码展示
+
+![memory code](../../image/windbg/memoryCode.jpg)
+
+## UMDH
+
+### 介绍
+
+[UMDH (User-Mode Dump Heap)](https://learn.microsoft.com/zh-cn/windows-hardware/drivers/debugger/umdh) 能对指定进程的 Microsoft Windows 堆内存分配进行分析
+- **分析正在运行的进程**: UMDH 捕获和分析进程的堆内存分配，并输出日志文件。 对于每个分配，UMDH 显示分配大小、开销大小、指向分配的指针和分配堆栈。 如果进程有多个活动内存堆，则 UMDH 会捕获所有堆。
+- **分析 UMDH 日志文件**: MDH 分析它之前创建的日志文件。 UMDH 可以比较在不同时间为同一进程创建的两个日志，并显示分配大小增加最大的调用。 此方法可用于查找内存泄漏。
+
+> [!tip]
+> `UMDH` 的工作原理是比对同一进程前后两段时间内的内存分配日志，然后得出内存差异供用户分析。该方式不用调试器参与。**可用于排除内存持续增长问题** 。
+
+### 操作
+
+> [!warning]
+> `WIN10` 可能不能使用，原因未知
+
+```term
+triangle@LEARN:~$ cmd // 切换到 cmd 才能使用 set 命令
+triangle@LEARN:~$ set _NT_SYMBOL_PATH=pdb_path // 设置 pdb 文件路径，可选
+triangle@LEARN:~$ set OANOCACHE=1 // 禁用 BSTR 缓存，这个会导致追踪结果不准确
+triangle@LEARN:~$ powershell.exe 
+triangle@LEARN:~$ .\gflags.exe -i demo.exe +ust // 创建运行时堆栈跟踪数据库
+triangle@LEARN:~$ .\demo.exe // 启动程序
+triangle@LEARN:~$ umdh.exe -pn:demo.exe -f:mem1.log // 抓取快照
+triangle@LEARN:~$ umdh.exe -pn:demo.exe -f:mem2.log // 程序运行一段时间，再抓取快照
+triangle@LEARN:~$ umdh.exe -d mem1.log mem2.log > res.log // 比对两个日志，得到分析结果
+```
+
+
