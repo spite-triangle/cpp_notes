@@ -700,7 +700,11 @@ eip=77d12e6c esp=0099f614 ebp=0099f6e8 iopl=0         nv up ei pl nz na pe nc
 cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000206
 ntdll!NtTerminateProcess+0xc:
 77d12e6c c20800          ret     8
+triangle@LEARN:~$ !heap -p -a 0x05E44FF0   // 泄漏点定位 ，需要配合 gflags.exe -i demo.exe +hpa 才能使用
 ```
+
+> [!warning|style:flat]
+> `windbg` 一定要下载 [Windows 10 SDK 版本 2104 (10.0.20348.0)](https://developer.microsoft.com/zh-cn/windows/downloads/sdk-archive/) 版，否则不能使用 `!heap -p` 相关命令。
 
 
 ```txt
@@ -744,4 +748,13 @@ triangle@LEARN:~$ umdh.exe -pn:demo.exe -f:mem2.log // 程序运行一段时间�
 triangle@LEARN:~$ umdh.exe -d mem1.log mem2.log > res.log // 比对两个日志，得到分析结果
 ```
 
+## windbg
 
+内存检测思路同 `UMDH` 。 首先开启 `gflags.exe -i demo.exe +hpa`，利用 windbg 间隔一段时间采集两次 `.dmp` ，然后比对两次堆分配变化，定位泄漏点 
+- 泄漏点必定持续泄漏，内存申请疯涨 (不疯涨，量小，也没必要管等系统回收就好)。`!heap -s` 查看堆的使用情况
+- 找泄漏的堆。`!heap -stat -h xxxxxxx` 查看异常堆的内存申请情况
+- 泄漏点基本尺寸大小固定 (同一个地方申请的，肯定有规律)。`!heap -flt s xx` 查看尺寸为 `xx` 在哪个堆
+- 泄漏点定位。`!heap -p -a xxxxxxx` 打印 `xxxxxxx` 地址的调用栈
+
+> [!tip]
+> [内存泄漏排查案例](https://www.cnblogs.com/lanxiaoke/p/12997032.html)

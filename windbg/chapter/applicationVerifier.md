@@ -1,4 +1,4 @@
-# 应用程序验证
+# Application Verifier
 
 # 介绍
 
@@ -53,10 +53,11 @@ leak!leak+0x8f:
 00007ffb`1931718f c6040177        mov     byte ptr [rcx+rax],77h ds:0000026c`29f46000=??
 ```
 
-# 泄漏
+# 内存泄漏
 
 > [!tip]
-> `WIN10` 没有测试出来，估计不支持
+> `WIN10` 没有生成检测报告，估计不支持。
+
 
 
 

@@ -1,5 +1,9 @@
 # Windbg
 
+> [!warning|style:flat]
+> 要想使用 `!heap -p` 相关命令，`windbg` 一定要下载 [Windows 10 SDK 版本 2104 (10.0.20348.0)](https://developer.microsoft.com/zh-cn/windows/downloads/sdk-archive/) 
+
+
 # 调试器命令
 
 ## 命令类型
