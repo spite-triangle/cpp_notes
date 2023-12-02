@@ -6,6 +6,7 @@
 - [第四章 性能分析](windbg/chapter/performanceAnalyse.md) 
 - [第五章 栈调试](windbg/chapter/stackDebug.md) 
 - [第六章 堆调试](windbg/chapter/heapDebug.md) 
+- [第七章 线程调试](windbg/chapter/threadDebug.md) 
 - [附录  Application Verifier](windbg/chapter/applicationVerifier.md) 
 
 
