@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>DataViewWidget</class>
+ <widget class="QWidget" name="DataViewWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1050</width>
+    <height>543</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>DataViewWidget</string>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout_2">
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout" stretch="3,7">
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="DataTreeViewWidget" name="m_pWidgetTreeView" native="true">
+       <property name="minimumSize">
+        <size>
+         <width>250</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_3"/>
+      </widget>
+     </item>
+     <item>
+      <widget class="DatabaseTableWidget" name="m_pWidgetDataTable" native="true">
+       <property name="minimumSize">
+        <size>
+         <width>750</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_4"/>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>DataTreeViewWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">DataTreeViewWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>DatabaseTableWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">DatabaseTableWidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
