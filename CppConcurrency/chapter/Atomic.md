@@ -142,7 +142,7 @@ bool ret = current.compare_exchange_weak(expected, update);
 ```
 `compare_exchange_weak` 函数的工作原理
 - 当 `current == expected` 时，会将 `update` 的值储存到 `current` 中
-- 当 `current != expected` 时，会将 `expected` 的值设置为 `current` 的值
+- 当 `current != expected` 时，返回 `false`
 - 返回值：`bool`
   - true：更新成功
   - false：未更新成功 

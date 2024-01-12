@@ -68,6 +68,8 @@ triangle@LEARN:~$ prefview collect  /nogui // 开始收集，并不展示界面�
 - `Interval` : 进程被采集的时间
 - `when` ： 除了首先得明确是否是由于 CPU 导致的性能问题外，还得明确是要排查哪个时间段内性能问题。
 
+![metric](../../image/windbg/metric.png)
+
 ### 自上而下
 
 ![call tree|c,70](../../image/windbg/perfview_calltree.jpg)
@@ -118,6 +120,8 @@ x 轴为事件采样时间；y 轴为当前时间有多少事件的数字。选�
 
 ## 阻塞时间分析
 
+![block time](../../image/windbg/blockTime.jpg)
+
 - `Thread Time View`: 会对线程阻塞时间进行统计。当 `CPU Stack` 分析走不通后，就需要分析阻塞时间
   - `BLOCKED_TIME` : 阻塞时间。包含所有阻塞等待的时间，网络请求、上下文切换、I/O阻塞等
   - `HARD_FAULT` : 故障时间，例如操作系统处理页中断的时间
@@ -126,11 +130,14 @@ x 轴为事件采样时间；y 轴为当前时间有多少事件的数字。选�
 - `wall clock time` : 每个线程在某个栈上的消耗时间。不管线程在运行还是阻塞，都会和一个栈相关，`wall clock time` 就是用来度量这个时间的。
 
 ![thread time](../../image/windbg/perfview_threadTime.jpg)
+![thread time](../../image/windbg/threadTime.jpg)
 
 当启用 `thread time` 时，PerfView 会收集的内容有：
 1. 每毫秒正在 CPU 上运行的栈
 2. 线程上下文切换
 3. 线程创建和销毁的时间
+
+![cpu time](../../image/windbg/cpuTime.jpg)
 
 首先观察 `CallTree` 面板，会列出所有的线程，并且新增 `cpu=xxxms` 展示，通过该参数就能区分出哪些线程在调用 CPU 干活。其次重点观察 `inc` 指标，可以大致定位哪个函数调用耗时最长，就能找到需要着重优化分析的函数。
 
