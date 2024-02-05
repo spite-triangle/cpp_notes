@@ -113,3 +113,84 @@ func main() {
 
 ```
 
+# 结构体标签
+
+## 定义
+
+```go
+package main
+
+import (
+	"fmt"
+	"reflect"
+)
+
+type Test struct{
+	// 以键值对形式定义
+	str string `key:"value"`
+
+	// 可以定义多个
+	num int `info:"name" doc:"说明"`
+}
+
+func show(arg interface{}){
+	// 判断类型
+	if reflect.TypeOf(arg).Kind() == reflect.Pointer {
+		// 获取类型的标签，只能用于 Array, Chan, Map, Pointer, or Slice
+		elem := reflect.TypeOf(arg).Elem()
+		for i := 0; i < elem.NumField(); i++ {
+			tagKey := elem.Field(i).Tag.Get("info")	
+			tagVal := elem.Field(i).Tag.Get("doc")
+			fmt.Printf("key : %s, val : %s\n", tagKey, tagVal)
+		}
+	}
+}
+
+func main() {
+	t := Test{num: 10, str: "test"}
+	show(&t)
+} 
+```
+
+## 序列化
+
+```go
+package main
+
+import (
+	"fmt"
+	"encoding/json" // json 包
+)
+
+// 需要被 json 包调用，因此得首字母大写
+type Test struct{
+	Str string `json:"str"`
+	Num int `json:"num"`
+}
+
+// 序列化
+func toJson(obj interface{}) string {
+	str, _ :=  json.Marshal(obj)
+	return string(str)
+}
+
+// 反序列化
+func toObj(str string ,obj interface{}) {
+	buff := make([]byte, len(str))
+	copy(buff, str)
+
+	json.Unmarshal(buff, obj)
+}
+
+func main() {
+	t := Test{Str: "qqqqq", Num: 10}
+
+	strJson := toJson(t)
+	fmt.Println(strJson)
+
+	var t1 Test
+	toObj(strJson, &t1)
+	fmt.Printf("%v\n", t1)
+} 
+
+```
