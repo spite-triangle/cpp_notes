@@ -90,3 +90,151 @@ func main()  {
 }
 ```
 
+# channel
+
+## 无缓冲
+
+> [!note]
+> 通信双方，都会阻塞等待管道中的内容被取出。且对于 channel 的读写操作都是原子的
+
+```go
+package main
+
+import (
+	"fmt"
+)
+
+func main() {
+	// 定义无缓冲 channel
+	ch := make(chan int)
+
+	go func(){
+		// 写入，会阻塞等待取值
+		ch <- 100
+	}()
+		
+	// 取出，会阻塞等待取值
+	res := <- ch
+
+	fmt.Println(res)
+} 
+```
+
+## 有缓冲
+
+```go
+package main
+
+import (
+	"fmt"
+)
+
+func main() {
+	// 定义有缓冲 channel
+	ch := make(chan int, 3)
+
+	go func(){
+		// 写入，当超过缓冲数时才会阻塞
+		ch <- 100
+	}()
+		
+	// 读取，没有获取到数据时才会阻塞
+	res := <-ch
+	fmt.Println(res)
+} 
+```
+
+## 关闭
+
+```go
+package main
+
+import (
+	"fmt"
+)
+
+func main() {
+	ch := make(chan int, 3)
+	go func(){
+		ch <- 100
+		// 关闭，关闭 channel 后，能解除读的阻塞
+		close(ch)
+	}()
+	
+	for{
+		// ch 被关闭，ok 为 false，能防止死锁
+		if res,ok := <-ch; ok{
+			fmt.Println(res)
+		}else{
+			break
+		}
+	}
+} 
+```
+
+## 特殊用法
+
+- `range`
+
+
+```go
+package main
+
+import (
+	"fmt"
+)
+
+func main() {
+	ch := make(chan int, 3)
+
+	go func(){
+		for i := 0; i < 5; i++ {
+			ch <- i	
+		}
+		close(ch)
+	}()
+	
+	// 遍历 channel ，在 channel 关闭后退出
+	for data := range ch{
+		fmt.Println(data)
+	}
+} 
+```
+
+- `select`
+
+
+```go
+package main
+
+import (
+	"fmt"
+)
+
+func fcn(ch,quit chan int)  {
+	x := 0
+	for{
+		// select 尝试每一个条件，成功就执行对应 case，并且不会阻塞
+		select{
+		case x = <- ch: // 尝试读取 ch
+			fmt.Println(x)
+		case <- quit: // 尝试读取 quit
+			return
+		}
+	}	
+}
+
+func main() {
+	ch := make(chan int)
+	quit := make(chan int)
+
+	go func(){
+		for i := 0; i < 5; i++ {
+			ch <- i	
+		}
+		quit <- 0
+	}()
+
+	fcn(ch, quit)
+} 
+```
