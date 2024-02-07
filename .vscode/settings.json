@@ -1,5 +1,5 @@
 {
-    "docsifyPreview.indexFile": "index.html",
+    "docsifyPreview.indexFile": "doc/index.html",
     "docsifyPreview.port": 10813,
     "files.associations": {
         "*.vue": "html",
