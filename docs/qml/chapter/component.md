@@ -458,7 +458,7 @@ ListView {
 }
 ```
 
-## ComboBox
+# ComboBox
 - 基本属性
 ```qml
 ComboBox{
@@ -524,3 +524,38 @@ ComboBox {
 }
 ```
 
+# Setting
+
+可以将界面设置保存到本地，下一次打开界面会读取相应配置
+
+```qml
+ import QtQuick.Window 2.1
+  import Qt.labs.settings 1.0
+
+  Window {
+      id: window
+
+      width: 800
+      height: 600
+
+      Settings {
+          id: ini
+          fileName: "settings.ini"
+          category: "ini group"
+          property alias x: window.x
+          property alias y: window.y
+          property alias width: window.width
+          property alias height: window.height
+      }
+      Button{
+        onClicked:{
+            // 直接访问
+            ini.x;
+            // 查找值
+            ini.value("key");
+            // 设置
+            ini.setValue("key",value);
+        }
+      }
+  }
+```

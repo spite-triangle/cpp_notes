@@ -14,6 +14,10 @@ Button{
     onWidthChanged:{
         console.log("change")
     }
+
+    Component.onCompleted:{
+        width = 10 // 初始化
+    }
 }
 ```
 

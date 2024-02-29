@@ -357,6 +357,12 @@ MyItem{
 
     // 别名
     property alias newName : oldName // 可以为 id, 内部控件的属性
+
+    // 将属性私有化
+    QtObject{
+        id: attributes
+        property bool m_isok: true
+    }
 }
 ```
 
@@ -403,8 +409,8 @@ Button{
 ```
 
 - 焦点组
-```qml
 
+```qml
 // 可以让多个组件的 focus 变为 true
 FocusScope{
     Button{
