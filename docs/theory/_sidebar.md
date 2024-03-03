@@ -1,14 +1,11 @@
 
 - [目录](theory/README.md)
-- **基础理论**
-    - [计算机原理](https://spite-triangle.github.io/computer_theory/#/)
-    - [操作系统](operateSystem/README.md)
-    - [调试原理](windbg/README.md)
 - **编译工具**
     - [bat](theory/chapter/bat.md)
     - [msvc](theory/chapter/msvc.md)
     - [cmake](theory/chapter/cmake.md)
     - [xmake](theory/chapter/xmake.md)
+    - [webassembly](theory/chapter/WebAssembly.md)
 - **调试工具**
     - [gdb](https://spite-triangle.github.io/computer_theory/#/./LinuxCommand/chapter/gdb)
 - **语言特性**

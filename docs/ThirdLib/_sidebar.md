@@ -4,6 +4,7 @@
 - [curl](ThirdLib/chapter/curl.md)
 - [grpc](ThirdLib/chapter/grpc.md)
 - [sqlite](ThirdLib/chapter/sqlite.md)
+- [graphviz](ThirdLib/chapter/graphviz.md)
 - [其他](ThirdLib/chapter/other.md)
 
 
