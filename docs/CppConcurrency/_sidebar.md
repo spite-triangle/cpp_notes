@@ -7,7 +7,7 @@
 - [第四章 原子操作](CppConcurrency/chapter/Atomic.md)
 - [第五章 有锁数据结构](CppConcurrency/chapter/dataStructureMutex.md)
 - [第六章 无锁数据结构](CppConcurrency/chapter/dataStructureAtomic.md)
-- [第七章 线程管理](CppConcurrency/chapter/AdcanceThreadManager.md)
+- [第七章 线程管理](CppConcurrency/chapter/AdcanceThreadManage.md)
 - [第八章 并发设计](CppConcurrency/chapter/concurrencyDesign.md)
 
 
