@@ -458,6 +458,24 @@ ListView {
 }
 ```
 
+# TextField
+
+```qml
+    TextField{
+        clip: true // 超出文本框内容会被隐藏
+        autoScroll: true // 输入内容超出尺寸能滚动
+        selectByMouse: true // 输入内容能被选中
+
+        // NOTE - 只校验了输入结果，并未完成限制输入。例如，输入 300 也能正常展示
+        validator: IntValidator{bottom:1;top:100;}
+        onTextEdited:{
+            // validtaor 的校验结果 
+            console.log(acceptableInput)
+        }
+    }
+```
+
+
 # ComboBox
 - 基本属性
 ```qml
@@ -523,6 +541,10 @@ ComboBox {
     }
 }
 ```
+
+
+
+
 
 # Setting
 

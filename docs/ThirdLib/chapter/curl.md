@@ -5,6 +5,8 @@
 - [curl库的用法](https://blog.csdn.net/Quellaaa/article/details/103149911)
 
 
+# 基础流程
+
 ```cpp
 
 #include <stdio.h>
@@ -46,5 +48,44 @@ int main(int argc, char const *argv[])
 
     fclose(file);
     return 0;
+}
+```
+
+# TCP 协议
+
+```cpp
+#include <curl/curl.h>
+
+int main(){
+
+    curl_socket_t sockfd;
+
+    // 初始化句柄
+    CURL* curl =  curl_easy_init();
+
+    // 设置 curl
+    curl_easy_setopt(curl, CURLOPT_URL, "127.0.0.1");
+    curl_easy_setopt(curl, CURLOPT_PORT, 7102);
+    // it tells the library to perform all 
+    // the required proxy authentication and connection setup,
+    // but no data transfer, and then return.
+    curl_easy_setopt(curl, CURLOPT_CONNECT_ONLY, 1L);
+
+    // 执行
+    curl_easy_perform(curl);
+
+    // 获取 socket 
+    long sockextr;
+    curl_easy_getinfo(curl, CURLINFO_LASTSOCKET, &sockextr);
+    sockfd = (curl_socket_t)sockextr;
+
+    // 发送
+    curl_easy_send(curl, request, strlen(request), &iolen);
+
+    // 接收
+    curl_easy_recv(curl, buf, 1024, &iolen);
+
+    // 关闭
+    curl_easy_cleanup(curl);
 }
 ```

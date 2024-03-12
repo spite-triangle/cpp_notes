@@ -293,8 +293,16 @@ class Data : public QObject{
 public:
     Data(QObject* parent=nullptr) : QObject(parent){}
 
-    QString getName() const;
-    void setName(const QString &newName);
+    QString getName() const{ return m_name;};
+    void setName(const QString &newName){
+        // NOTE - 防止嵌套绑定
+        if(newName == m_name) return;
+
+        m_name = newName;
+
+        // NOTE - 触发修改信号。qml 属性绑定依赖该信号
+        emit nameChanged();
+    }
 
 signals:
     void nameChanged();
@@ -306,7 +314,7 @@ private:
 };
 ```
 
-## 使用
+## 导入QML 
 
 > [!note]
 > 继承了 `QObject` 的类型，会自动屏蔽拷贝语义，**因此，引入属性系统的类，都应采用指针的方式**
