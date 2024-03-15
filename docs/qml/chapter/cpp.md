@@ -539,11 +539,14 @@ Connections{
 window{
     id:wind
 
-    function Func(a,b){
+    function func(a,b){
         return a + b;
     }
 }
 ```
+
+>[!note]
+> 函数名第一个字母不能大写，变量一样。只有对象能大写
 
 ```cpp
 #include <QGuiApplication>
@@ -570,7 +573,7 @@ int main(int argc, char *argv[])
     QVariant res;
     QVariant a = 1;
     QVariant b = 2;
-    QMetaObject::invokeMethod(pWindow, "Func", 
+    QMetaObject::invokeMethod(pWindow, "func", 
                               Q_RETURN_ARG(QVariant,res),
                               Q_ARG(QVariant,a),
                               Q_ARG(QVariant,b));
