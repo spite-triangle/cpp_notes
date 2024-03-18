@@ -417,6 +417,35 @@ int main(int argc, char const *argv[])
 }
 ```
 
+- 结构体空数组
+
+```cpp
+struct Test1{
+    int a;
+    char b[];  // 在结构体末尾定义空数组，是为了方便的管理内存缓冲区
+};
+
+struct Test2{
+    int a[];
+};
+
+void Fcn(){
+    // 空数组不占用字节，返回 4
+    printf("%d\n", sizeof(Test1));
+
+    // 空数组不占用字节，但是结构体会内存对齐，因此还是返回 4
+    printf("%d\n", sizeof(Test2));
+
+    // 申请内存
+    char * buff = (char *)malloc(8);
+    // 重新解释内存
+    Test1* p = (Test1*) buff;
+    p->a = 1;
+    p->b[2] = 'c'; // 可以通过索引直接访问 buff 的额外内存，更方便
+}
+```
+
+
 ## 特殊成员函数
 
 特殊的成员函数有以下几类：

@@ -47,3 +47,76 @@ int main(int argc, char const *argv[])
     return 0;
 }
 ```
+
+# 反射宏
+
+- **结构体定义头文件**
+
+```cpp
+/* ================== dataDefine.h ================= */
+
+// 结构体的名
+#ifndef data_name
+#error not found data_name
+#endif
+
+// 结构体内部字段定义
+#ifndef data_body
+#error not found data_body
+#endif
+
+struct data_name{
+
+// 自定义 int、doule 的展开形式
+#undef field_int
+#define field_int(name,...) int name = {__VA_ARGS__}
+
+#undef field_double
+#define field_double(name,...) double name = {__VA_ARGS__}
+
+// 展开自定义字段
+    data_body
+};
+
+std::ostream& operator<<(std::ostream & os, const data_name & t){
+
+// 自定义字段的序列化输出形式
+#undef field_int
+#define field_int(name,...) os << #name " "  << t.name << std::endl;
+
+#undef field_double
+#define field_double(name,...) os << #name " " << t.name << std::endl;
+
+// 展开自定义字段
+    data_body
+    return os;
+}
+
+#undef data_name
+#undef data_body
+```
+
+- **使用**
+
+```cpp
+#include <iostream>
+
+#define data_name Test          // 定义结构体的名
+#define data_body \             // 定义字段
+        field_int(a,10); \
+        field_double(b,10); \
+        // 
+
+#include "dataDefine.h"         // 利用工具头文件展开宏
+
+int main(){
+    Test t;
+    std::cout << t;
+}
+```
+
+```term
+triangle@LEARN:~$ ./a.out
+a 10
+b 10
+```
