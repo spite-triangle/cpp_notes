@@ -1,4 +1,4 @@
-# WebassemblyWebassembly
+# Webassembly
 
 # 介绍
 
@@ -188,13 +188,62 @@ triangle@LEARN:~$  emcc --bind main.cpp -s WASM=1
 
 # 调试
 
-1. 浏览器安装插件 [C/C++ DevTools Support (DWARF)](https://developer.chrome.com/docs/devtools/wasm?hl=zh-cn)
+> - 教程： [使用现代工具调试 WebAssembly](https://developer.chrome.com/blog/wasm-debugging-2020)
+> - 浏览器调试工具： [C/C++ DevTools Support (DWARF)](https://developer.chrome.com/docs/devtools/wasm?hl=zh-cn)
 
-2. 启动调试编译选项
+
+## 汇编调试
+
+安装好插件后，可以直接在汇编中打断点调试。
+
+![wasm](../../image/theory/wasm.jpg)
+
+
+```cpp
+#include <stdio.h>
+#include <emscripten.h>
+
+int main(int argc, char ** argv) {
+    // 可以在代码中主动设置断点，方便找代码
+    EM_ASM({ debugger });  
+    printf("Hello World\n");
+}
+
+```
+
+## DWARF
+
+
 
 ```term
-triangle@LEARN:~$ emcc -g -fdebug-compilation-dir='.' --bind get.cpp -s FETCH  -s WASM
-=1
-# -g : 调试
-# -fdebug-compilation-dir ：源码路径，相对于 html
+triangle@LEARN:~$ emcc -g -fdebug-compilation-dir='.' hello.cpp -o hello.html
+Options:
+    -g                          生成调试信息
+    -fdebug-compilation-dir     源码相对于 hello.html 的路径，通过 http 协议加载。若不指定则通过 file:// 协议获取本地源文件
 ```
+
+![DWARF](../../image/theory/dwarf.jpg)
+
+## Source Map
+
+```term
+triangle@LEARN:~$ emcc -gsource-map hello.c -o hello.html
+Options:
+    -gsource-map                会生成 wasm 文件对应源码的映射文件
+    -g4                         效果同上，新版 emscripten 不推荐使用
+triangle@LEARN:~$ tree
+.
+├── hello.c
+├── hello.html
+├── hello.js
+├── hello.wasm
+└── hello.wasm.map              # 源码映射文件
+```
+
+![source map](../../image/theory/sourcemap.jpg)
+
+> [!note]
+> `Source Map` 只是将汇编对应到源码，堆栈还是展示汇编寄存器
+
+
+
