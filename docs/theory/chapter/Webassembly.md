@@ -188,6 +188,7 @@ triangle@LEARN:~$  emcc --bind main.cpp -s WASM=1
 
 # 调试
 
+
 1. 浏览器安装插件 [C/C++ DevTools Support (DWARF)](https://developer.chrome.com/docs/devtools/wasm?hl=zh-cn)
 
 2. 启动调试编译选项

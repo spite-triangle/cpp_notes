@@ -5,7 +5,7 @@
     - [msvc](theory/chapter/msvc.md)
     - [cmake](theory/chapter/cmake.md)
     - [xmake](theory/chapter/xmake.md)
-    - [webassembly](theory/chapter/WebAssembly.md)
+    - [webassembly](theory/chapter/webassembly.md)
 - **调试工具**
     - [gdb](https://spite-triangle.github.io/computer_theory/#/./LinuxCommand/chapter/gdb)
 - **语言特性**

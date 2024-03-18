@@ -585,42 +585,6 @@ int main(int argc, char const *argv[])
 ```
 
 
-
-# 附录
-
-## 变长实参
-
->[!note]
-> 区别于形参包，变长实参是 c 语言的特性
-
-
-```cpp
-#include <iostream>
-#include <stdarg.h>
-
-void print(int count, ...)
-{
-    // 可变参数
-    va_list args;
-    // 参数遍历开始
-    va_start(args,count);
-    for (size_t i = 0; i < count; i++)
-    {
-        // 以 int 类型访问参数，并指向下一个
-        int arg = va_arg(args, int);
-        printf("%d\n", arg);
-    }
-    // 参数遍历结束
-    va_end(args); 
-}
-
-int main(int argc, char const *argv[])
-{
-    print(5,1,2,3,4,5);
-    return 0;
-}
-```
-
 # 标签分发
 
 > [!note]
@@ -657,6 +621,43 @@ int main(int argc, char const *argv[])
     Fcn(10, 11, 12, 12.5);
 
     Fcn(11, 11, 12, 12);
+    return 0;
+}
+```
+
+
+
+# 附录
+
+## 变长实参
+
+>[!note]
+> 区别于形参包，变长实参是 c 语言的特性
+
+
+```cpp
+#include <iostream>
+#include <stdarg.h>
+
+void print(int count, ...)
+{
+    // 可变参数
+    va_list args;
+    // 参数遍历开始
+    va_start(args,count);
+    for (size_t i = 0; i < count; i++)
+    {
+        // 以 int 类型访问参数，并指向下一个
+        int arg = va_arg(args, int);
+        printf("%d\n", arg);
+    }
+    // 参数遍历结束
+    va_end(args); 
+}
+
+int main(int argc, char const *argv[])
+{
+    print(5,1,2,3,4,5);
     return 0;
 }
 ```
