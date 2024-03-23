@@ -324,7 +324,6 @@ private:
 ```cpp
 class MyModel : public QObject{
     Q_OBJECT
-    QML_ELEMENT
 public:
     MyModel(QObject* parent=nullptr) : QObject(parent){}
 
@@ -380,6 +379,250 @@ Item{
         // 访问数据类的属性
         console.log(MyModel.data.name)
     }
+}
+```
+
+# 自定义 model
+
+## QList
+
+1. 通过属性系统定义 `QList` 属性
+
+```cpp
+
+class DataList : public QObject{
+    Q_OBJECT
+public:
+    DataList(QObject *parent = nullptr);
+
+    QStringList getItems() const{return m_lstItems;}
+    void setItems(const QStringList & other){
+        if(m_lstItems == other) return;
+
+        m_lstItems = other;
+        emit itemsChanged();
+    }
+signals:
+    itemsChanged();
+private:
+    QStringList m_lstItems;
+    Q_PROPERTY(QStringList items READ getItems WRITE setItems NOTIFY itemsChanged FINAL)
+};
+```
+
+2. 注册类型
+
+```cpp
+    qmlRegisterType<DataList>("MyObject", 1,0,"MyDataList");
+```
+
+3. QML 中引用
+
+```qml
+import MyObject 1.0
+
+MyDataList{
+    id: lst
+}
+
+ComboBox{
+    // 直接将 QList 放入 model 中进行使用
+    // 由于是 QStringList，ComboBox 可以直接展示
+    model: lst.items 
+}
+```
+
+> [!tip]
+> `QList<Type*>` 中的 `Type` 也可以是自定义结构体，`Type` 内部字段需要满足「属性系统」
+
+## QAbstractListModel
+
+使用 `QList<>` 同样也能将自定义结构体变成 QML 中的 `model`。自定义结构体中需要添加「属性系统」，会继承 `QObject`，这就会导致该结构体失去「复制」、「移动」功能。替代方案可以直接通过 `QAbstractListModel` 实现自定义 `model`。
+
+- **头文件**
+
+```cpp
+/* checkbox 选择区域 */
+class DataCheckBoxSession: public QAbstractListModel{
+    Q_OBJECT
+public:
+
+    // 自定义结构体
+    struct ITEM{
+        QString strName;
+        bool bState; 
+    };
+
+    enum ROLES{
+        ROLE_NAME= Qt::UserRole + 1,
+        ROLE_STATE
+    };
+
+public:
+    DataCheckBoxSession(QObject* parent=nullptr);
+
+    /* 获取数据行数接口 */
+    Q_INVOKABLE virtual int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    /* 获取数据接口 */
+    Q_INVOKABLE virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    /* 修改数据接口 */
+    Q_INVOKABLE virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
+protected:
+    /* 注册字段名接口 */
+    virtual QHash<int,QByteArray> roleNames() const override;
+
+private:
+    QList<ITEM> m_lstData; // 数据
+};
+```
+
+- **源文件**
+
+
+```cpp
+int DataCheckBoxSession::rowCount(const QModelIndex &parent) const
+{
+    return m_lstData.size();
+}
+
+QVariant DataCheckBoxSession::data(const QModelIndex &index, int role) const
+{
+    // 不在范围
+    auto nRow = index.row();
+    if(nRow < 0 || nRow >= m_lstData.size() ) return QVariant();
+
+    // 读取数据
+    const auto & stData = m_lstData[nRow];
+    switch (role)
+    {
+    case ROLES::ROLE_NAME : return stData.strName;
+    case ROLES::ROLE_STATE : return stData.bState;
+    default:
+        break;
+    }
+
+    return QVariant();
+}
+
+bool DataCheckBoxSession::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    if(index.isValid() == false ) return false;
+
+    int nRow = index.row();
+    switch (role)
+    {
+    case ROLES::ROLE_NAME :{
+        auto str =  value.toString();
+
+        // 防止循环绑定
+        if(m_lstData[nRow].strName == str) return false;
+
+        m_lstData[nRow].strName = str;
+        break;
+    }
+    case ROLES::ROLE_STATE :{
+        bool bNew = value.toBool();
+        if(m_lstData[nRow].bState == bNew) return false;
+        m_lstData[nRow].bState = bNew;
+        break;
+    }
+    default:
+        return false;
+        break;
+    }
+    return true;
+}
+
+QHash<int, QByteArray> DataCheckBoxSession::roleNames() const
+{
+    return QHash<int, QByteArray>{ 
+                {ROLE_NAME, "name"},        // qml 里访问字段的名字
+                {ROLE_STATE,"isChecked"}    
+             };
+}
+```
+
+使用 `QAbstractListModel` 的接口维护数据比较繁琐，可以自定义对数据的增、删、改、查
+
+```cpp
+protected:
+    /* 插入 */
+    void beginInsertRows(const QModelIndex &parent, int first, int last);
+    void endInsertRows();
+
+    void beginInsertColumns(const QModelIndex &parent, int first, int last);
+    void endInsertColumns();
+
+    /* 删除 */
+    void beginRemoveRows(const QModelIndex &parent, int first, int last);
+    void endRemoveRows();
+
+    void beginRemoveColumns(const QModelIndex &parent, int first, int last);
+    void endRemoveColumns();
+
+    /* 移动 */
+    bool beginMoveRows(const QModelIndex &sourceParent, int sourceFirst, int sourceLast, const QModelIndex &destinationParent, int destinationRow);
+    void endMoveRows();
+
+    bool beginMoveColumns(const QModelIndex &sourceParent, int sourceFirst, int sourceLast, const QModelIndex &destinationParent, int destinationColumn);
+    void endMoveColumns();
+
+Q_SIGNALS:
+    /* 数据被修改 */
+    void dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles = QVector<int>());
+    void headerDataChanged(Qt::Orientation orientation, int first, int last);
+    void layoutChanged(const QList<QPersistentModelIndex> &parents = QList<QPersistentModelIndex>(), QAbstractItemModel::LayoutChangeHint hint = QAbstractItemModel::NoLayoutChangeHint);
+    void layoutAboutToBeChanged(const QList<QPersistentModelIndex> &parents = QList<QPersistentModelIndex>(), QAbstractItemModel::LayoutChangeHint hint = QAbstractItemModel::NoLayoutChangeHint);
+
+    void rowsAboutToBeInserted(const QModelIndex &parent, int first, int last, QPrivateSignal);
+    void rowsInserted(const QModelIndex &parent, int first, int last, QPrivateSignal);
+
+    void rowsAboutToBeRemoved(const QModelIndex &parent, int first, int last, QPrivateSignal);
+    void rowsRemoved(const QModelIndex &parent, int first, int last, QPrivateSignal);
+
+    void columnsAboutToBeInserted(const QModelIndex &parent, int first, int last, QPrivateSignal);
+    void columnsInserted(const QModelIndex &parent, int first, int last, QPrivateSignal);
+
+    void columnsAboutToBeRemoved(const QModelIndex &parent, int first, int last, QPrivateSignal);
+    void columnsRemoved(const QModelIndex &parent, int first, int last, QPrivateSignal);
+
+    void modelAboutToBeReset(QPrivateSignal);
+    void modelReset(QPrivateSignal);
+
+    void rowsAboutToBeMoved( const QModelIndex &sourceParent, int sourceStart, int sourceEnd, const QModelIndex &destinationParent, int destinationRow, QPrivateSignal);
+    void rowsMoved( const QModelIndex &parent, int start, int end, const QModelIndex &destination, int row, QPrivateSignal);
+
+    void columnsAboutToBeMoved( const QModelIndex &sourceParent, int sourceStart, int sourceEnd, const QModelIndex &destinationParent, int destinationColumn, QPrivateSignal);
+    void columnsMoved( const QModelIndex &parent, int start, int end, const QModelIndex &destination, int column, QPrivateSignal);
+
+```
+
+在操作数据时，调用上述接口，通知 `QAbstractListModel` 哪些数据发生了变动。
+
+```cpp
+
+/* 插入数据 */
+bool DataCheckBoxSession::append(const ITEM & other){
+    // 获取行号
+    auto nRow = rowCount();
+
+    // 通知需要在 nRow 位置插入数据
+    beginInsertRows(QModelIndex(), nRow, nRow);
+    m_lstData.append(other);
+    // 完成数据插入
+    endInsertRows();
+
+    return true;
+}
+
+/* 修改数据 */
+bool DataCheckBoxSession::update(int nRow,const ITEM & other){
+    if(m_lstData[nRow] == other) return true;
+    m_lstData[nRow] = other;
+
+    // 通知 nRow 位置的数据被修改
+    emit dataChanged(index(nRow), index(nRow));
+    return true;
 }
 ```
 
