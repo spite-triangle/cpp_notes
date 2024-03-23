@@ -6,6 +6,7 @@
 - [第三章 restful规范](http/chapter/restful.md)
 - [第四章 阻塞IO](http/chapter/blockingIO.md)
 - [第五章 网络模型](http/chapter/reactor.md)
+- [第六章 HTML](http/chapter/html.md)
 
 
 
