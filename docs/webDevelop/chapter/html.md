@@ -31,7 +31,7 @@
 </html>
 ```
 
-![iframe example](../../image/http/iframe_example.jpg)
+![iframe example](../../image/web/iframe_example.jpg)
 
 ## 基本属性
 
