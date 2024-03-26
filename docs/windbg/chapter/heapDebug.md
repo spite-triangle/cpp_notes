@@ -645,6 +645,77 @@ cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b
 ![normal page heap|c,40](../../image/windbg/normalPageHeap.jpg)
 
 
+# GC Heap
+
+## 介绍
+
+上面介绍的堆都属于 `Native Heap`，与操作系统内存最接近的内存管理器，类似 `c/c++` 这种 `Native Code` 语言能直接使用，例如 `new/delete、malloc/free`。这种简单粗暴的内存管理器就会导致以下问题：
+- 程序无法跨平台。不同的操作系统都有自己的内存管理机制，而 `Native Code` 则与操作系统的内存管理机制强相关
+- 存在内存泄漏风险。`Native Code` 得自己维护内存的申请与释放，如果代码出现 bug ，就会导致内存泄漏。
+
+为了解决该问题，一些高级语言便提出了 `GC Heap (Garbage Collection Heap)` 的概念，即 **「垃圾回收机制」**，语言底层自动实现内存申请与释放。其基本思路就是在 `Native Heap` 的基础上，再实现一套语言自己的内存管理系统。
+
+![jvm|c,60](../../image/windbg/jvm.png)
+
+
+## .Net GC
+
+```term
+triangle@LEARN:~$ !eeheap -gc // 查看 .net 应用的 GC 内存分配情况
+Number of GC Heaps: 2
+------------------------------
+Heap 0 (001c3a88)   // windows 堆 0 上构建的 GC Heap
+generation 0 starts at 0x0310d288
+generation 1 starts at 0x030ee154
+generation 2 starts at 0x03030038
+ephemeral segment allocation context: none
+segment   begin    allocated size                reserved
+001c92f0  7a733370 7a754b98  0x00021828(137,256) 00004000
+001c5428  790d8620 790f7d8c  0x0001f76c(128,876) 00004000
+03030000 03030038 03115294 0x000e525c(938,588) 03d3f000
+Large object heap starts at 0x0b030038
+segment   begin     allocated  size                    reserved
+0b030000 0b030038 0b4d5aa8 0x004a5a70(4,872,816) 01af8000
+Heap Size 0x5cbc60(6,077,536)
+------------------------------
+Heap 1 (001c4a48) // windows 堆 1 上构建的 GC Heap
+generation 0 starts at 0x0712614c
+generation 1 starts at 0x071014ac
+generation 2 starts at 0x07030038
+ephemeral segment allocation context: none
+segment   begin     allocated  size                    reserved
+07030000 07030038 07134158 0x00104120(1,065,248) 03d2f000
+Large object heap starts at 0x0d030038
+segment    begin    allocated  size                  reserved
+0d030000 0d030038 0d0f3588 0x000c3550(800,080) 01f3c000
+Heap Size 0x1c7670(1,865,328)
+------------------------------
+GC Heap Size 0x7932d0(7,942,864)
+```
+
+- **结构**
+
+`.Net` 的 `GC Heap` 实现由两部分组成:
+- `generation` : 管理小对象，generation 与 heap segment 不是一一对应的，一个 generation 可能由多个 heap segment 组成，一个 heap segment 也可能包含多个 generation
+- `LOH（Large Object Heap)` : 管理大对象
+
+![GC heap|c,20](../../image/windbg/gc_heap.png)
+
+- **工作原理流程**
+
+新对象都是在 `generation 0` 中被创建；当「收集」发生时，需要存活的对象就会被迁移到到`generation 1`；当收集时， `generation 1` 中还要存活的对象，又会被迁移到 `generation 2`中；以此类推，需要长时间存活的对象会被一直迁移，直到生命结束。会发生收集的条件：
+1. `generation 0` 中没有内存创建新对象
+2. 主动调用 `GC.Collect()`
+3. 存在内存压力
+
+- **Root**
+
+若一个对象被其他对象引用，则这个对象会被设置为「根 `Root`」。
+
+- **LOH（Large Object Heap）**
+
+`LOH` 是一个或多个很特殊的段，那里面的对象往往都大于 `85000 Byte`，这个大小指的是这个对象本身的结构行大小，并不包含这个对象的大小和它的子对象的大小。一般存放的是比较大的数组或者字符串。
+
 
 # 内存泄漏
 
@@ -704,7 +775,7 @@ triangle@LEARN:~$ !heap -p -a 0x05E44FF0   // 泄漏点定位 ，需要配合 gf
 ```
 
 > [!warning|style:flat]
-> `windbg` 一定要下载 [Windows 10 SDK 版本 2104 (10.0.20348.0)](https://developer.microsoft.com/zh-cn/windows/downloads/sdk-archive/) 版，否则不能使用 `!heap -p` 相关命令。
+> `windbg` 一定要下载 [Windows 10 SDK 版本 2104 (10.0.20348.0)](https://developer.microsoft.com/zh-cn/windows/downloads/sdk-archive/) 版，否则不能使用 `!heap -p` 相关命令。**但是也有概率失效**
 
 
 ```txt
@@ -757,4 +828,93 @@ triangle@LEARN:~$ umdh.exe -d mem1.log mem2.log > res.log // 比对两个日志�
 - 泄漏点定位。`!heap -p -a xxxxxxx` 打印 `xxxxxxx` 地址的调用栈
 
 > [!tip]
-> [内存泄漏排查案例](https://www.cnblogs.com/lanxiaoke/p/12997032.html)
+> **该方案也有几率用不了**
+> - [内存泄漏排查案例](https://www.cnblogs.com/lanxiaoke/p/12997032.html)
+
+## 内存分析
+
+上面的方法对于现代应用进行泄露分析都有各种各样的问题，可以通过内存分析工具对内存泄漏进行排查
+- [PerfView](https://github.com/microsoft/perfview) : `windows`平台下，能分析 `unmange memory` 与 `GC Heap`
+- [VMMAP](https://learn.microsoft.com/zh-cn/sysinternals/downloads/vmmap) : `windows`平台下， 统计所有内存信息
+- [ASAN](https://github.com/google/sanitizers/wiki/AddressSanitizerFlags) : 只有高版本`c++`编译器能用 
+- [valgrind](https://zhuanlan.zhihu.com/p/56538645) : `Linux` 上的内存检测工具，性能没有 `ASAN` 好，但是兼容低版本编译器
+- [Electric Fence](https://github.com/kallisti5/ElectricFence) : `Linux` 堆越界检测工具
+- [gperftools](https://github.com/gperftools/gperftools) : `Linux` 内存分析工具，该工具提供了提供了著名的 `tcmalloc`
+
+
+# VMMAP
+
+![vmmap](../../image/windbg/vmmap.png)
+
+只有 `Launch and trace a new process` 模式，才会按时间记录所有的内存使用情况；`view a running process` 只是会抓取一次内存快照。
+
+![vmmap launch](../../image/windbg/vmmap_launch.png)
+
+通过 `Launch and trace a new process` 启动的程序，才能使用下方的四个按钮
+- `Timeline` : 展示内存变化的时间线
+- `Heap Allocation` : 展示 `Virtual Alloce` 的变化，只有类 `c/c++` 的程序才会直接调用系统接口创建 `unmange heap`，若是基于 `GC Heap` 语言编写的程序，则不能使用该选项。
+- `Call Tree` : 程序执行内存申请的调用树，从程序入口出发
+- `Trace` : 追踪每个申请内存的函数接口，并且可以通过 `Stack` 查看调用堆栈 （**可用于查内存泄漏点**）
+
+通过结果的字段说明：
+
+![vmmap field](../../image/windbg/vmmap_fields.png)
+
+# PerfView
+
+## GC Heap 
+
+![gc heap](../../image/windbg/perfview_GC_Heap.png)
+
+`Memmory` 工具栏提供了抓取 `.Net` 应用的 `GC Heap` 内存快照的功能。抓取快照后，可在 PerfView 中进行内存分析。按道理抓取 GC Heap 内存快照，只要把所有的 `Root` 都保存下来就完事了，但这么干存在以下问题：
+
+- **内存快照过大**：为防止该问题，PerfView 对内存对象进行「采样」，所有的大对象都会被准确记录，而小对象则是抽检，保证每一类小对象都会被至少记录一次，然后通过对象总数来估算内存。**细节见官方文档 `Understanding GC Heap Sampling `**
+- **程序运行运行干扰**：内存采样过程需要一定耗时，若采样过程中内存申请释放会对结果有一定影响。但内存采样过程中中断程序运行，也会影响生成环境，例如探测服务器。因此，PerfView 给了一个 `Freeze` 开关
+- **图转换树**：Heap 的数据结构为「图」，但图不利于数据分析，因此需要转换为「树」结构。**细节见官方文档`Converting a Heap Graph to a Heap Tree `**
+
+
+## Unmanaged Memory
+
+`GC Heap` 是由程序自动管理内存的申请与释放，这样的模式也被称之为 `Managed Memory`；而类似 `c/c++` 这种，由程序猿主动维护内存申请与释放的内存管理模式则称之为 `Unmanaged Memory`。PerfView  同样也提供了分析 `Unmanaged Memory` 的能力。
+
+![Unmanaged Memory](../../image/windbg/perfview_unmanaged_memory.png)
+
+一个应用程序内存占用主要来源就两个：
+- `mapped memory` : 加载可执行程序与动态库到内存，`Image Load Stacks` 表格可查看
+- `VirtualAlloc API`: 系统调用，向操作系统申请内存，`VirtAlloc` 选项启用事件捕获
+
+> [!note]
+> 由于 `VirtualAlloc API` 会频繁调用，且申请的内存大小至少是 `64K`，因此其统计结果较粗糙。只有程序中主动调用 `VirtualAlloc API` 接口， 捕获的 `VirtAlloc` 事件才有一定分析价值。
+
+监控整个操作系统 Heap 内部内存申请与释放不太现实，因为所有程序都会频繁进行内存操作，其记录结果也会十分庞大。 PerfView 针对该问题，提供了只监控指定程序 Heap 事件的功能：
+- `OS Heap Exe` : 监控还未执行的 exe
+- `OS Heap Process` : 监控正在执行的进程
+
+启用 OS Heap 与 VirtAlloc 事件后，会生成 `OS Heap Alloc Stacks` 与 `VirtualAlloc Stacks` 表格。表格中所有不存在 `memory alloce` 与之配对的 `memory free` 事件将被忽略。但选中一段时间范围 `when`，内存权值可能是负数，这只是说明在这个时间范围内，内存被释放了。
+
+![os heap](../../image/windbg/perfview_os_heap.png)
+
+
+
+## Diff
+
+![diff](../../image/windbg/perfview_diff.png)
+
+在获取到 `OS Heap Alloc Stacks` 还能利用 PerfView 的 `Diff` 功能进行内存泄漏分析。
+1. 打开两个窗口 `A` 与 `B`
+2. 在 `A` 窗口启用与 `B` 窗口的 `Diff`
+3. 比对结果输出到 `C`
+
+在 PerfView 中，`Diff` 的工作原理就是将 A 中 `Metric` 与 `Count` 与 B 表中数据作差，即 `A - B = C`。
+
+> [!note]
+> 在使用 `Diff` 功能功能之前，需要尽量保证 A 与 B 表中的 `Metric` 的符号相同（要么正，要么负），这样差值运算结果就不会出现一些奇奇怪怪的干扰值。例如 `1000 - (-1000) = 2000`
+
+
+
+
+
+
+
+
+

@@ -133,8 +133,9 @@ int close(int sockfd);
 
 # 附录
 
-## 封装 socket 组件
+## Socket 组件
 
+> **Windows** 版接口封装。
 
 <details>
 <summary><span class="details-title">封装组件</span></summary>
@@ -301,16 +302,22 @@ SOCKET InitServer(const char * ip, u_short port)
 		err("listen");
 		return -1;
 	}
-	printf("等待客户端连接...\n");
-    
     return fd;
 }
 
 SockInfo AcceptClient(SOCKET fd)
 {
+	printf("等待客户端连接...\n");
     SockInfo client;
 	int addrLen = sizeof(sockaddr_in);
     client.fd = accept(fd, (struct sockaddr*)&client.addr, &addrLen);
+
+    char ip[32];
+    printf("客户端fd: %d, IP：%s, 端口:%d\n",
+        client.fd,
+        inet_ntop(AF_INET, &client.addr.sin_addr.S_un, ip, sizeof(ip)),
+        ntohs(client.addr.sin_port)
+    );
     return client;
 }
 

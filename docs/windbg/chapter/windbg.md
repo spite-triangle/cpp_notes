@@ -311,6 +311,15 @@ start             end                 module name
 > [!note]
 > [离线机下载符号文件](https://learn.microsoft.com/zh-cn/windows-hardware/drivers/debugger/using-a-manifest-file-with-symchk)
 
+## dump
+
+```term
+triangle@LEARN:~$ .dump [Options] <dump path> // 创建dump
+Options:
+/f              full dump
+/m              mini dump
+triangle@LEARN:~$ .opendump <dump path> // 打开dump
+```
 
 # 远程调试
 
