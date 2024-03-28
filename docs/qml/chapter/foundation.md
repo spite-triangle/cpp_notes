@@ -278,12 +278,42 @@ Window {
 
     // 控件创建成功时调用
     Component.onCompleted:{
-
     }
 
     // 控件销毁时调用
     Component.onDestruction:{
+    }
 
+    Button{
+        text: "create obj"
+        onClicked:{
+            // 加载 Button.qml 为 Component 组件
+            var component = Qt.createComponent("Button.qml");
+            if (component.status == Component.Ready)
+                // 根据 Component 创建一个对象，并挂载到 parent 的子对象下
+                // {x: 100, y: 100} : 修改 Button.qml 中属性
+                component.createObject(parent, {x: 100, y: 100});
+        }
+    }
+
+    Button{
+        text: "create incubate"
+        onClicked:{
+            var component = Qt.createComponent("Button.qml");
+            // 根据 Component 创建一个孵化器，能异步加载组件
+            // component.createObject 是同步加载
+            var incubator = component.incubateObject(parent, { x: 10, y: 10 });
+            if (incubator.status != Component.Ready) {
+                // 组件加载成功的回调
+                incubator.onStatusChanged = function(status) {
+                    if (status == Component.Ready) {
+                        print ("Object", incubator.object, "is now ready!");
+                    }
+                }
+            } else {
+                print ("Object", incubator.object, "is ready immediately!");
+            }
+        }
     }
 }
 ```

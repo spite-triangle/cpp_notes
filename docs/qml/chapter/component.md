@@ -581,3 +581,58 @@ ComboBox {
       }
   }
 ```
+
+# StackView
+
+```qml
+Item {
+    width: 640
+    height: 480
+    visible: true
+
+    StackView {
+        id: stack
+        initialItem: mainView
+        anchors.fill: parent
+    }
+
+    Component {
+        id: mainView
+        
+        Row {
+            spacing: 10
+            property int index: 0
+            property string type: ""
+
+            Component.onDestruction: console.log("Destroying second item", type, index)
+
+            Button {
+                text: "Push Temp"
+                // stack 会根据 Component 创建一个实例，并在 pop 的时候直接释放
+                // {"type":"temp", "index": stack.depth} : 修改 Component 显示内容的属性
+                onClicked: stack.push(mainView,{"type":"temp", "index": stack.depth})
+            }
+
+            Button {
+                text: "Push Obj"
+                // 使用 Component.createObject 创建一个实例，并挂到 StackView 的对象树下
+                // 该对象不会在 pop 的时候释放，只会在 StackView 被销毁后，一起删除
+                onClicked: stack.push(mainView.createObject(stack,{"type":"obj", "index": stack.depth}))
+            }
+
+            Button {
+                text: "Pop"
+                enabled: stack.depth > 1
+                onClicked: stack.pop()
+
+            }
+
+            Text { text: stack.depth }
+
+            TextField{ width: 100 }
+        }
+    }
+} 
+
+
+```
