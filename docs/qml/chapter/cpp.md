@@ -28,6 +28,97 @@ int main(int argc, char *argv[])
 
 # CPP 注册
 
+## Q_ENUM
+
+- **CPP 定义**
+
+```cpp
+#include <QObject>
+
+class MyEnum : public QObject
+{
+    Q_OBJECT
+public:
+    explicit MyEnum(QObject *parent = nullptr);
+
+    // 必须 public 
+    enum Priority
+    {
+        High = 1,
+        Low = 2,
+        VeryHigh = 3,
+        VeryLow = 4
+    };
+    // NOTE - Q_ENUM 只能用于类的内部枚举
+    Q_ENUM(Priority)
+};
+
+void main(){
+    // 注册到 qml
+    qmlRegisterType<MyEnum>("MyData", 1,0, "QEnum");
+}
+```
+
+- **QML 使用**
+
+
+```qml
+import MyData 1.0
+
+Item{
+    Component.onCompleted:{
+        console.log(QEnum.High);
+    }
+}
+```
+
+## Q_ENUM_NS
+
+- **CPP 定义**
+
+ `Q_NUME` 只能用于「类内部枚举」，而全局枚举类型则需要使用 `Q_ENUM_NS`、`Q_NAMESPCACE`
+
+```cpp
+namespace MyNamespace
+{
+    Q_NAMESPACE
+
+    enum Priority
+    {
+        High = 1,
+        Low = 2,
+        VeryHigh = 4,
+        VeryLow = 8,
+    };
+    
+    Q_ENUM_NS(Priority)
+}
+
+void main(){
+    // 注册到 qml 中的 QEnum 只能用于访问枚举，不能用于创建对象
+    qmlRegisterUncreatableMetaObject(MyNamespace::staticMetaObject, 
+                                    "MyData",1,0, "QEnum", "Only read enum");
+}
+```
+
+- **QML 使用**
+
+```qml
+import MyData 1.0
+
+Item{
+    Component.onCompleted:{
+        console.log(QEnum.High);
+    }
+}
+
+// NOTE - 禁止使用，不能创建对象
+QEnum{
+
+}
+```
+
+
 ## 全局变量
 - c++中定义
 
@@ -229,6 +320,8 @@ MyValue{
 }
 ```
 
+
+
 # 属性系统
 
 ## 格式
@@ -378,6 +471,68 @@ Item{
 
         // 访问数据类的属性
         console.log(MyModel.data.name)
+    }
+}
+```
+
+## 容器类型
+
+> [!note]
+> 不能利用属性系统直接向 `QML` 传递 `QList、QMap` 容器类型，需要使用 ` QVariantMap、QVariantList、QStringList` 替代。
+
+- **CPP 定义**
+
+```cpp
+class MyData : public QObject{
+    Q_OBJECT
+public:
+    MyData(QObject* parent=nullptr) : QObject(parent){
+        /* 初始化 */        
+        m_map = QMap<QString, QVariant>{
+            {"name", QVaraint("x")},
+            {"age", QVariant(10)}
+        };
+
+        m_lst = QList<QVariant>{
+            1,2,3,4,5
+        }
+    }
+
+signals:
+    void mapChanged();
+    void lstChanged();
+
+private:
+    QVariantMap m_map;
+    Q_PROPERTY(QVariantMap map  MEMBER m_map NOTIFY  mapChanged)
+
+    QVariantList m_lst;
+    Q_PROPERTY(QVariantList lst MEMBER m_lst NOTIFY  lstChanged)
+};
+
+void main(){
+    qmlRegisterType<MyData>("MyData", 1,0, "Test");
+}
+```
+
+- **QML 使用**
+
+```qml
+import MyData 1.0
+
+Test{
+    Component.onCompleted:{
+        // 在 qml 中，QVariantList 就是数组
+        for (var i=0; i< lst.length; i++){
+            console.log("Array item:", lst[i]);
+        }
+
+        // QVariantMap 是对象，可以直接通过 key 访问
+        console.log(map.name);
+        console.log(map.age);
+        for(var prop in map){
+            console.log("Object item:", prop, "=", map[prop])
+        }
     }
 }
 ```

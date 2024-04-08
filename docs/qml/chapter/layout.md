@@ -65,6 +65,7 @@
             Layout.fillHeight:true // 当前 Item 高度按照最大允许值填充 Layout
         }
         Rectangle{
+            // 
             Layout.preferredWidth:20   // 当前 Item 宽度度参考给定值填充 Layout
             Layout.preferredHeight:10  // 当前 Item 高度参考给定值填充 Layout
         }

@@ -3,6 +3,8 @@
 
 # Item
 
+## 基本属性
+
 > [!note]
 > 在 `qml` 中，所有可见控件均继承该控件
 
@@ -18,6 +20,24 @@
 - y
 - z
 - .....
+
+
+## 坐标转换
+
+![map|c,50](../../image/qt/itemMap.png)
+
+
+```cpp
+// rect2 中的 (0,0) 点，转换到 rect1 的坐标体系中为 (20,20)
+rect2.mapToItem(rect1, 0, 0);
+
+// rect1 中的 (0,0) 点，转换到 rect2 的坐标体系中为 (-20,-20)
+rect2.mapFromItem(rect1, 0, 0);
+
+// 若目标为 null 坐标点的转换则基于根组件的坐标系
+rect2.mapToItem(null, 0, 0);
+rect2.mapFromItem(null, 0, 0);
+```
 
 
 
@@ -45,7 +65,7 @@ Rectangle{
 
 # MouseArea
 
-- 基本属性
+## 基本属性
 
 ```qml
 MouseArea{
@@ -84,7 +104,7 @@ MouseArea{
 }
 ```
 
-- 控件拖动
+## 控件拖动
 
 ```qml
 // 控件拖拽
@@ -108,7 +128,8 @@ Rectangle {
     }
 }
 ```
-- 事件拦截
+
+## 事件拦截
 
 ```qml
 Rectangle {
@@ -138,7 +159,7 @@ Rectangle {
 
 # Button
 
-- 基础属性
+## 基础属性
 
 ```qml
 Button{
@@ -168,7 +189,7 @@ Button{
 }
 ```
 
-- 长按按钮
+## 长按按钮
 
 ```qml
 Button{
@@ -182,7 +203,7 @@ Button{
 }
 ```
 
-- 选择按钮
+## 选择按钮
 
 ```qml
 Button{
@@ -195,7 +216,7 @@ Button{
 }
 ```
 
-- 多选框：只有一个框能被选中
+## 互斥多选框
 
 ```qml
 Item{
@@ -272,6 +293,9 @@ Text{
 
     // 添加省略号
     elide: Text.ElideLeft
+
+    // NOTE - 使用 wrap 必须明确指定 width 属性
+    wrapMode: Text.Wrap
 }
 ```
 
@@ -359,7 +383,7 @@ Repeater {
 
 # ListView
 
-- 基本属性
+## 基本属性
 
 ```qml
 ListView{
@@ -374,6 +398,7 @@ ListView{
 
     // 控制每一项数据应该如何绘制
     delegate: Text{
+        // index 获取 model 索引
         text: index
 
         // 控制当前激活项
@@ -393,7 +418,33 @@ ListView{
     }
 }
 ```
-- 自定义选项
+
+>[!note]
+> **在 `delegate` 中不能直接绑定 `parent` 属性以及数据存储**。因为 `delegate` 会根据可视状态动态生成和释放。
+
+## 挂载属性
+
+```qml
+ListView{
+
+    delegate: Text{
+        id: itemRoot
+
+        // delegate 的根组件会有 ListView 挂载属性
+        ListView.view; // ListView 本身
+        ListView.isCurrentItem; // 当前 delegate 是否选中
+
+        Rectangle{
+            // delegate 中的所有子组件必须通过根组件访问 ListView 挂载
+            width: itemRoot.ListView.view.width
+        }
+    }
+
+}
+```
+
+## 自定义选项
+
 ```qml
 ListView{
     width: 100; height: 300
@@ -423,7 +474,9 @@ ListView{
     }
 }
 ```
-- 分组
+
+## 分组
+
 ```qml
 // 定义分组标题控件
 Component {
@@ -458,6 +511,7 @@ ListView {
 }
 ```
 
+
 # TextField
 
 ```qml
@@ -475,9 +529,16 @@ ListView {
     }
 ```
 
+# TextEdit
+
+>[!warning|style:flat]
+>  `Qt 6.3` 之前的所有版本，`TextEdit` 与 `TextArea` 存在内存泄漏问题
+
 
 # ComboBox
-- 基本属性
+
+##  基本属性
+
 ```qml
 ComboBox{
     // ComboBox 可以输入
@@ -513,7 +574,7 @@ ComboBox{
 }
 ```
 
-- 自定 ComboBox
+## 自定 ComboBox
 
 ```qml
 ComboBox {
@@ -543,7 +604,24 @@ ComboBox {
 ```
 
 
+# Menu
 
+```qml
+Menu{
+    // menu 中的选项
+    MenuItem{
+        text: "menu1"
+        action: Action{
+            // 激活快捷键
+            shortcut: StandardKey.copy
+            // 选项被点击
+            onTriggered:{
+
+            }
+        }
+    }
+}
+```
 
 
 # Setting

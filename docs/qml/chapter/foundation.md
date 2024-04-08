@@ -1,8 +1,8 @@
 # 基础概念
 
-# 基本概念
 
-## 窗口
+
+# Window
 
 ```qml
 import QtQuick 2.6
@@ -42,7 +42,40 @@ Window {
 }
 ```
 
-## 按钮
+# Property
+
+```qml
+MyItem{
+    property bool isok: true
+    property real float: 0.1 // 浮点类型
+    property string str: "fuck"
+    property color c: "black"
+    property var map: {1:0} // 自定义 map ，必须给一个初始值
+
+    // 只声明
+    property Component con
+
+    // 自动推断类型
+    property var val
+
+    // 限定只读
+    readonly property int num
+
+    // 限定必填
+    required property Component con1
+
+    // 别名
+    property alias newName : oldName // 可以为 id, 内部控件的属性
+
+    // 将属性私有化
+    QtObject{
+        id: attributes
+        property bool m_isok: true
+    }
+}
+```
+
+# Button
 
 ```qml
 Button{
@@ -364,37 +397,7 @@ Loader{
 }
 ```
 
-# Property
 
-```qml
-MyItem{
-    property bool isok: true
-    property real float: 0.1 // 浮点类型
-    property string str: "fuck"
-    property color c: "black"
-
-    // 只声明
-    property Component con
-
-    // 自动推断类型
-    property var val
-
-    // 限定只读
-    readonly property int num
-
-    // 限定必填
-    required property Component con1
-
-    // 别名
-    property alias newName : oldName // 可以为 id, 内部控件的属性
-
-    // 将属性私有化
-    QtObject{
-        id: attributes
-        property bool m_isok: true
-    }
-}
-```
 
 # Color
 
