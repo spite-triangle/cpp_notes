@@ -1,8 +1,5 @@
 # QML 与 CPP
 
-# MVC
-
-![alt|c,70](../../image/qt/vcm.jpg)
 
 # QML 加载
 
