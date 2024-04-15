@@ -57,7 +57,7 @@ triangle@LEARN:~$ tree
 >[!note]
 > **启用服务预览 `hello.html`** ，不能直接打开 `hello.html`。`vscode` 可以使用 [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) 快速预览。
 
-![hello|c,60](../../image/theory/wasm_hello.jpg)
+![hello|c,60](../../image/tools/wasm_hello.jpg)
 
 ## 模板文件
 
@@ -196,7 +196,7 @@ triangle@LEARN:~$  emcc --bind main.cpp -s WASM=1
 
 安装好插件后，可以直接在汇编中打断点调试。
 
-![wasm](../../image/theory/wasm.jpg)
+![wasm](../../image/tools/wasm.jpg)
 
 
 ```cpp
@@ -222,7 +222,7 @@ Options:
     -fdebug-compilation-dir     源码相对于 hello.html 的路径，通过 http 协议加载。若不指定则通过 file:// 协议获取本地源文件
 ```
 
-![DWARF](../../image/theory/dwarf.jpg)
+![DWARF](../../image/tools/dwarf.jpg)
 
 ## Source Map
 
@@ -240,7 +240,7 @@ triangle@LEARN:~$ tree
 └── hello.wasm.map              # 源码映射文件
 ```
 
-![source map](../../image/theory/sourcemap.jpg)
+![source map](../../image/tools/sourcemap.jpg)
 
 > [!note]
 > `Source Map` 只是将汇编对应到源码，堆栈还是展示汇编寄存器

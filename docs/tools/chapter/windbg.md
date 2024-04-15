@@ -72,7 +72,7 @@ LPTOP_LEVEL_EXCEPTION_FILTER SetUnhandledExceptionFilter(
 
 实现了客户端与服务端，支持对 dump 的远程收集
 
-![Breakpad|c,60](../../image/theory/Breakpad.jpg)
+![Breakpad|c,60](../../image/tools/Breakpad.jpg)
 
 - 调试器中生成
 

@@ -536,7 +536,7 @@ str fuck
 
 ## 流
 
-![alt|c,50](../../image/theory/stream.png)
+![alt|c,50](../../image/tools/stream.png)
 
 - **设备**
     - **istream**：常用于接收从键盘输入的数据，例如 `std::cin`；

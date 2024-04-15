@@ -99,7 +99,7 @@ install(
 - 文件类型
     - `FILES`：普通文本
     - `PROGRAMS`：非目标文件的可执行程序(如脚本文件)
-    ![alt|c,75](../../image/theory/installType.png)
+    ![alt|c,75](../../image/tools/installType.png)
 
 - `option`可以指定
   - DESTINATION：指定磁盘上要安装文件的目录
@@ -112,7 +112,7 @@ install(
   - 默认安装根目录由 `CMAKE_INSTALL_PREFIX` 指定
   - 当采用 DESTINATION 可以自定义安装路径
 
-![alt|c,75](../../image/theory/cmakePath.png)
+![alt|c,75](../../image/tools/cmakePath.png)
 
 ## 案例
 

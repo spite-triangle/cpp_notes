@@ -514,14 +514,14 @@ devenv  solutionName.sln /Project projectName /Build Release
 
 启用汇编代码，方便对优化后的代码进行调试
 
-![alt|c,50](../../image/theory/vs_asm.jpg)
+![alt|c,50](../../image/tools/vs_asm.jpg)
 
 
 ## dump
 
 - 从任务管理器获取
 
-![alt|c,45](../../image/theory/attachDump.png)
+![alt|c,45](../../image/tools/attachDump.png)
 
 - 程序崩溃生成
 

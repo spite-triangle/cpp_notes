@@ -1,7 +1,7 @@
 <!-- <hr style="margin: 5px 0;"> -->
 
 - **理论知识**
-  - [基础概念](./theory/README.md) 
+  - [基本工具](./tools/README.md) 
   - [计算机原理](https://spite-triangle.github.io/computer_theory/#/)
   - [操作系统](operateSystem/README.md)
   - [调试原理](windbg/README.md)
