@@ -2,16 +2,18 @@
 
 <div style="text-align:center;"><img width= 150px src="image/logo.png" align="middle" /></div>
 
-# C++开发笔记 <small>1.0.1</small>
+# 开发笔记 <small>1.0.1</small>
 
-> 记录 C++ 进行开发时知识点
+> 该项目用于记录日常开发学习笔记
 
 - c++11 新特性、高并发编程
-- http 服务器
-- workflow、gtest、gmock
-- msvc 编程器
+- http 服务器、web 基础知识、socket 通信
+- workflow、gtest、gmock、libcurl、qt、qml
+- msvc、gdb
 - windbg、调试原理、SEH 机制
-- xmake、cmake 配置
+- xmake、cmake、makefile
+- vscode 插件开发
+- golang、协程
 
 [GitHub](https://github.com/spite-triangle)
 [Read](./README.md)

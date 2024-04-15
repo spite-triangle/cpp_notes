@@ -1,0 +1,38 @@
+@startuml lifecyvle
+
+actor client
+participant server
+
+client -> server : 启动服务
+
+client -> server ++ : method: 'initialize' \n告知客户端能力，以及初始化参数
+return result: ·InitializeResult·\n告知服务能力
+
+client -> server : method: 'initialized' \n通知服务，接收到了 initialize 信息
+
+group Option
+server -> client ++ : method: 'client/registerCapability' \n动态注册能力
+return 注册结果
+
+server -> client ++ : method: 'client/unregisterCapability' \n动态注销能力
+return 注销结果
+end
+
+
+group 业务逻辑
+
+client -> server++: request
+return response
+
+client -> server : client Notification 
+
+server -> client : server Notification 
+end
+
+
+client -> server ++: method: 'shutdown' \n关闭服务
+return 关闭结果
+
+client -> server : method: 'exit' \n关闭服务程序
+
+@enduml
