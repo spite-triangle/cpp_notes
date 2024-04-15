@@ -88,11 +88,28 @@ browserify : 无法加载文件 C:\Users\86136\AppData\Roaming\npm\browserify.ps
 
 3. 修改源，同 `anaconda` 配置
 
-4. miniforge 的 `base` 没有安装 python，需要自己手动安装
+> [!note]
+> miniforge 可以直接修改 `D:\ProgramData\miniforge3\.condarc`，不用再配置 `C:\Users\[主机名]\.condarc`
 
-```term
-(base) triangle@LEARN:~$ conda install python
+
+```txt
+show_channel_urls: true
+default_channels:
+  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main
+  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/r
+  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
+  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/msys2
+custom_channels:
+  conda-forge: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+  msys2: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+  bioconda: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+  menpo: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+  pytorch: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+  pytorch-lts: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+  simpleitk: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+  deepmodeling: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/
 ```
+
 
 # mamba
 
