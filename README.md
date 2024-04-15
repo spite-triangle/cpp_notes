@@ -9,6 +9,7 @@
 - xmake、cmake、makefile
 - vscode 插件开发
 - golang、协程
+- docker、conda
 
 
 > [笔记主页](https://spite-triangle.github.io/cpp_notes/)

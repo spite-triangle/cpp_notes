@@ -14,6 +14,7 @@
 - xmake、cmake、makefile
 - vscode 插件开发
 - golang、协程
+- docker、conda
 
 [GitHub](https://github.com/spite-triangle)
 [Read](./README.md)

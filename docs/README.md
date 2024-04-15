@@ -1,6 +1,6 @@
 
 
-<h1 style="text-align:center;font-size:60px;font-weight:bold;">CPP笔记</h1>
+<h1 style="text-align:center;font-size:60px;font-weight:bold;">学习笔记</h1>
 
 <style>
     #btn{
