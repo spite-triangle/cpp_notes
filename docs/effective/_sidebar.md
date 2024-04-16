@@ -14,6 +14,7 @@
 - [第十一章 模板](effective/chapter/template.md)
 - [第十二章 Cpp17](effective/chapter/cpp17.md)
 - [第十三章 Cpp20](effective/chapter/cpp20.md)
+- [第十四章 标准库](effective/chapter/std.md)
 
 
 
