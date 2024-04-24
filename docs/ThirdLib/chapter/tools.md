@@ -2,7 +2,7 @@
 
 # 内存块管理
 
-> [BufferBlock](../../code/buffer/BufferBlock.hpp)
+> [BufferBlock](https://github.com/spite-triangle/cpp_notes/tree/master/docs/code/buffer/)
 
 
 ```cpp
@@ -40,11 +40,11 @@ int main(){
 
 # Variant
 
-> [Variant](https://github.com/spite-triangle/variant/tree/main)
+> [Variant](https://github.com/spite-triangle/variant)
 
 # 耗时统计
 
-> [PerfTime](https://github.com/spite-triangle/cpp_notes/tree/master/docs/PerfTime)
+> [PerfTime](https://github.com/spite-triangle/cpp_notes/tree/master/docs/code/PerfTime)
 
 
 `PerfTime` 的作用为统计一对断点内代码的运行时间，并能生成时间统计报告，且支持多线程。集成到项目中使用，只需复制 `lib` 的源文件，然后包含头文件 `PerfTime.h` 即可使用。
@@ -203,9 +203,7 @@ a
 
 # Socket 封装
 
-> **Windows** 版接口封装。
-> - [头文件](../../code/socket/socket.h)
-> - [源文件](../../code/socket/socket.cpp)
+> [**Windows** 版接口封装](https://github.com/spite-triangle/cpp_notes/tree/master/docs/code/socket/)
 
 
 - **服务**

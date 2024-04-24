@@ -135,10 +135,7 @@ int close(int sockfd);
 
 ## Socket 组件
 
-> **Windows** 版接口封装。
-> - [头文件](../../code/socket/socket.h)
-> - [源文件](../../code/socket/socket.cpp)
-
+> [**Windows** 版接口封装](https://github.com/spite-triangle/cpp_notes/tree/master/docs/code/socket/)
 
 - **服务**
 
