@@ -201,6 +201,60 @@ a
 
 
 
+# Socket 封装
+
+> **Windows** 版接口封装。
+> - [头文件](../../code/socket/socket.h)
+> - [源文件](../../code/socket/socket.cpp)
+
+
+- **服务**
+
+```cpp
+void main(){
+    // 初始化网络库
+	InitSocketNet();
+
+    // 初始化服务
+	SOCKET fd = InitServer("127.0.0.1", 2333);
+
+    // 接收客户端
+    SockInfo client = AcceptClient(fd);
+
+    char buff[1024] = {0};
+    RecvMsg(client.fd, buff, sizeof(buff));
+    printf(buff);
+    // SendMsg(client.fd, buf);
+
+    closeSocket(client.fd);
+    closeSocket(fd);
+    CloseSocketNet();
+}
+```
+
+- **客户端**
+
+```cpp
+
+void main(){
+    InitSocketNet();
+
+    auto fd = InitSocket();
+
+    ConnectServer(fd, "127.0.0.1", 2333);
+
+    const char * buff = "fuck you";
+    SendMsg(fd, buff, strlen(buff));
+
+    Sleep(1000);
+
+    closeSocket(fd);
+
+    CloseSocketNet();
+}
+```
+
+
 
 
 
