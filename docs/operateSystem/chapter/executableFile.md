@@ -423,7 +423,7 @@ int main(int argc, char *argv[], char *envp[]) {
 **实现上述目标宏的定义**
 
 - [dl.h](https://jyywiki.cn/pages/OS/2022/demos/dl/dl.h)
-- [备份 dl.h](../../example/operateSystem/dl.h)
+- [备份 dl.h](../../code/operateSystem/dl.h)
 
 ```cpp
   /* 文件头 */
@@ -516,7 +516,7 @@ DL_END
 **加载器的定义**
 
 - [dlbox.c](https://jyywiki.cn/pages/OS/2022/demos/dl/dlbox.c)
-- [备份 dlbox.c](../../example/operateSystem/dlbox.c)
+- [备份 dlbox.c](../../code/operateSystem/dlbox.c)
 
 ```cpp
 

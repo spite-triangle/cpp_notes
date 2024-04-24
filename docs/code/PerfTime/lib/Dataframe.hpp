@@ -116,7 +116,7 @@ public:
         std::string format(){
             std::string str = m_strName + ":";
             for(auto & item : m_vecItem){
-                str += item.ToString() + ",";
+                str += item.String() + ",";
             }
             // 弹出最后一个 符号
             str.pop_back();
