@@ -760,6 +760,19 @@ Canvas 支持 `HTML5` 所有关于 Context2D 的 `Pixel Operations`，并且对�
 > 不推荐使用 `Cavans.Image` 渲染复杂且庞大的图形、需要频繁刷新的界面、复杂动画。应当使用 `QQuickPaintedItem` 或者 `QPainter` 替换
 
 
+# BusyIndicator
+
+> [!warning]
+> `6.5` 之前的版本都别用，会存在大量的 CPU 与 GPU 占用，并且隐藏后会继续运行。
+
+```qml
+BusyIndicator{
+    width : 100
+    height: 100
+    // 是否启动等待组件
+    running: true
+}
+```
 
 
 

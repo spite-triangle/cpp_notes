@@ -1,7 +1,7 @@
 
 - **Effective C++**
 - [目录](effective/README.md)
-- [第一章 宏](effective/chapter/macro.md)
+- [第一章 c 语言](effective/chapter/c.md)
 - [第二章 新特性](effective/chapter/Featrue.md)
 - [第三章 类型推断](effective/chapter/TypeDeduction.md)
 - [第四章 引用](effective/chapter/Reference.md)

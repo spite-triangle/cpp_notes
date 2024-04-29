@@ -609,6 +609,25 @@ const &
 
 # 关键字
 
+## inline
+
+- **重定义**
+
+```cpp
+
+/* test.hpp */
+
+class Test{
+public:
+    void fcn();
+};
+
+// NOTE - 在 .hpp 中使用 inline 修饰实现，可以避免实现的重定义
+inline void Test::fcn(){
+
+}
+```
+
 ## nullptr
 
 ```cpp
