@@ -1,25 +1,276 @@
 # QML 与 CPP
 
 
-# QML 加载
+# QML 引擎
+
+## QML 加载
+
+```cpp
+#include <QtGui>
+#include <QtQml>
+
+int main(int argc, char **argv)
+{
+    QGuiApplication app(argc, argv);
+    QUrl source(QStringLiteral("qrc:/main.qml"));
+    QQmlApplicationEngine engine;
+    engine.load(source);
+    return app.exec();
+}
+```
+
+
+- `QGuiApplication` 提供应用程序的控制能力，例如命令行解析、事件循环机制。
+- `QQmlApplicationEngine` 则对应 `QML` 引擎，以 `qrc:/main.qml` 为入口点，进行界面渲染。
+
+
+```qml
+import QtQuick 2.5
+import QtQuick.Window 2.2
+
+Window {
+}
+
+```
+
+当 `QML engine` 加载 `qrc:/main.qml` 后，会在导入路径中查找 `QtQuick` 与 `QtQuick.Window` 模块，并加载对应的「插件」；插件加载成功，引擎就能获取模块下定义的组件 `Type` ，然后在这些组件中找到 `Window` 对应的 `QML File` 定义；根据组件定义就能实现渲染组件。此外，QML 文件又可以通过 `qmldir` 进行管理。
+
+
+## CPP 组件
+
+QML 中的组件可以直接编写 `QML File`，也能通过 `c++` 代码进行实现，主要方式有以下几种：
+
+- **上下文属性**
+
+```cpp
+void main(){
+    QGuiApplication app(argc, argv);
+    QUrl source(QStringLiteral("qrc:/main.qml"));
+    QQmlApplicationEngine engine;
+    engine.load(source);
+
+    // 直接将 c++ 对象当作 qml 全局变量
+    // qml 中可以使用 `$.current` 进行访问
+    engine.rootContext().setContextProperty("current", current.value());
+    return app.exec();
+}
+```
+
+- **注册**
+
+```cpp
+void main(){
+    QGuiApplication app(argc, argv);
+
+    // 自定类型注册到 qml 引擎中
+    qmlRegisterType<CurrentTime>("org.example", 1, 0, "CurrentTime");
+
+    QUrl source(QStringLiteral("qrc:/main.qml"));
+    QQmlApplicationEngine engine;
+    engine.load(source);
+    return app.exec();
+}
+```
+
+- **插件** : 灵活度最高，可将多个 cpp 自定义组件打包成一个插件对外提供。
+
+# 信号与槽
+
+## QML信号Qt槽
+
+```cpp
+#include <QObject>
+#include <QtQml>
+
+class MyValue : public QObject
+{
+    Q_OBJECT
+
+    // 声明该 object 能被 qml 访问
+    QML_ELEMENT
+public:
+    MyValue();
+
+// NOTE - 与 QML 信号相关的信号和槽，形参都是 QVariant
+public slots:
+    void slotTest(QVariant a, QVariant b){}
+signals:
+    void sigTest(QVariant a, QVariant b){}
+};
+```
+
+- 直接当函数调用
+
+```qml
+import MyObject 1.0
+
+window{
+    id:wind
+
+    signal sigTest(int a, int b)
+
+    MyValue{
+        id: obj
+    }
+
+    Connections{
+        target: wind
+        function onSigTest(a,b){
+            obj.slotTest(a,b)
+        }
+    }
+}
+```
+
+- qml绑定
+
+```qml
+//  需要先注册 qmlRegisterType<MyValue>("MyObject", 1,0,"MyValue");
+import MyObject 1.0
+
+window{
+    id:wind
+
+    signal sigTest(int a, int b)
+
+    MyValue{
+        id: obj
+        objectName: myval
+    }
+
+    Component.onCompleted:{
+        // 绑定信号与槽
+        sigTest.connect(obj.slotTest)
+    }
+}
+```
+
+
+- Qt绑定
 
 ```cpp
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QQmlContext>
 
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
+
+
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     if (engine.rootObjects().isEmpty())
         return -1;
+
+    // 获取所有 qml QObject
+    QList<QObject*> lstObjs = engine.rootObjects();
+
+    // 第一个元素是 Window
+    QObject* pWindow = lstObjs.list();
+
+    // 元素名
+    pWindow->objectName();
+
+    // 获取子元素
+    pWindow->findChild<QObject*>("myval");
+
+    auto pVal = new MyValue();
+
+    // 绑定信号
+    connect(pWindow, SIGNAL(sigTest(QVariant,QVariant)), pVal, SLOT(slotTest(QVariant,QVariant)))
 
     return app.exec();
 }
 ```
 
+## Qt信号QML槽
+
+```cpp
+#include <QGuiApplication>
+#include <QQmlApplicationEngine>
+#include <QQmlContext>
+
+int main(int argc, char *argv[])
+{
+    QGuiApplication app(argc, argv);
+
+    QQmlApplicationEngine engine;
+
+    // 按照单例的形式，在QML中注册一个全局的QObject 对象
+    auto pVal = new MyValue();
+    qmlRegisterSingletonInstance("MyObject", 1,0,"MyValue",pVal);
+
+    engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+    if (engine.rootObjects().isEmpty())
+        return -1;
+
+
+    return app.exec();
+}
+```
+
+```qml
+import MyObject 1.0
+
+// 直接绑定全局对象 MyValue
+Connections{
+    target: MyValue
+    function onSigTest(a,b){
+        
+    }
+}
+```
+
+# Qt调用QML函数
+
+```qml
+window{
+    id:wind
+
+    function func(a,b){
+        return a + b;
+    }
+}
+```
+
+>[!note]
+> 函数名第一个字母不能大写，变量一样。只有对象能大写
+
+```cpp
+#include <QGuiApplication>
+#include <QQmlApplicationEngine>
+#include <QQmlContext>
+
+int main(int argc, char *argv[])
+{
+    QGuiApplication app(argc, argv);
+
+    QQmlApplicationEngine engine;
+
+    engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+    if (engine.rootObjects().isEmpty())
+        return -1;
+
+    // 获取所有 qml QObject
+    QList<QObject*> lstObjs = engine.rootObjects();
+
+    // 第一个元素是 Window
+    QObject* pWindow = lstObjs.list();
+
+    // 调用 qml 中的函数
+    QVariant res;
+    QVariant a = 1;
+    QVariant b = 2;
+    QMetaObject::invokeMethod(pWindow, "func", 
+                              Q_RETURN_ARG(QVariant,res),
+                              Q_ARG(QVariant,a),
+                              Q_ARG(QVariant,b));
+
+    return app.exec();
+}
+```
 
 
 
@@ -778,202 +1029,126 @@ bool DataCheckBoxSession::update(int nRow,const ITEM & other){
 }
 ```
 
+# 插件
 
-# 信号与槽
+## 定义
 
-## QML信号Qt槽
+**插件：** 一个带有接口定义的动态库，将在被需要的时候加载。且插件不用像动态库一样，参与主程序的编译、链接。
 
 ```cpp
-#include <QObject>
-#include <QtQml>
+#include <QQmlEngineExtensionPlugin>
 
-class MyValue : public QObject
-{
-    Q_OBJECT
-
-    // 声明该 object 能被 qml 访问
-    QML_ELEMENT
+class QQmlEngineExtensionPlugin{
 public:
-    MyValue();
+    /* 注册自定义的 qml 组件 */
+    virtual void registerTypes(const char *uri) = 0;
 
-// NOTE - 与 QML 信号相关的信号和槽，形参都是 QVariant
-public slots:
-    void slotTest(QVariant a, QVariant b){}
-signals:
-    void sigTest(QVariant a, QVariant b){}
+    /* 访问 qml 引擎，并能向根 context 中添加对象 */
+    virtual void initializeEngine(QQmlEngine *engine, const char *uri) = 0;
 };
 ```
 
-- 直接当函数调用
-
-```qml
-import MyObject 1.0
-
-window{
-    id:wind
-
-    signal sigTest(int a, int b)
-
-    MyValue{
-        id: obj
-    }
-
-    Connections{
-        target: wind
-        function onSigTest(a,b){
-            obj.slotTest(a,b)
-        }
-    }
-}
-```
-
-- qml绑定
-
-```qml
-//  需要先注册 qmlRegisterType<MyValue>("MyObject", 1,0,"MyValue");
-import MyObject 1.0
-
-window{
-    id:wind
-
-    signal sigTest(int a, int b)
-
-    MyValue{
-        id: obj
-        objectName: myval
-    }
-
-    Component.onCompleted:{
-        // 绑定信号与槽
-        sigTest.connect(obj.slotTest)
-    }
-}
-```
-
-
-- Qt绑定
-
-```cpp
-#include <QGuiApplication>
-#include <QQmlApplicationEngine>
-#include <QQmlContext>
-
-int main(int argc, char *argv[])
-{
-    QGuiApplication app(argc, argv);
-
-    QQmlApplicationEngine engine;
-
-
-    engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
-    if (engine.rootObjects().isEmpty())
-        return -1;
-
-    // 获取所有 qml QObject
-    QList<QObject*> lstObjs = engine.rootObjects();
-
-    // 第一个元素是 Window
-    QObject* pWindow = lstObjs.list();
-
-    // 元素名
-    pWindow->objectName();
-
-    // 获取子元素
-    pWindow->findChild<QObject*>("myval");
-
-    auto pVal = new MyValue();
-
-    // 绑定信号
-    connect(pWindow, SIGNAL(sigTest(QVariant,QVariant)), pVal, SLOT(slotTest(QVariant,QVariant)))
-
-    return app.exec();
-}
-```
-
-## Qt信号QML槽
-
-```cpp
-#include <QGuiApplication>
-#include <QQmlApplicationEngine>
-#include <QQmlContext>
-
-int main(int argc, char *argv[])
-{
-    QGuiApplication app(argc, argv);
-
-    QQmlApplicationEngine engine;
-
-    // 按照单例的形式，在QML中注册一个全局的QObject 对象
-    auto pVal = new MyValue();
-    qmlRegisterSingletonInstance("MyObject", 1,0,"MyValue",pVal);
-
-    engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
-    if (engine.rootObjects().isEmpty())
-        return -1;
-
-
-    return app.exec();
-}
-```
-
-```qml
-import MyObject 1.0
-
-// 直接绑定全局对象 MyValue
-Connections{
-    target: MyValue
-    function onSigTest(a,b){
-        
-    }
-}
-```
-
-# Qt调用QML函数
-
-```qml
-window{
-    id:wind
-
-    function func(a,b){
-        return a + b;
-    }
-}
-```
-
 >[!note]
-> 函数名第一个字母不能大写，变量一样。只有对象能大写
+> 「插件」与「模块」是一一对应关系，一个插件只对应一个「模块名」
+
+## 接口形式
+
+想要实现一个文件 I/O 操作的接口，一般定义如下
+
+```qml
+QtObject {
+    // 写，指定路径与内容
+    function write(path, text) {};
+    // 读，指定路径，返回内容
+    function read(path) { return "TEXT"}
+}
+```
+
+读/写接口都涉及两个变量 `path` 与 `text`，实现与接口调用者的交互。而在 `QML` 中，用户与组件的交互都是通过 `property` 进行，并且还有非常方便的「属性绑定」机制，因此，更符合 `QML API` 习惯的接口是：**将交互参数以属性的形式进行暴露**
+
+```qml
+QtObject {
+    property url source
+    property string text
+    function write() { // open file and write text };
+    function read() { // read file and assign to text };
+}
+```
+
+这个接口对应 `c++` 的实现便是
 
 ```cpp
-#include <QGuiApplication>
-#include <QQmlApplicationEngine>
-#include <QQmlContext>
+class FileIO : public QObject {
+    Q_PROPERTY(QUrl source READ source WRITE setSource NOTIFY sourceChanged)
+    Q_PROPERTY(QString text READ text WRITE setText NOTIFY textChanged)
 
-int main(int argc, char *argv[])
-{
-    QGuiApplication app(argc, argv);
-
-    QQmlApplicationEngine engine;
-
-    engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
-    if (engine.rootObjects().isEmpty())
-        return -1;
-
-    // 获取所有 qml QObject
-    QList<QObject*> lstObjs = engine.rootObjects();
-
-    // 第一个元素是 Window
-    QObject* pWindow = lstObjs.list();
-
-    // 调用 qml 中的函数
-    QVariant res;
-    QVariant a = 1;
-    QVariant b = 2;
-    QMetaObject::invokeMethod(pWindow, "func", 
-                              Q_RETURN_ARG(QVariant,res),
-                              Q_ARG(QVariant,a),
-                              Q_ARG(QVariant,b));
-
-    return app.exec();
+public:
+    Q_INVOKABLE void read();
+    Q_INVOKABLE void write();
 }
+```
+
+## 实现
+
+- **插件入口**
+
+```cpp
+#ifndef FILEIO_PLUGIN_H
+#define FILEIO_PLUGIN_H
+
+#include <QQmlExtensionPlugin>
+
+class FileioPlugin : public QQmlExtensionPlugin
+{
+    Q_OBJECT
+    /* 声明一个插件 */
+    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QQmlExtensionInterface")
+
+public:
+    void registerTypes(const char *uri);
+};
+
+#endif // FILEIO_PLUGIN_H
+```
+
+```cpp
+#include "fileio_plugin.h"
+#include "fileio.h"
+
+#include <qqml.h>
+
+void FileioPlugin::registerTypes(const char *uri)
+{
+    // 注册插件所包含的所有 qml 类型
+    // uri : 模块名
+    qmlRegisterType<FileIO>(uri, 1, 0, "FileIO");
+}
+```
+
+
+- **插件配置**
+
+```qmldir
+module org.example.io # 模块名，对应上面的 uri
+plugin fileio # 插件名
+```
+
+## 使用
+
+编译插件会得到两个重要文件（其实应该有三个）
+
+```term
+triangle@LEARN:~$ tree .
+.
+├── plugins.qmltypes    # qml 符号文件，用于代码提示
+├── qmldir              # 插件配置文件 
+└── plugin.dll          # 插件动态库
+```
+
+将插件路径添加到 QML 引擎中的导入路径后，直接在 `QML` 使用即可。
+
+```cpp
+QQmlEngine::addPluginPath(const QString & dir);
+QQmlEngine::addPluginPathList(const QString & paths);
 ```
 

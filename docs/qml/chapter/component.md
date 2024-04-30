@@ -762,8 +762,8 @@ Canvas 支持 `HTML5` 所有关于 Context2D 的 `Pixel Operations`，并且对�
 
 # BusyIndicator
 
-> [!warning]
-> `6.5` 之前的版本都别用，会存在大量的 CPU 与 GPU 占用，并且隐藏后会继续运行。
+> [!warning|style:flat]
+> `6.5` 之前的版本，会占用 CPU 与 GPU，并且隐藏后会继续运行。
 
 ```qml
 BusyIndicator{
