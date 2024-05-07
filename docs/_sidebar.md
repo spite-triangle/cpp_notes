@@ -8,6 +8,7 @@
   - [Effictive C++](effective/README.md)
   - [c++并发](CppConcurrency/README.md)
   - [Web 开发](webDevelop/README.md)
+  - [多媒体](Media/README.md)
 - **框架组件**
   - [Qt](./qt/README.md)
   - [测试工具](./testTools/README.md)

@@ -169,6 +169,39 @@ Window {
 | `ChartView`         | 管理所有坐标轴、图例、图表类 |
 | `PolarChartView`    | `ChartView` 的特例，极坐标图 |
 
+## ChartView
+
+```qml
+ChartView{
+    // 图例
+    legend
+
+    // 语言
+    locale
+
+    // 主题
+    theme
+
+    // 标题
+    title
+
+    Component.onCompleted{
+        // 将 series 坐标系中的 value 点转换到 ChartView 界面的像素点上
+        mapToPosition(value, series)
+
+        // 将 ChartView 界面的 pos 像素点转换到 series 的坐标系上
+        mapToValue(pos, series)
+
+        // 缩放
+        zoomIn(factor)
+        zoomIn(rect)
+        zoomIn()
+        zoomOut()
+        zoomReset()
+    }
+}
+```
+
 ## XYSeries
 
 ```qml
