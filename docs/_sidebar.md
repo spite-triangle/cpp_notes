@@ -1,7 +1,6 @@
 <!-- <hr style="margin: 5px 0;"> -->
 
 - **理论知识**
-  - [基本工具](./tools/README.md) 
   - [计算机原理](https://spite-triangle.github.io/computer_theory/#/)
   - [操作系统](operateSystem/README.md)
   - [调试原理](windbg/README.md)
@@ -16,6 +15,7 @@
 - **语言**
   - [GoLang](go/README.md)
 - **工具** 
+  - [基本工具](./tools/README.md) 
   - [Http](./http/README.md)
   - [Docker](docker/README.md)
   - [Vscode](./vscode/README.md)
