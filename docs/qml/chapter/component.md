@@ -129,7 +129,17 @@ Rectangle {
 }
 ```
 
-## 事件拦截
+## 事件穿透
+
+
+### 鼠标点击事件
+
+- **事件类型**
+  - 基本：`pressed` 、`released`
+  - 组合：`clicked`、`doubleClicked`、`pressAndHold`
+
+- `propagateComposedEvents` : 组合的鼠标事件是否将自动传播到重合的底层 `MouseArea`，即当多个`MouseArea`在界面上重叠时，鼠标事件会从 `z` 值最大的 MouseArea 依次传播到 `z` 值最小的 MouseArea 停止。
+- `mouse.accepted` : 控制是否接收处理该事件，默认 `true`。事件被接收，则停止传播
 
 ```qml
 Rectangle {
@@ -145,17 +155,55 @@ Rectangle {
         color: "blue"
         width: 50; height: 50
 
+        // 虽然是子控件，但是显示在最上层
         MouseArea {
             anchors.fill: parent
+
+            // 启动事件传递
             propagateComposedEvents: true 
+
             onClicked: {
                 console.log("clicked blue")
-                mouse.accepted = false // 子控件不会吞掉事件，会将事件下放到父控件
+
+                // 当前层级不处理事件，事件继续传播
+                mouse.accepted = false 
             }
         }
     }
 }
 ```
+
+
+### 鼠标悬停
+
+**事件类型**： `entered`、`exited`
+
+```qml
+Rectangle {
+    color: "yellow"
+    width: 100
+    height: 100
+ 
+    MouseArea {
+        anchors.fill: parent
+        onEntered: {}
+        onExited: {}
+ 
+        Rectangle {
+            color: "blue"
+            width: 50
+            height: 50
+ 
+            MouseArea {
+                anchors.fill: parent
+                onEntered: {}
+                onExited: {}
+            }
+        }
+    }
+}
+```
+
 
 # Button
 

@@ -169,6 +169,11 @@ Window {
 | `ChartView`         | 管理所有坐标轴、图例、图表类 |
 | `PolarChartView`    | `ChartView` 的特例，极坐标图 |
 
+
+> [!note]
+> - `ChartView` : 可以通过 `MouseArea` 接收鼠标事件
+> - `**Series` : 有对应信号接收鼠标信号，不能设置 `MouseArea`
+
 ## ChartView
 
 ```qml
@@ -194,7 +199,7 @@ ChartView{
 
         // 缩放
         zoomIn(factor)
-        zoomIn(rect)
+        zoomIn(rect) // rect 的坐标系为 ChartView 的像素坐标
         zoomIn()
         zoomOut()
         zoomReset()
