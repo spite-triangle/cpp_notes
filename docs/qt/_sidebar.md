@@ -6,6 +6,7 @@
 - [第三章 数据库](qt/chapter/database.md)
 - [第四章 元对象](qt/chapter/metaObject.md)
 - [第五章 QSS](qt/chapter/qss.md)
-- [第六章 QML](qml/README.md)
+- [第六章 QIODevice](qt/chapter/QIODevice.md)
+- [第七章 QML](qml/README.md)
 
 

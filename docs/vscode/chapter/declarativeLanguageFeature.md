@@ -206,13 +206,75 @@ vscode 中，可以在插件的 `package.json/contributes` 中配置 TextMate gr
   "contributes": {
     "grammars": [
       {
-        "path": "./syntaxes/injection.json",
-        "scopeName": "todo-comment.injection",
-        // 向 source.js 中注入扩充规则
-        "injectTo": ["source.js"]
+        "path": "./syntaxes/code.codeblock.json",
+        "scopeName": "markdown.codeblock.code",
+        "injectTo": [
+          "source.code" // 需要注入的 scope 规则
+        ],
+        "embeddedLanguages":{
+            // 嵌入语言基本特性，scope 在 code.codeblock.json 中进行定义
+            "meta.embedded.block.code": "code"
+        }
       }
     ]
   }
+}
+```
+
+`markdown` 代码块样式注入：
+
+```json
+{
+	"fileTypes": [],
+	"injectionSelector": "L:text.html.markdown",
+	"patterns": [
+		{
+      // 修改 _code 为目标语言
+			"include": "#fenced_code_block_code"
+		}
+	],
+	"repository": {
+    // 修改 _code 为目标语言
+		"fenced_code_block_code": {
+      // code1|code2|... ： 在 markdown 中代码块的标识，多个可以用 `|` 分隔
+			"begin": "(^|\\G)(\\s*)(`{3,}|~{3,})\\s*(?i:(code1|code2|...)((\\s+|:|\\{)[^`~]*)?$)",
+			"name": "markup.fenced_code.block.markdown",
+			"end": "(^|\\G)(\\2|\\s{0,3})(\\3)\\s*$",
+			"beginCaptures": {
+				"3": {
+					"name": "punctuation.definition.markdown"
+				},
+				"4": {
+					"name": "fenced_code.block.language.markdown"
+				},
+				"5": {
+					"name": "fenced_code.block.language.attributes.markdown"
+				}
+			},
+			"endCaptures": {
+				"3": {
+					"name": "punctuation.definition.markdown"
+				}
+			},
+			"patterns": [
+				{
+					"begin": "(^|\\G)(\\s*)(.*)",
+					"while": "(^|\\G)(?!\\s*([`~]{3,})\\s*$)",
+
+          // 修改 code 为目标语言
+					"contentName": "meta.embedded.block.code",
+					"patterns": [
+						{
+							"include": "source.qml"
+						}
+					]
+				}
+			]
+		}
+	},
+
+  // 修改 code 为目标语言
+	"scopeName": "markdown.codeblock.code"
 }
 ```
 

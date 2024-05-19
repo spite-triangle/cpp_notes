@@ -102,8 +102,8 @@ GRPC=grpc_cpp_plugin
 
 .PHONY: compile
 compile:
-	$(PROTOC) --grpc_out ./src/   --plugin=protoc-gen-grpc=$(GRPC)  ./proto/testServer.proto
-	$(PROTOC) --cpp_out ./src/ ./proto/testServer.proto
+	\$(PROTOC) --grpc_out ./src/   --plugin=protoc-gen-grpc=$(GRPC)  ./proto/testServer.proto
+	\$(PROTOC) --cpp_out ./src/ ./proto/testServer.proto
 ```
 
 ## 程序编译
