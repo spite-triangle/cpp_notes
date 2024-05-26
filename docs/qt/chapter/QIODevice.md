@@ -111,7 +111,7 @@ bool isTransactionStarted() const;
 class QRingBuffer
 {
 public:
-    inline int getChar() {//........}
+    inline int getChar() {/* ........ */}
     inline void putChar(char c) {
         char *ptr = reserve(1);//返回地址
         *ptr = c;

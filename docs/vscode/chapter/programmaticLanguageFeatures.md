@@ -382,7 +382,7 @@ export function activate(context: ExtensionContext) {
 	/* 
 	 * 启动服务
 	 * run: 一般模式下的服务
-	 * debug: 只有在 debug 模式下，才会被启动
+	 * debug: 该模式指的是插件 debug 开发
 	 * 两种参数模式：
 
 		1. 用于启动本地可执行文件的服务
@@ -587,6 +587,67 @@ export function deactivate(): Thenable<void> {
 
 ```
 
+### socket 连接
+
+```ts
+
+function connect(socket: string | int, command: string) {
+
+	// 环境变量
+	let env =  process.env;
+	env.path = "D:/ProgramData/Qt6/6.7.0/msvc2019_64/bin" + split + env["path"];
+	
+	// 服务启动参数
+	let args : string[] =[
+		"-v"
+	]; 
+
+	// 启动服务目标程序
+	let	server = spawn(command, args, {
+		env: env,
+	});
+	
+	server.on("spawn",()=>{
+
+		// 连接 socket
+		let serverOptions = () => {
+			let socket = net.connect(socketSuffix + tmpSocket);
+			let result: StreamInfo = {
+				writer: socket,
+				reader: socket
+			};
+			return Promise.resolve(result);
+		};
+
+		const clientOptions: LanguageClientOptions = {
+			documentSelector: [
+				{ scheme: 'file',language: 'qml' }
+			],
+			diagnosticCollectionName: 'lsp-multi-server-example',
+			outputChannel: outputChannel
+		};
+
+		// 创建 lsp 客户端
+		defaultClient = new LanguageClient('lsp-multi-server-example', 'LSP Multi Server Example', serverOptions, clientOptions);
+		defaultClient.start();
+
+	});
+
+	server.on("message", (msg)=>{
+		outputChannel.appendLine(`message: ${msg}`);
+	});
+
+	// 子进程异常
+	server.on("error", (error)=>{
+		outputChannel.appendLine(`Failed to launch server. error: ${error}`);
+	});
+
+	server.on("close", (code)=>{
+		outputChannel.appendLine(`Close server. code: ${code}`);
+	});
+}
+```
+
 ### 自定义接口
 
 
@@ -701,3 +762,6 @@ export function deactivate(): Thenable<void> | undefined {
 
 依赖 `vscode-languageserver` 与 `vscode-languageserver-textdocument` 实现，在 [lsp-sample](https://github.com/microsoft/vscode-extension-samples/tree/main/lsp-sample) 中已经定义好了模板，照着抄就行。
 
+### 其他
+
+需要根据 [通讯协议](#通信协议) 自定实现。
