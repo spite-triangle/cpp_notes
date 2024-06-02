@@ -1,5 +1,8 @@
 # QIODevice
 
+>[!note]
+> `QTcpSocket` 、`QLocalSocket` 不支持跨线程使用，多线程复杂的 `socket` 通信别用这个。
+
 # 介绍
 
 `QIODevice` 是 `QFile`、`QBuffer`、`QTcpSocket` 等数据流程操作的基类，定义了数据「读/写」相关的 `API`。
