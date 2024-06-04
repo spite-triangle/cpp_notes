@@ -1029,6 +1029,64 @@ bool DataCheckBoxSession::update(int nRow,const ITEM & other){
 }
 ```
 
+# QQuickPaintedItem
+
+## Scene Graph
+
+Qt Quick 的核心是 `Scene Graph` 。其设计思想和 `QGraphicsView/QGraphicsScene` 框架类似：所有的图像元素 `item` 均放到 `scene` 中进行渲染展示。不同之处是 Item 的绘制， QGraphicsView 框架里是通过 View 的绘图事件来驱动 Item 的绘制，QGraphicsItem 有一个 `paint()` 虚函数，只要从 QGraphicsItem 继承来的 Item 实现这个 paint() 函数，便能绘制到 `QPaintDevice` ；而 Qt Quick 的绘制，其实另有一个渲染线程， Scene 里的 Item 没有 paint() 这种直观的绘图函数，只有一个 `updatePaintNode()` 方法来构造 Item 的几何表示，当程序轮转渲染循环时，渲染循环把所有 Item 的 QSGNode 树取出来绘制。
+
+
+使用 `updatePaintNode()` 进行图像绘制，是事先准备需要绘图的元素，然后 Qt Quick 在某一时刻对元素进行绘制。因此，该方案的工作原理与旧版的 `QWidget` 并不一致，为了兼容，Qt Quick 提供了 `QQuickPaintedItem` 可使用 `QPainter` 模拟 `QWidget` 中的 `paint()` 提供元素，然后等待 Qt Quick 对 `QPainter` 的元素进行绘制。
+
+## 使用
+
+- **QQuickPaintedItem**
+
+
+```cpp
+#include <QtQuick>
+
+class CustomItem : public QQuickPaintedItem{
+    Q_OBJECT
+
+public:
+    CustomPlotItem( QQuickItem* parent = 0 );
+    virtual ~CustomPlotItem();
+
+    /* 通过 QPainter 定义绘制元素 */
+    virtual void paint( QPainter* painter ){
+
+        // qml 中的 item 矩形
+        boundingRect();
+
+        // qml 中的 x y z
+        x();
+        y();
+        z();
+
+    }
+
+protected:
+    virtual void mousePressEvent( QMouseEvent* event );
+    virtual void mouseReleaseEvent( QMouseEvent* event );
+    virtual void mouseMoveEvent( QMouseEvent* event );
+    virtual void mouseDoubleClickEvent( QMouseEvent* event );
+    virtual void wheelEvent( QWheelEvent *event );
+
+    virtual void timerEvent(QTimerEvent *event);
+};
+```
+
+> [!note]
+> `QQuickPaintedItem` 继承 `QQuickItem` ，因此直接可以访问 QML 中 `Item` 的设置。 
+
+- **注册**
+
+```cpp
+    /* 将自定义的 QQuickPaintedItem 注册到 qml 中*/
+    qmlRegisterType<CustomPlotItem>("CustomPlot", 1, 0, "CustomItem");
+```
+
 # 插件
 
 ## 定义
@@ -1087,6 +1145,10 @@ public:
     Q_INVOKABLE void write();
 }
 ```
+
+
+
+
 
 ## 实现
 

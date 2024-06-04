@@ -1,8 +1,11 @@
 # Qt Charts
 
+> [!warning|style:flat]
+> 画静态图勉强，动态实时更新图性能烂得一批，最好别用，傻逼 `Qt Chart`。建议使用 `QQuickPaintedItem` 与 [qcustomplot](https://www.qcustomplot.com/) 替代。
+
 # 介绍
 
-`Qt Charts` 能够创建时尚、交互式、以数据为中心的用户界面。Qt Charts 基于 `Graphics View Framework` 实现。图表组件可以用作 `QWidget`，`QGraphicsWidget`，`QML`。
+`Qt Charts` 能够创建时尚、交互式、以数据为中心的用户界面。Qt Charts 基于QQuickPaintedItem `Graphics View Framework` 实现。图表组件可以用作 `QWidget`，`QGraphicsWidget`，`QML`。
 
 ![Charts|c,50](../../image/qt/qtcharts.png)
 

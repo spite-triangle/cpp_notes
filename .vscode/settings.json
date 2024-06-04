@@ -8,5 +8,6 @@
         "ostream": "c",
         "streambuf": "c"
     },
-    "C_Cpp.default.compilerPath": "cl.exe"
+    "C_Cpp.default.compilerPath": "cl.exe",
+    "vsicons.presets.angular": true
 }
