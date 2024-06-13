@@ -11,7 +11,7 @@
 - **框架组件**
   - [Qt](./qt/README.md)
   - [测试工具](./testTools/README.md)
-  - [第三方工具库](ThirdLib/README.md) 
+  - [第三方工具](ThirdLib/README.md) 
 - **语言**
   - [GoLang](go/README.md)
 - **工具** 
