@@ -198,4 +198,13 @@ int main(int argc, char const *argv[])
 ```
 
 
+# std::string_view
+
+`std::string_view` 用于对字符串的查看，接口与 `std::string` 类似，**但 `string_view` 不存储字符串，是 `const char *` 的一个封装，因此，在字符串查看上，性能要优于 `string` (不存在字符串拷贝)。** 由于 `std::string_view` 是 `const char *` 的封装，需要注意：
+- 若 `std::string_view` 包装的是局部变量 `std::string`，则不能当作函数返回值，会出现野指针访问问题；
+- 传递给 `std::string_view` 的指针，需要检测是否为空指针
+- `std::string_view` 包装的字符串必须在 `string_view` 销毁后，才能释放
+
+
+
 
