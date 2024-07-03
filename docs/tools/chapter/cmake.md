@@ -99,7 +99,9 @@ install(
 - 文件类型
     - `FILES`：普通文本
     - `PROGRAMS`：非目标文件的可执行程序(如脚本文件)
+
     ![alt|c,75](../../image/tools/installType.png)
+
 
 - `option`可以指定
   - DESTINATION：指定磁盘上要安装文件的目录
@@ -113,6 +115,7 @@ install(
   - 当采用 DESTINATION 可以自定义安装路径
 
 ![alt|c,75](../../image/tools/cmakePath.png)
+
 
 ## 案例
 
@@ -253,4 +256,49 @@ MESSAGE(STATUS ${自定义名_LIBRARIES})
 
 // 头文件配置
 MESSAGE(STATUS ${自定义名_INCLUDE_DIRS})
+```
+
+# 函数
+
+## 自定义
+
+```php
+// module_install : 函数名
+// _module 自定义参数
+// _dir 自定义参数
+function(module_install _module _dir)
+    install(TARGETS ${_module}
+            CONFIGURATIONS debug
+            DESTINATION ${PROJECT_SOURCE_DIR}/bin/debug/${_dir})
+
+    install(TARGETS ${_module}
+            CONFIGURATIONS release
+            DESTINATION ${PROJECT_SOURCE_DIR}/bin/release/${_dir})
+endfunction()
+
+// 使用
+module_install(demo ./)
+```
+
+## 子模块
+
+如果将函数写在主 `CMakeLists.txt` 中，会使得可读性极差，通过 `CMake` 提供的子模块功能，可以进行优化：
+- 在子模块中定义函数或者宏
+- 主配置中引用子模块
+
+```term
+triangle@LEARN:~$ tree
+.
+├── cmake
+│   └── install.cmake    # 子模块
+└── CMakeLists.txt       # 主配置
+```
+
+
+```php
+// 在主配置中导入子模块
+include(cmake/install.cmake)
+
+// 直接使用使用
+module_install(demo ./)
 ```

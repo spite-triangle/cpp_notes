@@ -4,6 +4,7 @@
     - [bat](tools/chapter/bat.md)
     - [msvc](tools/chapter/msvc.md)
     - [makefile](tools/chapter/makefile.md)
+    - [ninja](tools/chapter/ninja.md)
     - [cmake](tools/chapter/cmake.md)
     - [xmake](tools/chapter/xmake.md)
     - [webassembly](tools/chapter/Webassembly.md)

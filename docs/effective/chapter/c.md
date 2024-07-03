@@ -124,6 +124,45 @@ a 10
 b 10
 ```
 
+## 宏定义污染
+
+> [!note]
+> 当宏名与函数名、变量名重名时，编译器编译会优先使用「宏」，进而导致函数、变量无效。
+
+解决宏污染有以下几种方案
+
+| 方案                 | 范围                     |
+| -------------------- | ------------------------ |
+| 重命名               | 变量、全局函数、成员函数 |
+| 函数名使用`()`包裹   | 全局函数                 |
+| 函数名之后添加标记宏 | 全局函数、成员函数       |
+
+
+
+```cpp
+
+#define test(A,B) ( "call macro test" )
+#define MARK
+
+char* (test)(int a, int b)
+{    return "call function test"; }
+
+namespace ns{
+    char* test MARK(int a,int b)
+    {    return "call function ns::test"; }
+}
+
+int main ( int, char ** )
+{
+    cout <<      test (1,2) << endl; // call macro test
+    cout <<     (test)(1,2) << endl; // call function test
+    cout << (ns::test)(1,2) << endl; // call function ns::test
+    cout << ns::test MARK(1,2) << endl; // call function ns::test
+    return 0;
+}
+```
+
+
 # 内存对齐
 
 ## 规则

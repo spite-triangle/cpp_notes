@@ -4,6 +4,8 @@
 #include <memory>
 #include <string.h>
 #include <algorithm>
+#include <iomanip>
+#include <sstream>
 
 namespace OwO
 {
@@ -112,7 +114,7 @@ namespace OwO
 
         /* ´òÓ¡ÄÚ´æ */
         std::string dump(size_t uLen, size_t offset = 0){
-            uLen = std::min(uLen, m_uLen - offset);
+            uLen = (std::min)(uLen, m_uLen - offset);
             size_t cursor = 0;
             unsigned char * pointer = convert<unsigned char>(offset);
             if(pointer == nullptr) return std::string();
@@ -121,7 +123,7 @@ namespace OwO
             while (cursor < uLen)
             {
                 int i;
-                int thisline = std::min(uLen - cursor, 16ULL);
+                int thisline = (std::min)(uLen - cursor, 16ULL);
 
                 os << std::setw(8) << std::setfill('0') << std::hex << (int)cursor << " ";
 
