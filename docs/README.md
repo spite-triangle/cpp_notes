@@ -93,7 +93,7 @@
 <a href="https://space.bilibili.com/27206875" id="btn_link" title="Bilibili">
 <button type="button" id="btn" class="btn_bili"></button>
 </a>
-<a href="https://spite-triangle.github.io/computer_notes/" id="btn_link" title="Labuladong">
+<a href="https://spite-triangle.github.io/computer_notes/" id="btn_link" title="Computer Notes">
 <button type="button" id="btn" class="btn_book"></button>
 </a>
 </div>
