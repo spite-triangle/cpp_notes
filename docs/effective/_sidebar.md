@@ -5,7 +5,7 @@
 - [第二章 新特性](effective/chapter/Featrue.md)
 - [第三章 类型推断](effective/chapter/TypeDeduction.md)
 - [第四章 引用](effective/chapter/Reference.md)
-- [第五章 智能指针语法](effective/chapter/SmartPointerTheory.md)
+- [第五章 智能指针语法](effective/chapter/smartPointerTheory.md)
 - [第六章 智能指针](effective/chapter/SmartPointer.md)
 - [第七章 封装](effective/chapter/stdWrap.md)
 - [第八章 Lambda](effective/chapter/Lambda.md)
