@@ -611,7 +611,7 @@ const &
 
 ## inline
 
-- **重定义**
+**可用于防止重定义**
 
 ```cpp
 
@@ -627,6 +627,10 @@ inline void Test::fcn(){
 
 }
 ```
+
+>[!note]
+> 在头文件中定义常量字符串，可以通过 `const char * const str = "";` 防止重定义。
+
 
 ## nullptr
 

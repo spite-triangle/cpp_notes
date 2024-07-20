@@ -195,6 +195,49 @@ Flickable{
 ![flick position|c,50](../../image/qt/FlickPos.png)
 
 
+>[!note]
+> 默认的 `Flickable` 会抢占 `mouseMoveEvent/onPositionChanged` 事件，导致子控件异常，这就需要自己实现滚动条交互
+
+```qml
+Flickable { 
+
+    clip: true
+
+    // 展示内容的宽高
+    contentHeight: gridLayout.height
+    contentWidth: gridLayout.width
+
+    // 滚动条
+    ScrollBar.vertical: ScrollBar{
+        id:scrollbar
+    }
+
+    interactive: false
+
+    MouseArea{
+        anchors.fill:parent
+        preventStealing: true
+        propagateComposedEvents: true
+        onPressed: {
+            mouse.accepted = false;
+        }
+
+        onWheel: {
+            if(wheel.angleDelta.y > 0){
+                scrollbar.decrease();
+            }else{
+                scrollbar.increase();
+            }
+        }
+    }
+
+    // 实际内容
+    GridLayout{
+        id: gridLayout
+    }
+}
+```
+
 # OpacityMask
 
 ```qml

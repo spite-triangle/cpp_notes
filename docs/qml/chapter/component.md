@@ -823,4 +823,47 @@ BusyIndicator{
 ```
 
 
+# Flickable/ScrollView
 
+`Flickable` 与 `ScrollView` 都可以实现界面拖拽效果，例如滚动滑动。区别是 `Flickable` 的控制参数比 `ScrollView` 多，可控性更高。
+
+```qml
+Flickable { 
+
+    clip: true
+
+    // 展示内容的宽高
+    contentHeight: gridLayout.height
+    contentWidth: gridLayout.width
+
+    // 滚动条
+    ScrollBar.vertical: ScrollBar{
+        id:scrollbar
+    }
+
+    // 默认的 Flickable 会抢占 mouseMoveEvent 事件，导致子控件异常，这就需要自己实现滚动条交互
+    interactive: false
+
+    MouseArea{
+        anchors.fill:parent
+        preventStealing: true
+        propagateComposedEvents: true
+        onPressed: {
+            mouse.accepted = false;
+        }
+
+        onWheel: {
+            if(wheel.angleDelta.y > 0){
+                scrollbar.decrease();
+            }else{
+                scrollbar.increase();
+            }
+        }
+    }
+
+    // 实际内容
+    GridLayout{
+        id: gridLayout
+    }
+}
+```
