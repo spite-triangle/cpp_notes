@@ -5,6 +5,7 @@
   - [操作系统](operateSystem/README.md)
   - [调试原理](windbg/README.md)
   - [Effictive C++](effective/README.md)
+  - [算法导论](Algorithms/README.md)
   - [c++并发](CppConcurrency/README.md)
   - [Web 开发](webDevelop/README.md)
   - [多媒体](Media/README.md)
