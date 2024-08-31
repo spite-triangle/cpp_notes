@@ -12,6 +12,63 @@
 >   - `skip lists`，跳表
 >   - `treaps`，树堆
 
+# 平衡二叉树
+
+**定义：** 如果二叉树的高度满足 $h = O(\lg n)$ 关系，则称之为平衡二叉树 `balanced binary tree`
+
+## 旋转
+
+![alt|c,40](../../image/algorithm/nodeRotation.png)
+
+调整内部两个父子结点的位置的操作被称之为「旋转」，**进行旋转操作后，二叉搜索树的性质不发生改变**
+- 右旋：父结点绕左子结点旋转，左图 y 绕 x 旋转
+- 左旋：父结点绕右子结点旋转，右图 x 绕 y 旋转
+
+![alt|c,60](../../image/algorithm/leftRotate.png)
+
+# AVL 树
+
+## 定义
+
+**`AVL` 树** : 基本结构属于 `BST` 树，通过一系列旋转操作，保证一个结点的左子树与右子树的高度差为 $[-1,1]$，即倾斜度 `skew`
+$$
+    skew(node) = heigth(node.right) - heigth(node.left), skew(node) \in \{-1,0,1\}
+$$
+
+## 高度
+
+![alt|c,40](../../image/algorithm/AVL_height.png)
+
+某结点子树的高度为 $h$，根据 AVL 数定义，考虑最坏情况，所有结点的左子树与右边子树的倾斜度都是 $1$，因此假设左子树高度为 $h-2$，右子树高度为 $h-1$。结点拥有的子结点树为 $n$，左子树内的结点数为 $n_{h-1}$，右子树内的结点数 $n_{h-2}$
+
+$$
+    \begin{aligned}
+        n &= n_{h-1} + n_{h-2} + 1 \\
+          &> 2 n_{h-2} \\
+          &= 2 \cdot 2^{\lfloor (h-2)/2 \rfloor } \\
+          &=  2^{\lfloor h/2 \rfloor } \\
+        h  &<  2 \lg n \\
+    \end{aligned}
+$$
+
+因此，AVL 树的高度满足 $h = O(\lg n)$
+
+## 维持 AVL 树
+
+算法思路：
+- 利用「子树增强」的概念，为所有的结点增加一个高度属性，并定义其计算公式
+
+$$
+    node.height = 1 + \max \{node.left.height, node.right.heigth\}
+$$
+
+- 只有通过删除/插入才能改变二叉树结构，导致 AVL 树不平衡，即导致倾斜度取值范围为 $[-2,2]$，可通过高度属性进行判别
+- 在二叉树中，删除/插入操作都是修改的叶子结点，因此，当执行删除/插入操作后，可从下往上遍历树，找到倾斜度不平衡的最小子树
+- 使用旋转操作调整倾斜度不平衡的最小子树
+- 在删除/插入操作中，更新高度属性
+
+![alt](../../image/algorithm/AVL_maintain.png)
+
 
 # 红黑树
 
@@ -69,15 +126,6 @@ $$
     h \le 2 \lg (n+1)
 $$
 
-## 旋转
-
-![alt|c,40](../../image/algorithm/nodeRotation.png)
-
-调整内部两个父子结点的位置的操作被称之为「旋转」，**进行旋转操作后，二叉搜索树的性质不发生改变**
-- 右旋：父结点绕左子结点旋转，左图 y 绕 x 旋转
-- 左旋：父结点绕右子结点旋转，右图 x 绕 y 旋转
-
-![alt|c,60](../../image/algorithm/leftRotate.png)
 
 ## 查询
 
