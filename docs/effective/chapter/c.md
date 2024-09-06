@@ -124,6 +124,38 @@ a 10
 b 10
 ```
 
+## 宏展开
+
+```cpp
+#define EXPAND( x ) x
+
+/* 从输入序列中，选择 NAME 参数作为结果 */
+#define GET_MACRO(_1, _2, _3,_4,_5,_6, NAME,...) NAME
+
+/* 
+    1. __VA_ARGS__ 与 PASTEx 组成序列，例如 ARG1,ARG2,ARG3,PASTE6,PASTE5,...,PASTE1
+    2. 将序列输入 GET_MACRO ，并从序列中选择出第 7 个参数，即 PASTE3
+    3. __VA_ARGS__ 作为 GET_MACRO 选择出来的宏的参数，即 PASTE3(ARG1,ARG2,ARG3)
+ */
+#define PASTE(...) EXPAND(GET_MACRO(__VA_ARGS__, \
+        PASTE6, \
+        PASTE5, \
+        PASTE4, \
+        PASTE3, \
+        PASTE2, \
+        PASTE1)(__VA_ARGS__))
+
+/* 宏展开定义 */
+#define PASTE2(func, v1) func(v1)
+#define PASTE3(func, v1, v2) PASTE2(func, v1) PASTE2(func, v2)
+#define PASTE4(func, v1, v2, v3) PASTE2(func, v1) PASTE3(func, v2, v3)
+#define PASTE5(func, v1, v2, v3, v4) PASTE2(func, v1) PASTE4(func, v2, v3, v4)
+#define PASTE6(func, v1, v2, v3, v4, v5) PASTE2(func, v1) PASTE5(func, v2, v3, v4, v5)
+
+// Test(1) Test(2) Test(3) Test(4)
+PASTE(Test,1,2,3,4);
+```
+
 ## 宏定义污染
 
 > [!note]

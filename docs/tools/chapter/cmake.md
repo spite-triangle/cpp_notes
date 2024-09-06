@@ -45,17 +45,23 @@ SET(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 # 添加头文件，全部都添加
 include_directories(${PROJECT_SOURCE_DIR}/inc)
 
-# 自动查找库，只有cmake官方内置与cmake 编译时 install 的库才能找到
-find_package(OpenCV REQUIRED)
 # 指定第三方库所在路径
 link_directories(${PROJECT_SOURCE_DIR}/lib)
+
+# 自动查找库，只有配置了 module 和 config 模式的 .cmake 配置文件的库才能找到
+find_package(OpenCV REQUIRED)
 
 # 查找当前目录所有源文件，保存在变量 DIR_LIB_SRCS中
 aux_source_directory(. DIR_LIB_SRCS)
 set(CPP_FILES ./main.cpp)
+file(GLOB_RECURSE SRC_FILES "path/*.cpp") # 推荐方案，递归查找目标文件
 
 # 生成目标可执行文件
 add_executable(demo ${CPP_FILES} ${OPENCV_INCLUDES}) 
+# 创建静态库
+add_library(lib_name STATIC ${file_cpp})
+# 创建动态库
+add_library(lib_name SHARED ${file_cpp})
 
 # 添加子目录文件夹
 # add_subdirectory(${PROJECT_SOURCE_DIR}/src)
@@ -67,16 +73,6 @@ target_link_libraries(demo ${OpenCV_LIBS})
 target_include_directories(demo ${PROJECT_SOURCE_DIR}/include)
 ```
 
-# 子目录 CMakeLists 配置
-
-```php
-# 创建静态库
-add_library(lib_name STATIC ${file_cpp})
-# 创建动态库
-add_library(lib_name SHARED ${file_cpp})
-# 链接第三方库
-target_link_libraries(lib_name ${THIRD_LIBS})
-```
 # 命令行传参
 
 ```term
@@ -151,6 +147,17 @@ install(TARGETS target
 ```term
 triangle@LEARN:~$ cmake ..
 triangle@LEARN:~$ make install
+```
+
+## 导出包
+
+```php
+# 配置导出配置文件
+install(TARGETS target
+        EXPORT exportName
+        )
+# 生成配置文件，一般是  xxxxConfig.cmake , findxxxx.cmake
+export(export exportName)
 ```
 
 # pkg-config
@@ -302,3 +309,79 @@ include(cmake/install.cmake)
 // 直接使用使用
 module_install(demo ./)
 ```
+
+# 库导入
+
+## find_library
+
+```php
+# 就是查找 demo.lib 的绝对路径，放入 LIB 变量中
+find_library(LIB
+        NAMES demo.lib
+        HINTS path/
+        )
+
+target_link_libraries(target ${LIB})
+```
+
+## find_package
+
+`find_package` 分两种模式查找，先查找 `Module`，再查找 `Config`
+
+- **Module 模式**
+
+Module 模式对应 `Find<packageName>.cmake` 配置文件，cmake 通过搜索 `CMAKE_MODULE_PATH` 查找，主要用于包导入前的前处理，也可以直接导入第三库，作用类似于 cmake 的拓展脚本。
+
+```php
+/* =================================== */
+find_path(ADD_INCLUDE_DIR libadd.h /usr/include/ /usr/local/include ${CMAKE_SOURCE_DIR}/ModuleMode)
+find_library(ADD_LIBRARY NAMES add PATHS /usr/lib/add /usr/local/lib/add ${CMAKE_SOURCE_DIR}/ModuleMode)
+
+if (ADD_INCLUDE_DIR AND ADD_LIBRARY)
+    set(ADD_FOUND TRUE)
+endif (ADD_INCLUDE_DIR AND ADD_LIBRARY)
+
+/* ======================== */
+# 将项目目录下的cmake文件夹加入到CMAKE_MODULE_PATH中，让find_pakcage能够找到我们自定义的函数库
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake;${CMAKE_MODULE_PATH}")
+add_executable(addtest addtest.cc)
+find_package(ADD)
+if(ADD_FOUND)
+    target_include_directories(addtest PRIVATE ${ADD_INCLUDE_DIR})
+    target_link_libraries(addtest ${ADD_LIBRARY})
+else(ADD_FOUND)
+    message(FATAL_ERROR "ADD library not found")
+endif(ADD_FOUND)
+```
+
+- **Config 模式**
+
+Config 模式对应 `<packageName>Config.cmake` 配置文件，用于以 `packageName` 包名，导入第三库
+
+
+```php
+
+/* ============== demoConfig.cmake ================= */
+find_library(DEMO_LIB
+            NAMES demo.lib
+            HINTS ${CMAKE_CURRENT_LIST_DIR}/lib)
+
+#　IMPORTED　表明是导入的动态库
+add_library(demo SHARED IMPORTED)
+set_target_properties(hmk PROPERTIES
+        INTERFACE_COMPILE_DEFINITIONS "_USRDLL" # 宏
+        INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_CURRENT_LIST_DIR}/include" # 头文件路径
+        IMPORTED_LINK_INTERFACE_LANGUAGES "CXX" 
+        IMPORTED_IMPLIB_DEBUG ${DEMO_LIB} # lib 库
+        IMPORTED_IMPLIB ${DEMO_LIB})
+
+/* ============== CMakeLists.txt ===================*/
+find_package(demo PATHS path/ REQUIRED)
+
+# 直接引入包配置
+target_link_libraries(target demo)
+```
+
+
+
+
