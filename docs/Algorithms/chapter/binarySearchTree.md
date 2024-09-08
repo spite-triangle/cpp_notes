@@ -1,5 +1,57 @@
 # 二叉搜索树
 
+# 二叉树
+
+
+## 结点
+
+![alt|c,30](../../image/algorithm/node.png)
+
+二叉树中的每一个结点都有三个指针
+- `parent` : 指向父结点
+- `left` : 左子结点
+- `right` : 右子结点
+
+## 子树
+
+![alt|c,60](../../image/algorithm/tree.png)
+
+在二叉树中以某一个结点为起始，就能获取到一颗子树
+- `depth` : 子树根结点到树根结点的最短距离 (有多少条边)
+- `height` : 子树根结点到其叶结点的最长距离 (有多少条边)
+
+## 遍历顺序
+
+**中序遍历** ：在二叉树操作中，一般只关心中序遍历，因为二叉搜索树的中序遍历天然具有顺序
+
+```python
+def traversal(root:Node):
+    if (root == None):
+        return
+
+    traversal(root.left)
+    print(root) 
+    traversal(root.right)
+```
+
+关于中序遍历的操作
+- `subtree_first(node)` : 返回以 `node` 为根结点的子树按照中序遍历得到的第一个结点，即树最左边的结点
+- `successor(node)` : 在中序遍历中，`node` 结点的下一个结点。
+  - `node.right != null` : `subtree_first(node.right)` 就是结果
+  - `node.right == null` : 向上查找父结点 `node = node.parent` ，直到找到 `node = node.parent.left` 的结点
+- `predecessor(node)` : 在中序遍历中，`node` 结点的上一个结点
+- `subtree_insert_after(node,new)` : 根据中序遍历，在 `node` 之后，插入 `new` 结点
+  - `node.right != null` : 让 `new` 成为 `subtree_first(node.right)`  的左结点
+  - `node.right == null` : 让 `new` 成为 node 的右结点
+- `subtree_delete(node)` : 删除结点 `node`
+  - `node is leaf` : 直接删除
+  - `node not leaf` : 
+    - `node.left != null` :  `node` 持续与 `predecessor(node)` 进行交换，直到 `node` 抵达叶子结点
+    - `node.right != null` :  `node` 持续与 `successor(node)` 进行交换，直到 `node` 抵达叶子结点
+
+上述操作耗时均是 $O(h)$
+
+
 # 二叉搜索树
 
 ## 构建
@@ -184,34 +236,6 @@ $$
 $$
 
 
-# 索引定位
-
-## 算法思路
-
-**问题：** `BST` 可以实现查找、删除、更新目标结点的操作都是 $\lg h$，此外，`BST` 还存在一个重要性质，其中序遍历结果为一个有序的序列。如果想要对有序序列的指定「索引」进行查找、删除、更新，也能实现 $\lg h$。
-
-
-**算法：** 
-1. Divide : 根据当前位置的结点，将其子树划分为左子树、右子树
-2. Conquer: 利用 $n_L$ 表示结点左子树的结点个数，$i$ 为查找的目标索引
-
-    ![alt|c,50](../../image/algorithm/subtree_at.png)
-
->[!note]
-> 现在关键问题便是，如何获取子树的结点数
-
-## 子树增强
-
-**子树增强**：每个结点会存储一些扩展属性信息，且当前结点的属性信息可以根据子结点的属性信息计算获得。根据子树增强的思路，每个结点的子结点个数 $node.size$ 便是一个扩展属性，并且依赖于左右子结点的属性值
-
-$$
-    node.size = node.left.size + node.right.size + 1
-$$
-
-在树结构改变时，根据上述公式更新对应的结点属性即可。**在二叉树中，删除/插入操作改变的是树的叶子结点，那么需要属性更新的结点数便是 $O(h)$**
-
->[!note]
-> 子树增强可以添加任意属性，但是不能维护有序序列的「索引」，因为当删除/插入结点后，索引便会动态改变
 
 
 

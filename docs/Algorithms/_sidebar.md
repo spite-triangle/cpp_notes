@@ -8,6 +8,8 @@
 - [第五章 哈希](Algorithms/chapter/hash.md)
 - [第六章 二叉搜索树](Algorithms/chapter/binarySearchTree.md)
 - [第七章 平衡搜索树](Algorithms/chapter/balanceSearchTree.md)
+- [第七章 拓展数据结构](Algorithms/chapter/augmentDataStructure.md)
+- [第八章 跳表](Algorithms/chapter/skipLists.md)
 
 
 
