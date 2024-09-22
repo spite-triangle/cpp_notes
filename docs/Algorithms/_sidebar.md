@@ -10,6 +10,8 @@
 - [第七章 平衡搜索树](Algorithms/chapter/balanceSearchTree.md)
 - [第七章 拓展数据结构](Algorithms/chapter/augmentDataStructure.md)
 - [第八章 跳表](Algorithms/chapter/skipLists.md)
+- [第九章 平价分析](Algorithms/chapter/amortizedAnalysis.md)
+- [第十章 竞争分析](Algorithms/chapter/competiveAnalysis.md)
 
 
 
