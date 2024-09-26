@@ -160,6 +160,7 @@ install(TARGETS target
 export(export exportName)
 ```
 
+
 # pkg-config
 
 ## 配置文件
@@ -281,11 +282,95 @@ function(module_install _module _dir)
     install(TARGETS ${_module}
             CONFIGURATIONS release
             DESTINATION ${PROJECT_SOURCE_DIR}/bin/release/${_dir})
+    
+    // 通过 set 会将 out 变量作用域提升，可作为返回值，在外部使用
+    set(out value)
 endfunction()
 
 // 使用
 module_install(demo ./)
 ```
+
+## 参数
+
+- **ARG**
+
+```php
+function(foo x1 x2 x3)
+    message("参数数量:${ARGC}, ARGV0:${ARGV0}, ARGV1:${ARGV1}, ARGV2:${ARGV2}")
+endfunction()
+
+# ARGV 所有参数
+function(foo)
+    message("ARGV:${ARGV}")
+endfunction()
+
+# ARGV 去除 x1，x2 之后的所有剩余参数
+function(foo x1 x2)
+    message("ARGN:${ARGN}")
+endfunction()
+```
+
+- **参数解析**
+
+```php
+/* 语法规则
+    - prefix : 变量前缀
+    - options：可选参数
+    - one_value_keywords：一个关键字对应一个值
+    - multi_value_keywords：一个关键字对应多个值
+*/
+cmake_parse_arguments(<prefix> <options> <one_value_keywords>
+                      <multi_value_keywords> <args>...)
+
+cmake_parse_arguments(PARSE_ARGV <N> <prefix> <options>
+                      <one_value_keywords> <multi_value_keywords>)
+```
+
+```php
+
+macro(my_install)
+    # 定义参数规则
+    set(options LIBRARY RUNTIME OBJECTS OPTIONAL)
+    set(oneValueArgs DESTINATION COMPONENT RENAME)
+    set(multiValueArgs TARGETS CONFIGURATIONS)
+    cmake_parse_arguments(MY_INSTALL "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+
+    # 多值关键词
+    message("MY_INSTALL_TARGETS: ${MY_INSTALL_TARGETS}")
+    # 可选关键词
+    message("MY_INSTALL_LIBRARY: ${MY_INSTALL_LIBRARY}")
+    message("MY_INSTALL_RUNTIME: ${MY_INSTALL_RUNTIME}")
+    message("MY_INSTALL_OBJECTS: ${MY_INSTALL_OBJECTS}")
+    # 多值关键词
+    message("MY_INSTALL_CONFIGURATIONS: ${MY_INSTALL_CONFIGURATIONS}")
+    # 单值关键词
+    message("MY_INSTALL_DESTINATION: ${MY_INSTALL_DESTINATION}")
+    message("MY_INSTALL_COMPONENT: ${MY_INSTALL_COMPONENT}")
+    message("MY_INSTALL_RENAME: ${MY_INSTALL_RENAME}")
+    # 可选关键词
+    message("MY_INSTALL_OPTIONAL: ${MY_INSTALL_OPTIONAL}")
+
+    # 特殊变量
+    # 未解析的参数
+    message("MY_INSTALL_UNPARSED_ARGUMENTS: ${MY_INSTALL_UNPARSED_ARGUMENTS}")
+    # 关键字缺失值的参数
+    message("MY_INSTALL_KEYWORDS_MISSING_VALUES: ${MY_INSTALL_KEYWORDS_MISSING_VALUES}")
+endmacro()
+
+```
+
+## 宏
+
+```php
+macro(<name> [<arg1> ...])
+    ...
+endmacro()
+```
+
+宏语法规则基本与函数一致，其区别是
+- `ARG` 在函数中是「变量」，在宏中是「宏」
+- 函数具有作用域，宏则是代码的复制粘贴
 
 ## 子模块
 
@@ -382,6 +467,77 @@ find_package(demo PATHS path/ REQUIRED)
 target_link_libraries(target demo)
 ```
 
+# 自定义
+
+## 命令
+
+- **命令用于输出特定文件**
+
+```php
+#声明一个变量 wrap_BLAS_LAPACK_sources来保存wrap_BLAS_LAPACK.tar.gz 压缩包文件的名称
+set(wrap_BLAS_LAPACK_sources
+    ${CMAKE_CURRENT_BINARY_DIR}/wrap_BLAS_LAPACK/CxxBLAS.hpp
+    ${CMAKE_CURRENT_BINARY_DIR}/wrap_BLAS_LAPACK/CxxBLAS.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/wrap_BLAS_LAPACK/CxxLAPACK.hpp
+    ${CMAKE_CURRENT_BINARY_DIR}/wrap_BLAS_LAPACK/CxxLAPACK.cpp
+)
+ 
+#当需要 wrap_BLAS_LAPACK_sources 内文件时，会执行 COMMAND 命令
+add_custom_command(
+    OUTPUT
+        ${wrap_BLAS_LAPACK_sources}
+    COMMAND #在构建时提取打包文件
+        ${CMAKE_COMMAND} -E tar xzf ${CMAKE_CURRENT_SOURCE_DIR}/wrap_BLAS_LAPACK.tar.gz
+    COMMAND #更新提取文件的时间戳
+        ${CMAKE_COMMAND} -E touch ${wrap_BLAS_LAPACK_sources}
+    WORKING_DIRECTORY #指定在何处执行命令
+        ${CMAKE_CURRENT_BINARY_DIR}
+    DEPENDS #列出了自定义命令的依赖项
+        ${CMAKE_CURRENT_SOURCE_DIR}/wrap_BLAS_LAPACK.tar.gz
+    COMMENT #在构建时打印状态消息
+        "Unpacking C++ wrappers for BLAS/LAPACK"
+    VERBATIM #告诉CMake为生成器和平台生成正确的命令，从而确保完全独立。
+)
 
 
+# 通过自定义 target 来触发自定义命令
+add_custom_target(finish
+                DEPENDS ${wrap_BLAS_LAPACK_sources}
+            )
+```
 
+- **命令用于指定操作**
+
+```php
+add_executable(example "")
+ 
+target_sources(example PRIVATE example.f90)
+
+# 命令需要依赖具体的 target ，并指定命令运行的时机
+# PRE_LINK ：链接前执行
+# PRE_BUILD: 编译前执行
+# POST_BUILD: 编译后执行
+add_custom_command(
+  TARGET
+    example
+  PRE_LINK 
+  COMMAND
+    ${PYTHON_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/echo-file.py
+      ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/example.dir/link.txt
+  COMMENT
+    "link line:"
+  VERBATIM
+  )
+```
+
+## 目标
+
+cmake 中的目标只有两类：可执行文件`add_executable()`与库文件`add_library()`。通过 `add_custom_target` 可以自定义构建目标，且目标不依赖具体的源文件，可以执行其他的命令和操作。**其核心功能就是在 `makefile` 中自定义一个 `.PHONY` 目标，然后可以通过 `make [target]` 进行使用。**
+
+```php
+    add_custom_target(finish 
+                    ALL # 在 `make all` 的时候，会调用当前自定义目标
+                    COMMAND ${CMAKE_COMMAND} -E echo compile finish
+    )
+```
