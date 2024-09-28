@@ -12,6 +12,7 @@
 - [第八章 跳表](Algorithms/chapter/skipLists.md)
 - [第九章 平价分析](Algorithms/chapter/amortizedAnalysis.md)
 - [第十章 竞争分析](Algorithms/chapter/competiveAnalysis.md)
+- [第十一章 动态规划](Algorithms/chapter/dynamicProgramming.md)
 
 
 
