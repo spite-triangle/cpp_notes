@@ -13,7 +13,8 @@
 - [第九章 平价分析](Algorithms/chapter/amortizedAnalysis.md)
 - [第十章 竞争分析](Algorithms/chapter/competiveAnalysis.md)
 - [第十一章 动态规划](Algorithms/chapter/dynamicProgramming.md)
-
+- [第十二章 最小生成树](Algorithms/chapter/graph.md)
+- [第十三章 最短路径](Algorithms/chapter/ShortestPath.md)
 
 
 
