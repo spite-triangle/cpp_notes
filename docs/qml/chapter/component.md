@@ -82,12 +82,12 @@ MouseArea{
         color: "black"
     }
 
-    onClicked:{} // 鼠标点击
     onReleased: {} // 鼠标释放
     onPressed:{ // 鼠标按下
         // 获取按下的按键
         var ret = pressedButtons
     } 
+    onClicked:{} // 鼠标点击
 
     // 当 hoverEnabled 设置 true，鼠标进入 MouseArea 就会触发 onContainsMouseChanged
     hoverEnabled: true
@@ -135,10 +135,11 @@ Rectangle {
 ### 鼠标点击事件
 
 - **事件类型**
-  - 基本：`pressed` 、`released`
-  - 组合：`clicked`、`doubleClicked`、`pressAndHold`
+  - 基本事件：`pressed` 、`released`
+  - 组合事件：`clicked`、`doubleClicked`、`pressAndHold`
 
-- `propagateComposedEvents` : 组合的鼠标事件是否将自动传播到重合的底层 `MouseArea`，即当多个`MouseArea`在界面上重叠时，鼠标事件会从 `z` 值最大的 MouseArea 依次传播到 `z` 值最小的 MouseArea 停止。
+
+- `propagateComposedEvents` : 组合的鼠标事件是否将自动传播到重合的底层 `MouseArea`，即当多个`MouseArea`在界面上重叠（根据 `z` 轴判断重叠，而非父子关系，且组件定义顺序也会影响 `z` 轴），鼠标事件会从 `z` 值最大的 MouseArea 依次传播到 `z` 值最小的 MouseArea 停止。
 - `mouse.accepted` : 控制是否接收处理该事件，默认 `true`。事件被接收，则停止传播
 
 ```qml
@@ -162,7 +163,7 @@ Rectangle {
             // 启动事件传递
             propagateComposedEvents: true 
 
-            onClicked: {
+            onPressed: {
                 console.log("clicked blue")
 
                 // 当前层级不处理事件，事件继续传播
@@ -173,6 +174,8 @@ Rectangle {
 }
 ```
 
+>[!note]
+> 先处理基本事件，再处理组合事件，即顶层组件在基本事件处理阶段就将 `pressed` 事件吞了，那么底层组件将接收不到所有的鼠标事件
 
 ### 鼠标悬停
 
