@@ -15,6 +15,9 @@
 - [第十一章 动态规划](Algorithms/chapter/dynamicProgramming.md)
 - [第十二章 最小生成树](Algorithms/chapter/graph.md)
 - [第十三章 最短路径](Algorithms/chapter/ShortestPath.md)
+- [第十四章 全对最短路径](Algorithms/chapter/allPairShortestPath.md)
+- [第十五章 并行算法](Algorithms/chapter/parallel.md)
+
 
 
 
