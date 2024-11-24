@@ -100,5 +100,119 @@ $$
     \end{aligned}
 $$
 
+# 并行循环
+
+计算一个矩阵与向量相乘
+$$
+    B = Ax
+$$
+
+可以对没个 `for` 循环并行化，使用 `parallel for` 关键字表示
+
+![alt|c,35](../../image/algorithm/parallelfor.png)
+
+- 
+
+`parallel for` 最简单的方案便是对于每一个循环体都启动一个线程，然后同步结果
+
+```python
+# 假设 range 描述区间 [1,n]
+for i in range(1,n):
+    spawn [y[i] = y[i] a[i][j] * x[j] for j in range(1,n)]
+sync
+```
+
+但这种实现的 $T_{\infty} = \Theta(n + n)$。采用分治法进行优化，将第一层 `for i = 1 to n` 循环对半拆分成子问题
+
+![alt|c,55](../../image/algorithm/matvecmainloop.png)
+
+绘制 $ MAT-VEC-MAIN-LOOP(A,x,y,8,1,8)$ 的 DAG 图
+
+![alt](../../image/algorithm/matvecDAG.png)
+
+可以看到只有在最后一层节点，才会进行 `for j = 1 to n` 的循环运算，其他节点都是进行关于 $i$ 的递归迭代
+
+$$
+    T_{\infty} = \Theta(\lg n + n)
+$$
+
+在进行优化，对 `for j = 1 to n` 也通过分治法实现并行化
+
+```python
+    parallel for i = 1 to n
+        parallel for j = 1 to n
+            y[i] = y[i] + a[i][j] * x[j]
+```
+
+$$
+    T_{\infty} = \Theta(\lg n + \lg n) = \Theta(\lg n)
+$$
+
+其并行度为 $\bar{P} = \Theta(n^2 / \lg n)$
 
 
+# 矩阵乘法
+
+## 问题描述
+
+**问题：** 已知矩阵 $n \times n$ 的 $A=[a_{ij}]$ 与 $B=[b_{ij}]$，计算矩阵 $C=[c_{ij}] = A B, c_{ij} = \sum_{k=1}^n a_{ik} b_{kj}$。
+
+
+直接按照公式进行矩阵乘法计算，需要执行 3 次 $n$ 规模的循环，其算法耗时为 $\Theta(n^3)$。为了实现分治法，首先对矩阵进行分块处理
+
+$$
+    \begin{aligned}
+     C &= AB \\ 
+    \begin{bmatrix}
+        r & s \\
+        t & u 
+    \end{bmatrix} 
+    &= 
+    \begin{bmatrix}
+        a & b \\
+        c & d 
+    \end{bmatrix}
+    \begin{bmatrix}
+        e & f \\
+        g & h 
+    \end{bmatrix}
+    \end{aligned}
+$$
+
+将矩阵 $C$ 的计算转换为
+
+$$
+    C = \begin{bmatrix}
+        ae  & af \\
+        ce  & cf 
+    \end{bmatrix} +  \begin{bmatrix}
+        bg & bh \\
+        dg & dh
+    \end{bmatrix}
+$$
+
+## 并行算法
+
+**思路：** 矩阵进行分块后，可利用「分治法」拆解为 $8$ 个互不关联的子块乘法，然后对子块的求解并行化
+
+![alt](../../image/algorithm/matrixMultThread.png)
+
+定义 $M_p(n)$ 为 $p$ 个处理器时的耗时，则可以求解工时
+
+$$
+    \begin{aligned}
+        M_1(n) &= 8 M_1(n/2) + \Theta(n^2) \\
+               &= \Theta(n^3)
+    \end{aligned}
+$$
+
+其耗时与实际分治法一样。然后求解关键路径长度
+
+$$
+    \begin{aligned}
+        M_{\infty}(n) &= M_{\infty}(n/2) + \Theta(\lg n) \\
+                      &= \Theta(\lg^2 n)
+    \end{aligned}
+$$
+
+其并行度为 $\bar{P} = \Theta(n^3 / \lg ^2 n)$
