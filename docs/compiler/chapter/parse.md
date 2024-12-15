@@ -180,10 +180,12 @@ $$
 ![alt|c,40](../../image/compiler/AST_example.png)
 
 
-# 解析算法
+# 自上而下解析算法
 
 > [!tip]
-> 基于 CFG 定义的规则解析输入的 token 流，解析推导流程就能构造出一颗解析树（代码运行逻辑层面，并未真正创建）
+> 解析算法：基于 CFG 定义的规则解析输入的 token 流，其推导流程便是在生成一可棵解析树，
+> - token 流的解析树生成成功，满足语法规则
+> - token 流的解析树生成失败，语法错误
 
 ## 递归下降
 
@@ -282,12 +284,13 @@ private:
 上述代码根据递归下降法实现了一个简单的解析器。但是该解析器只能正确匹配出 `int`，`( int )` 等类型的字符串。**当匹配 `int * int`时，`E() -> E1() -> T() -> T1()` 匹配到 `int` 后便直接返回，并未尝试解析 `T2()`，因此最后结论是失败**。
 
 > [!tip]
-> 市面上存在真正通用的梯度下降算法，但是具有负责的回溯机制，用以解决上述问题
+> - 市面上存在真正通用的梯度下降算法，但是具有复杂的回溯机制，用以解决上述问题，后续的 `LL(1)` 也能解决该问题
+> - 递归下降法通过函数递归实现了解析树生成
 
 
 ### 左递归问题
 
-左递归问题 `Left Recursion` : 「递归下降算法」针对 $S \rightarrow S \alpha | \beta$ 的生成式会陷入死循环。
+左递归问题 `Left Recursion` : 「递归下降算法」针对 $S \rightarrow S \alpha | \beta$ 的生产式会陷入死循环。
 
 ```cpp
 bool S1() {return S() && term(a);}
@@ -308,6 +311,228 @@ $$
 $$
 
 
+## 预测解析
+
+### 概念
+
+**预测解析 `Predictive Parse`:** 属于自上而下解析算法，可以预测接下来应该使用哪个生产式
+- 会执行 `lookahead` 操作，向前多检测几个 token
+- 没有回溯机制
+- 适用于 `LL(k)` 文法
+
+**`LL(k) `文法**： **每一步需要检索 k 个 token 后才能确定生产式，且每次最多仅有一个生产式能匹配，通常使用 `LL(1)`**
+- `Left to right` : 从左向右扫描 token
+- `Left-most derivation` : 左推导
+
+### 左因子分解
+
+在递归下降算法中
+
+$$
+\begin{aligned}
+    E \rightarrow& \text{ T + E | T} \\
+    T \rightarrow& \text{ int | int * T | (E)} \\
+\end{aligned}
+
+$$
+- `int * int` : 对于 $T$ 而言， $T \rightarrow \text{ int | int * T }$ 都可以匹配字符串，若选择 $ T \rightarrow \text{ int}$ 将导致字符串将匹配失败
+- `int + int` : 对于 $E$ 而言，$E \rightarrow \text{ T + E | T}$ 均能匹配字符串，若选择 $E \rightarrow \text{T} $ 也将导致字符串匹配失败
+
+针对上述问题，可以采用 **左因子分解 `left-factor`** 进行处理
+
+$$
+    \begin{aligned}
+        E \rightarrow& \text{ T + E}\\
+          \rightarrow& \text{ T}
+    \end{aligned}
+$$
+
+两个生产式都具有公共符号 $T$ 导致字符串推导可以具有不同选择，可以将公共部分提取，重新改写生产式，去除二义性
+
+$$
+    \begin{aligned}
+        E \rightarrow& \text{ T X} \\
+        X \rightarrow& \text{ + E | } \varepsilon
+    \end{aligned}
+$$
+
+对于 $T$ 也一样提取公共 $int$
+
+$$
+    \begin{aligned}
+        T \rightarrow& \text{ int Y | (E)}\\
+        Y \rightarrow& \ \varepsilon \text{ | * T}
+    \end{aligned}
+$$
+
+### LL(1) 解析表
+
+![alt|c,70](../../image/compiler/LL1_parsingTable.png)
+
+- `$` : 字符串结束的标记
+
+将现有语法规则通过「左因子分解」分解后，可以绘制出 `LL(1)` 预测解析表，可以实现每个 token 至少存在一条生产式
+- 当前处于 $E$ ，且输入 `int`，可得 $E \rightarrow \text{ T X}$
+- 当前处于 $Y$ ，且输入 `*`，可得 $Y \rightarrow \text{ * T}$
+- 当前处于 $X$ ，且输入 `int`, 没有生产式，语法错误
+
+
+```cpp
+// 基于 LL(1) 解析表的 token 流解析算法
+bool parse(LL1 table,  Token[] tokens){
+
+    // 初始化
+    std::stack<Symbol> stack;
+    stack.push('$'); // token 流结束标记
+    stack.push('E'); // 解析算法开始的标记
+
+    auto next = tokens;
+
+    do{
+        // 还没完成匹配，token 流输入就没了
+        if(next == nullptr){
+            return false;
+        }
+
+        Symbol top = stack.top();
+
+        if(top.isTerminal()){
+            if( top == *next++){
+                stack.pop();
+            }else {
+                return false;
+            }
+        }else if(top.isNonTerminal()){
+
+            // 查询 LL(1) 解析表获取生产式
+            auto grammar = table[top, *next];
+
+            // 生产式为空，输入异常
+            if(grammar == nullptr) return false;
+
+            stack.pop();
+
+            // 将生产式的符号都入栈
+            for(int i = grammer->size() - 1; i >= 0; --i){
+                stack.push(grammer[i]);
+            }    
+        }
+    }while(stack.size() > 0)
+
+    return true;
+}
+```
+
+![alt|c,70](../../image/compiler/LL1_example.png)
+
+### 首集/跟随集
+
+解析表 $T$ 中，在非终止符为 $A$且 token 为 $t$ 的情况下，生产式为 $T[A,t] = \alpha$。$\alpha$ 能匹配输入 $t$ 只存在两种情况
+- $\alpha \rightarrow^* t \ \beta$ ：最终展开 $A$ 后得到的 stack 栈顶是 $t$，该情况称之为 $t \in first(\alpha)$
+- $\alpha \rightarrow^* \varepsilon$ 且 $S \rightarrow^* ..At..$: 最终展开 $A$ 的结果是 $\varepsilon$；在生产式推导过程中，一定存在符号 $t$ 在符号 $A$ 后面的结果，该情况称之为 $t \in follow(A)$
+
+#### 首集
+
+首集 `First Set` 定义
+
+$$
+    First(X) = \{ t | X \rightarrow^* t \alpha\} \cup \{ \varepsilon | X \rightarrow^* \varepsilon \} , \ t \in \text{terminals}
+$$
+
+
+引理：
+1. $First(t) = \{ t \}$
+2. $\varepsilon \in First(X)$ 的成立条件
+    - $X \rightarrow \varepsilon$
+    - $X \rightarrow A_1 \dotsm A_n, \ \varepsilon \in Fisrt(A_i)$
+3. 若 $X \rightarrow A_1 \dotsm A_n \alpha, \ \varepsilon \in First(A_i)$，则 $First(\alpha) \subseteq Fisrt(X)$
+4. 若 $E \rightarrow X \ Y, \ \varepsilon \notin First(X)$，则 $First(E) = First(X)$
+
+![alt|c,60](../../image/compiler/firstSetExample.png)
+
+#### 跟随集
+
+跟随集 `Follow Set` 定义：**在生产式推导过程中，存在 $X$ 在 $t$ 前面的情况，且不包含 $\varepsilon$**
+
+$$
+    Follow(X) = \{ t | S \rightarrow^* \beta X t \delta \} , \ t \in \text{terminals}
+$$
+
+引理
+1. $S$ 是开始符号，则一定存在 $ \$ \in Follow(S) $
+2. 若 $X \rightarrow \text{ A B}$，则 $Follow(X) \subseteq Follow(B)$
+3. 若 $A \rightarrow \alpha X \beta$， 则 $First(\beta) - \{ \varepsilon \} \subseteq Follow(X)$
+4. 若 $A \rightarrow \alpha X \beta, \ \varepsilon \in First(\beta)$，  则 $Follow(A) \subseteq Follow(X)$
+
+
+**引理4 证明：**
+
+根据生产式规则，多次推导一定能得到 $S \rightarrow^* \omega \alpha X \beta \delta$
+
+- 当 $\beta \rightarrow^* \varepsilon$ 时，$A_1 \rightarrow \alpha X$ 且 $S \rightarrow^* \omega \alpha X  \delta$，则 $Follow(A_1) = First(\delta) - \{ \varepsilon \}$
+- 当 $ \beta \neq \varepsilon $ 时，$A_2 \rightarrow \alpha X \beta$ 且 $S \rightarrow^* \omega \alpha X \beta  \delta$，则 $Follow(A_2) = First(\delta) - \{ \varepsilon \}$
+
+无论 $\beta$ 是否为 $\varepsilon$ ，$Follow(A) = First(\delta) - \{ \varepsilon \}$ 均成立。且当 $\beta \rightarrow^* \varepsilon$ 时，$First(\delta) - \{ \varepsilon \} \subseteq Follow(X)$，因此  $Follow(A) \subseteq Follow(X)$ 成立
+
+![alt|c,60](../../image/compiler/followSet_example.png)
+
+### LL(1) 表构建
+
+$T$ 表示根据 CFG 创建的 `LL(1)` 解析表。将生产式 $A \rightarrow \alpha$ 放入表中的规则为
+- 若终结符 $t \in First(\alpha)$，则 $T[A,t] = \alpha$
+- 若 $\varepsilon \in First(\alpha), \ t \in Follow(A)$，则 $T[A,t] = \alpha$
+- 若 $\varepsilon \in First(\alpha), \ \$ \in Follow(A)$, 则 $T[A, \$] = \alpha$
+
+
+![alt|c,70](../../image/compiler/LL1_parsingTable.png)
+
+### 适用范围
+
+$$
+    \begin{aligned}
+        S &\rightarrow \text{ S a | b} \\
+        Fisrt(S) &=  \text{{ b }} \\
+        Follow(S) &= \text{{ a, \$ }}
+    \end{aligned}
+$$ 
+
+- $S \rightarrow Sa$ 且终结符为 $b$ 时，$b \in First(Sa) = First(S)$，则 $T[S,b] = Sa$ 成立
+- $S \rightarrow b$ 且终结符为 $b$ 时，$b \in First(b)$，则 $T[S,b] = b$ 成立
+
+综上 $T[A,b]$ 存在两个生成式，违反 `LL(1)` 文法规则，因此 $T$ 并不是 `LL(1)` 解析表。
+
+> [!note]
+> - 预测解析算法只适用于 `LL(1)` 文法，判断 CFG 是否为 `LL(1)`，则观察解析表 $T[S,t]$ 是否映射到多值
+> - 大多数语言的 CFG 都不满足 `LL(1)` 文法
+
+# 自下而上解析算法
+
+## 介绍
+
+自下而上算法 `Bottom-up` 相较于自上而下算法适用性更广，是现代解析器首选方案。
+- 性能更好
+- 不需要生产式左因子化
+- 对生产式的限制更低，表达上可以更加人性化一些
+
+自下而上算法是扫描字符串 token，从解析树的叶子结点开始，从下往上还原生产式，直到起始符号停止。将字符串还原成生产式的操作称之为 「归约 `reduce`」，归约与生产 `product` 相对应，是生产的反向操作。
+
+$$
+    \begin{aligned}
+        E \rightarrow& \text{ T + E | T}\\
+        T \rightarrow& \text{ int * T | int | (E)}
+    \end{aligned}
+$$
+
+- 归约：将字符串 token 还原成生产式，例如输入字符串 `int ` 可以反向推理出 $T \rightarrow  \text{ int }$
+- 生产：将生产式展开字符串，例如字符串 `int + int` 的推理展开流程为 $E \rightarrow T + E \rightarrow int  +  E \rightarrow int + T \rightarrow int + int$
 
 
 
+<video src="/image/compiler/reduce.mp4"  controls="controls" width="700" height="400"></video>
+
+
+
+> [!note]
+> 自下而上算法是在反向追踪右推导的生产路径
+
+![alt](../../image/compiler/bottomUp.png)
