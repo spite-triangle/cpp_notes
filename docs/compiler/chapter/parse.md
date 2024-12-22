@@ -197,7 +197,7 @@ $$
 - 叶子结点的中序遍历结果，就是输入的 token 流
 
 
-<video src="/image/compiler/recursiveDescent.mp4"  controls="controls" width="700" height="400"></video>
+<video src="/image/compiler/recursiveDescent.mp4"  controls="controls" width="100%" height="100%"></video>
 
 简单算法实现检测字符串 `( 5 )`
 
@@ -507,12 +507,13 @@ $$
 
 # 自下而上解析算法
 
-## 介绍
 
 自下而上算法 `Bottom-up` 相较于自上而下算法适用性更广，是现代解析器首选方案。
 - 性能更好
 - 不需要生产式左因子化
 - 对生产式的限制更低，表达上可以更加人性化一些
+
+## Reduce
 
 自下而上算法是扫描字符串 token，从解析树的叶子结点开始，从下往上还原生产式，直到起始符号停止。将字符串还原成生产式的操作称之为 「归约 `reduce`」，归约与生产 `product` 相对应，是生产的反向操作。
 
@@ -528,7 +529,7 @@ $$
 
 
 
-<video src="/image/compiler/reduce.mp4"  controls="controls" width="700" height="400"></video>
+<video src="/image/compiler/reduce.mp4"  controls="controls" width="100%" height="100%"></video>
 
 
 
@@ -536,3 +537,171 @@ $$
 > 自下而上算法是在反向追踪右推导的生产路径
 
 ![alt](../../image/compiler/bottomUp.png)
+
+
+## Shift
+
+> [!note]
+> **定理：**执行自下而上算法，若序列 $\alpha \beta \omega$ 的下一步归约为 $X \rightarrow \beta$，则 $\omega$ 必定是终结符，**即最右侧非终结符的右侧应当是终结符**
+
+证明： 当前归约追踪的「右推导」步骤为 $\alpha X \omega \rightarrow \alpha \beta \omega$，若 $\omega$ 不是非终结符，那么当前的右推导应该是 $\omega \rightarrow a_1 \dotsm a_n$，而非 $X \rightarrow \beta$，因此，$\omega$ 必然是终结符，即最右侧非终结符的右侧均是终结符。
+
+
+根据上述定理可知，右推导流程中，最右侧非终结符的右侧均是终结符，即最右侧非终结符右侧的终结符都是最先被推导出来的；此外，归约是对右推导的逆向追踪，也就是说最右侧非终结符右侧的终结符将在后续步骤中被归约处理，**即最右侧非终结符右侧的所有终结符都是自下而上算法还未处理的符号**。根据这一事实，可以将符号序列根据最右侧非终结符位置划分为两部分
+- 左子序列：包含终结符与非终结符，已经被算法处理过
+- 右子序列：全是终结符，未被算法处理
+
+利用符号 $|$ 来标记左右子序列，例如 $\alpha X | \omega$。符号 $|$ 的移动操作则被称之为「移进 `Shift`」：
+- 从左向右移动
+- 每次移动则从右侧序列中读取一个终结符放入左侧序列
+
+## Shift-Reduce 解析
+
+自下而上算法就是通过「移进」与「归约」完成对输入序列的解析
+
+
+
+<video src="/image/compiler/shift-reduce.mp4"  controls="controls" width="100%" height="100%"></video>
+
+
+
+![alt|c,60](../../image/compiler/shift-reduce.png)
+
+
+对于 `Shift-Reduce` 解析存在两个问题
+- `Shift-Reduce Conflict` : 下一步解析操作，无论进行归约还是移进都有正确的生产式能与之对应，可以消除
+- `Reduce-Reduce Conflict` : 下一步归约操作，有两个生产式能与之对应，解析器具有严重错误
+
+## Handle
+
+Shift 与 Reduce 只解释了自下而上算法如何运行，但是并未规定每次操作应当选择 Shift 还是 Reduce 。算法的运行目标：每次执行的 Reduce 操作都能保证最后能够抵达起始符号。
+
+**定义：** 假设右推导流程为
+
+$$
+    S \rightarrow^* \alpha X \omega \rightarrow \alpha \beta \omega
+$$
+
+只要在 $\alpha \beta \omega$ 选择 $X \rightarrow \beta$ 的方式进行 Reduce 操作，便能保证的归约肯定能抵达 $S$，为了标记这里可以执行 Reduce 操作，便将 $\alpha \beta$ 称之为 $\alpha \beta \omega$ 符号序列的句柄 `Handle`，**即 Handle 标记了何处可以执行 Reduce 操作, 只要能正确找到的 Handle 那么就能确定何时应当执行 Redcue 操作**。
+
+> [!note]
+> **定理：** 在 `Shift-Reduce` 解析算法中，`Handle` 只会出现在 $|$ 符号的左侧
+
+
+## Viable
+
+- **可行前缀 `viable prefix`**: 若存在符号 $\omega$ 使得 $\alpha | \omega$ 是 shift-reduce 解析的一个有效环节， 那么 $\alpha$ 则是一个可行前缀。
+    - 可行前缀也是句柄的前缀
+    - $|$ 左侧有可行前缀，就表明当前解析没有出错
+
+>[!note]
+> **定理：** 对于任何语法，可行前缀合集 `viable prefixs set` 是是一类正则语言 `regular language`，即可行前缀合集可以通过有限状态机识别。
+
+
+- **项 `item`**: 生产式的右侧足有一个 `.` 符号，表示生产式右侧有多少符号位于 $|$ 的左侧
+  - $T \rightarrow \text{ (E.)}$ 表示基于 $T \rightarrow \text{ (E)}$ 生产式，解析到 $\beta (E|) \omega$ 的情况
+  - $LR(0)$ 项： $X \rightarrow \varepsilon$ 的项 $X \rightarrow .$
+
+- **有效项 `valid item`**: 根据右推导，若 $S' \rightarrow^* \alpha X \omega \rightarrow \alpha \beta \gamma \omega$ 成立，则 $X \rightarrow \beta . \gamma$ 则称之为有效项
+
+通过 `item` 可以看出 $|$ 的左符号序列存放的都是生产式右侧部分的前缀
+
+$$
+    P_1P_2P_3\dotsm P_n | \omega
+$$
+
+- $P_i$ 是 $X_i \rightarrow \alpha_i$ 中 $\alpha_i$ 的部分前缀，即只要凑齐 $\alpha_i$ 的剩余部分，就能将 $P_i$ 归约为 $X_i$
+- $X_i$ 又是 $X_{i-1} \rightarrow \alpha_{i-1}$ 中 $\alpha_{i-1}$ 的缺失部分， $P_{i-1}X_i$ 又能组成 $\alpha_{i-1}$ 的前缀，最终也能归约成 $X_{i-1}$
+
+**案例：** 基于以下规则解析字符串 `(int * int)`
+
+$$
+    \begin{aligned}
+        E &\rightarrow \text{ T + E | T} \\
+        T &\rightarrow \text{ int * T | int | (E)} 
+    \end{aligned}
+$$
+
+当字符串处于 $\text{(int * | int)}$ 状态时，项的结构为
+1. $T \rightarrow \text{ int * . T}$ : `int *` 是 $T \rightarrow \text{ int * T}$ 的前缀
+1. $E \rightarrow \text{ . T}$ : `ε`  是 $E \rightarrow \text{ T}$ 的前缀
+1. $T \rightarrow \text{ (. E)}$ : `(`  是 $T \rightarrow \text{ ( E)}$ 的前缀
+1. $E \rightarrow \text{ .T}$ : `ε`  是 $E \rightarrow \text{ T}$ 的前缀
+
+按照上述步骤进行归约便能实现对字符串 `int * int` 的 `Shift-Reduce` 解析。
+
+> [!note]
+> **由此可知，识别出 `Viable Prefix` 就能找到有效的 `Handle`**
+
+
+## Viable 状态机
+
+定义新的起始符号 $S'$，其对应的唯一生产式为 $S' \rightarrow S$ 得到语法 $G$。应构造的 NFA 定义如下
+
+- 状态: $G$ 的项 $E \rightarrow \alpha . X \beta$
+- 开始：$S' \rightarrow .S$
+- 转移：$(E \rightarrow \alpha . X \beta) \  \rightarrow^X \ (E \rightarrow \alpha X . \beta)$
+- $\varepsilon$ 转移：当前状态处于 $E \rightarrow \alpha . X \beta$ 且 $X$ 为非终结符，此时需要先处理 $X$ 的状态，才能确定 $E \rightarrow \alpha . X \beta$ 应当转移，即需要从  $E \rightarrow \alpha . X \beta$ 状态切换到 $X \rightarrow . \gamma$ 的状态
+
+$$
+    (E \rightarrow \alpha . X \beta) \ \rightarrow^\varepsilon \ (X \rightarrow . \gamma)
+$$
+
+- 每一个状态都是接受状态
+
+**案例**： 构建 NFA
+
+$$
+    \begin{aligned}
+       S' &\rightarrow \text{ E} \\
+        E &\rightarrow \text{ T + E | T} \\
+        T &\rightarrow \text{ int * T | int | (E)} 
+    \end{aligned}
+$$
+
+<video src="/image/compiler/NFA_viable.mp4"  controls="controls" width="100%" height="100%"></video>
+
+同样也能将 NFA 转换为 DFA
+
+
+![alt](../../image/compiler/DFA_vaible.png)
+
+在 DFA 中的状态被称之为规范项集合 `canonical collections of items` 或 $LR(0)$ 项的规范集合 `canonical collections of LR(0) items`。
+
+## LR(0) 算法
+
+`LR(0)` 算法：用一个栈存储存储 $\alpha | \beta \omega$ 中的 $\alpha$，$t$ 为马上需要被读取的终结符，viable 相关的 DFA 在输入为 $\alpha$ 时，所处的状态为 $s$
+- 归约：若 $s$ 包含项 $X \rightarrow \beta .$，则 $\alpha$ 进行基于 $X \rightarrow \beta$ 的归约操作 
+- 移动：若 $s$ 包含项 $X \rightarrow \beta . t \omega$，则将 $t$ 放入 $\alpha$ 中，且 DFA 也进行相应的状态转移
+
+`LR(0)` 算法存在的问题:
+- `reduce-reduce Conflict` : $s$ 包含 $X \rightarrow \beta.$ 与 $Y \rightarrow \omega. $，无法确定应当进行那个项的归约
+- `reduce-shift Conflict` :  $s$ 包含 $X \rightarrow \beta.$ 与 $Y \rightarrow \omega . t \delta$，无法确定当前是进行归约，还是进行移动 
+
+
+## SLR 算法
+
+`SLR` 算法：用一个栈存储存储 $\alpha | \beta \omega$ 中的 $\alpha$，$t$ 为马上需要被读取的终结符，viable 相关的 DFA 在输入为 $\alpha$ 时，所处的状态为 $s$
+- 归约：若 $t \in Follow(X)$ 且 $s$ 包含项 $X \rightarrow \beta .$，则 $\alpha$ 进行基于 $X \rightarrow \beta$ 的归约操作 
+- 移动：若 $s$ 包含项 $X \rightarrow \beta . t \omega$，则将 $t$ 放入 $\alpha$ 中，且 DFA 也进行相应的状态转移
+
+
+
+`SLR` 算法是对 `LR(0)` 算法的改进，唯一区别就是对「归约」操作增加了一个判断条件 $t \in Follow(X)$。
+
+
+**解析处理流程：**
+
+![alt|l,50](../../image/compiler/SLR_parsing.png)
+
+> [!note]
+> - 检查 DFA 状态图，若结点中出现任何冲突，那么定义的文法不属于 `SLR(k)`，解析算法失效。
+> - 实际使用的文法规则是 `LR(1)`
+
+
+
+
+
+
+
+
