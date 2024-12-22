@@ -694,10 +694,35 @@ $$
 
 ![alt|l,50](../../image/compiler/SLR_parsing.png)
 
-> [!note]
-> - 检查 DFA 状态图，若结点中出现任何冲突，那么定义的文法不属于 `SLR(k)`，解析算法失效。
-> - 实际使用的文法规则是 `LR(1)`
+上述 `SLR` 算法放入的栈中的元素 $\alpha$ 是生产式右侧符号的 `viable prefix`。当进行一次归约操作后，就需要从栈底开始重新执行 DFA 状态机，获取归约后新的 $\alpha'$ 所对应的状态。归约操作只修改了栈顶元素，这状态机对栈的遍历就存在大量重复操作，因此可以对栈结构进行优化，栈不仅存储符号，还要存储符号输入时 DFA 所处状态。
 
+![alt|c,60](../../image/compiler/SLR_code.png)
+
+
+- $goto[i,A] = j$ 描述 $state_i \rightarrow^A state_j$，表示 DFA 的在 $A$ 输入下的状态转移
+- $action$ 定义在状态 $s_i$ 与输入终结符 $a$ 情况下，应当采取何种操作
+  - 若 $s_i$ 包含 $X \rightarrow \alpha . a \beta$ 且 $goto[i,a] = j$，则 $action[i,a] = shift \ j$
+  - 若 $s_i$ 包含 $X \rightarrow \alpha . \ , X \neq S'$ 且 $a \in Follow(X)$，则 $action[i,a] = reduce \ X \rightarrow \alpha$
+  - 若 $s_i$ 包含 $S' \rightarrow S$ ， 则 $action[i, \$] = accept$
+  - 其他情况，$action[i,a] = error$
+
+
+
+> [!note]
+> 检查 DFA 状态图，若结点中出现任何冲突，那么定义的文法不属于 `SLR`，解析算法失效。
+
+## LR(k) 算法
+
+
+`LR(k)` 算法：用一个栈存储存储 $\alpha | \beta \omega$ 中的 $\alpha$，$t$ 为马上需要被读取的终结符，viable 相关的 DFA 在输入为 $\alpha$ 时，所处的状态为 $s$
+- 归约：若 $[X \rightarrow \beta .  , T]$ (表示 $s_i$ 包含 $X \rightarrow \alpha .$ 且 $a \in T$ )，则 $\alpha$ 进行基于 $X \rightarrow \beta$ 的归约操作 
+- 移动：若 $s$ 包含项 $X \rightarrow \beta . t \omega$，则将 $t$ 放入 $\alpha$ 中，且 DFA 也进行相应的状态转移
+
+`LR(k)` 相比于 `SLR` 的改动也是归约条件，集合 $T$ 的定义将比 $Follow(X)$ 更加精确，且 `k` 表示 $\alpha$ 的字符数量，例如 `LR(1)` 表示 $len(a) == 1$。
+
+> [!note]
+> - `LR(k)` 更加通用，可以使用 `yacc` 工具创建。
+> - `LR(1)` 会被进一步优化，得到 `LALR(1)`
 
 
 
