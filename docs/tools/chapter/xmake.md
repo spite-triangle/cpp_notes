@@ -127,7 +127,9 @@ target("demo")
 triangle@LEARN:~$ xmake f --test=y
 triangle@LEARN:~$ xmake
 ```
-# 配置项
+# 配置
+
+## 常用配置
 
 ```lua
 -- 设置工程名
@@ -165,6 +167,31 @@ del_files("src/test.c")
 -- target 保存路径
 set_targetdir("/tmp/build")
 ```
+
+>[!note]
+> 除了 `Qt`，不要往 `add_files` 中添加 `.h` 文件
+
+## 依赖配置
+
+```lua
+target("library1")
+    set_kind("static")
+    add_files("*.c")
+    -- 默认不对外暴露头文件路径，library2 不会查找头文件路径 inc
+    add_includedirs("inc")
+    -- 暴露头文件路径 , test 与 library2 会查找头文件路径 inc1
+    add_includedirs("inc1", {public = true}) 
+
+target("library2")
+    set_kind("static")
+    add_deps("library1")
+    add_files("*.c")
+
+target("test")
+    set_kind("binary")
+    add_deps("library2")
+```
+
 
 # 模式
 

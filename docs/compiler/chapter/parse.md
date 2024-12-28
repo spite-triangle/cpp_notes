@@ -197,7 +197,7 @@ $$
 - 叶子结点的中序遍历结果，就是输入的 token 流
 
 
-<video src="/image/compiler/recursiveDescent.mp4"  controls="controls" width="100%" height="100%"></video>
+<video src="./image/compiler/recursiveDescent.mp4"  controls="controls" width="100%" height="100%"></video>
 
 简单算法实现检测字符串 `( 5 )`
 
@@ -529,7 +529,7 @@ $$
 
 
 
-<video src="/image/compiler/reduce.mp4"  controls="controls" width="100%" height="100%"></video>
+<video src="./image/compiler/reduce.mp4"  controls="controls" width="100%" height="100%"></video>
 
 
 
@@ -561,7 +561,7 @@ $$
 
 
 
-<video src="/image/compiler/shift-reduce.mp4"  controls="controls" width="100%" height="100%"></video>
+<video src="./image/compiler/shift-reduce.mp4"  controls="controls" width="100%" height="100%"></video>
 
 
 
@@ -659,7 +659,7 @@ $$
     \end{aligned}
 $$
 
-<video src="/image/compiler/NFA_viable.mp4"  controls="controls" width="100%" height="100%"></video>
+<video src="./image/compiler/NFA_viable.mp4"  controls="controls" width="100%" height="100%"></video>
 
 同样也能将 NFA 转换为 DFA
 
