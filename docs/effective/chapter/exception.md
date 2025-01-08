@@ -218,8 +218,8 @@ catch(int e)
 
 # 退出方式
 
-![alt|c,75](../../image/theory/exit.png)
 
+![alt|c,75](../../image/tools/exit.png)
 
 - **std::exit：** 用于正常流程退出，由用户显式调用。main 函数返回，也是调用这个
 - **std::abort：** 终止进程
