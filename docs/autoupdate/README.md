@@ -1,5 +1,5 @@
 
-<h1 style="text-align:center;font-size:60px;font-weight:bold;font-family:宋体">更新框架</h1>
+<h1 style="text-align:center;font-size:60px;font-weight:bold;font-family:宋体">自动更新</h1>
 
 <style>
     #btn{
