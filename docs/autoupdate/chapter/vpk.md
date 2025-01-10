@@ -17,4 +17,4 @@
     - `cli-windows-x64.zip` : 命令行工具
     - `Source2Viewer.exe` : 可视化工具
 
-![alt](../../image/autoupdate/Source2Viewer.png)
+![alt|c,40](../../image/autoupdate/Source2Viewer.png)
