@@ -272,6 +272,7 @@ triangle@LEARN:~$ bl // 断点展示
 
 ```term
 triangle@LEARN:~$ k* // 展示栈的信息
+triangle@LEARN:~$ dt // 查看变量
 ```
 
 ## 路径设置
