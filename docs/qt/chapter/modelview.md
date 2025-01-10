@@ -679,4 +679,135 @@ int main(){
 > [!note]
 > 当数据量过大，达到百万量级时，通过 `QSortFilterProxyModel` 实现数据筛选与排序存在性能问题，需要额外优化。
 
+# drag/drop
 
+## 概念
+
+- `drag` ：拖拽组件移动
+- `drop` : 将组件放置到目标位置
+
+## model
+
+
+```cpp
+class QAbstractTableModel{
+public:
+    /* 需要启用单元格的 Qt::ItemIsDropEnabled | Qt::ItemIsDragEnabled 权限 */
+    Q_INVOKABLE virtual Qt::ItemFlags flags(const QModelIndex &index) const;
+
+    /* 操作控制 */
+    virtual Qt::DropActions supportedDropActions() const;
+
+    // supportedDragActions 会直接使用 supportedDropActions 返回值
+    // virtual Qt::DropActions supportedDragActions() const;
+
+    /* 数据类型控制
+        mimeType 表示一类数据类型的统称，例如 png、jpg、ico 等格式都是图片，那么就可以使用 `image/*` 这个 mimeType 类型进行统称。
+        - `text/*` : 文本类
+            - `text/plain`: 纯文本
+            - `text/html` : html 格式文本
+        - `image/*` : 图片类
+    */
+    virtual QStringList mimeTypes() const{
+        QStringList mimes = QAbstractTableModel::mimeTypes();
+
+        // 自定义一个数据类型
+        mimes << "text/rows" ;
+        return mimes;
+    }
+
+    /* drag 时会携带的数据 */
+    virtual QMimeData *mimeData(const QModelIndexList &indexes) const{
+        auto data = QAbstractTableModel::mimeData(indexes);
+        if(data == nullptr) return data;
+
+        QString strRows;
+        for (auto & index : indexes)
+        {
+            strRows +=  QString::number(index.row()) + ",";
+        }
+        if(strRows.endsWith(",")){
+            strRows.chop(1);
+        }
+
+        // drag 时携带的数据
+        data->setData("text/rows", strRows.toLocal8Bit());
+
+        return data;
+    }
+
+    /* 控制是否可以 drop 
+        - parent : item 被放置位置的父节点
+        - row, column: 
+            - < 0 : item 是 parent 的第一个节点
+            - >= 0: item 被放置在 row, column 位置前面
+    */
+    virtual bool canDropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) const{
+        // 简单控制，不放置其他子节点下面
+        return (row < 0 || column < 0)? false : true;
+    }
+
+    /* 根据 drop 结果，更新 model 数据
+        - parent : item 被放置位置的父节点
+        - row, column: 
+            - < 0 : item 是 parent 的第一个节点
+            - >= 0: item 被放置在 row, column 位置前面
+     */
+    virtual bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent);
+
+};
+```
+
+## view
+
+```cpp
+class QAbstractItemView{
+
+public:
+
+    /* drag 与 drop 相关设置 */
+    void setDropIndicatorShown(bool enable);
+    bool showDropIndicator() const;
+
+    void setDragEnabled(bool enable);
+    bool dragEnabled() const;
+
+    void setDragDropOverwriteMode(bool overwrite);
+    bool dragDropOverwriteMode() const;
+
+    enum DragDropMode {
+        NoDragDrop,
+        DragOnly,
+        DropOnly,
+        DragDrop,
+        InternalMove
+    };
+    Q_ENUM(DragDropMode)
+
+    void setDragDropMode(DragDropMode behavior);
+    DragDropMode dragDropMode() const;
+
+    void setDefaultDropAction(Qt::DropAction dropAction);
+    Qt::DropAction defaultDropAction() const;
+
+protected:
+    /* NOTE - 若有特殊需求可单独定制 drag 与 drop 行为，否则使用默认实现即可 */
+    virtual void startDrag(Qt::DropActions supportedActions);
+    void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
+    void dragMoveEvent(QDragMoveEvent *event) Q_DECL_OVERRIDE;
+    void dragLeaveEvent(QDragLeaveEvent *event) Q_DECL_OVERRIDE;
+    void dropEvent(QDropEvent *event) Q_DECL_OVERRIDE;
+};
+
+void init(QAbstractItemView * view){
+    /* 设置 drop 与 drag */
+    view->setDragEnabled(true);
+    view->setDefaultDropAction(Qt::MoveAction);
+    view->setDragDropMode(QAbstractItemView::InternalMove);
+
+    /* 控制单元格如何被选中 */
+    view->setSelectionBehavior(QAbstractItemView::SelectRows);
+    view->setSelectionMode(QAbstractItemView::SingleSelection);
+}
+
+```
