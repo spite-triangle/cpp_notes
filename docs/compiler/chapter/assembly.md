@@ -1,4 +1,4 @@
-# 代码生成
+# 生成汇编
 
 # 环境描述
 
@@ -234,7 +234,7 @@ Class C inherits A {
 };
 ```
 
-## 实例内存结构
+## 类属性
 
 根据类对象创建出来存储在内存中的变量被称之为「实例 `instance`」或「对象 `object`」。通过实例访问属性的方式 `obj.a` 其本质就是内存偏移，首先查询到实例 `obj` 所在内存的首地址，然后加上属性 `a` 相对于首地址的便宜量 `obj + offset(a)` 即可访问到属性。因此，实现实例的关键就在于内存结构
 - 实例被存储在一片连续的内存上
@@ -249,4 +249,34 @@ Class C inherits A {
 - `Object Size` : 对象占用内存的大小
 - `Dispatch Ptr` : 调度指针，指向方法表的地址
 - `Attribute` : 类属性
+
+
+对于子类而言，就是在父类内存布局之后追加子类的属性
+
+![alt|c,60](../../image/compiler/inherite_memory.png)
+
+对于多层继承也是一样处理
+
+
+![alt|c,40](../../image/compiler/inherite_memory1.png)
+
+## 类方法
+
+```python
+class A:
+    def __init__(self):
+        self.data = 0
+
+    def fcn(self, arg1,arg2):
+        self.data = arg1 + arg2
+```
+
+类成员函数与普通函数的唯一区别：类成员函数会传递一个 `self/this` 的形参，例如 `python` 中需要显示的定义 `self` ，而 `c++`，`java` 中则是由编译器隐式添加 `this`。通过 `self/this` 便能将类对象实例传入类成员方法。由此可知，类成员方法其实是对所有实例均是通用的，不同实例调用成员方法，只要修改 `sefl/this` 就行，因此，在汇编层面类方法是通过一个固定的表结构进行管理。方法调用 `obj.f()` 的工作原理便是
+- 通过 `obj.dispatchPtr` 访问方法表
+- 再通过预先规定好的偏移量 `offset` 跳转到函数 `f()` 地址，即 `obj.dispatchPtr + offset`
+- 调用 `f()` 函数时，会将 `obj` 的地址赋值给 `self` 参数（也称之为绑定到 `self`）
+
+类成员方法表与属性的内存布局类似，父类的方法的地址存放在表的前面，子类的方法地址往后放。实现子类 `override` 父类方法，只需将子类的方法地址覆盖父类的地址即可。
+
+![alt|c,40](../../image/compiler/inherite_memory2.png)
 

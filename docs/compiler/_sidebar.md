@@ -6,6 +6,7 @@
 - [第三章 词法分析](compiler/chapter/lexicalAnalysis.md)
 - [第四章 语法分析](compiler/chapter/parse.md)
 - [第五章 运行时结构](compiler/chapter/runtime.md)
+- [第六章 生成汇编](compiler/chapter/assembly.md)
 
 
 
