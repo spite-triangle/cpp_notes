@@ -4,6 +4,38 @@
 
 [WinSparkle](https://github.com/vslavik/winsparkle) 是 MAC 系统自动更新框架 [Sparkle](https://sparkle-project.org/) 框架的仿造版本，使用  `Appcast` 配置文件维护版本。其功能十分简单只实现了发布与更新，未集成任何打包与部署能力，此外对 Sparkle 的功能也未完全支持。
 
+# 下载
+
+直接在 [WinSparkle](https://github.com/vslavik/winsparkle) 的 Github 仓库就能下载编译好的库文件，且要使用 `generate_keys.bat`  与 `sign_update.bat` 还需下载 [openssl](https://www.openssl.org/source/)。
+
+```term
+triangle@LEARN:~$ D:\WORKSPACE\WINSPARKLE-0.8.3
+│
+│
+├─bin
+│      generate_keys.bat        # DSA 公匙与私匙生成脚本
+│      sign_update.bat          # 签名脚本
+│
+├─include                       # 头文件
+│      winsparkle-version.h
+│      winsparkle.h
+│
+├─Release                       # 32 位动态库
+│      WinSparkle.dll
+│      WinSparkle.lib
+│      WinSparkle.pdb
+├─ARM64                         # arm64 动态库
+│  └─Release
+│          WinSparkle.dll
+│          WinSparkle.lib
+│          WinSparkle.pdb
+└─x64                           # 64 位动态库
+    └─Release
+            WinSparkle.dll
+            WinSparkle.lib
+            WinSparkle.pdb
+```
+
 # 使用
 
 1. 生成 DSA 公匙与私匙
@@ -81,11 +113,11 @@
     END
     ```
 
-4. 使用打包工具 (官方推荐 `NuGet`) 对应用程序进行打包，得到安装包 `setup.exe`
+4. 可以使用 [Wix tool](https://wixtoolset.org/docs/wix3/) 得到安装包 `setup.msi`
 5. 对安装包使用 DSA 进行签名
 
     ```term
-    triangle@LEARN:~$ sign_update.bat setup.exe dsa_priv.pem
+    triangle@LEARN:~$ sign_update.bat setup.msi dsa_priv.pem
     ```
 
 6. 配置 `appcast.xml` 文件，实现版本发布
@@ -107,9 +139,9 @@
                 <pubDate>Fri, 06 Feb 2016 22:49:00 +0100</pubDate>
                 <!-- 
                     url: 安装包下载链接
-                    dsaSignature: 通过 sign_update.bat 生成的 setup.exe 签名
+                    dsaSignature: 通过 sign_update.bat 生成的 setup.msi 签名
                  -->
-                <enclosure url="https://your_domain/your_path/setup.exe"
+                <enclosure url="https://your_domain/your_path/setup.msi"
                         sparkle:dsaSignature="MEQCICh10SofkNHa5iJgVWDi2O8RBYyN+nxkFEL7u/tBuWboAiB6VOV/WQMRJE+kRoICZXAhq5b24WkgqcDs0z7gyBkGVw=="
                         length="0"
                         type="application/octet-stream" />
@@ -117,3 +149,8 @@
         </channel>
     </rss> 
     ```
+7. 目标程序中执行 `win_sparkle_check_update_with_ui()` 便会检测更新，若存在更新会弹出对话框
+
+    ![alt|c,70](../../image/autoupdate/winsparkle_updates.png)
+
+8. 点击 `Install update` 后，默认会将安装包 `setup.msi` 下载到 `%temp%` 文件夹下，并启动。

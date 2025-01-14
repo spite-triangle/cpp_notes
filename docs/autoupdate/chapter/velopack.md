@@ -5,7 +5,7 @@
 [velopack](https://github.com/velopack/velopack) 是最新出厂且最为通用的自动更新框架，基于 `NuGet` 包管理器实现，支持 `windows`、`linux` 、`OSX`平台，且适用于 `c#`、`c/c++`、`js`、`rust` 语言开发的应用程序。
 
 
-# vpk 安装
+# 安装
 
 >[!note]
 > `velopack` 自己实现了打包工具 `vpk` ，并不是 valve 公司开发的 `vpk` 工具。
@@ -95,5 +95,6 @@
         ├── demo-win-Portable.zip
         └── demo-win-Setup.exe          # 安装器
     ```
-    
-4. 将发布文件夹 `Releases` 部署到服务上，且能让客户端访问该文件夹 `https://localhost:8080/Release/`
+4. 点击 `demo-win-Setup.exe`  软件将被安装到 `%LocalAppData%\project_name` 目录下
+5. 将发布文件夹 `Releases` 部署到服务上，且能让客户端访问该文件夹 `https://localhost:8080/Release/`
+6. 在应用程序中调用 `update_app()` 便能实现更新检测
