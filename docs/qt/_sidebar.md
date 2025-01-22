@@ -11,6 +11,7 @@
 - [第八章 QCustomPlot](qt/chapter/qcustomplot.md)
 - [第九章 QPainter](qt/chapter/qpainter.md)
 - [第十章 QWebEngine](qt/chapter/qwebengine.md)
-- [第十一章 QML](qml/README.md)
+- [第十一章 QLayout](qt/chapter/layout.md)
+- [第十二章 QML](qml/README.md)
 
 
