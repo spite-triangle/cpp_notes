@@ -1,13 +1,13 @@
 
 - **编译原理**
 - [目录](compiler/README.md)
-- [第一章 简介](compiler/chapter/inroduction.md)
+- [第一章 简介](compiler/chapter/introduction.md)
 - [第二章 cool](compiler/chapter/cool.md)
 - [第三章 词法分析](compiler/chapter/lexicalAnalysis.md)
 - [第四章 语法分析](compiler/chapter/parse.md)
-- [第五章 运行时结构](compiler/chapter/runtime.md)
-- [第六章 生成汇编](compiler/chapter/assembly.md)
-
-
-
-
+- [第五章 语义分析](compiler/chapter/semanticAnasys.md)
+- [第六章 运行时结构](compiler/chapter/runtime.md)
+- [第七章 生成汇编](compiler/chapter/assembly.md)
+- [第八章 操作语义](compiler/chapter/operationalSemantics.md)
+- [第九章 代码优化](compiler/chapter/optimization.md)
+- [第十章 内存管理](compiler/chapter/memoryManager.md)
