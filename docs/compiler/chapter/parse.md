@@ -87,7 +87,7 @@ $$
 
     ![alt|c,20](../../image/compiler/leftmost.png)
 
-- 右推导 `left-most derivation` :  生产式每一步展开，都先替换最右边的非终止符号
+- 右推导 `right-most derivation` :  生产式每一步展开，都先替换最右边的非终止符号
 
     ![alt|c,20](../../image/compiler/rightmost.png)
 
@@ -110,11 +110,6 @@ $$
     \end{aligned}
 $$
 
-且 $E \rightarrow E' + E$ 实现了递归
-
-$$
-    E \rightarrow E' + E \rightarrow E' + E' + E \rightarrow E' + E' + E' + E \rightarrow \dotsm 
-$$
 
 **案例二**: $E \rightarrow \text{if E then E | if E then E else E | OTHER}$ 解析条件判断，对于字符串
 
@@ -249,9 +244,9 @@ private:
     }
     bool E(){
         // 使用 save 实现了回溯
-        auto save = next;
-        return (next = save, E1())
-            || (next = save, E2());
+        auto save = m_next;
+        return (m_next = save, E1())
+            || (m_next = save, E2());
     }
 
     /* 
@@ -263,10 +258,10 @@ private:
     bool T2() { return term(INT) && term(PLUS) && T(); }
     bool T3() { return term(OPEN) && E() && term(CLOSE); }
     bool T(){
-        auto save = next;
-        return (next = save, T1())
-            || (next = save, T2())
-            || (next = save, T3());
+        auto save = m_next;
+        return (m_next = save, T1())
+            || (m_next = save, T2())
+            || (m_next = save, T3());
     }
 
     // 输入 type 与当前的 token 类型是否匹配
@@ -301,7 +296,7 @@ bool S(){
         || (next = save, S2());
 }
 ```
-从 $S$ 进入，就会产生 `S() -> S1() -> S() -> S1() -> ...` 死循环调用。 $S \rightarrow S \alpha | \beta$ 描述的推导流程是 $S \overset{*}{\rightarrow} \beta \alpha \dotsm \alpha$，采用左递归的推导方式，是从右向左生成字符串，因此，要解决该问题只要从左向右生成字符串就行，即改写为右递归 `right recursion`
+从 $S$ 进入，就会产生 `S() -> S1() -> S() -> S1() -> ...` 死循环调用。 $S \rightarrow S \alpha | \beta$ 描述的推导流程是 $S \overset{*}{\rightarrow} \beta \alpha \dotsm \alpha$，采用左递归的方式，是从右向左生成字符串，因此，要解决该问题只要从左向右生成字符串就行，即改写为右递归 `right recursion`
 
 $$
     \begin{aligned}
@@ -333,8 +328,8 @@ $$
     E \rightarrow& \text{ T + E | T} \\
     T \rightarrow& \text{ int | int * T | (E)} \\
 \end{aligned}
-
 $$
+
 - `int * int` : 对于 $T$ 而言， $T \rightarrow \text{ int | int * T }$ 都可以匹配字符串，若选择 $ T \rightarrow \text{ int}$ 将导致字符串将匹配失败
 - `int + int` : 对于 $E$ 而言，$E \rightarrow \text{ T + E | T}$ 均能匹配字符串，若选择 $E \rightarrow \text{T} $ 也将导致字符串匹配失败
 

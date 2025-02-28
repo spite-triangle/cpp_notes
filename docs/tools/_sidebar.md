@@ -20,6 +20,7 @@
     - [graphviz](tools/chapter/graphviz.md)
     - [graph-easy](tools/chapter/grapheasy.md)
 - **开发工具**
-    - [wsl](tools/chapter/wsl.md)
+    - [WSL](tools/chapter/wsl.md)
     - [Doxygen](tools/chapter/doxygen.md)
+    - [PyAEDT](tools/chapter/pyaedt.md)
 
