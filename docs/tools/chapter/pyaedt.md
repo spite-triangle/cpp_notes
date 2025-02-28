@@ -105,9 +105,7 @@ triangle@LEARN:~$ pip install pyaedt
 
 通过 AEDT 界面操作实现一个简单的 HFSS 天线仿真案例
 
-1. 创建工程
-    - `1` 创建 `project`
-    - `2` 创建 `design`，包含 `Icepak`、`HFSS` 等
+1. 创建工程。`1` 创建 `project`；`2` 创建 `design`，包含 `Icepak`、`HFSS` 等
     ![alt|c,50](../../image/tools/hfss_1.png)
 
 2. 设置求解模型
