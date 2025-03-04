@@ -11,8 +11,9 @@
   - [Web 开发](webDevelop/README.md)
   - [多媒体](Media/README.md)
 - **框架组件**
-  - [MFC](./mfc/README.md)
   - [Qt](./qt/README.md)
+  - [MFC](./mfc/README.md)
+  - [分布式集群](./distributeCluster/README.md)
   - [自动更新](./autoupdate/README.md)
   - [测试工具](./testTools/README.md)
   - [第三方工具](ThirdLib/README.md) 

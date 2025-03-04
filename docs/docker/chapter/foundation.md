@@ -19,6 +19,7 @@
 ## 下载
 
 根据 [官方文档](https://docs.docker.com/get-docker/) 文档可以快速进行下载安装。
+- [4.20.0 之前的历史版本](https://gist.githubusercontent.com/kupietools/2f9f085228d765da579f0f0702bec33c/raw/a5259781de36d99de7695495b3c0eaa851074ec1/Docker%2520Desktop%2520v%25204.0.0%2520thru%25204.22.1%2520direct%2520download%2520links)
 
 > [!note]
 > [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install) 在安装好「内核」后，推荐安装 [Docker Desktop on Windows](https://docs.docker.com/desktop/install/windows-install/)。在 `WSL2` 中能直接使用 `windows` 版的 Docker
