@@ -123,6 +123,17 @@ elif async_result.status == 'STARTED':
 
 将 `worker` 使用包进行管理，而非一个 `.py` 文件
 
+```term
+triangle@LEARN:~$ tree .
+.
+├── demo.py
+└── celery_workers
+    ├── __init__.py
+    ├── worker01.py
+    ├── worker02.py
+    └── celery.py
+```
+
 ### worker 创建
 
 - **`worker01.py`**
