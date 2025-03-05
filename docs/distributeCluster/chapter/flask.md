@@ -50,7 +50,7 @@ triangle@LEARN:~$ tree .
 - **参数**
 - **锚点** ： 资源内部的位置标记，例如文档中的书签
 
-## 路由
+## 视图/路由
 
 - **路径**
 
@@ -58,6 +58,7 @@ triangle@LEARN:~$ tree .
 app = Flask(__name__)
 
 # 将 URL 上的「路径」绑定到一个处理函数上
+# 该函数就被称之为「视图函数」
 @app.route('/')
 def hello_world():
     return 'hello world'
@@ -93,6 +94,43 @@ def message_get():
 def message_get():
     json = request.json
     return f'id is {json}'
+```
+
+## 上下文
+
+在`Flask`中，对一个请求进行处理时，视图函数一般都会需要请求参数、配置等对象。但是不能所有参数都一层一层地传递到视图函数中使用，因此，设计出了上下文机制（比如 `request` 就是上下文变量），通过上下文便能快速访问到当前允许使用的一些环境对象。主要有两种上下文
+- 请求上下文
+  - `request` : 封装请求报文数据
+  - `session` : 用来记录请求会话中的信息，针对的是用户信
+- 应用上下文
+  - `current_app` : 表示当前运行的 Flask 应用实例
+  - `g` : 是一个临时变量，用于在一次请求的多个函数间传递数据。每次请求都会重设这个变量
+
+
+```python
+from flask import Flask, request, session, current_app, g
+
+app = Flask(__name__)
+app.secret_key = 'supersecretkey'
+
+@app.route('/')
+def index():
+    user = request.args.get('user')
+    session['user'] = user
+    g.user = user
+    return f'Hello, {user}!'
+
+@app.route('/current_app')
+def show_current_app():
+    return f'Current app name: {current_app.name}'
+
+@app.route('/g')
+def show_g():
+    # 这里会抛异常，因为当前请求没有定义 'g.user'
+    return f'g.user: {g.user}'
+
+if __name__ == '__main__':
+app.run(debug=True)
 ```
 
 # Jinja2
@@ -409,6 +447,7 @@ triangle@LEARN:~$
 
 ```term
 triangle@LEARN:~$ pip install flask-sqlalchemy
+triangle@LEARN:~$ pip install psycopg2-binary // 安装 pgsql 驱动
 ```
 
 ## 连接
@@ -425,6 +464,141 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # 连接数据库
 db = SQLAlchemy(app)
+```
+
+## ORM 模型
+
+**对象关系映射 `Object Relational Mapping (ORM)`** : 是一种为了解决面向对象与关系数据库存在的互不匹配的现象的技术，即通过对象来完成数据库操作。`ORM` 框架是连接数据库的桥梁，只要提供了持久化类与表的映射关系，`ORM` 框架在运行时就能参照映射文件的信息，把对象持久化到数据库中。
+- `ORM` 类对应数据库中的一张表
+- `ORM` 类属性对应表中的字段
+- `ORM` 类实例对应表中的一条记录
+
+```python
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+
+app = Flask(__name__)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:1234@127.0.0.1:5432/postgres'
+
+# 连接数据库
+db = SQLAlchemy(app)
+
+# 创建 ORM 类
+class User(db.Model):
+    __tablename__ = 'demo_user' # 表名
+    # 主键
+    id = db.Column(db.Integer, primary_key = True, autoincrement=True)
+    # varchar
+    name = db.Column(db.String(100), nullable=False)
+
+# 手动创建一个程序上下文，db 执行依赖 `app_context`
+with app.app_context():
+    db.create_all() # 创建表
+
+@app.route('/add')
+def add():
+    user = User(name='demo')
+    # 事务操作
+    db.session.add(user) # 添加会话
+    db.session.commit() # 提交
+
+    # 回滚
+    # db.session.rollback()
+    return "add"
+
+@app.route('/query')
+def query():
+    # 根据主键查找
+    user = User.query.get(1)
+    print(f'{user.id}, {user.name}')
+
+    # 过滤查找
+    users = User.query.filter_by(name = 'demo')
+    for user in users:
+        print(f'{user.id}, {user.name}')
+
+    # 查所有
+    User.query.all()
+    return "query"
+
+@app.route("/update")
+def update():
+
+    user = User.query.get(1)
+    user.name = 'demo1'
+
+    db.session.commit() # 不需要再添加
+    return 'update'
+
+@app.route("/delete")
+def delete():
+
+    user = User.query.get(1)
+    user.name = 'demo1'
+    # 删除
+    db.session.delete(user)
+    # 同步
+    db.session.commit()
+    return 'delete'
+
+if __name__ == '__main__':
+    app.run(debug=False,host='0.0.0.0',port=2333)
+```
 
 
+## 外键与关系
+
+- **正向关联** ： 通过 `book` 查找 `user`
+
+```python
+class User(db.Model):
+    __tablename__ = 'demo_user' # 表名
+    # 主键
+    id = db.Column(db.Integer, primary_key = True, autoincrement=True)
+    # varchar
+    name = db.Column(db.String(100), nullable=False)
+
+class Book(db.Model):
+    __tablename__ = 'demo_user' # 表名
+    # 主键
+    id = db.Column(db.Integer, primary_key = True, autoincrement=True)
+    # varchar
+    name = db.Column(db.String(100), nullable=False)
+
+    # 外键
+    author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    # 根据外键获取 user 表中的对象
+    author = db.relationship('User')
+
+```
+
+- **反向关联** : 在正向关联的基础上，可以查找所有关联了 `user` 的 `book`
+
+```python
+class User(db.Model):
+    __tablename__ = 'demo_user' # 表名
+    # 主键
+    id = db.Column(db.Integer, primary_key = True, autoincrement=True)
+    # varchar
+    name = db.Column(db.String(100), nullable=False)
+
+    # 查找所有关联了当前 user 的 book
+    books = db.relationship("Book", back_populates = 'author')
+
+class Book(db.Model):
+    __tablename__ = 'demo_book' # 表名
+    # 主键
+    id = db.Column(db.Integer, primary_key = True, autoincrement=True)
+    # varchar
+    name = db.Column(db.String(100), nullable=False)
+
+    # 外键
+    author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    # 根据外键获取 user 表中的对象
+    # 利用 back_populates 实现反向关联
+    author = db.relationship('User'， back_populates='books')
+
+    # 通过 backref 简写，可以不写 ` books = db.relationship("Book", back_populates = 'author')`
+    author = db.relationship('User'， backref ='books')
 ```
