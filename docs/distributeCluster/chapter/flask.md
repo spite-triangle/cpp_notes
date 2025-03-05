@@ -327,3 +327,104 @@ app.add_template_filter(custom_filter,'custom')
     {{ line }}
 {% endfor %}
 ```
+
+## 模板继承
+
+**模板继承** ： 先搭建一个框架界面作为父界面，然后继承父界面，在子界面中实现存在差异的控件，从而实现父界面上的控件公用。
+
+- **`base.html`**
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- 使用 block 定义名为 tile 的空区域，在子界面中实现 -->
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+
+{% block body %}
+{% endblock %}
+
+</body>
+</html>
+```
+
+- **`child.html`**
+
+```html
+<!-- 继承父模板 -->
+{% extends "base.html" %}
+
+<!-- 会替换父模板中的 title block  -->
+{% block title %}
+子模板标题
+{% endblock %}
+
+{% block body %}
+子模板内容
+{% endblock %}
+```
+
+## 静态文件
+
+网页中的 `css`、`JavaScript`、图片等在 `Jinja2` 中都属于静态文件，存放到 `static` 文件夹下。
+
+```term
+triangle@LEARN:~$ 
+├── static
+│   ├── css
+│   │   └── styles.css
+│   └── images
+│       └── image.jpg
+    ...
+```
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- 使用 block 定义名为 tile 的空区域，在子界面中实现 -->
+    <title>静态文件</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'css/styles.css') }}">
+</head>
+<body>
+
+<!-- 
+    1. 'url_for()' 加载 url
+    2. 'filename' : 填写相对于根目录 `static/` 的相对路径
+ -->
+<img src="{{ url_for('static', filename='images/image.jpg') }}" >
+
+</body>
+</html>
+```
+
+# 数据库
+
+
+## 安装
+
+```term
+triangle@LEARN:~$ pip install flask-sqlalchemy
+```
+
+## 连接
+
+```python
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+
+app = Flask(__name__)
+
+# 配置 pgsql
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:1234@127.0.0.1:5432/postgres'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# 连接数据库
+db = SQLAlchemy(app)
+
+
+```
