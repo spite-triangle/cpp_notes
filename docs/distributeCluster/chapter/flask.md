@@ -133,6 +133,8 @@ if __name__ == '__main__':
 app.run(debug=True)
 ```
 
+
+
 # Jinja2
 
 ## 变量
@@ -601,4 +603,155 @@ class Book(db.Model):
 
     # 通过 backref 简写，可以不写 ` books = db.relationship("Book", back_populates = 'author')`
     author = db.relationship('User'， backref ='books')
+```
+
+## 模型迁移
+
+- **`SQLAlchemy` 接口** ： **不推荐使用**
+
+```python
+
+# NOTE - 只会创建一次表，若检测到表存在便不会执行，因此无法实现字段的增删
+with app.app_context():
+    db.create_all() 
+```
+
+- **`Migrate` 接口**
+
+```term
+triangle@LEARN:~$ pip install flask-migrate
+```
+
+```python
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+
+app = Flask(__name__)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:1234@127.0.0.1:5432/postgres'
+
+# 连接数据库
+db = SQLAlchemy(app)
+
+# 导入 Migrate 工具
+migrate = Migrate(app, db)
+
+# 创建 ORM 类
+class User(db.Model):
+    __tablename__ = 'demo_user' # 表名
+    # 主键
+    id = db.Column(db.Integer, primary_key = True, autoincrement=True)
+    # varchar
+    name = db.Column(db.String(100), nullable=False)
+```
+
+```term
+triangle@LEARN:~$ flask db init // 初始化 Migrate 迁移项目，只用调用一次
+triangle@LEARN:~$ flask db migrate // 生成迁移脚本，识别代码中数据库的修改
+triangle@LEARN:~$ flask db upgrade // 运行数据库迁移脚本，同步表修改
+```
+
+# 项目工程
+
+```term
+triangle@LEARN:~$ tree .
+.
+├── app.py              # 程序入口
+├── exts.py             # 插件导入
+├── config.py           # 配置
+├── blueprints          # 蓝图包，根据实际项目定义
+|   ├──__init__.py   
+|   └── routes.py       # 蓝图中定义路由
+├── model               # 数据库 model
+|   ├──__init__.py   
+|   └── user.py         # model 定义
+├── static              # 存放静态文件
+└── templates           # 存放 Jinja 模板
+```
+
+## 插件配置
+
+- `exts.py`
+
+```python
+from flask_migrate import Migrate
+from flask_sqlalchemy import SQLAlchemy
+
+db = SQLAlchemy()
+
+migrate = Migrate()
+```
+
+## ORM 模型
+
+- `model/__init__.py`
+
+```python
+from .user import User
+```
+
+- `model/user.py`
+
+```python
+from exts import db
+
+class User(db.Model):
+    pass
+```
+
+## 蓝图
+
+**蓝图** ： 将所有的「视图函数」分类打包放到模块中，而非全部写在 `app.py`
+
+- `blueprints/routes.py`
+
+```python
+from flask import Blueprint
+
+# 定义蓝图
+bp = Blueprint('蓝图名', __name__, url_prefix='/prefix')
+
+# 创建视图，侵权 url 就为 '/prefix/login'
+@pb.route('/login')
+def login():
+    pass
+
+```
+
+## 配置文件
+
+- `config.py`
+
+```python
+SQLALCHEMY_DATABASE_URI = 'url'
+```
+
+## 程序入口
+
+- `app.py`
+
+```python
+import exts
+from model import User  # NOTE - 必须导入一下，让框架识别到模型
+from flask import Flask
+from blueprints.routes import bp 
+
+app = Flask(__name__)
+
+# 方式一：通过 app.config 加载配置文件
+app.config['SQLALCHEMY_DATABASE_URI'] = 'url'
+
+# 方式二：从 'config.py' 中加载
+app.config.from_object(config)
+
+# 初始化插件
+exts.db.init_app(app)
+exts.migrate.init_app(app,db)
+
+# 注册蓝图
+app.register_bluprint(bp)
+
+if __name__ == '__main__':
+    app.run(debug=False,host='0.0.0.0',port=2333)
 ```
