@@ -27,10 +27,10 @@ class StudentInfo(models.Model):
 
     class Meta:
         # 表名
-        db_table = "t_student"
+        db_table = "student"
 ```
 
-2. 生成迁移脚本
+1. 生成迁移脚本
 
 ```term
 triangle@LEARN:~$ python manage.py makemigrations
@@ -248,5 +248,211 @@ urlpatterns = [
 ```
 
 ![alt|c,60](../../image/django/detailview_student.png)
+
+
+# CreateView
+
+**CreateView** : 用于在模型上新增数据，基于表单视图类 FormView 封装，加入了数据新增的功能。
+
+1. `app/forms.py` : 所有涉及到表单视图的功能开发，都要定义表单
+
+```python
+from django import forms
+from django.forms import ModelForm
+
+# 导入学生模型
+from .models import StudentInfo
+
+class StudentForm(ModelForm):
+    """
+    学生信息表单类，用于创建和验证学生信息表单。
+    继承自django.forms.ModelForm，针对StudentInfo模型进行了表单字段和样式的自定义。
+    """
+    class Meta:
+
+        # 导入model
+        model = StudentInfo 
+
+        # 代表所有字段
+        # fields = '__all__' 
+
+        # 指定需要修改值的字段
+        fields = ['name', 'age']
+        
+        # 定义输入界面
+        widgets = {
+            # 为 html 控件设置 'id' 与 'class'，便于 css 修改样式
+            # <input type='text', name='name', id='name', class='form-control'> 
+            'name': forms.TextInput(attrs={'id': 'name', 'class': 'form-control'}),
+            'age': forms.NumberInput(attrs={'id': 'age', 'class': 'form-control'})
+        }
+
+        # 自定义界面上字段名如何展示
+        labels = {
+            'name': '姓名',
+            'age': '年龄'
+        }
+```
+
+
+2. `views.py`
+
+```python
+from django.views.generic import CreateView
+from .forms import StudentForm,StudentInfo
+
+class Create(CreateView):
+    # 模板文件名，用于渲染创建学生信息的页面
+    template_name = 'student/create.html'
+
+    # 添加到模板上下文的额外数据，用于在页面中显示标题
+    extra_context = {'title': '创建学生信息'}
+
+    # 指定form
+    form_class = StudentForm
+
+    # 执行成功后跳转地址
+    success_url = '/student/list'
+```
+
+3. `urls.py`
+
+```python
+import app.views
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('student/create',app.views.Create.as_view())
+]
+```
+
+4. `creatview.html`
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    
+    <style>
+        .form-control {width: 50px;}
+    </style>
+</head>
+<h3>{{ title }}</h3>
+<body>
+<form method="post">
+    {% csrf_token %}
+    <!-- 
+        1. 根据 `forms.py` 中自定义 `widgets` 生成界面 
+        2. 也生成了自动提交请求的功能
+     -->
+    {{ form.as_p }}
+    <input type="submit" value="提交">
+</form>
+</body>
+</html>
+
+```
+
+5. 同样在 `listview.html` 中增加链接，实现数据添加功能
+
+```html
+    <a href="student/create"> 增加学生 </a>
+```
+
+![alt|c,60](../../image/django/createview_student.png)
+
+
+# UpdateView
+
+**UpdateView** : 首先使用视图类 DetailView 查询表种数据并显示在网页上，然后通过 FormView 表单方式修改数据。
+
+1. `views.py`
+
+```python
+from django.views.generic import UpdateView
+from .forms import StudentForm,StudentInfo
+
+class Update(UpdateView):
+    # 模板文件名
+    template_name = 'updateview.html'
+    # 添加到模板参数
+    extra_context = {'title': '修改学生信息'}
+    # 指定模型类
+    model = StudentInfo
+    # 指定form
+    form_class = StudentForm
+
+    # 主键值
+    pk_url_kwarg = 'id'
+
+    # 执行成功后跳转地址
+    success_url = '/student/list'
+```
+
+2. `urls.py`
+
+```python
+# id 指定数据库主键
+path('student/update/<int:id>',app.views.Update.as_view()),
+
+```
+
+3. `updateview.html` 与 `creatview.html` 一样，**区别是，在加载界面时，会通过 `DetailView` 读取表格数据，并添加到表单中。**
+
+
+# DeleteView
+
+**DeleteView** : 基于主键，只能删除数据库中单条数据。
+
+1. `views.py`
+
+```python
+
+from django.views.generic import DeleteView
+from .models import StudentInfo
+
+class Delete(DeleteView):
+    # 模板文件名，用于渲染创建学生信息的页面
+    template_name = 'deleteview.html'
+    # 添加到模板上下文的额外数据，用于在页面中显示标题
+    extra_context = {'title': '删除学生信息'}
+    # 指定模型类，本页面处理的对象是StudentInfo类的实例
+    model = StudentInfo
+    # 指定模板中使用的对象名称，使得在模板中可以通过这个名称访问对象
+    context_object_name = 'student'
+    # 执行成功后跳转地址
+    success_url = '/student/list'
+```
+
+2. `urls.py`
+
+```python
+# 使用默认名 pk
+path('student/delete/<int:pk>', app.views.Delete.as_view()),
+```
+
+3. `deleteview.html` 实现一个确认删除的界面
+
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+</head>
+<h3>{{ title }}</h3>
+<body>
+<form method="post">
+    {% csrf_token %}
+    <a>你确认要删除编号为{{ student.id }}，姓名为{{ student.name }}，年龄为{{ student.age }}的学生吗？</a>
+    <input type="submit" value="确认">
+</form>
+</body>
+</html>
+```
+
 
 
