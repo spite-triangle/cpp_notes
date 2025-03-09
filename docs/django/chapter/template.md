@@ -14,9 +14,9 @@
 
 # 内置模板引擎
 
-## 模板上下文
+## 模板变量
 
-**模板上下文** ： 用于将视图中的数据传递到模板中使用，在模板中使用 `{{ variable }}` 调用。支持 Python 所有的数据类型，如字典、列表、元组、字符串、整型或实例化对象等。
+**模板变量** ： 用于将视图中的数据传递到模板中使用，在模板中使用 `{{ variable }}` 调用。支持 Python 所有的数据类型，如字典、列表、元组、字符串、整型或实例化对象等。
 - 变量名必须由字母、数字、下划线组成，且必须字母开头
 - 变量不存在，则当空字符串处理
 - 模板中使用变量或方法时，不能出现`()`、`[]`、`{}`
@@ -189,6 +189,9 @@ def modelEngine(request):
 <!-- 继承父模板 -->
 {% extends "base.html" %}
 
+<!-- 可以将公共的一些组件定义导入 -->
+{% include "component.html" %}
+
 <!-- 会替换父模板中的 title block  -->
 {% block title %}
 子模板标题
@@ -198,6 +201,7 @@ def modelEngine(request):
 子模板内容
 {% endblock %}
 ```
+
 
 ## 过滤器
 
@@ -276,6 +280,74 @@ def modelEngine(request):
 | wordwrap           | 单词包裹                                                 |
 | yesno              | 将True，False 和 None，映射成字符串 ‘yes’，‘no’，‘maybe’ |
 
+
+## 标签/过滤器自定义
+
+1. 定义标签与过滤器 `tags/tag.py`，路径位置无要求，写在项目或应用都行
+
+```python
+from django.template.library import Library
+
+register = Library()
+
+# 自定义标签
+@register.simple_tag(takes_context=True)
+def test_tag(context):
+    # 通过 context 可以模板中的参数
+    val = context.get('title')
+    return f'title is {val}'
+
+# 自定义过滤器
+@register.filter
+def test_filter(input):
+    return f'filter {input}'
+```
+
+2. 在 `settings.py` 中配置标签
+
+```python
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [BASE_DIR / 'templates'],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+            'libraries' :{
+                # 'tags.tag' 就是 'tags/tag.py' 路径
+                'customTags' : 'tags.tag'
+            }
+        },
+    },
+]
+```
+
+3. 调用自定义标签
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+</head>
+<body>
+    <!-- 加载自定义标签模块 -->
+    {% load static customTags %}
+
+    <!-- 自定义标签 -->
+    {% test_tag %}
+
+    <!-- 自定义过滤器 -->
+    {{ title | test_filter }}
+</body>
+</html>
+```
 
 # Jinja3
 

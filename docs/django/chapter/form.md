@@ -213,11 +213,6 @@ def add_book_model(request):
     book.bookType_id = request.POST.get('bookType')
     book.save()
     return bookList(request)
-————————————————
-
-                            版权声明：本文为博主原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接和本声明。
-                        
-原文链接：https://blog.csdn.net/sishihao/article/details/140708066
 ```
 
 3. `BookInfo.bookType` 是 `BookInfoType` 类对象，因此 `BookInfo.bookType` 打印值不是`bookTypeName` 值，还需修改 `BookTypeInfo` 

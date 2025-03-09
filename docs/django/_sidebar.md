@@ -9,3 +9,6 @@
 - [第六章 模板](django/chapter/template.md)
 - [第七章 ORM 框架](django/chapter/orm.md)
 - [第八章 表单](django/chapter/form.md)
+- [第九章 Admin 后台管理系统](django/chapter/admin.md)
+- [第十章 simpleui](django/chapter/simpleui.md)
+
