@@ -58,10 +58,11 @@ def worker_send_email(name):
 ### 启动任务服务
 
 ```term
-triangle@LEARN:~$ celery -A workers worker  -l info
+triangle@LEARN:~$ celery -A workers worker  -l info -n name
 Options:
     -A <worker>     定义 worker 的 .py 文件名，-A 必须写在  worker 的前面
     -l info         服务日志打印等级
+    -n name         worker 的唯一标识符，用于监控
 ```
 
 通过上述命令 `Celery` 就会根据 `workers.py` 中的定义启动一个监听任务的 `worker` 服务。
@@ -426,6 +427,8 @@ def add(self:celery.Task, x, y):
 ### 钩子
 
 ```python
+import celery
+
 class MyTask(celery.Task):
     # 任务失败时执行
     def on_failure(self, exc, task_id, args, kwargs, einfo):
@@ -597,6 +600,8 @@ worker_add.si(3,4)
 
 ## 配置文件
 
+[配置选项](https://docs.celeryq.dev/en/stable/userguide/configuration.html#configuration)
+
 - **`celery.py`**
 
 ```python
@@ -659,6 +664,9 @@ CELERYBEAT_SCHEDULE = {
 }
 ```
 
+> [!tip]
+> 使用 `celery upgrade settings ./settings.py` 命令可以自动修复配置文件警告
+
 ## 动态创建
 
 ```python
@@ -701,4 +709,213 @@ triangle@LEARN:~$ celery -A proj worker -Q feeds,celery  // 逗号后面加空�
 Options
     -Q  feeds,celery            可指定多个监听队列，使用 ',' 分隔；'celery' 为默认队列
 ```
+
+
+# 信号
+
+- [signals](https://docs.celeryq.dev/en/stable/userguide/signals.html#signals)
+
+通过捕获信号，可以实现在目标环节中插入自定义处理代码。
+
+```python
+from celery.signals import celeryd_init
+
+# celery 框架启动成功后，会触发的第一个信号，可用来进行一些初始化工作
+@celeryd_init.connect(sender='worker12@example.com')
+def configure_worker12(conf=None, **kwargs):
+    conf.task_default_rate_limit = '10/m'
+```
+
+
+# 监控管理
+
+
+
+## 命令行
+
+```term
+triangle@LEARN:~$ celery [command] --help // 帮助
+triangle@LEARN:~$ celery -A proj status // 展示存活的节点
+->  celery@worker2: OK
+->  celery@worker1: OK
+triangle@LEARN:~$ celery -A proj result 4e196aa4-0141-4601-8138-7aa33db0f577 // 查看任务结果
+Options
+    -t                  指定任务名，例如 '-t tasks.add' 
+triangle@LEARN:~$ celery -A proj purge // 删除中间件中消息
+Options
+    -Q LIST                    指定要清空的队名 '-Q q1,q2,q3'
+    -X LIST                    不需要清空的队列名
+triangle@LEARN:~$ celery -A proj inspect [command] [options] // 监控工作节点
+commands
+    active                  工作节点中正在执行的任务
+    scheduled               工作节点中设置了 ETA 或 countdown 的任务
+    reserved                工作节点中等待执行的任务，不包含 ETA
+    revoked                 被工作节点撤销的任务
+    registered              在工作节点中注册的任务
+    stats                   工作节点详细的配置信息
+    query_task [id]         根据任务id查询任务状态
+options
+    -j                      安装 json 格式输出结果
+    -d LIST                 指定需要监控的工作节点名
+    --timeout               命令执行的超时时间
+triangle@LEARN:~$ celery -A proj migrate src dest // 数据迁移
+```
+
+## 代码
+
+对于 `purge` 、`inspect` 、`control` 等命令行均可通过代码进行控制
+
+```python
+import celery.app.control as ctrl
+
+# 工作节点、消息状况查看
+inspect = ctrl.Inspect(app=app)
+inspect.active()
+inspect.active_queues()
+inspect.reserved()
+inspect.reserved()
+    ...
+
+# 工作节点、消息控制
+control = ctrl.Control(app=app)
+control.add_consumer(queue='queue') # 让工作节点监听指定队列
+control.cancel_consumer(queue='queue') # 让工作节点取消监听指定队列
+control.enable_events() # 开启事件监听
+control.disable_events() # 关闭事件监听
+control.heartbeat() # 让工作节点发送心跳
+control.purge() # 清空中间件中的任务消息
+    ...
+```
+
+## 事件
+
+### 概念
+
+- **事件`event`** : 会在 Task/Worker 的状态发生变化的时候被发出，可利用 event 来监控task 和 worker 的状态。
+- **快照 `snapshots`** : 在一段时间内，worker 状态变化的事件序列。同过分析快照内的事件，就能实时监控集群中的工作节点状态，以及记录节点的历史状态。
+- **相机 `Camera`** :  获取快照的工具，可通过代码自定义。
+
+### Camera
+
+
+```python
+from app import app
+from celery.events.state import State,Worker,Task
+from celery.events.snapshot import Polaroid
+
+class DumpCamera(Polaroid):
+    clear_after = True  # clear after flush (incl, state.event_count).
+
+    # 相机捕获到快照时触发
+    def on_shutter(self, state: State):
+        state.event_count # 事件数量
+
+        # 工作节点状态
+        workerIds = state.workers.keys() 
+        for id in workerIds:
+            # 工作节点对象
+            worker:Worker = state.workers[id]
+            worker.id
+            worker.hostname
+            worker.alive    
+
+        # 任务状态
+        taskIds = state.tasks 
+        for id in taskIds:
+            task : Task = state.tasks[id]
+            task.id
+            task.name
+            task.state
+
+        pass
+
+# task、worker 的状态上下文，当接收到事件时会刷新
+state = app.events.State()
+with app.connection() as connection:
+    # 事件消费者 app.events.Receiver
+    recv = app.events.Receiver(
+            connection, 
+            handlers={'*': state.event} # 事件处理器, '*' 表示所有
+        )
+    
+    # 使用 DumpCamera 进行事件处理
+    with DumpCamera(state, freq=2):
+        recv.capture(limit=None, timeout=None)
+```
+
+### 事件处理器
+
+使用 `Camera` 会捕获快照，而快照中有存有大量事件，因此，利用 Camera 无法应用到实时性比较的业务场景。针对该问题，celery 也提供了更为轻量的事件处理器
+
+- [Event Type](https://docs.celeryq.dev/en/latest/userguide/monitoring.html#event-reference)
+
+```python
+state = app.events.State()
+
+# 只处理 task-failed 类型的事件
+def handler_failed_tasks(event):
+    task = state.tasks.get(event['uuid'])
+
+with app.connection() as connection:
+    recv = app.events.Receiver(
+        connection, 
+        handlers={
+            'task-failed': handler_failed_tasks,
+        }
+    )
+    # wakeup : 强制所有的 worker 发送一次 heartbeat，保证了在 app.events.State 中，能获取到最新的 worker 数据
+    recv.capture(limit=None, timeout=None, wakeup=True)
+
+```
+
+### 自定义事件
+
+
+```python
+from celery.events import EventDispatcher
+
+# 方式一
+with app.connection() as connection:
+    dispatcher = EventDispatcher(connection)
+
+    # 发送事件
+    dispatcher.send(type="my_custom_event")
+
+# 方式二
+with app.events.default_dispatcher() as dispatcher:
+    # 发送事件
+    dispatcher.send(type='custom-task-started')
+```
+
+
+## curses
+
+```term
+triangle@LEARN:~$ pip install curses // 需要安装 curses 库，但只支持 linux
+triangle@LEARN:~$ celery -A proj events // 简单的事件监听器
+Options
+    -c                  可指定自定的 Camera
+                        例如在 'camera.py' 中定义了 'DumpCamera' 类
+                        则设置 '-c camera.DumpCamera'
+    --frequency=flout   刷新频率
+```
+
+## flower
+
+[flower](https://flower.readthedocs.io/en/latest/index.html) 是 celery 监控管理系统的 web 实现。通过 flower 可在 web 上对 celery 的任务、工作节点进行查看与控制，此外，flower 还提供了 [HTTP API](https://flower.readthedocs.io/en/latest/api.html) 访问接口。
+
+```term
+triangle@LEARN:~$ pip install flower // 安装
+triangle@LEARN:~$ celery -A proj flower --port=5555  // 启动 flower
+```
+
+使用 `http://localhost:5555/` 便能访问 flower 界面
+
+![alt](../../image/distributeCluster/flower.png)
+
+
+> [!tip]
+> Flower 的监控信息不会序列化到本地，服务重启后，之前监控到的信息就没了
+
+
 
