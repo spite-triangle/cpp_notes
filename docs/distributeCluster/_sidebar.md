@@ -11,3 +11,7 @@
 - **后端服务**
     - [Django](django/README.md)
     - [Flask](distributeCluster/chapter/flask.md)
+- **HPC**
+    - [Ansys HPC](distributeCluster/chapter/ansys.md)
+
+    
