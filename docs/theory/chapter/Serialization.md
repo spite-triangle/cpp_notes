@@ -13,6 +13,9 @@
 
 # cereal
 
+> [!tip]
+> 只是单纯 `Json` 序列化与反序列化，推荐 [nlohmann](https://github.com/nlohmann/json)
+
 ## 介绍
 
 [cereal](http://uscilab.github.io/cereal/index.html) 是一个开源的（BSD License）、轻量级的、支持C++11特性的、仅仅包含头文件实现的、跨平台的C++序列化库。它可以将任意的数据类型序列化成不同的表现形式，比如二进制、XML格式或JSON。

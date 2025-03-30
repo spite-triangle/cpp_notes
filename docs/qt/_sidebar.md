@@ -13,5 +13,6 @@
 - [第十章 QWebEngine](qt/chapter/qwebengine.md)
 - [第十一章 QLayout](qt/chapter/layout.md)
 - [第十二章 QML](qml/README.md)
+- [第十三章 PySide](qt/chapter/pyside.md)
 
 
