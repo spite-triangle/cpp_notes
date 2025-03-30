@@ -10,4 +10,5 @@
     - [Celery](distributeCluster/chapter/celery.md)
 - **后端服务**
     - [Django](django/README.md)
+    - [FastAPI](fastapi/README.md)
     - [Flask](distributeCluster/chapter/flask.md)
