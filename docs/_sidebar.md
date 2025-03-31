@@ -6,10 +6,12 @@
   - [编译原理](compiler/README.md)
   - [算法导论](Algorithms/README.md)
   - [调试原理](windbg/README.md)
+  - [多媒体](Media/README.md)
+- **编码**
   - [Effictive C++](effective/README.md)
   - [c++并发](CppConcurrency/README.md)
   - [Web 开发](webDevelop/README.md)
-  - [多媒体](Media/README.md)
+  - [Ptyon 开发](python/README.md)
 - **框架组件**
   - [Qt](./qt/README.md)
   - [MFC](./mfc/README.md)

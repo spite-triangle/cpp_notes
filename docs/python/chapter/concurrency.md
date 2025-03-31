@@ -147,7 +147,7 @@ def task(arg):
 # 线程池内最大线程数为 8
 pool = ThreadPoolExecutor(max_workers=8)
 
-# 提交任务，当线程跑满时，会阻塞等待空闲线程
+# NOTE - 提交任务，不会阻塞，且无限制
 pool.submit(task,'arg')
 
 # 等待所有任务执行完成
@@ -338,4 +338,323 @@ c = Consumers()
 
 p.start()
 c.start()
+```
+
+
+# 进程
+
+
+## 模式
+
+在 Python 中，进程存在三种模式
+
+| 模式         | 平台 | 描述                                                                                                            |
+| ------------ | ---- | --------------------------------------------------------------------------------------------------------------- |
+| `fork`       |   Linux   | Linxu 系统的默认创建模式，会复制父进程内资源                                            |
+| `spawn`      |  Linux、Windows、MacOS   | 完成新建一个 Python 解释器，不复制父进程任何资源                                                              |
+| `forkserver` |  部分 Linux    | 会存在三个进程：父进程、server进程（单线程）、子进程。父进程会根据 server 进程 `fork` 子进程 |
+
+
+```python
+import multiprocessing
+
+def task():
+    print('ok')
+    pass
+
+# NOTE - 必须通过 __name__ 作为入口启动子进程，否则可能会报错
+
+if __name__ == '__main__':
+    # 设置模式
+    multiprocessing.set_start_method("fork")
+    multiprocessing.set_start_method("spawn")
+    multiprocessing.set_start_method("forkserver")
+
+    p = multiprocessing.Process(target=task)
+    p.start()
+```
+
+
+## multiprocessing
+
+```python
+import os
+import threading
+import multiprocessing
+
+def task():
+    # 当前进程名
+    multiprocessing.current_process().name
+
+    # 当前进程 PID
+    os.getpid()
+
+    # 父进程 PID
+    os.getppid()
+
+    # 当前进程中的所有线程
+    threading.enumerate()
+
+    pass
+
+def run():
+
+    # cpu 个数
+    multiprocessing.cpu_count()
+
+    p = multiprocessing.Process(target=task)
+
+    # 进程名
+    p.name = 'name'
+
+    # True : 主进程退出，会马上干掉子进程
+    p.daemon = True
+
+    # 开始
+    p.start()
+
+    # 等待子进程结束 
+    p.joint()
+
+
+if __name__ == '__main__':
+    run()
+```
+
+## 进程类
+
+
+```python
+
+import multiprocessing
+
+
+class MyProcess(multiprocessing.Process):
+    # 自定义参数
+    arg_count : int
+
+    def run(self):
+        self._identity
+        self._config
+        self._parent_pid
+        self._parent_name 
+        self._args
+        self._kwargs
+        self._name 
+        print(self.arg)
+
+
+if __name__ == '__main__':
+    multiprocessing.set_start_method("spawn")
+
+    p = MyProcess()
+
+    # 在 spawn 模式下，可以传递给子进程
+    p.arg_count = 11
+
+    p.start()
+```
+
+## 进程通信
+
+### 共享内存
+
+比较偏 C 语言底层的实现
+
+```python
+import multiprocessing
+from multiprocessing.sharedctypes import Synchronized,SynchronizedArray
+
+
+def task(val:Synchronized, array:SynchronizedArray):
+    val.value += 1 
+    array[0] = 100
+    pass
+
+if __name__ == '__main__':
+    multiprocessing.set_start_method("spawn")
+
+    # i : int
+    # I : uint
+    # l : long
+    # L : ulong
+    # c : char
+    # u : wchar
+    # f : float
+    shared_value = multiprocessing.Value('i', 0)
+
+    # NOTE - Array 长度不可变、类型不可变
+    shared_array = multiprocessing.Array('i', [11,22,33,44])
+
+    p = multiprocessing.Process(target=task,args=(shared_value,shared_array,))
+    p.start()
+    p.join()
+
+    print(shared_value.value)
+    # >> 1
+    print(shared_array[0])
+    # >> 100
+```
+
+### 服务进程
+
+比共享内存更方便
+
+```python
+import multiprocessing
+from multiprocessing.managers import DictProxy,ListProxy
+
+
+def task(l:ListProxy , d: DictProxy):
+    l.append(10)
+    d['key'] = 'value'
+    pass
+
+if __name__ == '__main__':
+    multiprocessing.set_start_method("spawn")
+
+    # manager 对象控制着一个服务进程，用于进程间通信
+    with multiprocessing.Manager() as manager:
+        shared_list = manager.list()
+        shared_dict = manager.dict()
+
+        p = multiprocessing.Process(target=task,args=(shared_list,shared_dict,))
+        p.start()
+        p.join()
+```
+
+
+### 消息队列
+
+由于消息队列具有阻塞 `Block` 功能，因此可以用于进程间同步
+
+```python
+import multiprocessing
+
+def task(queue: multiprocessing.Queue):
+    val = queue.get(block=True)
+    print(val)
+
+    queue.put(10,block=True)
+    pass
+
+if __name__ == '__main__':
+    multiprocessing.set_start_method("spawn")
+
+    queue = multiprocessing.Queue()
+
+    p = multiprocessing.Process(target=task,args=(queue,))
+
+    p.start()
+    queue.put(1)
+
+    p.join()
+    print(queue.get())
+
+```
+
+### 管道
+
+> [!note]
+> 管道通信时全双工的
+
+```python
+import multiprocessing
+from multiprocessing.connection import PipeConnection
+
+
+def task(conn: PipeConnection):
+    conn.send('11')
+    print(conn.recv())
+    pass
+
+if __name__ == '__main__':
+    multiprocessing.set_start_method("spawn")
+
+    conn1, conn2 = multiprocessing.Pipe()
+
+    p = multiprocessing.Process(target=task,args=(conn2,))
+
+    p.start()
+    conn1.send('aa')
+
+    p.join()
+    print(conn1.recv())
+
+```
+
+## 进程锁
+
+```python
+import multiprocessing
+from multiprocessing.synchronize import RLock
+from multiprocessing.sharedctypes import Synchronized
+
+def task(count:int, val: Synchronized, lock : RLock):
+
+    for i in range(count):
+        lock.acquire()
+        val.value +=1
+        lock.release()
+    pass
+
+if __name__ == '__main__':
+    multiprocessing.set_start_method("spawn")
+
+    lock = multiprocessing.RLock()
+    value = multiprocessing.Value('i',0)
+
+    p = multiprocessing.Process(target=task,args=(10,value,lock,))
+    p1 = multiprocessing.Process(target=task,args=(10,value,lock,))
+
+    p.start()
+    p1.start()
+
+    p.join()
+    p1.join()
+
+    print(value.value)
+```
+
+### 条件量
+
+```python
+from multiprocessing
+from multiprocessing.synchronize import Condition
+
+if __name__ == '__main__':
+    cond : Condtion = multiprocessing.Condition()
+```
+
+### 进程池
+
+> [!note]
+> 在使用线程池时，锁和共享数据必须使用 `multiprocessing.managers` 中的，否则无效
+
+```python
+import multiprocessing
+from multiprocessing.synchronize import Lock
+from multiprocessing.managers import ValueProxy
+from concurrent.futures import ProcessPoolExecutor
+
+def run(lock:Lock, val : ValueProxy):
+    for i in range(10):
+        with lock:
+            val.value += 1
+
+if __name__ == '__main__':
+    with multiprocessing.Manager() as manager:
+
+        lock = manager.Lock() 
+        val = manager.Value(typecode='i', value=0)
+
+        pool = ProcessPoolExecutor(max_workers=2)
+
+        # NOTE - 提交任务，不会阻塞，且无限制
+        future = pool.submit(run, lock, val)
+        future = pool.submit(run, lock, val)
+
+        pool.shutdown(wait=True)
+
+        print(val.value)
 ```
