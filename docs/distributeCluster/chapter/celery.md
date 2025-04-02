@@ -763,6 +763,8 @@ triangle@LEARN:~$ celery -A proj migrate src dest // 数据迁移
 
 ## 代码
 
+### 概述
+
 对于 `purge` 、`inspect` 、`control` 等命令行均可通过代码进行控制
 
 ```python
@@ -786,6 +788,67 @@ control.heartbeat() # 让工作节点发送心跳
 control.purge() # 清空中间件中的任务消息
     ...
 ```
+
+### 停止任务
+
+在 `celery` 中存在六种任务状态
+
+- `PENDING` (waiting for execution or unknown task id)
+- `STARTED` (task has been started)
+- `RETRY` (task is being retried)
+- `SUCCESS` (task executed successfully)
+- `FAILURE` (task execution resulted in exception)
+- `REVOKED` (task has been revoked)
+
+只有 `PENDING`、`STARTED`、`RETRY` 任务可以被撤销。
+- `PENDING` : worker 会直接丢弃任务不执行
+- `STARTED\RETRY` : 由于任务正在被执行，需要启用 `terminate` 选项才能真正结束任务
+
+```python
+# asyncresult.revoke
+t = tasks.celeryTest.delay(30)
+t.revoke()
+
+# app.control.revoke
+from celery.app.control import Control
+
+ctrl = Control(app)
+ctrl.revoke(task_id = 'xxxxxx', terminate=True)
+```
+
+对于批量任务还可以直接删任务队列中的消息 (**需要业务支持**)
+
+```python
+from celery import Celery
+from myapp.tasks import *
+
+app = Celery('myapp')
+
+active_tasks = app.control.inspect().active()
+
+specific_queue_tasks = []
+for worker, tasks in active_tasks.items():
+    for task in tasks:
+        if task['queue'] == 'specific_queue':
+            specific_queue_tasks.append(task)
+
+for task in specific_queue_tasks:
+    app.control.revoke(task['id'], terminate=True)
+```
+
+若用 RabbitMQ 作为中间件，可以直接连接 RabbitMQ 进行清理
+
+```python
+from proj.celery import app
+
+queues = ['queue_A', 'queue_B', 'queue_C']
+with app.connection_for_write() as conn:
+    conn.connect()
+    for queue in queues:
+        count = app.amqp.queues[queue].bind(conn).purge()
+```
+
+
 
 ## 事件
 
