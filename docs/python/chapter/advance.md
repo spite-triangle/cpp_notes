@@ -79,6 +79,24 @@ enter
 exit
 ```
 
+## 协程版本
+
+```python
+class Context:
+    # 进入 with 时调用
+    async def __aenter__(self):
+        print('获取资源')
+        return self
+
+    # 退出 with 时调用 
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        print("释放")
+
+    def do_something(self):
+        print("do ...")
+```
+
+
 # 装饰器
 
 ## 装饰器函数
@@ -339,3 +357,32 @@ print(type(a))
 ```
 
 
+## yield from
+
+- `yield` : 生成器返回一个值给调用者，并在下次调用时从停止的地方继续
+- `yield from` : 在一个生成器调用另一个生成器，并可以返回其内部 `yield` 值
+
+```python
+def generator1():
+    yield 'a'
+    yield 'b'
+    yield 'c'
+    return 'generator1 end'
+
+def generator2():
+    res = yield from generator1()
+    print(res)
+    yield 'd'
+    yield 'e'
+
+gen = generator2()
+for value in gen:
+    print(value) 
+# 输出: 
+#    a
+#    b
+#    c 
+#    generator1 end
+#    d
+#    e
+```
