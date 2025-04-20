@@ -75,6 +75,9 @@
 </script>
 ```
 
+> [!tip]
+> `v-bind:xxx= "expression"` 的本质其实是执行字符串定义的表达式
+
 ## if/else
 
 ```vue
@@ -94,8 +97,8 @@
 ```vue
 <template>
     <table>
-        <!-- v-for 数组遍历 -->
-        <tr v-for="item in persons" >
+        <!-- v-for 数组遍历，最好定义 'key' 声明每一项的唯一标识 -->
+        <tr v-for="item in persons" :key= "item.id">
             <td>{{ item.name }}</td>
             <td>{{ item.age }}</td>
         </tr>
@@ -104,8 +107,8 @@
 
 <script lang="ts" setup name="Person">
     let persons = [
-        {name: "p1", age:10},
-        {name: "p2", age:10},
+        {id: "xxx1",name: "p1", age:10},
+        {id: "xxx2",name: "p2", age:10},
     ]
 </script>
 ```

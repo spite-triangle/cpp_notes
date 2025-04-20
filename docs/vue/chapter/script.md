@@ -1,4 +1,4 @@
-# setup
+# 脚本
 
 # 选项式与组合式
 
@@ -110,7 +110,9 @@
 - `setup` 中不能使用 `this`
 
 
-# 返回值
+# setup
+
+## 返回值
 
 只有 `setup` 返回的对象在 `template` 中才能被访问，可返回渲染函数、函数名、数据等。
 
@@ -149,9 +151,7 @@
 </script>
 ```
 
-# 简化语法
-
-## setup 简化
+## 简化
 
 使用标签 `<script setup>` ，便能不用再定义 `setup(){ return{} }`，所有数据、函数自动返回。
 
@@ -218,3 +218,78 @@ export default defineConfig({
 </script>
 ```
 
+# hooks
+
+使用 `hooks` 可以将数据与数据相关的方法均放到同一个 `.ts` 脚本中，真正的实现物理层面上的组合式 API。
+
+```term
+triangle@LEARN:~$ tree ./src
+./src
+├── hooks
+│   ├── useNum.ts       # hooks 均使用 'use___' 的形式进行命名
+│   └── useStudent.ts
+├── App.vue
+└── main.ts
+```
+
+- `hooks/useNum.ts`
+
+```ts
+import { ref } from "vue";
+
+// export default 
+// - 允许在一个文件中导出一个默认的值，这个值可以是变量、函数、类等。
+// - 在 import 时，不需要使用大括号
+export default function (){
+    // 数据
+    let num = ref(0)
+    
+    // 方法
+    function add(){
+        num.value++;
+    }
+
+    return {num, add}
+}
+```
+
+- `hooks/useStudent.ts`
+
+```ts
+import { reactive } from "vue";
+
+export default function (){
+    // 数据
+    let student = reactive({
+        name: "zhang",
+        age: 18
+    })
+    
+    // 方法
+    function addAge(){
+        student.age++; 
+    }
+
+    return {student, addAge}
+}
+```
+
+- `App.vue`
+
+```vue
+<template>
+   <h1>{{ num }}</h1>
+   <h1>{{ student.name }} : {{ student.age }}</h1>
+   <button @click="add"> 增加 </button>
+   <button @click="addAge"> 增加 </button>
+</template>
+
+<script lang="ts" setup name="app">
+  import useStudent from '@/hooks/useStudent';
+  import useNum from '@/hooks/useNum';
+
+  // NOTE - 由于 hooks 定义默认导出的是一个 'function'，因此需要调用才能获取返回值
+  const {student, addAge} = useStudent()
+  const {num, add} = useNum()
+</script>
+```

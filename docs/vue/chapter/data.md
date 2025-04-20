@@ -158,6 +158,26 @@ export type Persons = Array<Person>
     </script>
     ```
 
+### 类型限制
+
+```vue
+<script lang="ts" setup name="Person">
+    import {type Person } from '@/types';
+    import { reactive, ref } from 'vue';
+
+    let student = reactive<Person>({
+        name: "t",
+        age: 10
+    });
+
+    let teacher = ref<Person>({
+        name: "t",
+        age: 10
+    });
+</script>
+```
+
+
 ## toRef
 
 ```vue
@@ -181,6 +201,8 @@ export type Persons = Array<Person>
     }
 </script>
 ```
+
+
 
 # 计算属性
 
