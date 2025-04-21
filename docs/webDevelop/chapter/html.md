@@ -1,8 +1,193 @@
 # HTML
 
+# 常用标签
+
+## 展示类
+
+### 文本
+
+```html
+<div>
+    <h1>一级标题</h1>
+    <h2>二级标题</h2>
+    <p>段落文本</p>
+    <p><b>加粗</b> <i>斜体</i> <u>下划线</u> </p>
+</div>
+```
+
+<div style='display:block; background-color: #f1f2f6; padding: 40px'>
+    <h1>一级标题</h1>
+    <h2>二级标题</h2>
+    <p>段落文本</p>
+    <p><b>加粗</b> <i>斜体</i> <u>下划线</u> </p>
+</div>
+
+
+### 无序列表
+
+
+```html
+<ul>
+    <li>列表</li>
+    <li>列表</li>
+</ul>
+```
+
+<div style='display:block; background-color: #f1f2f6; padding: 40px'>
+    <ul>
+        <li>列表</li>
+        <li>列表</li>
+    </ul>
+</div>
+
+### 有序列表
+
+```html
+<ol>
+    <li>列表</li>
+    <li>列表</li>
+</ol>
+```
+
+<div style='display:block; background-color: #f1f2f6; padding: 40px'>
+    <ol>
+        <li>列表</li>
+        <li>列表</li>
+    </ol>
+</div>
+
+
+### 表格
+
+
+```html
+<table>
+    <tr>
+        <th>字段</th>
+        <th>字段</th>
+        <th>字段</th>
+    </tr>
+    <tr>
+        <td>1</td>
+        <td>1</td>
+        <td>1</td>
+    </tr>
+    <tr>
+        <td>2</td>
+        <td>2</td>
+        <td>2</td>
+    </tr>
+</table>
+```
+
+<div style='display:block; background-color: #f1f2f6; padding: 40px'>
+    <table>
+        <tr>
+            <th>字段</th>
+            <th>字段</th>
+            <th>字段</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>2</td>
+            <td>2</td>
+        </tr>
+    </table>
+</div>
+
+## 控件类
+
+### input
+
+所有交互相关的控件基本上都能使用 `input` 实现
+
+```html
+<input type="text" value="输入内容"> </br>
+<input type="button" value="按钮"> </br>
+<input type="checkbox" value=""> 复选框 </br>
+<input type="color" value=""> </br>
+<input type="date" value=""> </br>
+<input type="file" value=""> </br>
+    。。。
+```
+
+<div style='display:block; background-color: #f1f2f6; padding: 40px'>
+    <input type="text" value="输入内容"> </br>
+    <input type="button" value="按钮"> </br>
+    <input type="checkbox" value=""> 复选框 </br>
+    <input type="color" value=""> </br>
+    <input type="date" value=""> </br>
+    <input type="file" value=""> </br>
+</div>
+
+### 按钮
+
+```html
+<button>按钮</button>
+```
+
+
+<div style='display:block; background-color: #f1f2f6; padding: 40px'>
+    <button>按钮</button>
+</div>
+
+### 下拉框
+
+```html
+<select name="" id="">
+    <option value="">选项1</option>
+    <option value="">选项2</option>
+    <option value="" selected="selected">选项3</option>
+</select>
+```
+
+<div style='display:block; background-color: #f1f2f6; padding: 40px'>
+    <select name="" id="">
+        <option value="">选项1</option>
+        <option value="">选项2</option>
+        <option value="" selected="selected">选项3</option>
+    </select>
+</div>
+
+## 表单
+
+```html
+<!-- 
+    action: url 
+    method: 请求方法
+    onsubmit: 表单提交前触发事件
+-->
+<form action="#" method="post" onsubmit="return check()">
+    <label for="">账号：</label>
+    <input type="text" class="account" placeholder="输入账号"> </br>
+
+    <label for="">密码：</label>
+    <input type="password" class="pwd" placeholder="输入密码">
+    
+    <!-- submit 类型的输入便能提交按钮 -->
+    <input type="submit" value="登陆">
+</form>
+```
+
+<div style='display:block; background-color: #f1f2f6; padding: 40px'>
+<form action="#" method="post" onsubmit="return alert('提交'),false;">
+    <label for="">账号：</label>
+    <input type="text" class="account" placeholder="输入账号"> </br>
+    <label for="">密码：</label>
+    <input type="password" class="pwd" placeholder="输入密码"> </br>
+    <!-- submit 类型的输入便能提交按钮 -->
+    <input type="submit" value="登陆">
+</form>
+</div>
+
+
 
 # iframe
-
 
 ## 简介
 
