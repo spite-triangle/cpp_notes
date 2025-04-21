@@ -108,7 +108,7 @@ triangle@LEARN:~$ tree -L 2 ./src
 
 
 
-# 数据访问
+# 数据通信
 
 ## 暴露数据
 
@@ -154,6 +154,7 @@ triangle@LEARN:~$ tree -L 2 ./src
 
 ## html 标签属性
 
+### 数据传递
 
 - `components/Component.vue`
 
@@ -221,5 +222,39 @@ triangle@LEARN:~$ tree -L 2 ./src
                 prop: () => 'default'
             } 
         )
+</script>
+```
+
+### 方法传递
+
+- `components/Component.vue`
+
+```vue
+<template>
+  <button @click="sendNumber(num)">传送</button>
+</template>
+
+<script lang="ts" setup name="Component">
+    import { defineProps, ref } from 'vue';
+
+    let num = ref(10)
+    defineProps(['sendNumber'])
+</script>
+```
+
+- `App.vue`
+
+```vue
+<template>
+  <!-- 标签属性可以传递方法 -->
+  <Compoent prop="html 属性"  v-bind:sendNumber="getNumber" />
+</template>
+
+<script lang="ts" setup name="app">
+  import Compoent from "./components/Component.vue";
+
+  function getNumber(val:number) {
+      // val ：子组件传递过来的数据
+  }
 </script>
 ```
