@@ -58,8 +58,8 @@ struct Test{
 ## requires
 
 requires 可以定义描述约束的 bool 类型的纯右值表达式，结合 concept 可以产生更骚的用法。
-- requires {要求序列}
-- requires (参数列表){要求序列}
+- `requires {要求序列}`
+- `requires (参数列表){要求序列}`
 
 要求序列有四种类型：
 - 简单要求：要求序列能编译通过，不会执行

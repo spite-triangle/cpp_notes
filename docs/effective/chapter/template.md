@@ -208,7 +208,10 @@ int main(int argc, char const *argv[])
     return 0;
 }
 ```
-## is_same
+
+## 应用
+
+### is_same
 
 ```cpp
 #include <iostream>
@@ -225,10 +228,6 @@ struct is_same<T,T>{
     const static bool value = true;
 };
 
-// tip - 利用模板变量(c++14) 可以进一步实现 is_same_v
-template<class A, class B>
-constexpr bool is_same_v = is_same<A,B>::value;
-
 int main(int argc, char const *argv[])
 {
 
@@ -241,10 +240,9 @@ int main(int argc, char const *argv[])
 }
 ```
 
-# enable_if
+### enable_if
 
 ```cpp
-
 // 模板，无类型
 template<bool _Test, class _Ty>
 struct enable_if{
@@ -255,11 +253,64 @@ template<class _Ty>
 struct enable_if<true, _Ty>{
     using type = _Ty;
 };
+```
+
+类型限定
+
+```cpp
+template<class T, 
+            class = std::enable_if_t< 
+                std::is_same_v<T,int> | std::is_same_v<T,double>
+            ,void>
+        >
+void Fcn(T arg){}
+```
+
+
+### 简化
+
+上述 `xxx::type` 与 `xxx::value` 存在语义歧义，在复杂推导中编译器不知道 `type/value` 是静态变量，还是类型，因此，在`c++11` 中使用 `typename` 进行区分
+- 添加：声明是类型
+- 不添加：优先当静态变量，简单场景还是能正确识别类型
+
+```cpp
+using type = typename enable_if<A, B>::type;
+```
+
+
+使用 `typename` 区分模板成员是类型还是静态变量还是有点繁琐，在 `c++14` 中使用 `using` 对其进行简化
+
+```cpp
 
 // 使用 using 进行简化
 template<bool _Test, class _Ty>
 using enable_if_t = typename enable_if<_Test, _Ty>::type;
+
+
+int main(){
+    using type = enable_if_t<demo::is_same<int,int>::value, int>::type;
+}
 ```
+
+同样 `is_same<x,x>::value` 仍然存在语义歧义，在 `c++14` 中使用「模板变量」进行规范化
+
+
+```cpp
+
+template<class A, class B>
+inline constexpr bool is_same_v = is_same<A,B>::value;
+
+
+int main(){
+    constexpr auto res = is_same_v<int,float>;
+}
+```
+
+> [!tip]
+> `c++14` 开始基本模板库的使用规范
+> - `std::xxxx_t` : 类型
+> - `std::xxxx_v` : 常量
+
 
 # 模板模板形参
 
@@ -304,7 +355,7 @@ int main(int argc, char const *argv[])
 template<int...args>
 void fcn()
 {
-    // 新参包展开
+    // 形参包展开
     for(const auto & item: {args...})
     {
         printf("%d\n", item);
@@ -373,7 +424,9 @@ int main(int argc, char const *argv[])
 
 ```
 
-## 参数类型展开
+##  解包
+
+### 参数类型展开
 
 ```cpp
 template<class T, class B>
@@ -397,7 +450,20 @@ int main(int argc, char const *argv[])
 }
 ```
 
-## 继承展开
+配合 `std::forward` 可以解「万能引用」的形参包
+
+
+```cpp
+template<class...Args>
+// 函数展开
+void Fcn(Args && ...args)
+{
+    // 类型展开类型的，参数展开参数的
+    Test<Args...> t(std::forward<Args>(args)...);
+}
+```
+
+### 继承展开
 
 ```cpp
 #include <iostream>
@@ -433,7 +499,7 @@ int main(int argc, char const *argv[])
 
 ```
 
-## 表达式展开
+### 初始化列表
 
 >[!tip]
 > 可以在 `c++11` 中暂替 `c++17` 的折叠表达式
@@ -491,13 +557,13 @@ int main(int argc, char const *argv[])
 ## 递归解包
 
 > [!note]
-> 形参包展开函数的特化函数，一定要在形参包函数之前声明。
+> 结束函数一定要在形参包函数之前声明
 
 
 ```cpp
 #include <iostream>
 
-// 递归结束
+// 结束函数
 void Fcn(){}
 
 // 递归
@@ -519,8 +585,10 @@ int main(int argc, char const *argv[])
 
 ## 一元折叠
 
-- 右折叠：`(E 运算符 ...)`，四层案列 (E1 运算符 (E2 运算符 (E3 运算符 E4)))，E 是存在包名的表达式
-- 左折叠：`(... 运算符 E)`，四层案列 (((E1 运算符 E2) 运算符 E3) 运算符 E4)
+- 右折叠：`(E 运算符 ...)`，
+  - 四层案列 `(E1 运算符 (E2 运算符 (E3 运算符 E4)))`，E 是存在包名的表达式
+- 左折叠：`(... 运算符 E)`，
+  - 四层案列 `(((E1 运算符 E2) 运算符 E3) 运算符 E4)`
 
 算数运算：
 
@@ -567,18 +635,20 @@ int main(int argc, char const *argv[])
 
 ## 二元折叠
 
-- 二元右折叠：`(E 运算符 ... 运算符 I)`，四层案列  (E1 运算符 (E2 运算符 (E3 运算符 I)))
-- 二元左折叠：`(I 运算符 ... 运算符 E)`，四层案列  (((I 运算符 E2) 运算符 E3) 运算符 E4)
+- 二元右折叠：`(E 运算符 ... 运算符 I)`
+  - 四层案列 `(E1 运算符 (E2 运算符 (E3 运算符 I)))`
+- 二元左折叠：`(I 运算符 ... 运算符 E)`，
+  - 四层案列 `(((I 运算符 E2) 运算符 E3) 运算符 E4)`
 
 ```cpp
 #include <iostream>
 
 template<int...args>
-// ((((1+1) +2) + 3) + 4)
 constexpr int L = (1 + ... + args);
 
 int main(int argc, char const *argv[])
 {
+    // ((((1+1) +2) + 3) + 4)
     printf("%d\n", L<1,2,3,4>);
     return 0;
 }
@@ -625,7 +695,37 @@ int main(int argc, char const *argv[])
 }
 ```
 
+# 类成员检测
 
+```cpp
+#include <iostream>
+
+template<typename T>
+struct has_member{
+    // std::decay< decltype(_T::member) >::type ： 获取 _T::member 的类型
+    template <typename _T>
+    static auto check(_T)-> typename std::decay< decltype(_T::member) >::type;
+    static void check(...);
+
+    // std::declval<T>() ： 编辑期间模拟生成一个 T 类型的对象
+    using type = decltype(check(std::declval<T>()));
+
+    // 存储判断结果
+    static constexpr bool value = !std::is_void<type>::value;
+};
+
+struct Test{
+    void member(){}
+};
+
+int main(){
+    // 是否含有 'Test::member' 成员
+    has_member<Test>::value;
+
+    // 'Test::member' 的类型
+    has_member<Test>::type;
+}
+```
 
 # 附录
 
