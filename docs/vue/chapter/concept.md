@@ -151,6 +151,19 @@
 </script>
 ```
 
+对于 `v-model` 实现的本质就是
+
+```vue
+<template>
+    <input type="text" :value="text"  @input="text = (<HTMLInputElement>$event.target).value">
+</template>
+
+<script lang="ts" setup name="Person">
+    import { ref } from 'vue';
+    let text = ref('a')
+</script>
+```
+
 # 事件
 
 ## 定义
