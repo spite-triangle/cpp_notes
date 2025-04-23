@@ -359,3 +359,182 @@ triangle@LEARN:~$ tree -L 2 ./src
 ```
 
 组件的 `ref="human"` 获取的不在是 `html` 标签，而是子组件实例对象。
+
+
+# 权限控制
+
+## shallowRef/shallowReactive
+
+**作用：** 只能对顶层的数据进行响应式处理，深层次数据无响应式
+
+```vue
+<script setup lang="ts">
+    import { shallowRef,shallowReactive } from 'vue';
+
+
+    interface Person {
+        name: string,
+        age : number
+    }
+
+    let num = shallowRef(0)
+    let student = shallowRef<Person>({
+        age:10,
+        name: ""
+    })
+
+    let teatcher = shallowReactive<Person>({
+        age: 21,
+        name: "" 
+    })
+
+    function change(value:number){
+        // 会触发响应
+        num.value = 10 
+
+        // 不会触发响应，因为 value 是顶层， 而 value.age 属于第二层数据
+        student.value.age = 10
+
+        // 会触发响应，因为 age 就是顶层
+        teatcher.age = 111;
+    }
+</script>
+```
+
+## readonly
+
+**作用：** 禁用响应式数据的编辑权限
+
+```vue
+<script setup lang="ts">
+    import { ref, readonly } from 'vue';
+
+    // num1 与 num2 都指向同一个数据
+    let num1 = ref(0)
+    let num2 = readonly(num)
+
+    function change(value:number){
+        // 可修改数据
+        num1.value = 10
+
+        // 不能修改数据，num2 的权限是只读的
+        num2.value = 12
+    }
+</script>
+```
+
+## toRaw
+
+**作用：** 获取响应式数据的原始数据
+
+> [!note]
+> `toRaw` 对于 `ref()` 生成的响应式数据无效
+
+
+```vue
+<script setup lang="ts">
+    import { reactive, toRaw } from 'vue';
+
+    let num = reactive({
+        count: 10
+    })
+
+    function change(value:number){
+        // 获取响应式数据的原始数据
+        let val = toRaw(num)
+
+        // NOTE - 数据修改时，不会触发视图刷新，但是 num 指向的内存数据还是被修改
+        val.count += 100
+    }
+</script>
+```
+
+
+## makeRaw
+
+**作用** ： 标记数据不能被转换为响应式数据
+
+```vue
+<script setup lang="ts">
+    import { makeRaw, reactive } from 'vue';
+
+    let num = makeRaw({
+        count: 10
+    })
+    
+    // val 不是响应式的
+    let val = reactive(num)
+</script>
+```
+
+
+# customRef
+
+```vue
+<script setup>
+    import { customRef } from 'vue';
+
+    function myRef(value) {
+        // 自定义 ref 需要提供 customerRef 返回值
+        // customer 需要提供一个函数作为参数
+        // 该函数默认带参数 track 和 trigger ，都是方法。
+        return customRef((track, trigger) => {
+            return {
+
+                // 数据被读取时调用
+                get() {
+                    // track 方法放在 get 中，用于提示这个数据是需要追踪变化的
+                    track();
+                    return value;
+                },
+
+                // 数据被修改时调用
+                set(newValue) {
+                    value = newValue;
+                    // 记得触发事件 trigger,告诉vue触发页面更新
+                    trigger();
+                }
+            }
+        })
+    }
+
+    let obj = myRef(123);
+</script>
+```
+
+
+# 全局变量
+
+> [!tip]
+> 不推荐，使用 `pinia` 代替
+
+- `main.ts`
+
+```ts
+import './assets/main.css'
+
+import { createApp } from 'vue'
+import App from './App.vue'
+
+const app = createApp(App)
+
+// 全局变量声明
+declare module 'vue' {
+    interface ComponentCustomProperties{
+        num: number
+    }
+}
+
+// 全局变量定义
+app.config.globalProperties.num = 10
+
+app.mount('#app')
+```
+
+- `components/Component.vue`
+
+```vue
+<template>
+    <div> {{ argument }} </div>
+</template>
+```

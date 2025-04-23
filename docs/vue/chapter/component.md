@@ -112,15 +112,13 @@ triangle@LEARN:~$ tree -L 2 ./src
 
 ![alt|c,60](../../image/vue/componet.png)
 
-## 暴露数据
+## ref
 
 - `components/Component.vue`
 
 ```vue
 <template>
-    <div>  
-        测试 : {{ message }}
-    </div>
+    <div> 测试 : {{ message }} </div>
 </template>
 
 <script lang="ts" setup name="Component">
@@ -135,6 +133,7 @@ triangle@LEARN:~$ tree -L 2 ./src
 
 ```vue
 <template>
+  <!-- 当前 Component 子组件实例用 `human` 进行标记 -->
   <Component ref="human"/>
 
   <button @click="print" >打印</button>
@@ -143,7 +142,8 @@ triangle@LEARN:~$ tree -L 2 ./src
 <script lang="ts" setup name="app">
   import { ref } from "vue";
   import  Component from "./components/Component.vue";
-
+  
+  /* 获取 Component 组件实例 */
   let human = ref()
 
   function print(){
@@ -154,7 +154,58 @@ triangle@LEARN:~$ tree -L 2 ./src
 
 组件的 `ref="human"` 获取的不在是 `html` 标签，而是子组件实例对象。
 
-## html 标签属性
+```vue
+<template>
+    <Component ref="human1"/>
+    <Component ref="human2"/>
+    <Component ref="human3"/>
+
+    <!-- 
+        1. $event : 按钮点击事件
+        2. $refs : 所有子组件实例
+    -->
+    <button @click="print($event, $refs)" >打印</button>
+</template>
+
+<script lang="ts" setup name="app">
+    import  Component from "./components/Component.vue";
+
+    function print(event:Event, refs:{[key:string]:any}){
+        for(let key in refs){
+            refs[key] // 各个子组件实例
+        }
+    }
+</script>
+```
+
+## parent
+
+- `components/Component.vue`
+
+```vue
+<template>
+    <div>  测试 : {{ message }} </div>
+
+    <!--
+        1. $event : 鼠标点击事件
+        2. $parent : 父组件
+    -->
+    <button @click="print($event, $parent)" >打印</button>
+</template>
+
+<script lang="ts" setup name="Component">
+    let message = 'hello'
+
+    // 将属性暴露给父组件
+    defineExpose({message})
+
+    function print(event:Event, parent:any) {
+        // 通过 parent 就能访问父组件 defineExpose 暴露的数据
+    }
+</script>
+```
+
+## props
 
 ### 数据传递
 
@@ -261,6 +312,125 @@ triangle@LEARN:~$ tree -L 2 ./src
 </script>
 ```
 
+
+## attrs
+
+```term
+triangle@LEARN:~$ tree ./src
+./src/
+├── components
+│   ├── Grand.vue
+│   ├── Father.vue
+│   └── Son.vue
+├── App.vue
+└── main.ts
+```
+
+
+- `components/Grand.vue`
+
+```vue
+<template>
+    <div>{{ a }}</div>
+    <div>{{ b }}</div>
+    <!-- 
+        1. 通过标签属性的形式将数据传递给子组件 
+        2. v-bind="{c:100,d:200}": 等价于 `:c="100"  :d="200"`
+        3. :sendVal="getValue" : 传递回调函数
+    -->
+    <Father :a="a" v-bind="{c:100,d:200}" :sendVal="getValue"></Father>
+</template>
+
+<script setup lang="ts">
+    import Father from './Father.vue';
+    import { ref } from 'vue';
+
+    let a = ref(0)
+    let b = ref(0)
+
+    function getValue(value:number){
+        console.log(value)
+    }
+</script>
+```
+
+- `components/Father.vue`
+
+
+```vue
+<template>
+    <div>{{ a }}</div>
+
+    <!-- 所有当前组件未接收的属性都在 $attrs 里面 -->
+    <div>{{ $attrs }}</div>
+
+    <!-- 把所有 Father 未接收的属性都传递给了 Son -->
+    <Son v-bind="$attrs"></Son>
+</template>
+
+<script setup lang="ts">
+    import Son from './Son.vue';
+    defineProps(['a'])
+</script>
+```
+
+- `components/Son.vue`
+
+```vue
+<template>
+    <div>{{ b }}</div>
+    <div>{{ c }}</div>
+    <div>{{ d }}</div>
+
+    <!-- 通过回调返回数据给 `Grand.vue` -->
+    <button @click="sendVal(val)"> 传递参数 </button>
+</template>
+
+<script setup lang="ts">
+    import { ref } from 'vue';
+    
+    let val = ref(0)
+    
+    defineProps(['b','c','d','sendVal'])
+</script>
+```
+
+## provide/inject
+
+- `components/Grand.vue`
+
+```vue
+<template>
+    <Father></Father>
+</template>
+
+<script setup lang="ts">
+    import Father from './Father.vue';
+    import { ref,provide } from 'vue';
+
+    let num = ref(0)
+
+    // 向当前组件的「所有后代」提供数据，Father.vue、Son.vue 中可直接获取
+    provide('a', num)
+</script>
+```
+
+- `components/Son.vue`
+
+```vue
+<template>
+    <h1> {{ num }} </h1>
+</template>
+
+<script setup lang="ts">
+    import { ref,inject } from 'vue';
+    
+    // 0 : 默认值
+    let num = inject('a', 0)
+</script>
+```
+
+
 ## 自定义事件
 
 
@@ -290,7 +460,6 @@ triangle@LEARN:~$ tree -L 2 ./src
   <!-- 注册 custom-event 事件的回调函数 -->
   <Component @custom-event="onCustomEvent"/>
 </template>
-
 
 <script lang="ts" setup name="App">
 	import Component from './components/Component.vue';
@@ -434,7 +603,169 @@ export {emitter}
 定义 `v-model:value` 后，就需要在子组件中提供 `value` 属性与 `update:value` 事件
 
 
+# 插槽
+
+## 默认插槽
 
 
+通过「插槽」可实现父组件往子组件的双标签中添加 `html` 标签元素，并且子组件对其进行渲染
 
+- `components/Son.vue`
+
+```vue
+<template>
+    <slot>默认</slot>
+</template>
+```
+
+- `components/Father.vue`
+
+```vue
+<template>
+    <Son>
+        <h1>测试</h1>
+    </Son>
+</template>
+
+<script setup lang="ts">
+    import Son from './Son.vue';
+</script>
+```
+
+**在渲染 `Father.vue` 界面时，会用 `<h1>测试</h1>` 替换掉 `Son.vue` 中的 `<slot>默认</slot>`**
+
+## 具名插槽
+
+- `components/Son.vue`
+
+```vue
+<template>
+    <slot name="slot1">默认</slot>
+
+    <slot name="slot2">默认</slot>
+</template>
+```
+
+- `components/Father.vue`
+
+```vue
+<template>
+    <Son>
+        <!-- template 包裹的内容会替换 slot2 插槽的内容 -->
+        <template v-slot:slot2>
+            <h1>测试2</h1>
+        </template>
+
+        <!-- '#slot1' 与 'v-slot:slot1' 等价  -->
+        <template #slot1>
+            <h1>测试1</h1>
+        </template>
+    </Son>
+</template>
+
+<script setup lang="ts">
+    import Son from './Son.vue';
+</script>
+```
+
+> [!tip]
+> 默认插槽的名字是 `default`
+
+
+## 作用域插槽
+
+通过「作用域插槽」可以在父组件中定义的 `html` 元素中访问子组件的 `slot` 标签中定义的属性。
+
+- `components/Son.vue`
+
+```vue
+<template>
+    <slot name="slot" :msg="message" x="100" y="200" >默认</slot>
+</template>
+
+<script setup lang="ts">
+    import { ref } from "vue"
+
+    let message = ref("")
+</script>
+```
+
+- `components/Father.vue`
+
+```vue
+<template>
+    <Son>
+        <template v-slot:slot="param">
+            <h1> {{ param.msg }} </h1>
+            <h1> {{ param.x }} </h1>
+            <h1> {{ param.y }} </h1>
+        </template>
+    </Son>
+</template>
+
+<script setup lang="ts">
+    import Son from './Son.vue';
+</script>
+```
+
+# teleport
+
+**作用** ：可将组件内部 `teleport` 标签下定义的 `html` 元素放到其他标签下（`to='css捕获器'`），例如直接放到 `body` 标签内。**主要用于制作「悬浮」界面**
+
+```vue
+<template>
+    <teleport to="body">
+        <div>测试</div>
+    </teleport>
+</template>
+
+<script setup>
+    import { Teleport } from 'vue';
+</script>
+```
+
+# suspense
+
+> [!tip]
+> 该功能为实验性功能，谨慎使用
+
+**作用：** 异步加载组件。当子组件存储 `await` 异步处理任务时，此时不能正常显示界面，可以使用 `suspense` 先展示一个等待界面，等子组件真正加载成功后，才正常展示。
+
+
+- `components/Son.vue`
+
+```vue
+<template>
+    <div> {{ content }} </div>
+</template>
+
+<script setup lang="ts">
+    import axios from 'axios'
+    
+    let {data:{content}} =  await axios.get('http://xxxxxx')
+</script>
+```
+
+- `components/Father.vue`
+
+```vue
+<template>
+    <Suspense>
+        <!-- 子组件加载成功后，才正常加载 -->
+        <template v-slot:default>
+            <Son/>
+        </template>
+
+        <!-- 子组件在处理异步任务时的等待界面  -->
+        <template v-slot:fallback>
+          <h1> 加载中... </h1>
+        </template>
+    </Suspense> 
+</template>
+
+<script setup lang="ts">
+    import { Suspense } from 'vue';
+    import Son from './Son.vue';
+</script>
+```
 
