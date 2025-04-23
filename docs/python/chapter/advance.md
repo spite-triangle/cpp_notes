@@ -386,3 +386,62 @@ for value in gen:
 #    d
 #    e
 ```
+
+# 魔法方法
+
+| 魔法方法                   | 触发场景          |
+| -------------------------- | ----------------- |
+| `__init__`                 | 对象初始化        |
+| `__del__`                  | 对象销毁时        |
+| `__str__, __repr__`        | 字符串表示        |
+| `__len__`                  | `len(obj)`        |
+| `__getitem__, __setitem__` | `obj[key]`        |
+| `__contains__`             | `item in obj`     |
+| `__add__, __mul__`         | `+, *` 运算       |
+| `__eq__, __lt__`           | `==, <` 比较      |
+| `__enter__, __exit__`      | `with` 上下文管理 |
+| `__call__`                 | `obj()` 实例调用  |
+| `__iter__, __next__`       | `for` 循环迭代    |
+
+
+## 访问控制
+
+`__getattribute__` 效果与 `__getattr__` 一样，**但是推荐使用 `__getattr__` 更安全**
+
+```python
+class Test:
+    age = 10
+    def __setattr__(self, name, value):
+        print(f'{name} : {value}')
+
+        # 需要调用 super() 才能真正修改 age
+        super().__setattr__(name,value)
+
+    # 
+    def __getattr__ (self, name):
+        if name == 'name':
+            return 'zhange' 
+        
+        # 需要调用 super() 才能访问 age
+        return super().__getattr__(name)
+            
+t = Test()
+
+t.age = 12
+print(t.name)
+# age : 12
+# zhange
+```
+
+## 可调用对象
+
+```python
+class Adder:
+    def __call__(self, a, b):
+        return a + b
+
+add = Adder()
+print(add(2, 3))
+# 5
+```
+
