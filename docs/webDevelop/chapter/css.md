@@ -1,32 +1,225 @@
 # CSS
 
-# viewport
+# 选择器
 
-**视口`viewport`** : 浏览器用来显示网页的区域
+> [!note]
+> `css` 选择器用于选择 `HTML` 元素并修改其样式
+
+## 常用选择器
+
+- **元素选择器** : 直接选择对应的 `html` 标签
+
+```css
+h1 {
+    color: aqua
+}
+```
+
+- **类选择器** : 对标签中的 `class` 属性进行选择
 
 ```html
-<!DOCTYPE html>
-<html lang="zh">
-  <head>
-    <meta charset="UTF-8">
-    <!-- 
-        width=device-width : 按照设备实际宽度渲染网页
-        initial-scale=1.0 : 初始化缩放为 1
-        user-scalable=no : 不允许用户缩放
-    -->
-    <meta name="viewport" content="
-                width=device-width, 
-                initial-scale=1.0,
-                minimum-scale=1.0,
-                maximum-scale=2.0,
-                user-scalable=no
-                ">
-    <title>Vite App</title>
-  </head>
-  <body>
-  </body>
-</html>
+<div class="category"></div>
+
+<style>
+    .category{
+        background-color: aqua;        
+    }
+</style>
 ```
+
+- **ID 选择器** : 对标签中的 `id` 进行选择
+
+```html
+<div id="index"></div>
+
+<style>
+    #index{
+        background-color: aqua;        
+    }
+</style>
+```
+
+- **通用选择器**：选择所有
+
+```css
+*{
+    background-color: aqua;
+}
+```
+
+## 组合选择器
+
+
+- **群组选择器** ：满足一个选择条件，则会被选择
+
+```css
+.box1,#box2,h1{
+    border: 1px solid  black;
+}
+```
+
+- **后代选择** ： 选择当前元素的内部节点
+
+```html
+<div class="box">
+    <div class="son">
+        <h1>测试</h1>
+    </div>
+</div>
+
+<style>
+    .box h1{
+        width: 50px;
+        height: 50px;
+        background-color: brown;
+    }
+</style>
+```
+
+- **子代选择器** ：只能选择第一代内部节点
+
+```html
+<div class="box">
+    <div class="son">
+        <h1>测试</h1>
+    </div>
+</div>
+
+<style>
+    .box > .son{
+        width: 50px;
+        height: 50px;
+        background-color: brown;
+    }
+</style>
+```
+
+- **相邻兄弟选择器** ： 紧挨着当前元素的下一个相邻元素（上一个选不中）
+
+```html
+<h1>测试</h1>
+<div class="box"></div>
+<h2>测试</h2>
+
+<style>
+  .box + h2{
+      color: brown;
+  }
+</style>
+```
+
+- **通用兄弟选择器** ： 当前元素的下面任意一个元素（上一个选不中）
+
+```html
+<h1>测试</h1>
+<div class="box"></div>
+<h2>测试</h2>
+<h3>测试</h3>
+
+<style>
+  .box + h3{
+      color: brown;
+  }
+</style>
+```
+
+## 属性选择器
+
+根据标签属性进行选择
+
+```html
+<h1 title="标题1">测试</h1>
+<h1 title="标题2">测试</h1>
+
+<style>
+  h1[title="标题2"]{
+      color: brown;
+  }
+</style>
+```
+
+## 伪类选择器
+
+为处于某个状态的已有元素添加对应的样式，这个状态是根据用户行为而动态改变的，使用 `:` 标记
+
+- `:link`: 应用于未被访问过的链接
+- `:hover`: 应用于鼠标悬停到的元素
+- `:active`: 应用于被激活的元素
+- `:visited`: 应用于被访问过的链接，与 `:link` 互斥
+- `:focus`:  应用于拥有键盘输入焦点的元素
+
+```css
+a:hover {
+    color: red;
+}
+```
+
+## 伪元素选择器
+
+伪元素为 `::` 引用选项，可以选择指定位置
+- `::after`：在元素内容之后插入内容
+- `::before`：在元素内容之前插入内容
+- `::first-letter`：选择元素的第一个字母
+- `::first-line`：选择元素的第一行
+- `::selection`：选择用户选中的文本部分
+
+```html
+<div class="box">
+    <!-- ::before -->
+    <h1>测试1</h1>
+    <!-- ::after -->
+</div>
+
+<style>
+  .box{
+    width: 200px;
+    display: block;
+  }
+
+  .box::after {
+    content: "div 后插入内容";
+    display: block;
+    width: 100%;
+    background-color: red;
+  }  
+  .box::before {
+    content: "div 前插入内容";
+    display: block;
+    width: 100%;
+    background-color: yellow;
+  }  
+</style>
+```
+
+<div style='display:block; background-color: #f1f2f6; padding: 40px;'>
+
+<div class="box">
+    <h1>测试1</h1>
+</div>
+
+<style>
+<style>
+  .box{
+    width: 200px;
+    display: block;
+  }
+
+  .box::after {
+    content: "div 后插入内容";
+    display: block;
+    width: 100%;
+    background-color: red;
+  }  
+  .box::before {
+    content: "div 前插入内容";
+    display: block;
+    width: 100%;
+    background-color: yellow;
+  }  
+</style>
+</style>
+</div>
+
 
 # 属性
 

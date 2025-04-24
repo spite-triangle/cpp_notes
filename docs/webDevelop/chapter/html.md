@@ -186,6 +186,34 @@
 </div>
 
 
+# viewport
+
+**视口`viewport`** : 浏览器用来显示网页的区域
+
+```html
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8">
+    <!-- 
+        width=device-width : 按照设备实际宽度渲染网页
+        initial-scale=1.0 : 初始化缩放为 1
+        user-scalable=no : 不允许用户缩放
+    -->
+    <meta name="viewport" content="
+                width=device-width, 
+                initial-scale=1.0,
+                minimum-scale=1.0,
+                maximum-scale=2.0,
+                user-scalable=no
+                ">
+    <title>Vite App</title>
+  </head>
+  <body>
+  </body>
+</html>
+```
+
 
 # iframe
 
