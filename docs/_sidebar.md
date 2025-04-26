@@ -15,6 +15,7 @@
 - **框架组件**
   - [Qt](./qt/README.md)
   - [MFC](./mfc/README.md)
+  - [Electron](./electron/README.md)
   - [分布式集群](./distributeCluster/README.md)
   - [自动更新](./autoupdate/README.md)
   - [测试工具](./testTools/README.md)

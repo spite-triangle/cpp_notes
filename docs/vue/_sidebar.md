@@ -9,3 +9,4 @@
 - [第六章 组件](vue/chapter/component.md)
 - [第七章 路由](vue/chapter/route.md)
 - [第八章 pinia](vue/chapter/pinia.md)
+- [第九章 配置](vue/chapter/config.md)

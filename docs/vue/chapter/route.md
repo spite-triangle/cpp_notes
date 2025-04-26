@@ -119,6 +119,20 @@ export default router
 </style>
 ```
 
+- `main.ts`
+
+```ts
+import './assets/main.css'
+
+import { createApp } from 'vue'
+import App from './App.vue'
+import router from './route/index'
+
+// 安装路由
+createApp(App).use(router).mount('#app')
+```
+
+
 ![alt](../../image/vue/spa.png)
 
 # 路由组件
