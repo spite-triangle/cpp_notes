@@ -15,7 +15,7 @@ const mainWindow = new BrowserWindow({
     resizable:true,     // 窗口是否可缩放
     alwaysOnTop: false, // 窗口置顶
     transparent: false, // 窗口透明，仅在无边框窗口生效
-    autoHideMenuBar: true,
+    autoHideMenuBar: false, // 自带的菜单栏，方便调试
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
         preload: join(__dirname, '../preload/index.js'),

@@ -184,7 +184,9 @@ triangle@LEARN:~$ tree ./src/
 > 路由组件切换时候， `RouterView` 中会将旧的组件卸载，然后重新加载新的组件
 
 
-# 路由模式
+# 路由配置
+
+## 路由模式
 
 - `history` : 在路由组件切换时， `url` 不会存在 `#`，需要服务器额外配置进行规避，否则会出现 `404` （因为，该路由 `url` 是前端自定义的，在服务上可能不存在，需要屏蔽 ）
 
@@ -202,7 +204,7 @@ const router = createRouter({
 })
 ```
 
-# 路由命令
+## 路由命令
 
 ```ts
 const router = createRouter({
@@ -216,8 +218,43 @@ const router = createRouter({
 })
 ```
 
+## 重定向
 
-# to
+```ts
+const router = createRouter({
+    routes:[ 
+        {
+            path:'/home',
+            component:Home
+        },
+        {
+            // 将 '/' 重定向到 '/home' 
+            path: '/',
+            redirect: '/home'
+        }
+    ]
+})
+```
+
+## 懒加载
+
+
+```ts
+const router = createRouter({
+    routes:[ 
+        {
+            path: '/about',
+            // NOTE - 懒加载的方式
+            component: () => import('@/components/About.vue')
+        }
+    ]
+})
+```
+
+
+# 路由导航
+
+## to
 
 ```vue
 <template>
@@ -238,6 +275,67 @@ const router = createRouter({
     }
 </script>
 ```
+
+## 导航方式
+
+路由在跳转的时候，浏览器会记录用户的操作记录用以实现 「前进」与「后退」
+- `push` : 将操作记录放入一个堆栈中，可实现「前进」与「后退」
+- `replace` : 当前操作会覆盖栈顶的操作，无法「前进」与「后退」
+
+
+```vue
+<template>
+  <div class="container">
+
+    <!-- 导航区 -->
+    <div class="navigate">
+      <!-- '/home' 路由采用 'replace' 模式 -->
+      <RouterLink replace to="/home" active-class="xiaozhupeiqi">首页</RouterLink>
+      <!-- 默认都是 'push' 模式 -->
+      <RouterLink to="/news" active-class="xiaozhupeiqi">新闻</RouterLink>
+      <RouterLink to="/about" active-class="xiaozhupeiqi">关于</RouterLink>
+    </div>
+
+    <!-- 展示区 -->
+    <div class="main-content"> <RouterView></RouterView> </div>
+  </div>
+</template>
+```
+
+## 编程导航
+
+上述路由跳转均是定义了 `RouterLink` 标签，然后通过用户点击界面控件实现路由跳转，但是为了编码灵活性，**还需要实现代码自动路由跳转**，即「编程式路由导航」。
+
+```vue
+<script lang="ts" setup name="App">
+  import { onMounted } from 'vue'
+  import { useRouter } from 'vue-router'
+
+  const router = useRouter()
+
+  onMounted(()=>{
+    setTimeout(()=>{
+      // 使用 'push' 方式，跳转到 '/news' 
+      router.push('/news')
+    },1000)
+  })
+
+  function active(id:number, content:string){
+      // 参数传递同 'RouterLink' 的 'to' 属性
+      router.push({
+        name: "xiangqing", 
+        params: {
+            id: id,
+            content: content
+        }
+      })
+  }
+</script>
+```
+
+
+
+
 
 # 路由嵌套
 
@@ -297,12 +395,6 @@ triangle@LEARN:~$ tree ./src
     ])
 
 </script>
-
-<style scoped>
-.page{display: flex;justify-content: flex-start;align-items: flex-start;width: 100%;height: 500px;}
-.navigate{width: 10%;}
-.content{ width: 80%; height: inherit; display: flex;  flex-direction: column; background-color: rgb(216, 216, 216);}
-</style>
 ```
 
 - `router/index.ts`
@@ -555,79 +647,79 @@ const router = createRouter({
 })
 ```
 
-# 路由导航
+# 导航守卫
 
-## 导航方式
-
-路由在跳转的时候，浏览器会记录用户的操作记录用以实现 「前进」与「后退」
-- `push` : 将操作记录放入一个堆栈中，可实现「前进」与「后退」
-- `replace` : 当前操作会覆盖栈顶的操作，无法「前进」与「后退」
+## 全局守卫
 
 
-```vue
-<template>
-  <div class="container">
+全局守卫分为三类
+- **前置守卫**： 在路由跳转前，这个钩子作用主要是用于登录验证
+- **解析守卫** ： 路由跳转前与导航被确认之前，同时在所有组件内守卫和异步路由组件被解析之后
+- **后置守卫**：在路由跳转完成后触发
+```ts
+const router = createRouter({
+    ...
+})
 
-    <!-- 导航区 -->
-    <div class="navigate">
-      <!-- '/home' 路由采用 'replace' 模式 -->
-      <RouterLink replace to="/home" active-class="xiaozhupeiqi">首页</RouterLink>
-      <!-- 默认都是 'push' 模式 -->
-      <RouterLink to="/news" active-class="xiaozhupeiqi">新闻</RouterLink>
-      <RouterLink to="/about" active-class="xiaozhupeiqi">关于</RouterLink>
-    </div>
+// 前置
+router.beforeEach((to，from, next)=>{
+    // 案例：用户未登陆时，所有路由都跳转到登陆界面
+    if(localStorage.getItem('token') == false && to.path !== '/login'){
+        return '/login';
+    }
+})
 
-    <!-- 展示区 -->
-    <div class="main-content"> <RouterView></RouterView> </div>
-  </div>
-</template>
+// 解析
+router.beforeResolve(()=>{
+
+})
+
+// 后置
+router.afterEach(()=>{
+})
 ```
 
-## 编程导航
-
-上述路由跳转均是定义了 `RouterLink` 标签，然后通过用户点击界面控件实现路由跳转，但是为了编码灵活性，**还需要实现代码自动路由跳转**，即「编程式路由导航」。
-
-```vue
-<script lang="ts" setup name="App">
-  import { onMounted } from 'vue'
-  import { useRouter } from 'vue-router'
-
-  const router = useRouter()
-
-  onMounted(()=>{
-    setTimeout(()=>{
-      // 使用 'push' 方式，跳转到 '/news' 
-      router.push('/news')
-    },1000)
-  })
-
-  function active(id:number, content:string){
-      // 参数传递同 'RouterLink' 的 'to' 属性
-      router.push({
-        name: "xiangqing", 
-        params: {
-            id: id,
-            content: content
-        }
-      })
-  }
-</script>
-```
-
-# 重定向
+## 独享守卫
+ 
+在路由配置时设置 `beforEnter`，在 `beforeEach` 之后执行
 
 ```ts
 const router = createRouter({
     routes:[ 
         {
-            path:'/home',
-            component:Home
+            path:'/news',
+            component:News,
+            beforEnter: (to,from,next) =>  {
+
+            }
         },
-        {
-            // 将 '/' 重定向到 '/home' 
-            path: '/',
-            redirect: '/home'
-        }
     ]
 })
 ```
+
+## 组件内守卫
+
+```vue
+<script setup lang="ts">
+    import { onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router';
+
+    // 导航离开该组件的对应路由时调用
+    onBeforeRouteLeave((to, from, next) => {
+    });
+
+    // 当路由跳转到该组件时
+    onBeforeRouteUpdate((to, from, next) => {
+    });
+</script>
+```
+
+## 守卫参数
+
+每一个路由守卫都有三个参数
+- `to` : 要进入的目标路由对象
+- `from` : 要离开的路由对象
+- `next` : 路由处理函数，**若不设置，则使用 `return` 代替**
+  - `next()` : 进入下一个钩子函数
+  - `next( false )` : 中断当前的导航，会重置到 `from`
+  - `next('url')` : 当前的导航被中断，然后进行一个新的导航
+  - `next(error)` : 导航会被终止且该错误会被传递给 `router.onError()` 注册过的回调

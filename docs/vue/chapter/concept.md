@@ -164,6 +164,29 @@
 </script>
 ```
 
+## style
+
+在 `template` 中定义 `css` 变量，便可以通过 `script` 中的变量修改 `style` 中样式参数
+
+```vue
+<template>
+    <div :style="{ '--width': width + 'px' }">测试</div>
+</template>
+
+<style scoped>
+div{
+    width: var(--width);
+    background-color: red;
+}
+</style>
+
+<script setup lang="ts">
+    import { ref } from 'vue';
+    let width = ref(100) 
+</script>
+```
+
+
 # 事件
 
 ## 定义

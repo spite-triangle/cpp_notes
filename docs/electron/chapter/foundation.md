@@ -4,7 +4,7 @@
 
 [Electron](https://www.electronjs.org/zh/docs/latest/) : 使用 `JavaScript(TypeScript)、HTML、CSS` 构建跨平台（Windows、MacOs、Linux）的桌面应用开发框架。该框架基于 `Chromium` 与 `Nodejs` 实现，因此可无缝使用 `web` 前端的界面库进行桌面应用开发。
 
-![alt|c,50](../../image/electron/electron_model.png)
+![alt|c,50](../../image/electron/electron_structure.png)
 
 
 # 工程构建

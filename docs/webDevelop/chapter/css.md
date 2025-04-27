@@ -280,6 +280,27 @@ a:hover {
 - `vh` : 视口高度的百分比
 
 
+# 变量
+
+```html
+<div class='father'>
+    <div class='son'>
+    </div>
+</div>
+
+<style>
+    .father{
+        --div--width: 100px
+        width: var(--div--width)
+    }
+
+    .son{
+        /* 自定义变量可继承 */
+        width: var(--div--width)
+    }
+</style>
+```
+
 
 
 # 布局
