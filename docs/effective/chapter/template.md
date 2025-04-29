@@ -727,6 +727,21 @@ int main(){
 }
 ```
 
+# 类型萃取
+
+
+```cpp
+template<typename T>
+struct TypeTraits;
+
+template<typename Key, typename Value>
+struct TypeTraits<std::map<Key, Value>>{
+    using KeyType = key;
+    using ValueType = Value;
+};
+```
+
+
 # 附录
 
 ## 变长实参
