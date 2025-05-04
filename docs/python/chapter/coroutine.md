@@ -298,8 +298,44 @@ if __name__ == '__main__':
     print('other thing ...')
 
     # 关闭子线程中的协程
-    # 必须在事件循环中执行 loop.close
+    # 必须在事件循环中执行 loop.stop
     asyncio.run_coroutine_threadsafe(close_loop(), loop)
     t.join()
     loop.close()
+```
+
+## run_forever
+
+使用 `asyncio.run` 与 `loop.run_until_complete` 启动事件循环，必须使用 `await` 才能保证协程能正常被执行完成。**若想要未使用 `await` 的协程也能被正常执行，则需要使用 `loop.run_forever` 启动事件循环。**
+
+
+```python
+import asyncio
+
+async def fcn():
+    print('fcn() called')
+    await asyncio.sleep(1)
+    print('fcn() finished')
+
+def done(arg):
+    print('done() called')
+
+async def run():
+    print('run() called')
+    r =  asyncio.create_task(fcn())
+    r.add_done_callback(done)
+    print('run() finished')
+
+if __name__ == '__main__':
+
+    loop = asyncio.new_event_loop()
+    asyncio.ensure_future(run(), loop=loop)
+    try:
+        # 使用 asyncio.run() 确保未使用 await 的协程也能被执行
+        loop.run_forever()
+    except KeyboardInterrupt:
+        print('quit')
+    finally:
+        loop.close()
+
 ```
