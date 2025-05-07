@@ -1,6 +1,8 @@
-# Conda
+# 项目管理
 
-# anaconda
+# conda
+
+## anaconda
 
 
 1. 安装 [anaconda](https://www.anaconda.com/)
@@ -68,7 +70,7 @@ custom_channels:
 ```
 
 
-# miniforge
+## miniforge
 
 1. 安装 [miniforge](https://github.com/conda-forge/miniforge)
 
@@ -111,7 +113,7 @@ custom_channels:
 ```
 
 
-# mamba
+## mamba
 
 >[!tip]
 > `miniforge` 自带 `mamba` ，无需安装
@@ -124,5 +126,125 @@ custom_channels:
 triangle@LEARN:~$ conda install -n base conda-libmamba-solver
 triangle@LEARN:~$ conda config --set solver libmamba
 triangle@LEARN:~$ conda install mamba -n base -c conda-forge // 安装 mamba
+```
+
+# 虚拟环境
+
+## 概念
+
+```txt
+conda
+├── python 3.8
+│   ├── venv 1
+│   └── venv 2
+└── python 3.10
+    ├── venv 1
+    └── venv 2
+```
+
+
+`conda` 用于管理多个不同版本的 `pyhton` 环境，而「虚拟环境」则是在同一 `python` 版本下，「项目工程本地」搭建不同的 python 环境。
+
+## venv
+
+```term
+triangle@LEARN:~$ python.exe -m venv .env // 创建虚拟环境，第三方包放在 .env 文件夹下
+triangle@LEARN:~$ .\.env\Scripts\activate // windows 激活环境
+triangle@LEARN:~$ source ./.env/bin/activate // linux 激活环境
+(.env) triangle@LEARN:~$ pip list // 查看安装了哪些包
+(.env) triangle@LEARN:~$ pip install fastapi
+(.env) triangle@LEARN:~$ pip install "uvicorn[standard]"
+(.env) triangle@LEARN:~$ deactivate // 退出激活环境
+triangle@LEARN:~$ rm -rf .env // 直接删除文件夹即可删除虚拟环境
+```
+
+
+# pyproject.toml
+
+## 介绍
+
+在传统的 Python 项目中，我们往往需要维护多个配置文件：
+- `setup.py` 用于项目打包、配置项目元数据
+- `requirements.txt` 管理依赖
+- 各种工具的配置文件（.pylintrc、pytest.ini 等）
+
+而且不同的打包工具 `setup.py` 配置也可能存在差异。因此，`PEP 518` 定义了 `pyproject.toml` 文件的基本结构和构建系统规范,解决 Python 项目构建时的依赖问题，让构建过程变得更加可靠。
+
+
+## 配置
+
+```toml
+# 项目元信息
+[project]
+name = "demo"                       # 需要是当前工程文件夹中的包名或脚本名
+version = "0.1.0"
+description = ""
+authors = [{ name = "triangle" }]
+license = { text = "MIT" }
+readme = "README.md"
+requires-python = ">=3.10"          # python 版本要求
+dependencies = [                    # 正式环境依赖
+    "requests>=2.25.0",
+    "numpy>=1.20.0",
+]           
+optional-dependencies.test = [      # 测试框架附加依赖
+    "pytest>=6.0.0",
+    "pytest-cov>=2.0.0",
+]
+optional-dependencies.dev = [       # 开发环境附加依赖
+    "black>=21.0",
+    "flake8>=3.9.0",
+]
+
+# 项目 url
+[project.urls]
+Homepage = "https://example.com"
+Repository = "https://github.com/example/your-package"
+
+# 项目相关的快捷命令，项目 instal 成功后才可执行
+[project.scripts]
+hello = 'cli.hello:hello'                # 运行 cli/hello.py 中的 hello 函数
+
+# 设置包管理构建系统，例如 poetry、setuptools 等
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+# 拓展的工具配置，例如配置 poetry、setuptools、black、isort、pytest 等
+[tool.xxx]
+xxx = 'xx'
+```
+
+```term
+triangle@LEARN:~$ pip install -e . // 以 dev 模式安装项目 
+triangle@LEARN:~$ hello // 执行 project.scripts 命令
+```
+
+## poetry
+
+但是 `python` 官方只干了一半的活，**只定了协议，未提供工具**，因此，诞生了 [poetry](https://python-poetry.org/docs/)。使用 `poetry` 可以非常方便的管理「虚拟环境」与 `pyproject.toml`。
+
+```term
+triangle@LEARN:~$ pip install poetry 
+triangle@LEARN:~$ poetry list
+Commands
+    new                     生成 package 工程的脚手架
+    init                    初始化一个新的 pyproject.toml 文件
+    env use                 切换项目的虚拟环境
+    shell                   进入项目的虚拟环境，2.1 版本后需要安装 pip install poetry-plugin-shell
+    install                 安装项目的依赖包
+    add                     添加依赖包到项目中
+    remove                  移除项目中的依赖包
+    update                  更新所有依赖
+    show                    显示项目的依赖包信息
+    run                     运行命令
+    export                  导出项目依赖到 requirements.txt 文件
+    build                   打包，只能生成 .whl 与压缩包
+    publish                 发布包到公网 
+triangle@LEARN:~$ 
+triangle@LEARN:~$ // 一般使用流程
+triangle@LEARN:~$ poetry init // 生成 pyproject.toml
+triangle@LEARN:~$ poetry add numpy
+triangle@LEARN:~$ poetry export -f requirements.txt -o requirements.txt // 根据 pyproject.toml 生成 requirements.txt
 ```
 

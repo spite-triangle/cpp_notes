@@ -10,8 +10,6 @@
     - [webassembly](tools/chapter/Webassembly.md)
 - **调试工具**
     - [gdb](https://spite-triangle.github.io/computer_tools/#/./LinuxCommand/chapter/gdb)
-- **管理工具**
-    - [conda](tools/chapter/conda.md)
 - **绘图**
     - [graphviz](tools/chapter/graphviz.md)
     - [graph-easy](tools/chapter/grapheasy.md)
