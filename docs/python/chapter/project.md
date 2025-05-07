@@ -284,6 +284,7 @@ package-mode = false  # 当前项目非 .whl 包开发，只使用 poetry 的包
 name = "aliyun"
 url = "https://mirrors.aliyun.com/pypi/simple"
 priority = "primary"
+default = true          # 使 poetry 的默认回调行为都使用上述源
 ```
 
 其他配置见 [Doc](https://python-poetry.org/docs/pyproject/)
@@ -322,4 +323,19 @@ numpy = "^2.2.5"
 # poetry.exe add pandas --group dev
 [tool.poetry.group.dev.dependencies]
 pandas = "^2.2.3"
+```
+
+### poetry.lock
+
+`poetry.lock` 锁定文件存在以下作用：
+- 记录确切的版本号，保证每个人安装的库版本都一样
+- 库依赖关系的准确记录
+- 可通过锁定文件检查 `pyproject.toml` 的正确性
+- 可用于 `git` 、`svn` 版本控制，防止开发人员的本地依赖库版本不统一
+
+在执行 `poetry add`，`poetry remove`，`poetry update` 命令后，会自动更新 `poetry.lock`。但有时会直接修改 `pyproject.toml`，这就导致 `pyproject.toml` 与 `poetry.lock` 不一致，这种情况下可以手动更新
+
+```term
+triangle@LEARN:~$ poetry update --lock
+triangle@LEARN:~$ poetry lock
 ```
