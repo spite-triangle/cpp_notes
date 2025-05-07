@@ -222,6 +222,8 @@ triangle@LEARN:~$ hello // 执行 project.scripts 命令
 
 ## poetry
 
+### 介绍
+
 但是 `python` 官方只干了一半的活，**只定了协议，未提供工具**，因此，诞生了 [poetry](https://python-poetry.org/docs/)。使用 `poetry` 可以非常方便的管理「虚拟环境」与 `pyproject.toml`。
 
 ```term
@@ -230,21 +232,94 @@ triangle@LEARN:~$ poetry list
 Commands
     new                     生成 package 工程的脚手架
     init                    初始化一个新的 pyproject.toml 文件
-    env use                 切换项目的虚拟环境
-    shell                   进入项目的虚拟环境，2.1 版本后需要安装 pip install poetry-plugin-shell
     install                 安装项目的依赖包
+    env                     虚拟环境
+    run                     在虚拟环境中运行命令
+    shell                   进入项目的虚拟环境，2.1 版本后需要安装 pip install poetry-plugin-shell
     add                     添加依赖包到项目中
     remove                  移除项目中的依赖包
     update                  更新所有依赖
     show                    显示项目的依赖包信息
-    run                     运行命令
+    source                  源管理
     export                  导出项目依赖到 requirements.txt 文件
     build                   打包，只能生成 .whl 与压缩包
     publish                 发布包到公网 
-triangle@LEARN:~$ 
-triangle@LEARN:~$ // 一般使用流程
-triangle@LEARN:~$ poetry init // 生成 pyproject.toml
-triangle@LEARN:~$ poetry add numpy
 triangle@LEARN:~$ poetry export -f requirements.txt -o requirements.txt // 根据 pyproject.toml 生成 requirements.txt
 ```
 
+### 虚拟环境
+
+`poetry` 除了能进行包管理外，还可以配置虚拟环境
+
+```term
+triangle@LEARN:~$ poetry config --list
+  ...
+virtualenvs.create = true                       # 自动创建虚拟环境
+virtualenvs.in-project = null                   # 虚拟环境在项目工程的 .venv 文件夹下
+virtualenvs.path = "{cache-dir}\\virtualenvs"   # 默认虚拟环境路径
+  ...
+
+triangle@LEARN:~$ poetry config virtualenvs.in-project true // 虚拟环境创建在项目目录，方便管理
+triangle@LEARN:~$ poetry env use python // 根据当前 python 版本创建虚拟环境
+triangle@LEARN:~$ poetry env activate // 只是打印进入虚拟环境的命令，具体指令见 venv 章节
+triangle@LEARN:~$ poetry run [command] // 在虚拟环境中执行 command 命令
+```
+
+
+### 配置文件
+
+```term
+triangle@LEARN:~$ poetry init // 生成 pyproject.toml
+triangle@LEARN:~$ poetry.exe source add aliyun  https://mirrors.aliyun.com/pypi/simple // 添加源
+triangle@LEARN:~$ poetry.exe source remove aliyun // 删除源
+```
+
+
+```toml
+[tool.poetry]
+package-mode = false  # 当前项目非 .whl 包开发，只使用 poetry 的包管理能力
+
+# 配置 poetry 的代理源
+[[tool.poetry.source]]
+name = "aliyun"
+url = "https://mirrors.aliyun.com/pypi/simple"
+priority = "primary"
+```
+
+其他配置见 [Doc](https://python-poetry.org/docs/pyproject/)
+
+### 依赖管理
+
+`poetry` 区分 `dev` 与 `test` 依赖，是以 `group` 的形式实现，即 `dev` 与 `test` 是两个依赖组，而默认组则是「运行环境依赖」。此外，根据需要也可以自定义 `group`。
+
+```term
+triangle@LEARN:~$ poetry add [package] // 同 pip install [package] ，运行环境依赖
+triangle@LEARN:~$ poetry add [package] --group dev // 开发环境依赖
+triangle@LEARN:~$ poetry add [package] --group test // 测试环境依赖
+triangle@LEARN:~$ poetry remove [package] // 删除包
+triangle@LEARN:~$ poetry install --help
+Options
+  --with [group1,group2]        安装 group1,group2 以及默认依赖
+  --without [group1,group2]     不安装 group1,group2
+  --only [group]                只安装 group
+  --only-root                   只安装项目，不安装依赖
+  --no-root                     只安装依赖，不安装项目
+```
+
+
+
+```toml
+# poetry.exe add aiohttp
+[project]
+dependencies = [
+    "aiohttp (>=3.11.18,<4.0.0)"
+]
+
+# poetry.exe add numpy --group test
+[tool.poetry.group.test.dependencies]
+numpy = "^2.2.5"
+
+# poetry.exe add pandas --group dev
+[tool.poetry.group.dev.dependencies]
+pandas = "^2.2.3"
+```
