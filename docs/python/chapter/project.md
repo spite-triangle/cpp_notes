@@ -235,7 +235,7 @@ Commands
     install                 安装项目的依赖包
     env                     虚拟环境
     run                     在虚拟环境中运行命令
-    shell                   进入项目的虚拟环境，2.1 版本后需要安装 pip install poetry-plugin-shell
+    shell                   进入项目的虚拟环境
     add                     添加依赖包到项目中
     remove                  移除项目中的依赖包
     update                  更新所有依赖
@@ -266,12 +266,19 @@ triangle@LEARN:~$ poetry run [command] // 在虚拟环境中执行 command 命�
 ```
 
 
-### 配置文件
+### 工具配置
 
 ```term
 triangle@LEARN:~$ poetry init // 生成 pyproject.toml
 triangle@LEARN:~$ poetry.exe source add aliyun  https://mirrors.aliyun.com/pypi/simple // 添加源
 triangle@LEARN:~$ poetry.exe source remove aliyun // 删除源
+triangle@LEARN:~$ poetry.exe config --list
+    ...
+installer.max-workers = null            # 依赖安装时的并发数
+installer.parallel = true               # 并发安装依赖
+installer.re-resolve = true
+repositories.aliyun.url = "https://mirrors.aliyun.com/pypi/simple"  # 配置的源
+    ...
 ```
 
 
@@ -279,15 +286,16 @@ triangle@LEARN:~$ poetry.exe source remove aliyun // 删除源
 [tool.poetry]
 package-mode = false  # 当前项目非 .whl 包开发，只使用 poetry 的包管理能力
 
-# 配置 poetry 的代理源
+# 配置 poetry 的代理源，使用 'poetry.exe source' 自动管理
 [[tool.poetry.source]]
 name = "aliyun"
 url = "https://mirrors.aliyun.com/pypi/simple"
 priority = "primary"
-default = true          # 使 poetry 的默认回调行为都使用上述源
+default = true          # 无法安装时才设置。使 poetry 的默认回调行为都使用上述源
 ```
 
 其他配置见 [Doc](https://python-poetry.org/docs/pyproject/)
+
 
 ### 依赖管理
 
@@ -338,4 +346,265 @@ pandas = "^2.2.3"
 ```term
 triangle@LEARN:~$ poetry update --lock
 triangle@LEARN:~$ poetry lock
+triangle@LEARN:~$ poetry check  // 检查 poetry.lock 与 pyproject.toml
+```
+
+### 插件
+
+在新版的 poetry 中，一些指令是通过插件的形式提供，例如 `export`、`shell`等
+
+```toml
+[tool.poetry.requires-plugins]
+poetry-plugin-export = ">=1.8"
+poetry-plugin-shell = ">=1.0"
+```
+
+**但是插件无法通过 `poetry install` 自动安装**
+
+```term
+triangle@LEARN:~$ pip install poetry-plugin-* // 安装插件
+```
+
+## pdm
+
+### 介绍
+
+[pdm](https://github.com/pdm-project/pdm) 与 `poetry` 一样，通过 `pyproject.toml` 进行项目管理。pdm 的设计大部分功能都借鉴了 poetry ，且对 poetry 的不足之处进行了优化，使用更加简便，但目前 pdm 用户量没有 poetry 多，属于战未来的产品。
+
+```term
+triangle@LEARN:~$ pip install pdm
+triangle@LEARN:~$ pdm --help
+Commands
+  init                  Initialize a pyproject.toml for PDM. Built-in templates: - default: `pdm init`, A simple template with a basic structure. - minimal: `pdm init minimal`, A minimal template with only `pyproject.toml`.
+  new                   Create a new Python project at <project_path>
+  install               Install dependencies from lock file
+  add                   Add package(s) to pyproject.toml and install them
+  remove                Remove packages from pyproject.toml
+  search                Search for PyPI packages
+  list                  List packages installed in the current working set
+  show                  Show the package information
+  config                Display the current configuration
+  build                 Build artifacts for distribution
+  cache                 Control the caches of PDM
+  completion            Generate completion scripts for the given shell
+  export                Export the locked packages set to other formats
+  fix                   Fix the project problems according to the latest version of PDM
+  import                Import project metadata from other formats
+  info                  Show the project information
+  lock                  Resolve and lock dependencies
+  outdated              Check for outdated packages and list the latest versions on indexes.
+  publish               Build and publish the project to PyPI
+  python (py)           Manage installed Python interpreters
+  run                   Run commands or scripts with local packages loaded
+  self (plugin)         Manage the PDM program itself (previously known as plugin)
+  sync                  Synchronize the current working set with lock file
+  update                Update package(s) in pyproject.toml
+  use                   Use the given python version or path as base interpreter. If not found, PDM will try to install one.
+  venv                  Virtualenv management
+```
+
+### 虚拟环境
+
+pdm 可以启用 `PEP 582` 来创建隔离的开发环境，**但是 PEP 582 规则被拒绝了**。因此，还是推荐使用虚拟环境的方式来创建隔离开发环境，pdm 支持以下方式
+- `virtualenv` : 默认方式，是最早诞生的虚拟环境工具，兼容性好
+- `venv` : 在 `python 3.3` 后集成的默认虚拟环境创建工具，**推荐**
+- `conda` 
+- `uv`
+
+```term
+triangle@LEARN:~$ pdm config 
+Configure
+    venv.backend [virtualenv|venv|conda]            修改虚拟环境创建方式
+    venv.with_pip                                   虚拟环境是否安装 pip
+    venv.in_project                                 虚拟环境创建在工程文件夹
+triangle@LEARN:~$ pdm venv --help
+Commands
+    create              创建虚拟环境
+    list                展示当前项目中创建的虚拟环境
+    remove              删除虚拟环境
+    activate            打印虚拟环境激活脚本
+    purge               清理虚拟环境
+triangle@LEARN:~$ pdm use [python] // 当前 pdm 环境使用哪个 python 解释器
+triangle@LEARN:~$ pdm venv create [python] [options]
+Position
+    python                              基于指定的 python 解释器创建虚拟环境，不指定就使用当前 pdm 环境的 python
+Options
+    --with-pip                          在虚拟环境中安装 pip
+    -w [virtualenv|venv|conda|uv]       指定虚拟环境的管理工具
+    --name [name]                       将创建全局的虚拟环境，不指定则创建在项目的 '.venv' 文件夹内
+triangle@LEARN:~$ pdm run python demo.py // 在虚拟环境中执行命令
+Options
+    --venv [venv]              指定虚拟环境名，通过 'pdm venv list' 查看
+```
+
+### 配置
+
+```term
+triangle@LEARN:~$ pdm config // 列出所有配置
+    ... 
+venv.backend = virtualenv               # 虚拟环境默认方式
+venv.in_project = True                  # 在项目本地创建虚拟环境，即 .venv
+venv.with_pip = False                   # 虚拟环境中安装 pip 
+    ...
+pypi.url = https://pypi.org/simple      # 仓库源
+pypi.verify_ssl = False                 # 源通信验证，开启可能无法访问仓库
+pypi.ignore_stored_index = False
+pypi.json_api = False
+    ...
+
+```
+
+配置文件分三种类型，从优先级从高到低为
+1. `<PROJECT_ROOT>/pdm.toml`: 项目本地配置
+1. `<CONFIG_ROOT>/config.toml` : pdm 全局配置
+1. `<SITE_CONFIG_ROOT>/config.toml` :  pdm 工具自带的默认配置，不可修改
+
+```term
+triangle@LEARN:~$ pdm config --local pypi.verify_ssl False // 修改项目本地配置
+triangle@LEARN:~$ pdm config pypi.verify_ssl False // 修改全局配置
+```
+
+- `<PROJECT_ROOT>/pdm.toml`
+
+```toml
+# 'pdm config --local' 配置
+[pypi]
+url = 'xxx'
+verify_ssl = false
+```
+
+- `pyproject.toml` : 除了在 `pdm.toml` 可以对 `pdm` 进行配置，在 `pyproject.toml` 中也能配置
+
+```toml
+# 源配置
+[[tool.pdm.source]]
+name = "private"
+url = "https://private.pypi.org/simple"
+
+# 为 'pdm commands' 添加默认的 'options'
+[tool.pdm.options]
+add = ["--no-isolation", "--no-self"]
+install = ["--no-self"]
+lock = ["--no-cross-platform"]
+
+# 在锁定文件中排除 'requests' 包的校验
+[tool.pdm.resolution]
+excludes = ["requests"]
+```
+
+
+### 依赖管理
+
+```term
+triangle@LEARN:~$ pdm --help
+Commands
+    install                 安装项目依赖
+    add [package]           往项目添加包
+    remove [package]        从项目中移除包
+    list                    查看当前项目已经安装成功的包
+    show [package]          查看安装的包信息
+    search [package]        从镜像仓库中搜索包
+    update <package>        更新包
+```
+
+pdm 也可以按照使用类型对包进行分组管理`group`：运行依赖包、`dev` 开发依赖包、`test` 测试依赖包以及其他自定义分组。
+
+```term
+triangle@LEARN:~$ pdm add --help 
+Options 
+    -G [group]                      将 package 归类到 group 组，放到 'project.optional-dependencies'
+    --dev                           开发依赖包，由 pdm 自行管理，不放到 'project.optional-dependencies'
+    -e                              可修改包依赖，例如 git 仓库
+triangle@LEARN:~$ pdm install --help
+Options
+    --with [group]                  需要安装的分组
+    --without [group]               不需要安装的分组
+    --dev                           需要安装 dev 依赖
+    --prod                          不安装 dev 依赖
+triangle@LEARN:~$ pdm export -o requirements.txt // 导出依赖
+```
+
+
+
+### 构建
+
+在 pdm 中并未强制要求用哪个构建工具，可根据 [build](https://github.com/pdm-project/pdm/blob/main/docs/reference/build.md)，在 `pyproject.toml` 中配置自行配置
+
+```toml
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+```
+
+### 脚本
+
+pdm 在 `pyproject.toml` 中支持多种类型的脚本配置
+
+```toml
+[tool.pdm.scripts]
+commond = "flask run -p 54321"
+cmd = {cmd = "flask run -p 54321"}
+shell = {shell = "cat error.log|grep CRITICAL > critical.log"}
+call = {call = "foo_package.bar_module:main"}
+```
+
+```term
+triangle@LEARN:~$ pdm run call // 执行脚本
+```
+
+
+除了基本的脚本配置外，pdm 也支持一些复杂的脚本配置
+
+- **组合命令**
+
+```toml
+[tool.pdm.scripts]
+lint = "flake8"
+test = "pytest"
+all = {composite = ["lint mypackage/", "test -v tests/"]}
+# 简化写法
+mytask.composite = [
+    "echo 'Hello'",
+    "echo 'World'"
+]
+```
+
+- **命令环境配置**
+
+```toml
+[tool.pdm.scripts]
+start.cmd = "flask run -p 54321"                # start 执行的命令
+start.env = {FOO = "bar", FLASK_DEBUG = "1"}    # start 命令的环境变量
+start.working_dir = "subdir"                    # 工作目录
+```
+
+- **命令传参**
+
+```toml
+[tool.pdm.scripts]
+cmd = "echo 'xxx {args} xxx'"                   # {args} 会展开传入的参数
+test = "echo 'xxx {args:--default} xxx'"        # {args: xxx} 指定默认参数
+```
+
+- **前置/后置命令**
+
+```toml
+[tool.pdm.scripts]
+pre_compress = "{{ Run BEFORE the `compress` script }}" # 前置 pre_xxxx
+compress = "tar czvf compressed.tar.gz data/"
+post_compress = "{{ Run AFTER the `compress` script }}" # 后置 post_xxxx
+```
+
+### 锁定文件
+
+当进行包安装操作时，会生成 `pdm.lock` 锁定文件
+- 保证在所有机器上，项目的包都一样
+- 便于版本控制，多人协同开发
+
+```term
+triangle@LEARN:~$ pdm sync // 根据 pdm.lock 安装包
+triangle@LEARN:~$ pdm update // 根据 pyproject.toml 更新 pdm.lock
+triangle@LEARN:~$ pdm lock // 生成锁定文件
+triangle@LEARN:~$ pdm lock --check // 检查锁定文件
+triangle@LEARN:~$ pdm lock --refresh // 刷新锁定文件
 ```
