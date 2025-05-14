@@ -2,7 +2,7 @@
 - **Python**
 - [目录](python/README.md)
 - **语言开发**
-    - [第一章 基本概念](python/chapter/advance.md)
+    - [第一章 基本概念](python/chapter/foundation.md)
     - [第二章 高级特性](python/chapter/advance.md)
     - [第三章 并发](python/chapter/concurrency.md)
     - [第四章 协程](python/chapter/coroutine.md)

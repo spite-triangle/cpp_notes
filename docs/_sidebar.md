@@ -1,6 +1,7 @@
 <!-- <hr style="margin: 5px 0;"> -->
 
 - **理论知识**
+  - [基本理论](theory/README.md)
   - [计算机原理](https://spite-triangle.github.io/computer_theory/#/)
   - [操作系统](operateSystem/README.md)
   - [编译原理](compiler/README.md)
