@@ -260,24 +260,27 @@ virtualenvs.path = "{cache-dir}\\virtualenvs"   # 默认虚拟环境路径
   ...
 
 triangle@LEARN:~$ poetry config virtualenvs.in-project true // 虚拟环境创建在项目目录，方便管理
-triangle@LEARN:~$ poetry env use python // 根据当前 python 版本创建虚拟环境
+triangle@LEARN:~$ poetry env use python // 根据当前 python 版本创建虚拟环境，也可以指定 python.exe 的绝对路径
 triangle@LEARN:~$ poetry env activate // 只是打印进入虚拟环境的命令，具体指令见 venv 章节
 triangle@LEARN:~$ poetry run [command] // 在虚拟环境中执行 command 命令
 ```
+
+> [!note]
+> 若当前环境处于 `conda` 的虚拟环境下时，会直接使用 `conda` 的虚拟环境，不会再创建 `.venv` 虚拟环境
 
 
 ### 工具配置
 
 ```term
 triangle@LEARN:~$ poetry init // 生成 pyproject.toml
-triangle@LEARN:~$ poetry.exe source add aliyun  https://mirrors.aliyun.com/pypi/simple // 添加源
+triangle@LEARN:~$ poetry.exe source add aliyun  xxxxx // 添加源
 triangle@LEARN:~$ poetry.exe source remove aliyun // 删除源
 triangle@LEARN:~$ poetry.exe config --list
     ...
 installer.max-workers = null            # 依赖安装时的并发数
 installer.parallel = true               # 并发安装依赖
 installer.re-resolve = true
-repositories.aliyun.url = "https://mirrors.aliyun.com/pypi/simple"  # 配置的源
+repositories.aliyun.url = "xxxxx"  # 配置的源
     ...
 ```
 
@@ -289,7 +292,7 @@ package-mode = false  # 当前项目非 .whl 包开发，只使用 poetry 的包
 # 配置 poetry 的代理源，使用 'poetry.exe source' 自动管理
 [[tool.poetry.source]]
 name = "aliyun"
-url = "https://mirrors.aliyun.com/pypi/simple"
+url = "xxxx"
 priority = "primary"
 default = true          # 无法安装时才设置。使 poetry 的默认回调行为都使用上述源
 ```
@@ -354,6 +357,7 @@ triangle@LEARN:~$ poetry check  // 检查 poetry.lock 与 pyproject.toml
 在新版的 poetry 中，一些指令是通过插件的形式提供，例如 `export`、`shell`等
 
 ```toml
+# 该配置已经无效
 [tool.poetry.requires-plugins]
 poetry-plugin-export = ">=1.8"
 poetry-plugin-shell = ">=1.0"
@@ -363,6 +367,24 @@ poetry-plugin-shell = ">=1.0"
 
 ```term
 triangle@LEARN:~$ pip install poetry-plugin-* // 安装插件
+```
+
+若想实现 `npm run [command]` 的效果，需要借助脚本实现
+
+```term
+triangle@LEARN:~$ pip install poetry-plugin-taskipy // 安装方案一
+triangle@LEARN:~$ poetry self add poetry-plugin-taskipy // 安装方案二，不能修改默认源
+```
+
+```toml
+# pyproject.toml 中配置
+[tool.taskipy.tasks]
+test_echo = "echo 'test'"
+```
+
+```term
+triangle@LEARN:~$ poetry task test_echo // 执行
+test
 ```
 
 ## pdm

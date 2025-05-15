@@ -104,6 +104,22 @@ re3 = {item : item for item in data}
 # {1:1,2:2,3:3,4:4}
 ```
 
+# enum
+
+```python
+from enum import Enum
+
+class Color(Enum):
+    RED = 1
+    GREEN = 2
+    BLUE = 3
+
+
+print(Color.RED)  
+print(Color.GREEN.name)  
+print(Color.BLUE.value)  
+```
+
 # 异常处理
 
 ```python
@@ -231,7 +247,9 @@ box = Box("Hello")  # 自动推断 T 为 str
 ```
 
 
-# 类型注解
+# 注解
+
+## 类型注解
 
 对于常规类型 `int, float, str` 以及自定义对象类型
 
@@ -268,3 +286,50 @@ def fcn(param1: typeing.List[int]):
 def fcn(param:GenericBox[int]):
     pass
 ```
+
+## TypeAlias
+
+```python
+from typing import TypeAlias, List
+
+# 为对象类型取别名
+IntListType: TypeAlias =  List[int]
+```
+
+
+## Optional
+
+```python
+from typing import Optional
+
+def greet(name: Optional[list[RoleEnum]] | str = None):
+    """
+        name 的取值类型有：
+        - None : Optional 自动添加的
+        - list[RoleEnum] ：通过 Optional 定义的
+        - str ： 同通过 '|' 添加的
+    """
+    pass
+```
+
+## Annotated
+
+`Annotated` 是 Python 类型注解系统中的一个工具不是具体的函数，允许为已有的类型添加元数据。
+- 提供额外的类型信息：为类型注解添加额外的上下文或约束，这些信息可以被静态类型检查器用来进行更精确的类型检查。
+- 增强代码可读性
+- 自定义类型检查：与静态类型检查器配合使用，实现自定义的类型检查逻辑。
+- 框架和库的开发：在开发框架或库时，Annotated 可以用来定义特殊的类型注解，这些注解可以被框架内部逻辑使用，以实现特定的功能。
+
+```python
+from typing import Annotated
+
+""" 
+    - type : 是原本的类型注解
+    - metadata : 是你想要附加的额外信息，可以是任意 Python 对象，如字符串、整数、自定义类的实例等
+"""
+Annotated[type, metadata]
+```
+
+> [!note]
+> `Annotated` 的作用只是让原类型增加一些 `metadata` 信息，这些信息并不会影响原类型的使用。一些框架会对这些 `metadata` 信息进行读取，例如 `pydantic` 库。
+

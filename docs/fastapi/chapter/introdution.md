@@ -28,6 +28,14 @@ triangle@LEARN:~$ rm -rf .env // 直接删除文件夹即可删除虚拟环境
 triangle@LEARN:~$ pip install fastapi-offline
 ```
 
+```python
+from fastapi_offline import FastAPIOffline
+
+# 使用 FastAPIOffline 代替 FastAPI
+# app = FastAPI()
+app = FastAPIOffline()
+```
+
 
 # hello world
 

@@ -138,6 +138,178 @@ class User(BaseModel):
     address : Address
 ```
 
+## 泛型
+
+
+```python
+from typing import Generic, TypeVar
+from pydantic import BaseModel, ValidationError
+
+DataType = TypeVar('DataType')  
+
+class DataModel(BaseModel):
+    number: int
+
+class Response(BaseModel, Generic[DataType]):  
+    data: DataType  
+
+# 必须写 `data=1` 否则会报错 
+var = Response[int](data=1)
+```
+
+如果不想使用写 `data=1` 构造可以使用 `Union` 来定义默认类型
+
+```python
+from typing import Union
+
+class Response(BaseModel, Generic[DataType]):  
+    data: Union[DataType, None] = None
+
+# 这样就不会报错了
+var = Response[int]()
+```
+
+## 自定义类型
+
+### Annotated
+
+- **类型自定义**
+
+```python
+from typing import Annotated
+
+from pydantic import (
+    AfterValidator,
+    PlainSerializer,
+    WithJsonSchema,
+    TypeAdapter,
+)
+
+TruncatedFloat = Annotated[
+    float,
+    # 对传入的 float 数进行四舍五入处理，保留一位小数
+    AfterValidator(lambda x: round(x, 1)),
+    # 字符串序列化
+    PlainSerializer(lambda x: f'{x:.1e}', return_type=str),
+    # 序列化 json 格式的类型定义
+    WithJsonSchema({'type': 'string'}, mode='serialization'),
+]
+
+# 根据定义的数据类型创建 pydantic 对象
+input = TypeAdapter(TruncatedFloat)
+
+# 赋值
+input = 1.02345
+assert input != 1.0
+
+# 会触发 AfterValidator 对值进行四舍五入处理
+assert ta.validate_python(input) == 1.0
+
+# 会调用 PlainSerializer 进行序列化
+assert ta.dump_json(input) == b'"1.0e+00"'
+
+# json 类型定义
+assert ta.json_schema(mode='validation') == {'type': 'number'}
+assert ta.json_schema(mode='serialization') == {'type': 'string'}
+```
+
+- **使用**
+
+```python
+from pydantic import BaseModel
+ 
+class DataModel(BaseModel):
+    value: TruncatedFloat 
+```
+
+### TypeAliasType
+
+直接使用 `Annotated` 自定义类型有以下缺点
+- 自定义类型的 `JSON Schema` 不能转换为 [define](https://json-schema.org/understanding-json-schema/structuring#defs)
+- 自定义类型无法进行类型递归
+
+上述问题可使用 `TypeAliasType` 解决：使用 `TypeAliasType()` 包裹 `Annotated` 自定义的类型
+
+```python
+from typing import Annotated
+
+from annotated_types import Gt
+from typing_extensions import TypeAliasType
+
+PositiveIntList = TypeAliasType('PositiveIntList', list[Annotated[int, Gt(0)]])
+```
+
+> [!note]
+> 在 `Python >= 3.12` 版本中，不再需要使用 `TypeAliasType` 进行包裹
+
+
+### 类定义
+ 
+可通过自定义类方法 `__get_pydantic_core_schema__` 与 `__get_pydantic_json_schema__` 实现 `WithJsonSchema`、`PlainSerializer`、`AfterValidator` 功能
+
+```python
+from typing import Any
+
+from pydantic_core import CoreSchema, core_schema
+from pydantic import GetCoreSchemaHandler, TypeAdapter, GetJsonSchemaHandler
+from pydantic.json_schema import JsonSchemaValue
+
+class Username(str):
+
+    @staticmethod
+    def value_validator(value:str):
+        print('value_validator')
+        return value
+    
+    @staticmethod
+    def json_serializer(value:str):
+        return value
+
+    @classmethod
+    def __get_pydantic_core_schema__(
+        cls, source_type: Any, handler: GetCoreSchemaHandler
+    ) -> CoreSchema:
+        """
+        参数
+            source_type : 原始类型，通常就是 'cls' 的类型
+            handler： 类型处理程序
+        返回
+            core_schema: 描述如何验证该对象
+        """
+        print(source_type)
+        # <class '__main__.Username'>
+        print(handler(int))
+        # {'type': 'int'}
+
+        # core_schema 方法命名规则
+        # - no_info : value_validator 处理器没有 info 参数
+        # - with_info: value_validator 处理器有 info 参数
+        # - after_validator : 在 json_schema 校验之后执行 value_validator
+        # - befor_validator : 在 json_schema 校验之前执行 value_validator
+        return core_schema.no_info_after_validator_function(
+                function=Username.value_validator,          # AfterValidator
+                schema=handler(str),                        # 输入类型验证，在 function 之前执行
+                serialization=core_schema.plain_serializer_function_ser_schema(
+                    function=Username.json_serializer       # 序列化函数
+                ))
+
+    @classmethod
+    def __get_pydantic_json_schema__(
+        cls, _core_schema: core_schema.CoreSchema, handler: GetJsonSchemaHandler
+    ) -> JsonSchemaValue:
+        """
+            复杂的 json schema 定义
+        """
+        # mode 可以填 'validation', 'serialization'
+        handler.mode = 'serialization'
+        return handler(core_schema.str_schema())
+
+val = TypeAdapter(Username)
+
+val.validate_python('test')
+```
+
+
 # 依赖注入
 
 除了使用 `Pydantic` 进行校验，也可以使用 `Depends` 对参数进行预处理、校验
