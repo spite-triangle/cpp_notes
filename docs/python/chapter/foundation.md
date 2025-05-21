@@ -120,6 +120,83 @@ print(Color.GREEN.name)
 print(Color.BLUE.value)  
 ```
 
+# 包管理
+
+## import
+
+- `package.py`
+
+```python
+print(__name__)
+
+# 创建动态全局变量
+def create_global(key,value):
+    dynamic_g = globals()
+    dynamic_g[key] = value
+
+# 值类型全局变量
+PI = '3.14'
+
+# 类全局变量
+class Person:
+    age : int = 18
+student = Person()
+```
+
+- `main.py`
+
+```python
+# 导入 package.py 脚本，生成 module ，且同一 package.py 全局只会导入一次
+import package
+# 使用上次生成的 module
+import package as pk
+
+# 导入操作是「赋值」
+from package import PI, student
+
+if __name__ == '__main__':
+
+    package.create_global('var', 'dynamic')
+    print(pk.var)
+
+    # 不可变对象，深拷贝
+    print(PI)
+    PI = 'pi'
+    print(pk.PI)
+
+    # 可变对象赋值，浅拷贝
+    print(student.age)
+    student.age = 20
+    print(pk.student.age)
+```
+
+```term
+triangle@LEARN:~$ python main.py
+package
+dynamic
+3.14
+3.14
+18
+20
+```
+
+## 查找
+
+```python
+import sys
+
+# import 根据 path 查找 module
+# 优先查找文件夹 package，然后再查找 .py 文件
+print(sys.path)
+
+
+# . .. 表示查找的相对路径
+from . import module
+from .. import parent
+```
+
+
+
 # 异常处理
 
 ```python

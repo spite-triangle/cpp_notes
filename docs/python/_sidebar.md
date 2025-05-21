@@ -7,6 +7,7 @@
     - [第三章 并发](python/chapter/concurrency.md)
     - [第四章 协程](python/chapter/coroutine.md)
     - [第五章 项目管理](python/chapter/project.md)
+    - [第六章 日志系统](python/chapter/project.md)
 - **异步框架**
     - [Celery](distributeCluster/chapter/celery.md)
 - **后端服务**

@@ -279,6 +279,8 @@ triangle@LEARN:~$ pip install concurrent-log-handler
 
 ## loguru
 
+### 基本用法
+
 使用 `loguru` 库替代 `logging` 进行日志记录
 
 ```python
@@ -298,13 +300,17 @@ logger.add(
 
 # 添加日志处理器，日志分割
 logger.add(
-    "logs/app_{time:YYYYMMDD}.log",
+    sink="logs/app_{time:YYYYMMDD}.log",
+    encoding="utf-8",
+    level="debug", # 打印日志的最低等级
     rotation="100 MB",  # 自动分割文件大小
     compression="zip",  # 旧日志压缩
     retention="30 days",  # 过期清理
     enqueue=True,  # 多进程安全
     backtrace=True,  # 堆栈追踪深度控制
-    diagnose=False  # 生产环境关闭敏感信息
+    diagnose=False,  # 生产环境关闭敏感信息
+    serialize=False, # 以 json 格式输出日志
+    catch=True, # 日志内部发生异常不会抛出
 )
 
 logger.warning('warning')
@@ -313,8 +319,82 @@ logger.info('info')
 logger.error('error')
 ```
 
+### 绑定
 
- 
+```python
+import sys
+from loguru import logger 
+
+logger.add(sys.stdout, format="{time:YYYY-MM-DD HH:mm:ss} {extra[value]} {level} From {module}.{function} : {message}")
+
+# 给 {extra[value]} 绑定参数，生成新的 logger
+extra_log = logger.bind(value='xxxxxx')
+extra_log.info("绑定参数")
+# 2025-05-21 21:03:00 xxxxxx INFO From logger.<module> : 绑定参数
+```
+
+
+### 异常捕获
+
+- **装饰器**
+
+```python
+from loguru import logger 
+
+# 该装饰器会直接记录依赖信息
+@logger.catch
+def fcn():
+    1/ 0
+
+fcn()
+```
+
+- **捕获**
+
+```python
+try:
+    1/ 0
+except Exception as e:
+    logger.exception(f'{e}')
+```
+
+
+### 简单封装
+
+```python
+from pathlib import Path
+from loguru import logger as loguru_logger
+
+class Logger:
+    _instance = None
+
+    def __init__(self, log_dir: str = "./log", log_file: str = "log.log"):
+        self._logger = loguru_logger
+        self._log_dir = log_dir
+        self._log_file = log_file
+        self._init_log()
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super(Logger, cls).__new__(cls)
+        return cls._instance
+
+    def _init_log(self):
+        dir = Path(self._log_dir)
+        if not dir.exists():
+            Path.mkdir(dir)
+
+        loguru_logger.add(
+            Path(self._log_dir, self._log_file).resolve(),
+        )
+
+    def logger(self):
+        return self._logger
+
+logger = Logger().logger()
+```
+
+
 
 
 
