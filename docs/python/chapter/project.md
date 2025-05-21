@@ -265,8 +265,13 @@ triangle@LEARN:~$ poetry env activate // 只是打印进入虚拟环境的命令
 triangle@LEARN:~$ poetry run [command] // 在虚拟环境中执行 command 命令
 ```
 
+若当前环境处于 `conda` 的虚拟环境下时，会直接使用 `conda` 的虚拟环境，不会再创建 `.venv` 虚拟环境
+
 > [!note]
-> 若当前环境处于 `conda` 的虚拟环境下时，会直接使用 `conda` 的虚拟环境，不会再创建 `.venv` 虚拟环境
+> 解决方案
+> 1. 使用 `conda` 安装目标版本的 python （`poetry python install` 也能装，但是 `poetry` 不能完全替换源，会使用默认的 `pypi.org`）
+> 2. `conda conda info --envs` 查看 python 的安装路径
+> 3. `poetry env use [python]` 根据 conda 安装的 python 创建虚拟环境
 
 
 ### 工具配置

@@ -80,3 +80,23 @@ triangle@LEARN:~$ ninja all # 执行 build all
 triangle@LEARN:~$ ninja help # 执行 build help
 ```
 
+# 问题
+
+当在 `msvc` 环境，使用 `cmake` 进行项目编译时，会生成一个 `xxx.rsp` 的依赖配置，**但该配置文件默认 `utf8` 编码，`msvc` 编译器可能无法正确识别**。
+
+```php
+# 将 .rsp 重新编码为 utf-8 dom
+function(ninja_recoding_rsp _target)
+
+if(MSVC AND  CMAKE_GENERATOR STREQUAL "Ninja")
+    add_custom_command(
+            TARGET ${_target}
+            PRE_LINK
+            # 自己写一个字符串转码工具，将 xxx.rsp 文件编码转换为 uft8-dom 或 gb2312 编码
+            COMMAND convert.exe  ${CMAKE_BINARY_DIR}/CMakeFiles/${_target}.rsp
+            DEPENDS "CMakeFiles/${_target}.rsp"
+            VERBATIM)
+endif()
+
+endfunction()
+```

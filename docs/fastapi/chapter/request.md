@@ -195,8 +195,8 @@ TruncatedFloat = Annotated[
     WithJsonSchema({'type': 'string'}, mode='serialization'),
 ]
 
-# 根据定义的数据类型创建 pydantic 对象
-input = TypeAdapter(TruncatedFloat)
+# 根据数据类型创建 pydantic 类型校验对象
+ta = TypeAdapter(TruncatedFloat)
 
 # 赋值
 input = 1.02345
