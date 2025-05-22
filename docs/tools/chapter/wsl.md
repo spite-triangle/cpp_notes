@@ -57,6 +57,13 @@ triangle@LEARN:~$ ipconfig.exe
    默认网关. . . . . . . . . . . . . :
    ...
 triangle@LEARN:~$ export all_proxy=htttp:/172.18.160.1:port
+triangle@LEARN:~$ curl www.google.com // 测试
+triangle@LEARN:~$ 
+triangle@LEARN:~$ cat cat /etc/resolv.conf  // 上面的 IP 地址不行，就用下面这个
+    ....
+nameserver 192.29.224.1
+    ...
+triangle@LEARN:~$ export all_proxy=htttp:/192.29.224.1:port
 ```
 
 
