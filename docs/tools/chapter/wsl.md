@@ -63,7 +63,7 @@ triangle@LEARN:~$ cat cat /etc/resolv.conf  // 上面的 IP 地址不行，就�
     ....
 nameserver 192.29.224.1
     ...
-triangle@LEARN:~$ export all_proxy=htttp:/192.29.224.1:port
+triangle@LEARN:~$ export all_proxy=htttp:\/\/192.29.224.1:port
 ```
 
 
