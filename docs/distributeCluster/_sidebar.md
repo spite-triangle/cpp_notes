@@ -9,6 +9,7 @@
 - **异步框架**
     - [Celery](distributeCluster/chapter/celery.md)
 - **后端服务**
+    - [Nginx](nginx/README.md)
     - [Django](django/README.md)
     - [FastAPI](fastapi/README.md)
     - [Flask](distributeCluster/chapter/flask.md)
