@@ -351,6 +351,28 @@ def post(
     return {"msg":"ok"}
 ```
 
+可对 `Form()` 获取的 `json` 数据进行校验
+
+
+```python
+from pydantic import TypeAdapter,BaseModle
+from fastapi import Depends,Form
+
+
+class FormData(BaseModle):
+    name: str
+    value: str
+
+def verfiy_json(json_data: str = Form()):
+    ta = TypeAdapter(BaseModle)
+    return ta.validate_json(json_data)
+
+@app.post("/post")
+def post(req: FormData = Depends(verfiy_json)):
+    return {"msg":"ok"}
+```
+
+
 # 文件上传
 
 文件数据的格式是 `Content-Type: multipart/form-data`，因此，同样需要安装 `pip install python-multipart` 后，才能支持 `File` 类型。
@@ -392,9 +414,16 @@ def update_file(inFile: UploadFile):
     # 文件大小
     inFile.size
 
+    # 同步读取文件
     with open( inFile.filename, mode='wb') as f:
         for line in inFile.file:
             f.write(line)
+    
+    # 异步读取文件
+    chunk_size = 1024
+    with open(inFile.filename, "wb") as f:
+        while chunk := await upload_file.read(chunk_size):
+            f.write(chunk)
 
     return {"file": "ok"}
 

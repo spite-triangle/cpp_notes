@@ -301,9 +301,10 @@ logger.add(
 # 添加日志处理器，日志分割
 logger.add(
     sink="logs/app_{time:YYYYMMDD}.log",
+    format="{time:YYYY-MM-DD HH:mm:ss} {extra[value]} {level} From {module}.{function} : {message}",
     encoding="utf-8",
     level="debug", # 打印日志的最低等级
-    rotation="100 MB",  # 自动分割文件大小
+    rotation="100 MB",  # 自动分割文件大小，时间
     compression="zip",  # 旧日志压缩
     retention="30 days",  # 过期清理
     enqueue=True,  # 多进程安全
@@ -317,6 +318,37 @@ logger.warning('warning')
 logger.debug('debug')
 logger.info('info')
 logger.error('error')
+```
+
+`format` 可配置参数
+
+| Key       | Description                                           | Attributes               |
+| --------- | ----------------------------------------------------- | ------------------------ |
+| elapsed   | The time elapsed since the start of the program       | See datetime.timedelta   |
+| exception | The formatted exception if any, None otherwise        | type, value, traceback   |
+| extra     | The dict of attributes bound by the user (see bind()) | None                     |
+| file      | The file where the logging call was made              | name (default), path     |
+| function  | The function from which the logging call was made     | None                     |
+| level     | The severity used to log the message                  | name (default), no, icon |
+| line      | The line number in the source code                    | None                     |
+| message   | The logged message (not yet formatted)                | None                     |
+| module    | The module where the logging call was made            | None                     |
+| name      | The `__name__` where the logging call was made        | None                     |
+| process   | The process in which the logging call was made        | name, id (default)       |
+| thread    | The thread in which the logging call was made         | name, id (default)       |
+| time      | The aware local time when the logging call was made   | See datetime.datetime    |
+
+### 配置文件
+
+```python
+config = {
+    "handlers": [
+        {"sink": sys.stdout, "format": "{time} - {message}"},
+        {"sink": "file.log", "serialize": True},
+    ],
+    "extra": {"user": "someone"}
+}
+logger.configure(**config)
 ```
 
 ### 绑定
@@ -357,6 +389,7 @@ try:
 except Exception as e:
     logger.exception(f'{e}')
 ```
+
 
 
 ### 简单封装

@@ -80,6 +80,7 @@ def down():
 `StreamingHttpResponse` 适用于当文件内容是动态生成的或需要逐步读取数据进行响应的场景。它通过“流式”将数据逐步发送给客户端，而不是一次性加载整个文件到内存中。这对于处理大文件或实时生成数据的场景非常有用。
 
 ```python
+from pathlib import Path
 from fastapi.responses import StreamingResponse
 
 @app.get("/download")
@@ -93,7 +94,13 @@ def down():
             # 对于迭代的每个部分，yield 的内容作为来自这个生成器函数
             yield from file_like
 
-    return StreamingResponse(iterfile(), media_type="video/mp4")
+    # 头信息
+    headers = {
+        "Content-Disposition": "attachment; filename=demo.zip",
+        'content-length': str(Path('file path').stat().st_size),
+        "content-type": "application/zip"
+    }
+    return StreamingResponse(iterfile(), headers = headers)
 ```
 
 # 异常处理

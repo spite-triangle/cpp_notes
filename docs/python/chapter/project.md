@@ -74,10 +74,10 @@ custom_channels:
 
 1. 安装 [miniforge](https://github.com/conda-forge/miniforge)
 
-2. 在系统的 `powershell` 或 `cmd` 直接使用 
+2. 在 `windows` 系统中初始化
 
 ```term
-triangle@LEARN:~$ cd D:\ProgramData\miniforge3\condabin // 安装目录下的 condabin 文件夹
+triangle@LEARN:~$ cd miniforge3\condabin // 安装目录下的 condabin 文件夹
 triangle@LEARN:~$ ./conda.bat init // 初始化环境
 triangle@LEARN:~$ 
 triangle@LEARN:~$ 
@@ -88,10 +88,18 @@ browserify : 无法加载文件 C:\Users\86136\AppData\Roaming\npm\browserify.ps
 (管理员) triangle@LEARN:~$ set-ExecutionPolicy RemoteSigned // 遇到上述异常，在「管理员」模式运行
 ```
 
-3. 修改源，同 `anaconda` 配置
+3. 在 `linux` 系统中初始化
 
-> [!note]
-> miniforge 可以直接修改 `D:\ProgramData\miniforge3\.condarc`，不用再配置 `C:\Users\[主机名]\.condarc`
+```term
+triangle@LEARN:~$ cd miniforge3/bin // 安装目录的 bin 文件夹
+triangle@LEARN:~$ ./conda init // 初始化
+triangle@LEARN:~$ source ~/.brashrc
+```
+
+4. 修改源，同 `anaconda` 配置
+ - `windows` :  `.\miniforge3\.condarc` 与 `C:\Users\[主机名]\.condarc`
+ - `linux` : `~/.condarc` 与 `/etc/conda/.condarc`
+ 
 
 
 ```txt

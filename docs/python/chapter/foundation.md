@@ -102,9 +102,14 @@ res2 = [item for item in data if item > 2]
 
 re3 = {item : item for item in data}
 # {1:1,2:2,3:3,4:4}
+
+re4 = {item for item in data}
+# {1,2,3,4}
 ```
 
-# enum
+# 枚举
+
+## enum
 
 ```python
 from enum import Enum
@@ -118,6 +123,44 @@ class Color(Enum):
 print(Color.RED)  
 print(Color.GREEN.name)  
 print(Color.BLUE.value)  
+```
+
+## flag
+
+```python
+from enum import Flag
+
+# 不允许重复定义枚举值
+@unique
+class Permission(Flag):
+    NONE = 0
+    READ = 1
+    WRITE = 2
+    EXECUTE = 4
+
+# 枚举组合
+rw = Permission.WRITE | Permission.READ
+
+# 可遍历
+for prem in rw:
+    print(prem)
+```
+
+## IntFlag
+
+`flag` 不允许执行数值运算，可用 `IntFlag` 代替
+
+```python
+from enum import IntFlag
+
+class Permission(IntFlag):
+    NONE = 0
+    READ = 1
+    WRITE = 2
+    EXECUTE = 4
+
+# 枚举组合值为 int 数值
+rw = Permission.WRITE | Permission.READ
 ```
 
 # 包管理

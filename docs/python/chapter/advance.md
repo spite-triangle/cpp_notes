@@ -404,6 +404,8 @@ for value in gen:
 | `__iter__, __next__`       | `for` 循环迭代    |
 
 
+
+
 ## 访问控制
 
 `__getattribute__` 效果与 `__getattr__` 一样，**但是推荐使用 `__getattr__` 更安全**
