@@ -9,6 +9,7 @@
 - [第六章 模板](fastapi/chapter/template.md)
 - [第七章 ORM](fastapi/chapter/orm.md)
 - [第八章 中间件](fastapi/chapter/meddleware.md)
+- [第九章 异常](fastapi/chapter/exception.md)
 
 
 

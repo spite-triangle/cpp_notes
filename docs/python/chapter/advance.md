@@ -30,6 +30,9 @@ except:
 
 ```python
 class Context:
+    def __init__(self):
+        print('初始化')
+
     # 进入 with 时调用
     def __enter__(self):
         print('获取资源')
@@ -44,6 +47,12 @@ class Context:
 
 with Context() as c:
     c.do_something()
+    
+# 执行顺序为
+#   初始化
+#   获取资源
+#   do ...
+#   释放
 ```
 
 ```term

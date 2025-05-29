@@ -79,14 +79,14 @@ FAILED test_demo.py::test_hello - assert 1 != 1
 
 报告结论的缩写有
 
-| 缩写 | 单词    | 含义                       |
-| ---- | ------- | -------------------------- |
-| -    | passed  | 通过                       |
-| F    | failed  | 失败                       |
-| E    | error   | 出错                       |
-| S    | skiped  | 跳过                       |
+| 缩写 | 单词    | 含义                   |
+| ---- | ------- | ---------------------- |
+| -    | passed  | 通过                   |
+| F    | failed  | 失败                   |
+| E    | error   | 出错                   |
+| S    | skiped  | 跳过                   |
 | X    | xpassed | 不符合预期，用例未失败 |
-| x    | xFailed | 符合预期，用例失败               |
+| x    | xFailed | 符合预期，用例失败     |
 
 
 ## import
@@ -293,6 +293,7 @@ def test_case():
     assert 1 != 1
 ```
 
+
 # 参数化测试
 
 ```term
@@ -474,6 +475,16 @@ def add_fixture():
 > [!note]
 > 虽然 `fixture` 可以指定范围，但是也只有那些指定了该 `fixture` 的测试用例，才能使用 `fixture`，未指定 `fixture` 的测试用例同样无法访问。想要实现真正全局共享，则需要结合 `conftest.py` 与 `autouse=true` 实现
 
+# 异步测试
+
+```python
+import pytest
+
+@pytest.mark.asyncio
+async def test_async_test():
+    """ 异步测试 """
+
+```
 
 # 插件
 
