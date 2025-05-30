@@ -61,4 +61,15 @@ app.add_exception_handler(HTTPException, http_exception_handler)
 自定义异常处理器也能覆盖默认的异常处理器，因为 `app.exception_handlers` 是 `Dict` 类型的
 
 
+## 堆栈信息
 
+```python
+from loguru import logger
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request, exc):
+    logger.exception(f'{exc}')
+    return PlainTextResponse(str(exc), status_code=400)
+```
+
+在异常处理器中可以直接使用 `logger.exception` 对堆栈信息进行打印

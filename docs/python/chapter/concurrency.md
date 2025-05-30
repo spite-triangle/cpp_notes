@@ -340,6 +340,47 @@ p.start()
 c.start()
 ```
 
+## threadlocal
+
+通过 `threading.local` 在各个线程间独立的全局变量
+
+```python
+import random
+import threading
+
+local_data = threading.local()
+
+
+def show():
+    name = threading.current_thread().getName()
+    try:
+        val = local_data.value
+    except AttributeError:
+        print(f'Thread {name}: No value yet')
+    else:
+        print(f'Thread {name}: {val}')
+
+
+def worker():
+    show()
+    local_data.value = random.randint(1, 100)
+    show()
+
+
+for i in range(2):
+    t = threading.Thread(target=worker)
+    t.start()
+```
+
+```term
+triangle@LEARN:~$ python demo.py
+    Thread Thread-1: No value yet
+    Thread Thread-1: 78
+    Thread Thread-2: No value yet
+    Thread Thread-2: 64
+```
+
+
 
 # 进程
 
@@ -348,11 +389,11 @@ c.start()
 
 在 Python 中，进程存在三种模式
 
-| 模式         | 平台 | 描述                                                                                                            |
-| ------------ | ---- | --------------------------------------------------------------------------------------------------------------- |
-| `fork`       |   Linux   | Linxu 系统的默认创建模式，会复制父进程内资源                                            |
-| `spawn`      |  Linux、Windows、MacOS   | 完成新建一个 Python 解释器，不复制父进程任何资源                                                              |
-| `forkserver` |  部分 Linux    | 会存在三个进程：父进程、server进程（单线程）、子进程。父进程会根据 server 进程 `fork` 子进程 |
+| 模式         | 平台                  | 描述                                                                                         |
+| ------------ | --------------------- | -------------------------------------------------------------------------------------------- |
+| `fork`       | Linux                 | Linxu 系统的默认创建模式，会复制父进程内资源                                                 |
+| `spawn`      | Linux、Windows、MacOS | 完成新建一个 Python 解释器，不复制父进程任何资源                                             |
+| `forkserver` | 部分 Linux            | 会存在三个进程：父进程、server进程（单线程）、子进程。父进程会根据 server 进程 `fork` 子进程 |
 
 
 ```python

@@ -339,3 +339,38 @@ if __name__ == '__main__':
         loop.close()
 
 ```
+
+# contextVar
+
+通过 `ContextVar` 便能定义协程级的 `threadlocal` 变量，且在各个协程间隔离。其运行规则为
+1. 不同协程间相互隔离
+2. 子协程会继承父协程的 `ContextVar`
+3. 动态作用域，上下文变量值的查找根据函数调用栈实现，而非代码定义
+4. 子线程不会继承父线程的  `ContextVar`
+
+```python
+import asyncio
+from contextvars import ContextVar
+
+var = ContextVar('var', default='default')
+
+async def task(value):
+    var.set(value)
+    print(f"Task {value}: var = {var.get()}")  # 输出各自设置的值
+
+async def main():
+    await asyncio.gather(
+        task("A"),
+        task("B")
+    )
+    print("Main after tasks:", var.get())  # 仍为默认值
+
+asyncio.run(main())
+```
+
+```term
+triangle@LEARN:~$ python demo.py
+Task A: var = A
+Task B: var = B
+Main after tasks: default
+```

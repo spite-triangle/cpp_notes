@@ -416,6 +416,24 @@ from typing import TypeAlias, List
 IntListType: TypeAlias =  List[int]
 ```
 
+## 可调用对象
+
+使用 `Callable` 可以声明可调用对象的传入参数类型与返回值类型
+
+```python
+from typing import Callable
+
+def fcn_hook(id:int,msg:str) -> bool:
+    pass
+
+# Callable[[形参类型], 返回类型]
+def fcn(hook: Callable[[int,str], bool]) -> bool:
+    return hook(1,'')
+
+fcn(fcn_hook)
+```
+
+
 
 ## Optional
 
