@@ -2,7 +2,7 @@
 
 <div style="text-align:center;"><img width= 150px src="image/logo.png" align="middle" /></div>
 
-# 开发笔记 <small>1.1.0</small>
+# 开发笔记 <small>1.1.1</small>
 
 > 该项目用于记录日常开发学习笔记
 
@@ -18,7 +18,7 @@
 - vscode 插件开发
 - golang、协程
 - RSM、HFSS、PyAedt
-- RabbitMQ、Redis
+- RabbitMQ、Redis、Ngnix
 - poetry、pdm、Flask、Django、FastAPI、Celery、PyTest
 
 [GitHub](https://github.com/spite-triangle)
