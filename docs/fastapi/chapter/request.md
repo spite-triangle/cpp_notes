@@ -112,6 +112,7 @@ class User(BaseModel):
     name: str
 
     # 自定义校验规则
+    # NOTE - 必须使用 cls ，表明该函数是 classmethod 而非实例方法
     @field_validator('name')
     def name_validator(cls, value):
 
@@ -122,21 +123,119 @@ class User(BaseModel):
         return value
 ```
 
+## 默认值陷阱
+
+
+
+```python
+from pydantic import BaseModel, Field
+
+class User(BaseModel):
+    # 不可变对象
+    id: int = 0
+    name: str = Filed(default='')
+
+    # 可变对象
+    address: List[str] = Filed(default=[])
+```
+
+由于 `List[str]` 是可变对象且 `address` 本质是类属性，因此使用 `default` 定义初始值时，**所有的 `User` 实例的`address`字段均会指向同一个默认值`[]`**。**要想所有的实例的 `address`都指向不同的默认值对象，则需要使用 `default_factory`**
+
+```python
+from pydantic import BaseModel, Field
+
+class User(BaseModel):
+    # 不可变对象
+    id: int = 0
+    name: str = Filed(default='')
+
+    # 可变对象
+    address: List[str] = Filed(default_factory=lambda: [])
+```
+
+> [!note]
+> 在新版的 `pydantic 2.x` 已经进行修复，但是复杂操作还是建议使用 `default_factory`
+
 
 ## 类型嵌套
+
+### 定义
 
 ```python
 class Address(BaseModel):
     id: int
     addr: str
 
+    @field_validator('id')
+    def id_validator(cls, value:int):
+        assert value >= 0
+        return value
+
 class User(BaseModel):
     id: int
     name: str
     age: int
-    friends: Union[List[int], None] = None
-    address : Address
+    address : Address = Field(default_factory= lambda: Address())
 ```
+
+### 赋值
+
+```python
+user = User()
+
+# 直接修改，虽然能赋值，但不会触发 id_validator 校验
+user.address.id = -1
+```
+
+在 `pydantic` 中，直接修改嵌套子对象的值，能修改值，但不会触发设定的 `validate` 校验 (**包括类型校验**)。解决方案
+
+- **方法一** ： 修改整个子对象
+
+    ```python
+    user = User()
+
+    address = Address()
+    address.id = -1
+    user.address = address
+    ```
+
+- **方法二**：打开赋值验证
+
+    ```python
+    class Address(BaseModel):
+        id: int
+        addr: str
+
+        # 配置
+        model_config = {"validate_assignment":True}
+
+        @field_validator('id')
+        def id_validator(cls, value:int):
+            assert value >= 0
+            return value
+
+    class User(BaseModel):
+        id: int
+        name: str
+        age: int
+        address : Address = Field(default_factory= lambda: Address())
+    ```
+
+- **方法三**：使用 `model_copy`
+
+    ```python
+    user = User()
+
+    new_user = user.model_copy(
+        update={
+            "address":{
+                "id": 1000
+            }
+        },
+        # 深度赋值
+        deep=True
+    )
+    ```
 
 ## 泛型
 

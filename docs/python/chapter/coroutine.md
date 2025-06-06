@@ -340,6 +340,37 @@ if __name__ == '__main__':
 
 ```
 
+## semaphore
+
+通过 `asyncio.Semaphore` 可对协程的并发数进行控制
+
+```python
+import asyncio
+import aiofiles
+
+async def async_exist_files(files: List[str], root:Optional[Path] = None, concurrency= 100) -> List[bool]:
+    semaphore = asyncio.Semaphore(concurrency)
+    async def check_with_semaphore(path: Path) -> bool:
+        async with semaphore:
+            try:
+                await aiofiles.os.stat(path)
+                return True
+            except FileNotFoundError:
+                return False
+            except Exception as e:
+                logger.warning(f'校验 {path} 存在性异常，{e}')
+                return False
+
+    if root:
+        file_paths = [root.joinpath(file) for file in files]
+    else:
+        file_paths = [Path(file) for file in files]
+
+    tasks = [check_with_semaphore(path) for path in file_paths]
+    return await asyncio.gather(*tasks)
+```
+
+
 # contextVar
 
 通过 `ContextVar` 便能定义协程级的 `threadlocal` 变量，且在各个协程间隔离。其运行规则为

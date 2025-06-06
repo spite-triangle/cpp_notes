@@ -163,6 +163,75 @@ class Permission(IntFlag):
 rw = Permission.WRITE | Permission.READ
 ```
 
+# 类
+
+## 类结构
+
+![alt|c,70](../../image/python/class_memory.webp)
+
+```python
+class Test:
+    # 类属性，与实例无关
+    value:int = 10 
+
+    def __init__(self):
+        self._value = 10 # 实例变量
+
+    # 实例方法
+    def instance_fcn(self):
+        self._value
+        # NOTE - 在实例方法中，可以使用 self.__class__ 访问类属性，但建议使用类方法代替
+        self.__class__.value
+
+    # 类方法
+    @classmethod
+    def class_fcn(cls):
+        cls.value
+
+    # 静态方法
+    @staticmethod
+    def static_fcn():
+        pass
+```
+
+在 `Python` 中类中的函数存在三种类型
+
+| 类型     | 定义                                          | 使用             | 权限                       |
+| -------- | --------------------------------------------- | ---------------- | -------------------------- |
+| 实例方法 | 定义 `self` 参数                              | 实例调用         | 访问权限最广               |
+| 类方法   | `@classmethod` 定义 (可省略)，定义 `cls` 参数 | 实例调用、类调用 | 只能访问类级别的属性和方法 |
+| 静态方法 | 通过 `@staticmethod` 定义                     | 实例调用、类调用 | 只能访问类静态方法         |
+
+## dataclass
+
+由于只能通过 `self` 来定义「实例属性」，用该方式定义专门存储数据的类型很不直观，不如「类属性」的形式方便。因此，在 `python 3.7` 引入了 `dataclass` 工具，可以将「类属性」定义自动转换为「实例属性」，且在 `dataclass` 中，该属性被称之为「字段」
+
+```python
+from typing import ClassVar
+from dataclasses import dataclass,field
+
+@dataclass
+class InventoryItem:
+    # 字段定义
+    name: str
+    age: int
+    unit_price: float
+    quantity_on_hand: int = 0
+    # NOTE - 可变对象需要使用 field 中的 default_factory 来定义默认值
+    # default_factory 输入可调用对象
+    addrs: list[str] = field(default_factory=lambda: [], repr=False)
+
+    # 通过 ClassVar 可以定义 dataclass 的类属性
+    count: ClassVar[int] = 0
+
+    # 由于 dataclass 会自动生成 __init__ 方法，若需要对字段进行初始化操作需要在 __post_init__ 中进行
+    # __post_init__ 在 __init__ 之后被调用
+    def __post_init__(self):
+        pass
+```
+
+
+
 # 包管理
 
 ## import
