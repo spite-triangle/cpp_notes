@@ -486,6 +486,9 @@ async def test_async_test():
 
 ```
 
+> [!note]
+> 测试 `async` 接口时，`@pytest.mark.asyncio` 与 `@pytest.mark.repeat` 可能存在兼容问题
+
 # 插件
 
 ## 概念

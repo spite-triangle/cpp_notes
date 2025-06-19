@@ -60,7 +60,7 @@ def worker_send_email(name):
 ```term
 triangle@LEARN:~$ celery -A workers worker  -l info -n name
 Options:
-    -A <worker>     定义 worker 的 .py 文件名，-A 必须写在  worker 的前面
+    -A <app>        定义 celery.Celery 的 .py 文件名，-A 必须写在 worker 的前面
     -l info         服务日志打印等级
     -n name         worker 的唯一标识符，用于监控
 ```
@@ -188,7 +188,7 @@ cel.conf.enable_utc = False
 - **启动**
 
 ```term
-triangle@LEARN:~$ celery -A celery_workers worker -l info -P eventlet 
+triangle@LEARN:~$ celery -A celery_workers.celery worker -l info -P eventlet 
 Options
     -P eventlet     使用 eventlet 协程库
 ```
@@ -624,15 +624,40 @@ from kombu import Exchange,Queue
 BROKER_URL = "redis://47.106.106.220:5000/1" 
 CELERY_RESULT_BACKEND = "redis://47.106.106.220:5000/2"
 
-# 初始化队列与路由
-CELERY_QUEUES = (
-    Queue("default",Exchange("default"),routing_key="default"),
-    Queue("for_task_A",Exchange("for_task_A"),routing_key="for_task_A"),
-    Queue("for_task_B",Exchange("for_task_B"),routing_key="for_task_B") 
-)
+# ================= 任务配置 =================
+task_serializer = 'json'
+result_serializer = 'json'
+accept_content = ['json']
+timezone = 'Asia/Shanghai'
+enable_utc = True
 
-# 路由
-CELERY_ROUTES = {
+# ================= 预取机制优化 =================
+worker_prefetch_multiplier = 1  # 关键！最小化预取队列积压
+worker_concurrency = 8          # 根据 CPU 核心数调整 (建议 CPU*2)
+worker_max_tasks_per_child = 100  # 防止内存泄漏
+
+# ================= 可靠性与重试 =================
+task_acks_late = True           # 任务完成后才确认
+task_reject_on_worker_lost = True  # Worker 崩溃时重新排队
+task_track_started = True        # 跟踪任务启动时间
+
+# ================= 超时控制 =================
+task_time_limit = 300           # 任务硬超时 (5分钟)
+task_soft_time_limit = 240      # 触发 SoftTimeLimitExceeded (4分钟)
+worker_enable_remote_control = True  # 启用远程控制
+
+# 初始化队列
+task_queues = [
+        Queue(f"task_{index}",Exchange("simulation"),routing_key=f"task_{index}") for index in range(10)
+    ]
+    
+# worker 所在模块
+include = [
+    "cel.workers.simulation"
+]
+
+# 路由，定义生产者应当将任务提交到哪个队列，而不是消费者从哪个队列获取任务
+task_routes = {
     'workers.worker_taskA':{
         "queue":"for_task_A",
         "routing_key":"for_task_A"
@@ -644,8 +669,7 @@ CELERY_ROUTES = {
 }
 
 # 新增加的定时任务部分
-CELERY_TIMEZONE = 'UTC'
-CELERYBEAT_SCHEDULE = {
+beat_schedule = {
     'taskA_schedule' : {
         'task':'tasks.taskA',
         'schedule':2,
@@ -981,4 +1005,103 @@ triangle@LEARN:~$ celery -A proj flower --port=5555  // 启动 flower
 > Flower 的监控信息不会序列化到本地，服务重启后，之前监控到的信息就没了
 
 
+# Bootsteps
+
+## 概念
+
+通过 `Bootsteps` 可用对 celery 的 worker (小写表示由 celery 启动的任务消费者) 生命周期进行 `Hook` 操作。一个 worker 的启动流程可以划分为多个 `Bootstep` 步骤，且主要划分为两大环节 (文档描述为 `Blueprints`)
+- `Worker` : 该环节主要启动 worker 运行的核心组件，例如定时器、协程/进程池、状态记录数据库等
+- `Consumer`: 在 `Worker` 组件全部启动成功后，才开始启动。worker 在该环节会执行与任务消息相关的操作，例如会与 broker 建立连接、接收任务远程控制指令、管理 worker 心跳等
+
+![alt|c,60](../../image/distributeCluster/worker_graph_full.webp)
+
+图中每个绿色框就是一个 `Bootstep` ，箭头表示依赖关系，例如 `Hub -> Timer` 表示 `Hub` 依赖 `Timer`，也就是说 worker 启动时，会最先启动  `Timer`
+
+> [!tip]
+> 官方提供的组件可在 `celery.worker` 包下查看
+
+## Worker
+
+```python
+from celery import bootsteps,Celery
+
+class WorkerHook(bootsteps.StartStopStep):
+    # 指定依赖关系，表示当前自定义的 bootstep 要在 Pool 之后运行
+    requires = ('celery.worker.components:Pool')
+
+    def __init__(self, parent, **kwargs):
+        pass
+
+    def create(self, context):
+        # 自定义属性变量，可在其他 bootstep 中通过 context 使用
+        context.attribute = {}
+        return self
+
+    def start(self, context):
+        # 使用其他 bootstep 中 create 的资源
+        context.hub     # hub 模块中的资源
+        context.pool    # pool 模块中的资源
+        context.timer   # timer 模块中的定时器
+
+
+    def stop(self, context):
+        """ worker 停止时调用 """
+        # 回收在 create 中创建的资源
+        del context.attribute 
+
+    def terminate(self, context):
+        # 回收在 create 中创建的资源
+        del context.attribute 
+
+app = Celery()
+app.steps['worker'].add(WorkerHook)
+```
+
+>[!tip]
+> 所谓的 `Bootstep` 其实就是在往 `context` 中添加资源，或者获取这些资源完成一些操作
+
+## Consumer
+
+在 `Consumer` 阶段的添加的 `Bootstep` 可以对消息进行处理，**且每次连接丢失时将重启所有的`Consumer`阶段的`Bootstep`**
+
+```python
+from celery import Celery
+from celery import bootsteps
+from kombu import Consumer, Exchange, Queue
+
+my_queue = Queue('custom', Exchange('custom'), 'routing_key')
+
+# ConsumerStep 继承 StartStopStep
+class MyConsumerStep(bootsteps.ConsumerStep):
+
+    # 消息处理器
+    def get_consumers(self, channel):
+        return [Consumer(channel,
+                         queues=[my_queue],
+                         callbacks=[self.handle_message],
+                         accept=['json'])]
+
+    def handle_message(self, body, message):
+        print('Received message: {0!r}'.format(body))
+        message.ack()
+
+    def create(self, context):
+        return self
+
+    def start(self, context):
+        pass
+
+
+    def stop(self, context):
+        pass
+
+    def shutdown(self, context):
+        """ 
+            Consumer 阶段需要支持重试，需要在 shutdown 中释放重试过程不要的资源
+        """
+        pass
+
+app = Celery(broker='amqp://')
+app.steps['consumer'].add(MyConsumerStep)
+```
 

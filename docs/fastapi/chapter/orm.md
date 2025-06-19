@@ -22,14 +22,14 @@
 
 [Tortoise](https://tortoise.github.io/) : 一个现代的异步 ORM，专为 Python 的异步框架（如FastAPI、Starlette）设计。它的API设计类似Django ORM，易于上手，支持多种数据库。
 
-| 数据库 | 安装 |
-| ------ | ---- |
-|SQLite|pip install tortoise-orm|
-|PostgreSQL (psycopg)|pip install tortoise-orm[psycopg]|
-|MySQL (aiomysql)|pip install tortoise-orm[aiomysql]|
-|MySQL (asyncmy) |pip install tortoise-orm[asyncmy]|
-|MS SQL|pip install tortoise-orm[asyncodbc]|
-|Oracle | pip install tortoise-orm[asyncodbc]|
+| 数据库               | 安装                                |
+| -------------------- | ----------------------------------- |
+| SQLite               | pip install tortoise-orm            |
+| PostgreSQL (psycopg) | pip install tortoise-orm[psycopg]   |
+| MySQL (aiomysql)     | pip install tortoise-orm[aiomysql]  |
+| MySQL (asyncmy)      | pip install tortoise-orm[asyncmy]   |
+| MS SQL               | pip install tortoise-orm[asyncodbc] |
+| Oracle               | pip install tortoise-orm[asyncodbc] |
 
 
 # 模型搭建
@@ -122,6 +122,23 @@ CONFIG_ORM = {
         },
     },
 }
+```
+
+> [!note]
+> 在 `tortoise` 中，数据库的连接池不能跨线程使用。**但王八没提供为指定线程绑定独立连接池的接口（`Tortoise.init()` 是进程内共享），因此，在多线程场景需要使用`using_db`显式的设置连接池**
+
+```python
+
+from tortoise import Model, fields
+from tortoise.connection import connections
+
+class User(Model):
+    id = fields.IntField(primary_key=True)
+    name = fields.CharField(max_length=32)
+
+User.create(using_db=connnections.get('pool_alias'),...)
+User.get(using_db=connnections.get('pool_alias'),...)
+User.filter(...).using_db(connnections.get('pool_alias'))
 ```
 
 ## 注册 ORM

@@ -139,3 +139,23 @@ async def read_user(connection=Depends(get_database_connection)):
 
 ```
 
+# 接口测试
+
+```python
+import pytest
+from fastapi.testclient import TestClient
+
+# 使用该方式创建客户端，才能正确启动 tortoise orm
+@pytest.fixture(scope="module")
+def test_client():
+with TestClient(app) as client:
+    yield client
+
+def test_demo(test_client:TestClient):
+    resp = test_client.get(
+        "/demo"
+    ) 
+```
+
+> [!note]
+> 测试 `async` 接口时，`@pytest.mark.asyncio` 与 `@pytest.mark.repeat` 可能存在兼容问题

@@ -54,12 +54,16 @@ triangle@LEARN:~$ service rabbitmq-server start // 启动服务
 triangle@LEARN:~$ service rabbitmq-server stop // 暂停服务
 ```
 
+```term
+triangle@LEARN:~$ rabbitmq-server -detached // 后台启动服务，docker 版本使用
+```
+
 ## rabbitmqctl
 
 - **工具管理**
 
 ```term
-triangle@LEARN:~$ rabbitmqctl start_app // 启动 rabbitmq 程序，docker 版不需要
+triangle@LEARN:~$ rabbitmqctl start_app // 直接启动 rabbitmq 程序
 triangle@LEARN:~$ rabbitmqctl status // 查看运行信息
 Status of node rabbit@49170c30f8c7 ...
 []
@@ -100,6 +104,9 @@ Listing plugins with pattern ".*" ...
 triangle@LEARN:~$ rabbitmq-plugins enable rabbitmq_management // 启动插件
 ```
 
+> [!note]
+> 默认使用 `http://ip:15672` 便能访问 web 界面
+
 
 # 概念
 
@@ -112,7 +119,7 @@ triangle@LEARN:~$ rabbitmq-plugins enable rabbitmq_management // 启动插件
   2. 容错性差。若在物流服务发生异常，则会依次回退订单服务、支付服务的数据库状态，并返回用户下单失败
   3. 响应速度慢。购物系统要跑完所有服务流程后，才会返回用户下单结果
 
-    ![alt|c,50](../../image/distributeCluster/synchronizeModel.png)
+![alt|c,50](../../image/distributeCluster/synchronizeModel.png)
 
 **异步模型** ： 购物系统中引入「消息队列」机制，便能很好的解决同步模型中的问题
   1. 扩展性。子服务与购物系统无关，增加的子服务只要接收 `MQ` 发送出来的任务消息，进行业务处理即可
@@ -121,7 +128,7 @@ triangle@LEARN:~$ rabbitmq-plugins enable rabbitmq_management // 启动插件
   4. 服务解耦。各个服务可以做到只与 `MQ` 交互通信下发任务，彼此之间无关联
   5. 提升服务稳定性。对于请求量剧增的秒杀活动，购物系统接收到用户订单后可以直接返回用户信息，让大量的用户订单在 `MQ` 中排队等待处理，这就能保证后续业务处理服务免受过载请求冲击。
 
-    ![alt|c,60](../../image/distributeCluster/mqModel.png)
+![alt|c,60](../../image/distributeCluster/mqModel.png)
 
 ## RabbitMQ 框架
 

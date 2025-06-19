@@ -243,6 +243,8 @@ asyncio.run(main())
 由于 `asyncio.to_thread` 每次都会创建一个新的线程，因此可通过 `loop.run_in_executor` 将多线程/进程任务放到池子里进行执行
 
 ```python
+import threading
+import time
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
 
@@ -404,4 +406,71 @@ triangle@LEARN:~$ python demo.py
 Task A: var = A
 Task B: var = B
 Main after tasks: default
+```
+
+# 附录
+
+简易协程池
+
+```python
+import time
+import asyncio
+import threading
+import inspect
+from typing import Callable,Optional
+
+class CoroutinePool:
+    def __init__(self, worker = 20):
+        self._loop = asyncio.new_event_loop()                           # 事件循环
+        self._sema_worker = asyncio.Semaphore(worker)                 # 任务数控制
+        self._thread_worker = threading.Thread(target=self._run_loop)   # 执行协程的线程
+        pass
+
+    def _run_loop(self):
+        asyncio.set_event_loop(self._loop)
+        self._loop.run_forever()
+
+    async def _close_loop(self, timeout:Optional[int]):
+        """
+        安全关闭事件循环：
+        1. 等待所有任务完成
+        2. 停止事件循环
+        """
+        loop = self._loop
+        
+        # 获取所有未完成的任务（排除当前任务）
+        tasks = [t for t in asyncio.all_tasks(loop) if t is not asyncio.current_task(loop)]
+        
+        if tasks:
+            # 等待所有任务完成（带超时保护）
+            try:
+                await asyncio.wait(tasks, timeout=timeout)
+            except asyncio.TimeoutError:
+                # 超时后取消剩余任务
+                for task in tasks:
+                    if not task.done():
+                        task.cancel()
+                # 等待取消的任务完成
+                await asyncio.wait(tasks)
+        
+        # 安全停止循环
+        loop.stop()
+
+    def start(self):
+        self._thread_worker.start()
+
+    def submit(self,func:Callable, /, *args, **kwargs):
+
+        async def runner(loop:asyncio.AbstractEventLoop):
+            async with self._sema_worker:
+                if inspect.iscoroutinefunction(func):
+                    return await func(*args,**kwargs)
+                else:
+                    return await asyncio.gather(loop.run_in_executor(None,func, *args,**kwargs))
+        return asyncio.run_coroutine_threadsafe(runner(self._loop), self._loop)
+
+    def close(self, timeout: Optional[int] = None):
+        asyncio.run_coroutine_threadsafe(self._close_loop(timeout=timeout), self._loop)
+        self._thread_worker.join()
+        self._loop.close()
 ```
