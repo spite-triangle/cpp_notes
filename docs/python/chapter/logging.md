@@ -58,6 +58,9 @@ logger.critical('严重错误')
 handler.handlers.clear()
 # 删除特定 handler 
 handler.removeHandler(hdl)
+
+# 不将日志传报的父级
+logger.propagate 
 ```
 
 # handler
@@ -146,10 +149,18 @@ LOGGING_CONFIG = {
 
 logging.config.dictConfig(LOGGING_CONFIG)
 
+# Note - 只有在根 logger 才能访问到 LOGGING_CONFIG 中配置 handlers
+logger = logging.getLogger()
+logger.handlers
+
+
 logging.info('test')
 ```
 
 # 坑
+
+>[!note]
+>  `multiprocessing.get_logger()` 也不是完全进程安全的
 
 ## 删日志
 
@@ -256,6 +267,8 @@ while True:
 ## 多进程写
 
 `logging` 非进程安全库，因此多进程同时写，会导致日志记录混乱
+
+
 
 
 # 解决方案

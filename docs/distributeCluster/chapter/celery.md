@@ -65,12 +65,16 @@ Options:
     -n name         worker 的唯一标识符，用于监控
 ```
 
-通过上述命令 `Celery` 就会根据 `workers.py` 中的定义启动一个监听任务的 `worker` 服务。
+通过上述命令 `Celery` 就会根据 `workers.py` 中的 `cel` 定义启动一个监听任务的 `worker` 服务。
 
 ```term
-triangle@LEARN:~$ pip install eventlet // win10 必须安装这个，不然服务会异常
-triangle@LEARN:~$ celery -A workers worker  -l info -P eventlet // win10 必须使用 eventlet
+triangle@LEARN:~$ pip install gevent // win10 必须安装这个
+triangle@LEARN:~$ celery -A workers worker  -l info -P gevent // win10 必须使用 gevent
 ```
+
+> [!note]
+> celery 的多进程方式只适用于 `Linux`，在 `windows` 上则需要改成通用的 `gevent` 或 `eventlet` 单进程的协程形式
+
 
 ### 生产者
 
@@ -1024,34 +1028,44 @@ triangle@LEARN:~$ celery -A proj flower --port=5555  // 启动 flower
 
 ```python
 from celery import bootsteps,Celery
+from celery.apps.worker import Worker
 
 class WorkerHook(bootsteps.StartStopStep):
     # 指定依赖关系，表示当前自定义的 bootstep 要在 Pool 之后运行
-    requires = ('celery.worker.components:Pool')
+    requires = ('celery.worker.components:Pool',)
 
     def __init__(self, parent, **kwargs):
         pass
 
-    def create(self, context):
+    def create(self, context:Worker):
+        """ 申请资源 """
         # 自定义属性变量，可在其他 bootstep 中通过 context 使用
         context.attribute = {}
         return self
 
-    def start(self, context):
+    def start(self, context: Worker):
+        """ 所有 step 的 create 成功后执行 """
         # 使用其他 bootstep 中 create 的资源
         context.hub     # hub 模块中的资源
         context.pool    # pool 模块中的资源
         context.timer   # timer 模块中的定时器
 
 
-    def stop(self, context):
-        """ worker 停止时调用 """
+    def stop(self, context:Worker):
+        """ 停止时调用 """
         # 回收在 create 中创建的资源
         del context.attribute 
 
-    def terminate(self, context):
+    def terminate(self, context:Worker):
+        """ 发生异常时调用 """
         # 回收在 create 中创建的资源
         del context.attribute 
+    
+    def close(self, context:Worker):
+        """ worker 关闭前最后调用 """
+        # 回收在 create 中创建的资源
+        del context.attribute 
+
 
 app = Celery()
 app.steps['worker'].add(WorkerHook)
