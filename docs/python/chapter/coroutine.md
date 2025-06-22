@@ -4,10 +4,13 @@
 
 在 Python 中协程本质上是基于「生成器」实现，详情键「Python 特性」章节。
 
-# greenlet
+# 第三方库
 
 > [!tip]
-> 该库不推荐使用，功能太旧
+> 在新版的 python 中已经自带协程标准库 `asyncio`，第三方库了解即可
+
+## greenlet
+
 
 ```python
 from greenlet import greenlet
@@ -37,6 +40,146 @@ func2 step1
 func1 step2
 func2 step2
 ```
+
+## gevent
+
+`gevent` 是 `greenlet` 的进一步封装版本
+
+### 概念
+
+```python
+# 使用 monkey 之后， gevent 会替换标准库的同步阻塞逻辑
+from gevent import monkey
+# NOTE - patch_all 之后的阻塞式库都会被修改为非阻塞式，例如 time、threading、requests等
+monkey.patch_all()
+
+import time
+import gevent
+import requests
+import threading
+
+def sleep():
+    print("\t\tsleep started: ",  threading.current_thread().name)
+    time.sleep(5)
+    print("\t\tsleep finished")
+
+def request():
+    print("\t\trequest started: ", threading.current_thread().name)
+    response = requests.get("https://cn.bing.com/?mkt=zh-CN")
+    print("\t\trequest received:", response.status_code)
+
+
+def run():
+    print("\tThread sleep started: ", threading.current_thread().name)
+    thread = threading.Thread(target=sleep)
+    thread.start()
+    thread.join()
+    print("\tThread sleep finished")
+
+    print("\tGevent request started: ", threading.current_thread().name) 
+    greenlet = gevent.spawn(request)
+    greenlet.join()
+    print("\tGevent request finished")
+    
+def deamnd():
+    print("\tDemand function called: ", threading.current_thread().name)
+    for i in range(10):
+        print(f"\t- Demand iteration {i}")
+        time.sleep(1)
+    print("\tDemand function finished")
+
+if __name__ == "__main__":
+    print("Main function started: ", threading.current_thread().name)
+
+    g_deamnd = gevent.spawn(deamnd)
+    g_run = gevent.spawn(run)
+    gevent.joinall([g_run])
+
+    print("All tasks completed")
+```
+
+```term
+triangle@LEARN:~$ python demo.py
+Main function started:  MainThread
+    Demand function called:  Dummy-1
+    - Demand iteration 0
+    Thread sleep started:  Dummy-2
+        sleep started:  Thread-3 (sleep)
+    - Demand iteration 1
+    - Demand iteration 2
+    - Demand iteration 3
+    - Demand iteration 4
+        sleep finished
+    Thread sleep finished
+    Gevent request started:  Dummy-2
+        request started:  Dummy-4
+    - Demand iteration 5
+        request received: 200
+    Gevent request finished
+All tasks completed
+```
+
+使用 `gevent` 后
+- 可将 `Dummy` 视为 `gevent` 创建的「协程对象」，而非真正线程（是否为线程由 `gevent` 内部进行控制）
+- `monkey` 可将标准库中的阻塞式操作变为非阻塞式
+- `gevent.spawn` 创建一个协程对象
+- `gevent.jointall()` 与 `Greenlet.join()` 实现协程切换操作，类似 `awaik`
+
+> [!note]
+> 建议直接使用 `gevent.spawn` 代替 `threading`，使用 `threading` 可能存在问题
+
+### monkey
+
+在 `monkey.patch_all()` 之后导入的库都将被修改为非阻塞式，且 `patch_all()` 的形参可显式控制需要替换哪些库
+
+```python
+# False : 不替换
+# True : 替换
+def patch_all(socket=True, dns=True, time=True, select=True, thread=True, os=True, ssl=True,
+              subprocess=True, sys=False, aggressive=True, Event=True,
+              builtins=True, signal=True,
+              queue=True, contextvars=True,
+              **kwargs):
+```
+
+被替换的这些库在 `gevent` 中都有实现，**建议导入 `gevent` 的库，除 `thread` 外**。
+
+```python
+import gevent.socket
+import gevent.time
+import gevent.ssl
+import gevent.os
+    ...
+# NOTE - 建议使用 gevent.spawn 代替
+import gevent.thread
+```
+
+### pool
+
+```python
+import gevent.monkey
+gevent.monkey.patch_all()
+
+
+import gevent
+import gevent.pool
+
+pool = gevent.pool.Pool(3)
+
+
+def task(n):
+    
+    print(f"Task {n} started:")
+    gevent.sleep(n)
+    print(f"Task {n} completed")    
+
+if __name__ == "__main__":
+    tasks = [pool.spawn(task, i) for i in range(10)]
+    gevent.joinall(tasks)
+    print("All tasks completed")
+```
+
+
 
 # asyncio
 
