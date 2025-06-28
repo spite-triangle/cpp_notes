@@ -73,7 +73,7 @@ triangle@LEARN:~$ celery -A workers worker  -l info -P gevent // win10 必须使
 ```
 
 > [!note]
-> celery 的多进程方式只适用于 `Linux`，在 `windows` 上则需要改成通用的 `gevent` 或 `eventlet` 单进程的协程形式
+> celery 的多进程方式只适用于 `Linux`，在 `windows` 上则需要改成通用的 `gevent` 、 `eventlet` 、`threads` 形式，**但是 `gevent` 与 `eventlet` 复杂控制存在一些小 BUG，使用 `threads` 模式最稳定**
 
 
 ### 生产者
@@ -446,6 +446,11 @@ class MyTask(celery.Task):
 
 @cel.task(base=MyTask)
 def add(x, y):
+    pass
+
+# 可以与 bind 混合使用
+@cel.task(base=MyTask,bind=True)
+def add_bind(self,x, y):
     pass
 ```
 
@@ -876,7 +881,9 @@ with app.connection_for_write() as conn:
         count = app.amqp.queues[queue].bind(conn).purge()
 ```
 
-
+> [!note]
+> - `revoke` : 只能停止 worker 还未接收的任务，已经接收的任务无法停止。控制指令会让所有 worker 在 `celery.worker.state:revoked` 中提前存入要撤销任务ID，等 worker 接收任务时会进行判断。
+> - `terminate`: 终止 worker 中已经接收的任务，可用 `active` 与 `reserved` 查询这些任务
 
 ## 事件
 
@@ -941,6 +948,7 @@ with app.connection() as connection:
 - [Event Type](https://docs.celeryq.dev/en/latest/userguide/monitoring.html#event-reference)
 
 ```python
+# 根据接收到的 event 信息，以内存对象的形式查看 task 与 worker
 state = app.events.State()
 
 # 只处理 task-failed 类型的事件
@@ -956,8 +964,12 @@ with app.connection() as connection:
     )
     # wakeup : 强制所有的 worker 发送一次 heartbeat，保证了在 app.events.State 中，能获取到最新的 worker 数据
     recv.capture(limit=None, timeout=None, wakeup=True)
-
 ```
+
+### state
+
+
+
 
 ### 自定义事件
 
@@ -1119,3 +1131,122 @@ app = Celery(broker='amqp://')
 app.steps['consumer'].add(MyConsumerStep)
 ```
 
+# pool
+
+在 linux 上直接使用默认的 `prefork` 便能完美运行，但在 windows 默认的 `gevent`、`threads`、`evenlet` 都有些问题，**为了 worker 能稳定运行，最好的方式是自定义 `threads` 运行池，为其增加任务`treminate` 功能**
+
+- `context.py`
+
+```python
+from enum import IntEnum
+from dataclasses import dataclass,field
+from typing import Callable,Optional
+from utils.concurrent import ThreadSafeDict
+
+class WorkerTaskState(IntEnum):
+    NORM = 0
+    TERMINATE = 1
+
+class TerminateType(IntEnum):
+    CONTROL_REVOKE  = 1     # 控制撤销任务
+    NODE_CLOSE = 2          # 当前节点程序需要关闭
+
+@dataclass
+class WorkerTaskItem:
+    """ 正在执行的任务信息 """
+    id: str = ""
+    type: str = ""
+    state: WorkerTaskState = WorkerTaskState.NORM 
+    on_terminate: Optional[Callable[[TerminateType],None]] = None
+
+@dataclass
+class Context:
+    # NOTE - 需要额外定义一个 bootstep 用于更新该状态值
+    worker_close: bool = False  # 关闭节点
+    node_id: int = -1           # 节点ID
+    host_name: str = ''         # 节点名
+    pool_tasks: ThreadSafeDict[int,WorkerTaskItem] = field(default_factory=lambda: ThreadSafeDict())
+
+worker_context = Context() 
+```
+
+
+- `TaskPool.py`
+
+```python
+from celery.concurrency.base import  apply_target
+from celery.concurrency.thread import TaskPool,ApplyResult
+
+class TerminateTaskPool(TaskPool):
+    """ threads pool 不支持 terminate 需要自定义实现 """
+
+    def _run_apply_target(self, target, args = None, kwargs = None, callback = None, accept_callback = None, **_):
+        """
+            args: 参数包，celery 源码 request.py:754 
+                type, 
+                task_id,
+                request_dict
+                body,
+                content_type, 
+                content_encoding
+        """
+        # 当前工作线程 ID
+        pid = threading.current_thread().native_id
+
+        # 保存任务
+        if args:
+            worker_context.pool_tasks[pid] = WorkerTaskItem(
+                type=args[0],
+                id=args[1],
+            )
+        try:
+            apply_target(target,args, kwargs, callback, accept_callback,pid=pid)
+        finally:
+            worker_context.pool_tasks.pop(pid)
+
+    def _terminate_task(self, task:WorkerTaskItem, type:TerminateType):
+            try:
+                task.on_terminate(type) if task.on_terminate else None
+            except:
+                pass
+
+   def on_apply(self, target, args = None, kwargs = None, callback = None, accept_callback = None, **_):
+        if worker_context.worker_close:
+            return None
+        
+        f = self.executor.submit(self._run_apply_target, target, args, kwargs,
+                                 callback, accept_callback)
+        return ApplyResult(f)
+    
+    def on_terminate(self):
+        tasks = worker_context.pool_tasks
+        for id in tasks:
+            task = tasks.pop(id)
+            self._terminate_task(task, TerminateType.NODE_CLOSE)
+
+    def on_close(self):
+        tasks = worker_context.pool_tasks
+        for id in tasks:
+            task = tasks.pop(id)
+            self._terminate_task(task, TerminateType.NODE_CLOSE)
+
+    def on_stop(self):
+        """ 在 close 之后才调用 """
+        if not self.executor._shutdown:
+            self.executor.shutdown(wait=True,cancel_futures=True)
+
+    def terminate_job(self, pid, signal=None):
+        """ terminate 指令 """
+        task = worker_context.pool_tasks.get(pid)
+        if task:
+            task.state = WorkerTaskState.TERMINATE
+            worker_context.pool_tasks[pid] = task
+            self._terminate_task(task,TerminateType.CONTROL_REVOKE)
+```
+
+- `celeryconfig.py`
+
+```python
+# 在配置文件中配置自定义的 pool
+worker_pool = 'taskpool:TerminateTaskPool' 
+```
