@@ -17,4 +17,4 @@
     - [FastAPI](fastapi/README.md)
     - [Flask](distributeCluster/chapter/flask.md)
 - **特殊工具**
-    - [pyaedt](python/chapter/pyaedt.py)
+    - [pyaedt](python/chapter/pyaedt.md)

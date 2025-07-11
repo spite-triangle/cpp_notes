@@ -556,22 +556,26 @@ Main after tasks: default
 简易协程池
 
 ```python
-import time
 import asyncio
 import threading
 import inspect
-from typing import Callable,Optional
+from concurrent.futures import Future
+from typing import TypeVar, Callable, Coroutine,Union, Optional,Any
+
+# 定义泛型类型变量
+T = TypeVar('T')
 
 class CoroutinePool:
     def __init__(self, worker = 20):
-        self._loop = asyncio.new_event_loop()                           # 事件循环
-        self._sema_worker = asyncio.Semaphore(worker)                 # 任务数控制
-        self._thread_worker = threading.Thread(target=self._run_loop)   # 执行协程的线程
+        self._loop: Optional[asyncio.BaseEventLoop] = None      # 事件循环
+        self._sema_worker = asyncio.Semaphore(worker)           # 任务数控制
+        self._thread_worker:Optional[threading.Thread] = None   # 执行协程的线程
         pass
 
     def _run_loop(self):
-        asyncio.set_event_loop(self._loop)
-        self._loop.run_forever()
+        if self._loop:
+            asyncio.set_event_loop(self._loop)
+            self._loop.run_forever()
 
     async def _close_loop(self, timeout:Optional[int]):
         """
@@ -579,6 +583,9 @@ class CoroutinePool:
         1. 等待所有任务完成
         2. 停止事件循环
         """
+        if self._loop is None:
+            return
+
         loop = self._loop
         
         # 获取所有未完成的任务（排除当前任务）
@@ -600,10 +607,14 @@ class CoroutinePool:
         loop.stop()
 
     def start(self):
+        self._loop = asyncio.new_event_loop()
+        self._thread_worker = threading.Thread(target=self._run_loop)
         self._thread_worker.start()
 
-    def submit(self,func:Callable, /, *args, **kwargs):
-
+    def submit(self,func: Callable[..., Union[T, Coroutine[Any, Any, T]]], /, *args, **kwargs) -> Future[T]:
+        if self._loop is None or self._thread_worker is None:
+            raise RuntimeError('请先调用 start() 再提交任务')
+            
         async def runner(loop:asyncio.AbstractEventLoop):
             async with self._sema_worker:
                 if inspect.iscoroutinefunction(func):
@@ -613,7 +624,12 @@ class CoroutinePool:
         return asyncio.run_coroutine_threadsafe(runner(self._loop), self._loop)
 
     def close(self, timeout: Optional[int] = None):
-        asyncio.run_coroutine_threadsafe(self._close_loop(timeout=timeout), self._loop)
-        self._thread_worker.join()
-        self._loop.close()
+        if self._thread_worker:
+            asyncio.run_coroutine_threadsafe(self._close_loop(timeout=timeout), self._loop)
+            self._thread_worker.join()
+            self._thread_worker = None
+        if self._loop:
+            self._loop.close()
+            self._loop = None
+
 ```
