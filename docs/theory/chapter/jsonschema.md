@@ -140,7 +140,7 @@
 
 # 通用关键字
 
-### 常量
+## 常量
 
 ```json
 {
@@ -150,7 +150,7 @@
 }
 ```
 
-### 枚举
+## 枚举
 
 
 ```json
@@ -161,7 +161,9 @@
 }
 ```
 
-### 组合 schema
+## 布尔运算
+
+### schema
 
 在 `JSNO schema` 中可以定义 schema 的地方还能使用组合式的 schema 对 json 数据进行校验
 
@@ -214,6 +216,73 @@
 }
 ```
 
+### required
+
+```json
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+        "model": { "type": "string" },
+        "type": { "type": "string" }
+    },
+
+    //  model 与 type 两个字段至少存在一个
+    "anyOf": [
+        { "required": ["model"] },
+        { "required": ["type"] }
+    ],
+    "additionalProperties": false
+}
+```
+
+## if-else
+
+```json
+{
+    "configurations": { 
+        "obj": {
+        }
+    },
+    "objData": {
+    }
+}
+```
+
+要校验当 `objData` 字段存在时，`configurations/obj` 必须存在时，就需要 `if-else` 实现
+
+```json
+{
+    "type": "object",
+
+    // 定义数据结构中的属性
+    "properties": {
+        // ....
+    },
+
+    "if": {
+        // required 的匹配结果成为了 if 的判断语句
+        "required": [
+            "objData"
+        ]
+    },
+    "then": {
+        // 判断 configurations/obj 存在性的匹配逻辑
+        "properties": {
+            "configurations": {
+                "properties": {
+                    "obj": { "type": "object" }
+                },
+                "required": [ "obj" ]
+            }
+        }
+    },
+    "else":{
+        // ...
+    }
+}
+```
+
 
 
 # 类型关键字
@@ -236,7 +305,12 @@
         // ....
     },
     // json 对象数据中必须包含哪些 properties 定义的属性
+    // {"productId", "productName", "price"} + model 与 type 其中一个
     "required": ["productId", "productName", "price"], 
+    "oneOf": [
+        { "required": ["model"] },
+        { "required": ["type"] }
+    ],
 }
 ```
 
@@ -291,7 +365,10 @@
     "properties": {
         // ....
     },
-    "additionalProperties": true
+    "additionalProperties": true,   // 方式一：控制是否允许配置
+    "additionalProperties": {       // 方式二：限制额外字段的类型
+        "type":"number" 
+    }
 }
 ```
 
