@@ -121,7 +121,7 @@ struct SESSION_S{
   - value : 将 `SESSION_S` 序列化为 json 文本
 - Hash 存储
   - key : 会话的唯一 token 标识符
-  - value : 将 `SESSION_S` 数据变成 fiedl-value 进行存储
+  - value : 将 `SESSION_S` 数据变成 field-value 进行存储
 
 
 

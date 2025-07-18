@@ -16,5 +16,4 @@
 - **开发工具**
     - [WSL](tools/chapter/wsl.md)
     - [Doxygen](tools/chapter/doxygen.md)
-    - [PyAEDT](tools/chapter/pyaedt.md)
 
