@@ -3,6 +3,7 @@
 # 课程
 
 - [Distributed Computer Systems Engineering (MIT 6.824)](https://ocw.mit.edu/courses/6-824-distributed-computer-systems-engineering-spring-2006/download/)
+- [配套代码](https://github.com/chaozh/MIT-6.824/tree/master)
 
 
 # 概念
@@ -36,5 +37,17 @@
 
 ## 一致性
 
-一致性 `consistency` : 为了保证系统的「容错性」，采取的技术往往是 「复制 `replication`」，这就需要保证应用程序从分布式系统中读\写的数据能够一致。
+### 作用
+
+一致性 `consistency` : 「复制 `replication`」是提升系统的「容错性」的重要手段，但利用复制的分布式系统需要提供一定的一致性，才能保证应用程序从分布式系统中读\写的数据符合逻辑。
+
+### 线性化
+
+**历史操作线性化 `Linearizablity`** : 若对系统进行的所有读/写操作按时间行记录，那么得到记录的必须满足以下规则
+- 对于同一变量的两次 `write(x, a)` 与 `write(x, b)` 写操作必须有先后顺序，不能同时发生
+- 读操作 `read(x)` 获取的值是 `n`， 那么必定发生在写操作 `write(x, n)` 完成之后，且 `write(x, n)` 与这次 `read(x)` 之间不存在其他的 `write(x,...)` 操作
+ 
+
+> [!note]
+> 只要保证操作记录满足「线性化」条件，那么这个系统肯定是「强一致性」的
 
