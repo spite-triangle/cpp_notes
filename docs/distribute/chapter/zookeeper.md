@@ -45,6 +45,8 @@ zookeeper 的一些应用场景
 - 主/备节点管理：`ZAB` 本来就是魔改的 `Raft` 算法，天然支持
 - 乐观锁
 
+> [!note]
+> 针对 `zookeeper` 状态保存能力，`Redis` 是一个功能更强大的替代品
 
 # 一致性
 
@@ -112,6 +114,74 @@ zookeeper 的一些应用场景
   - 成功： `path` 不存在，且创建成功
   - 失败：其他情况
 - `delete(path,version)` : 检测 `ZNode` 当前版本号与 `version` 是否一致，一致才执行操作
-- `exist(path,is_watch)` : 通过设置 `is_watch`，告知 zookeeper 是否监听该 `path` 是否执行写操作（删除、修改、创建）
+- `exist(path,is_watch)` : 通过设置 `is_watch`，告知 zookeeper 是否监听该 `path` 是否执行写操作（删除、修改、创建），**当 zookeeper 监听到修改后，会通知客户端**
 - `getData(path,is_watch)`
 - `setData(path, data, version)` ：检测 `ZNode` 当前版本号与 `version` 是否一致，一致才执行操作
+- `lists(path)` : 获取 `sequential` 类型 `path` 的所有实际路径名，例如 `path=/a/b/c` 其对应的真实路径有 `/a/b/c_1`，`/a/b/c_2`,`/a/b/c_3`
+
+
+## 同步应用
+
+### 迷你事务
+
+通过 `version` 也能实现针对单个 `ZNode` 节点数据的「乐观锁」
+
+```python
+def update_count(path):
+    """
+        利用 path 变量进行计数
+        注意：
+            该方式只适用于低负载情况，在高负责会存在严重性能问题
+            例如若 1000 个客户端同时更新，那么当1个客户端成功后，另外 999个都将失败，重新进入循环
+    """
+    while True:
+        val,version = getData(path)
+        val += 1
+        if setData(path, val, version):
+            break
+```
+
+该方式通过循环重试与 `version`，在客户端层面保证了针对 `path` 数据的读/写操作的原子性，即一个简单的「事务」。
+
+### 分布式锁
+
+```python
+def lock(path):
+    while True:
+        # 尝试创建锁
+        if version := create(path, "lock",ephemeral = True):
+            return version
+
+        if exist(path, is_watch = True):
+            # 等待 path 被修改，zookeeper 下发通知
+            wait(path)
+
+def unlock(path,version):
+    delete(path,version)
+```
+
+上述 zookeeper 通知客户端退出等待获取锁的方式类似条件量的 `condition.notifyAll()`，zookeeper 会唤醒所有的客户端，在高负载下，也会造成性能问题。
+
+```python
+def lock(path):
+    # num 就是 sequential 模式下，zookeeper 创建 path 时，自动生成编号
+    version,num = create(path, "lock",sequential =True , ephemeral = True)
+    while True:
+        # 获取所有现在还存在的 path 
+        paths = lists(path)
+        paths = sort_ascend_by_num(paths) 
+
+        # 编号 < num 的 path 均已经被删除，即已经获取锁并释放，或者持有锁的时间已经超时
+        if paths[0].num >= num:
+            return (version,num)
+
+        # 等待 num - 1 对应的 path 被删除
+        pre = path + "_" + (num - 1)
+        if exists(pre,is_watch=True):
+            wait(pre)
+
+def unlock(path, num,version):
+     delete(path + "_" + num,version)
+```
+
+利用 `sequential` 类型的 `path` 便能实现  `condition.notifyOne()` 的效果
