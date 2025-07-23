@@ -1,5 +1,5 @@
 
-<h1 style="text-align:center;font-size:60px;font-weight:bold;font-family:宋体">多媒体</h1>
+<h1 style="text-align:center;font-size:60px;font-weight:bold;font-family:宋体">分布式集群</h1>
 
 <style>
     #btn{
