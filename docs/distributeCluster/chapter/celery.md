@@ -36,7 +36,7 @@ import time
 # RabbitMQ 的写法，且只能配置 broker
 broker='amqp://admin:admin@172.29.5.143/'
 
-# Kalfka 写法 
+# redis 写法 
 broker='redis://127.0.0.1:6379/2'
 backend='redis://127.0.0.1:6379/1'
 
@@ -760,8 +760,24 @@ def configure_worker12(conf=None, **kwargs):
 ```
 
 
-# 监控管理
+# 远程控制
 
+## 通信模型
+
+
+采用 `rabbitmq` 时，`celery` 的控制指令通信模型为
+1. 每当一个新的 `worker` 接入集群系统，便会在 `celery.pidbox` 交换机下创建一个 `worker` 专属的消息队列，用于 `worker` 接收远程控制指令
+2. 生成控制指令
+   - `reply = true, timeout=1`: 生成一个答复 `id` ，并在 `reply.celery.pidbox` 交换机下生成一个 `id.reply.celery.pidbox` 消息队列（存活时间为`timeout`），用于接收指令处理结果
+   - `reply = false`: 不接收结果
+3. 远程控制指令发送到 `celery.pidbox` 交换机，`celery.pidbox` 会将消息广播到所有的 `xxx.celery.pidbox` 消息队列
+4. `worker` 从自己的 `xxx.celery.pidbox` 消息队列获取控制指令，并处理
+   - `reply = true`: 将处理结果提交给 `reply.celery.pidbox` 交换机
+   - `reply = false`: 控制控制指令流程结束
+5. 若指令设置了 `reply = true`，远程控制程序会阻塞等待 `timeout` 秒，期间会从答复 `id` 对应的 `id.reply.celery.pidbox` 队列中获取指令处理结果
+
+
+![alt|c,80](../../image/distributeCluster/celery_command.png)
 
 
 ## 命令行
@@ -791,6 +807,7 @@ options
     -j                      安装 json 格式输出结果
     -d LIST                 指定需要监控的工作节点名
     --timeout               命令执行的超时时间
+triangle@LEARN:~$ celery -A proj control [command] [options] // 控制工作节点
 triangle@LEARN:~$ celery -A proj migrate src dest // 数据迁移
 ```
 
@@ -801,10 +818,10 @@ triangle@LEARN:~$ celery -A proj migrate src dest // 数据迁移
 对于 `purge` 、`inspect` 、`control` 等命令行均可通过代码进行控制
 
 ```python
-import celery.app.control as ctrl
+from celery.app.control import Inspect,Control
 
 # 工作节点、消息状况查看
-inspect = ctrl.Inspect(app=app)
+inspect = Inspect(app=app)
 inspect.active()
 inspect.active_queues()
 inspect.reserved()
@@ -812,7 +829,7 @@ inspect.reserved()
     ...
 
 # 工作节点、消息控制
-control = ctrl.Control(app=app)
+control = Control(app=app)
 control.add_consumer(queue='queue') # 让工作节点监听指定队列
 control.cancel_consumer(queue='queue') # 让工作节点取消监听指定队列
 control.enable_events() # 开启事件监听
@@ -821,6 +838,7 @@ control.heartbeat() # 让工作节点发送心跳
 control.purge() # 清空中间件中的任务消息
     ...
 ```
+
 
 ### 停止任务
 
@@ -885,15 +903,19 @@ with app.connection_for_write() as conn:
 > - `revoke` : 只能停止 worker 还未接收的任务，已经接收的任务无法停止。控制指令会让所有 worker 在 `celery.worker.state:revoked` 中提前存入要撤销任务ID，等 worker 接收任务时会进行判断。
 > - `terminate`: 终止 worker 中已经接收的任务，可用 `active` 与 `reserved` 查询这些任务
 
-## 事件
+# 事件
 
-### 概念
+## 概念
 
 - **事件`event`** : 会在 Task/Worker 的状态发生变化的时候被发出，可利用 event 来监控task 和 worker 的状态。
 - **快照 `snapshots`** : 在一段时间内，worker 状态变化的事件序列。同过分析快照内的事件，就能实时监控集群中的工作节点状态，以及记录节点的历史状态。
 - **相机 `Camera`** :  获取快照的工具，可通过代码自定义。
 
-### Camera
+在`RabbitMQ`消息中间件模式中，所有的 `worker` 产生的事件信息会发送到 `celeryev` 交换机，然后事件接收器通过监听 `celeryev.xxxx` 消息队列获取事件信息
+
+![alt|c,70](../../image/distributeCluster/celery_event.png)
+
+## Camera
 
 
 ```python
@@ -941,7 +963,7 @@ with app.connection() as connection:
         recv.capture(limit=None, timeout=None)
 ```
 
-### 事件处理器
+## 事件处理器
 
 使用 `Camera` 会捕获快照，而快照中有存有大量事件，因此，利用 Camera 无法应用到实时性比较的业务场景。针对该问题，celery 也提供了更为轻量的事件处理器
 
@@ -966,12 +988,7 @@ with app.connection() as connection:
     recv.capture(limit=None, timeout=None, wakeup=True)
 ```
 
-### state
-
-
-
-
-### 自定义事件
+## 自定义事件
 
 
 ```python

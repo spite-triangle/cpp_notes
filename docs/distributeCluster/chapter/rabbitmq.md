@@ -446,7 +446,8 @@ channel.basic_publish(
 
 ## fanout
 
-**`direct` 类型** : 所有与交换机绑定的的队列都能接收到消息
+**`fanout` 类型** : 所有与交换机绑定的的队列都能接收到消息，**即广播**
+
 
 ```python
 # 声明交换机
