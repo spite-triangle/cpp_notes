@@ -26,10 +26,8 @@
 
 ```sql
 START TRANSACTION;
-
-insert into data_table (x) values (550);
-insert into data_table (y) values (750);
-
+    add(x,50); 
+    add(y,50); 
 commit;
 ```
 
