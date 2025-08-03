@@ -14,5 +14,5 @@
 - [第十一章 farm](distribute/chapter/farm.md)
 - [第十二章 spark](distribute/chapter/spark.md)
 - [第十三章 Memcache](distribute/chapter/memcache.md)
-- [第十四章 COPS](distribute/chapter/COPS.md)
+- [第十四章 COPS](distribute/chapter/cops.md)
 - [第十五章 证书透明](distribute/chapter/certificate.md)
