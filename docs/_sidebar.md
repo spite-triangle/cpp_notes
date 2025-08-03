@@ -4,6 +4,7 @@
   - [基本理论](theory/README.md)
   - [计算机原理](https://spite-triangle.github.io/computer_theory/#/)
   - [操作系统](operateSystem/README.md)
+  - [分布式系统](distribute/README.md)
   - [编译原理](compiler/README.md)
   - [算法导论](Algorithms/README.md)
   - [调试原理](windbg/README.md)
