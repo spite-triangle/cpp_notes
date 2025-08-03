@@ -8,6 +8,7 @@
 
 - c++11 新特性、高并发编程
 - 编译原理、http 服务器、socket 通信、操作系统、数据库设计
+- 分布式系统
 - 字符集、JSON schema
 - workflow、gtest、gmock、libcurl、qt、qml、mfc
 - msvc、gdb
