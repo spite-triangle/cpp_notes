@@ -16,6 +16,6 @@
 - **HPC**
   - [Ansys HPC](distributeCluster/chapter/ansys.md)
 - **消息监控**
-  - [Promethus](distributeCluster/chapter/promethus.md)
+  - [Prometheus](distributeCluster/chapter/prometheus.md)
 
     
