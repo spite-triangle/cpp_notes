@@ -1043,8 +1043,8 @@ triangle@LEARN:~$ celery -A proj flower --port=5555  // 启动 flower
 ## 概念
 
 通过 `Bootsteps` 可用对 celery 的 worker (小写表示由 celery 启动的任务消费者) 生命周期进行 `Hook` 操作。一个 worker 的启动流程可以划分为多个 `Bootstep` 步骤，且主要划分为两大环节 (文档描述为 `Blueprints`)
-- `Worker` : 该环节主要启动 worker 运行的核心组件，例如定时器、协程/进程池、状态记录数据库等
-- `Consumer`: 在 `Worker` 组件全部启动成功后，才开始启动。worker 在该环节会执行与任务消息相关的操作，例如会与 broker 建立连接、接收任务远程控制指令、管理 worker 心跳等
+- `Worker` : 该环节主要启动 worker 运行的核心组件，例如定时器、协程/进程池、状态记录数据库等。会在 `WorkerController` 下创建对应的实例对象，例如 `pool,timer,hub` 等
+- `Consumer`: 在 `Worker` 组件全部启动成功后，才开始启动。worker 在该环节会执行与任务消息相关的操作，例如会与 broker 建立连接、接收任务远程控制指令、管理 worker 心跳等。会在 `workerController.consumer` 下创建对应的实例对象，例如 `heart,task_consumer,dispatcher`等
 
 ![alt|c,60](../../image/distributeCluster/worker_graph_full.webp)
 
@@ -1052,6 +1052,15 @@ triangle@LEARN:~$ celery -A proj flower --port=5555  // 启动 flower
 
 > [!tip]
 > 官方提供的组件可在 `celery.worker` 包下查看
+
+`celery` 中的 `worker` 实际启动流程便是
+1. 读取 `celeryconfig.py` 配置
+2. 创建 `WorkerController` 实例，**其实就是 `worker` 工作节点实例**
+3. 根据依赖关系执行 `Worker` 流程，在 `WorkerController` 下创建相关实例对象
+4. 根据依赖关系执行 `Consumer` 流程，在 `WorkerController.consumer` 下创建相关实例
+   - `Tasks`: 加载自定义的 `task`，创建任务执行器，并生成任务消息队列的 `Consumer`
+   - `Control`: 加载控制指令执行器，并生成控制消息队列的 `Consumer`
+5. 开启 `event loop` 监听任务消息队列
 
 ## Worker
 

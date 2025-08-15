@@ -10,6 +10,7 @@
     - [第六章 日志系统](python/chapter/project.md)
     - [第七章 PyTest](python/chapter/pytest.md)
     - [第八章 Redis](python/chapter/redis.md)
+    - [第九章 win32serviceutil](python/chapter/service.md)
 - **异步框架**
     - [Celery](distributeCluster/chapter/celery.md)
 - **后端服务**
