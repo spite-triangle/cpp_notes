@@ -89,4 +89,25 @@
 - `ELK` : 日志收集
 
 
+## CRI
+
+`k8s` 在 `1.24.0` 之后的新版本完全移除对 `docker` 的适配，本质删除的是 `kubelet` 中的 `docker shim` 功能，其目的是为了推广 `CRI, container runtime interface` 技术，放弃对 `docker` 的定制适配
+- `docker shim` : 对于容器，`docker` 内部存在一套完整的网络、存储卷等功能，但是 `k8s` 为了巩固自己对容器控制权，又自己实现了一套网络、存储卷等功能，因此为了让 `docker` 只专注于提供容器，`k8s` 便利用 `docker shim` 来屏蔽 `docker` 提供的多余功能，即 `k8s` 只需要 `docker` 底层的 `containerd` 功能
+- `CRI, container runtime interface` : `k8s` 为容器技术提出的规范协议，第三方厂商只要根据 `CRI` 协议实现容器，便能接入 `k8s` 使用
+  - `CRI Client`: `kubelet` 会通过 `CRI Client` 客户端与 `CRI server` 通信
+  - `CRI Server`: 以 `grpc` 的形式提供，负责控制 `OCI Runtime` 的运行，属于对外的 `API` 层
+  - `OCI Runtime`: 真正实现容器技术的模块，例如网络通信、虚拟机创建、储存卷等功能
+
+![alt](../../image/k8s/CRI.png)
+
+
+利用 `CRI` 技术， `k8s` 便可以在容器技术上当甩手掌柜，让别人来负责实现。此外，在 `OCI Runtime` 中的「网络创建」部分，`k8s` 使用了同样的套路，定义了 `CNI, Container Network Interface` 协议规范，让别人来实现以下功能
+- `pod` 的 `ip` 地址的管理
+- 同一节点上的 `pod` 之间互相通信
+- 不同节点上的 `pod` 之间互相通信
+
+`CNI` 的主要实现有
+- [flannel](https://github.com/flannel-io/flannel)
+- [calico](https://www.tigera.io/project-calico/)
+
 
