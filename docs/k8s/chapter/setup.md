@@ -33,7 +33,7 @@
 ### 简介
 
 (minikube)[https://minikube.kubernetes.ac.cn/docs/] : 是一个基于`go`语言开发，易于在本地运行 `Kubernetes` 的工具，可在电脑的虚拟机内轻松创建单机版 `Kubernetes` 集群，对硬件资源没有太高的要求，非常适合 **测试** 和 **本地开发**。
-- **单机器部署**：`k8s` 的所有 `Node` 均运行在同一台物理机上，即通过 `virtualBox` 虚拟机模拟出多机器的效果
+- **单机器部署**：`k8s` 的所有 `Node` 均运行在同一台物理机上，即通过本地容器模拟出多机器的效果
 
 ![alt](../../image/k8s/minikube_schema.png)
 
@@ -71,7 +71,7 @@ triangle@LEARN:~$ minikube service // 快速实现 k8s 中的 service 功能，�
 
 ```term
 triangle@LEARN:~$ minikube ip // 获取集群 IP
-triangle@LEARN:~$ minikube ssh // 登录 minikube 模拟的 Node
+triangle@LEARN:~$ minikube ssh // 登录 minikube 模拟的 Node 容器
 triangle@LEARN:~$ minikube node list // 列出所有节点
 triangle@LEARN:~$ minikube node add // 添加一个节点
 triangle@LEARN:~$ minikube node delete <name>  // 删除指定节点
@@ -278,3 +278,15 @@ Other Commands:
 Usage:
   kubectl [flags] [options]
 ```
+
+## API
+
+`kubectl` 本质上就是在调用 `k8s` 集群以 `Restful` 形式提供的 `kube-api-server` 交互接口，即 `API` 接口。
+
+`API` 接口类型
+- `alpha`: 属于开发中的不稳定接口
+- `beta`: 经过测试验证的版本
+- `stable`: 真正发布的版本
+
+`k8s` 提供的 `API` 接口还可以设置「访问权限」
+
