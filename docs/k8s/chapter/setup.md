@@ -58,8 +58,16 @@ triangle@LEARN:~$ minikube stop // 暂停集群
 triangle@LEARN:~$ minikube delete // 删除集群
 triangle@LEARN:~$ minikube status // 查看集群状态
 triangle@LEARN:~$ minikube dashboard // k8s web 管理界面
-
 ```
+
+### 修改源
+
+```term
+triangle@LEARN:~$ minikube ssh // 登录 minikube 模拟的 Node 容器
+triangle@LEARN:~$ sudo vi /etc/docker/daemon.json // 修改镜像地址
+triangle@LEARN:~$ sudo systemctl restart docker // 重启 docker
+```
+ 
 
 ### 工具命令
 
@@ -208,6 +216,8 @@ triangle@LEARN:~$ kubeclt apply -f <xxx.yaml> // 安装应用，会自动创建�
 - `services` -> `svc`
 - `namespace` -> `ns`
 - `nodes` -> `no`
+- `PersistentVolume` -> `PV`
+- `PersistentVolumeClaim` -> `PVC`
 
 ```term
 triangle@LEARN:~$ kubectl --help
