@@ -169,6 +169,8 @@ triangle@LEARN:~$ kubectl cp nginx-demo:/data/volumes/nginx/html/index.html ./in
 Options
     -c              容器名
     -n              命名空间
+
+triangle@LEARN:~$ kubeclt logs -f <pod-name> // 查看日志
 triangle@LEARN:~$ kubectl delete pods nginx-demo // 删除
 ```
 
