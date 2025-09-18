@@ -283,7 +283,7 @@ while True:
 
 ## concurrent-log-handler
 
-由第三方库提供多进程安全的 handler
+由第三方库提供多进程安全的 `handler` ，**性能具差**
 
 ```term
 triangle@LEARN:~$ pip install concurrent-log-handler
@@ -292,9 +292,11 @@ triangle@LEARN:~$ pip install concurrent-log-handler
 
 ## loguru
 
+使用 `loguru` 库替代 `logging` 进行日志记录，**在 `windows` 环境有问题**
+
+
 ### 基本用法
 
-使用 `loguru` 库替代 `logging` 进行日志记录
 
 ```python
 import sys
@@ -441,6 +443,162 @@ logger = Logger().logger()
 ```
 
 
+## QueueHandler
+
+进程通过 `QueueHandler` 将消息放入 `Queue` ，然后通过 `QueueListener` 统一处理消息。
+
+```python
+
+import time
+import logging
+import multiprocessing
+import logging.handlers
+
+class LoggerCenter:
+    """ 日志保存处理中心，主进程中启动和关闭 """
+    def __init__(self):
+        pass
+
+    @property
+    def log_queue(self):
+        return self._log_queue
+
+    def start(self,handle:str):
+        # 消息队列
+        self._manager = multiprocessing.Manager()
+        self._log_queue = self._manager.Queue(-1)
+
+        handler = logging.getHandlerByName(handle)
+        if not handler:
+            raise ValueError("请指定正确的 handler")
+        
+        self._listener = logging.handlers.QueueListener(
+            self._log_queue, 
+            handler,
+            respect_handler_level=True
+        )
+
+        self._listener.start()
+        
+    def stop(self):
+
+        # 确保最后日志写入完成
+        time.sleep(1)
+
+        self._listener.stop()
+        self._manager.shutdown()
+
+class LoggerWorker:
+    """ 发送日志给 LoggerCenter """
+
+    def __init__(self):
+        self._logger : logging.Logger = None
+    
+    def setup(self,queue:multiprocessing.Queue, console:bool = False):
+        """ 对接 LoggerCenter 的 queue """
+        self._logger = logging.Logger("multiprocessing.logger.worker")
+
+        # 清除可能存在的旧处理器
+        for handle in self._logger.handlers:
+            self._logger.removeHandler(handle)
+        
+        self._logger.addHandler(logging.handlers.QueueHandler(queue))
+
+        if console:
+            self._logger.addHandler(logging.StreamHandler())
+
+        self._logger.setLevel(logging.INFO)
+
+    def info(self, msg, *args, **kwargs):
+        self._logger.info(msg,*args, stacklevel=2,**kwargs)
+
+    def debug(self, msg, *args, **kwargs):
+        self._logger.debug(msg,*args, stacklevel=2,**kwargs)
+
+    def warning(self, msg, *args, **kwargs):
+        self._logger.warning(msg,*args, stacklevel=2,**kwargs)
+
+    def error(self, msg, *args, **kwargs):
+        self._logger.error(msg,*args, stacklevel=2,**kwargs)
+
+    def critical(self, msg, *args, **kwargs):
+        self._logger.critical(msg,*args, stacklevel=2,**kwargs)
+
+logger = LoggerWorker()
+```
+
+使用案列
+
+```python
+import settings
+import logging.config as loconfig
+import multiprocessing
+from utils.logger import logger, LoggerCenter
+
+def worker_task(worker_id, log_queue):
+    
+    logger.setup(log_queue)
+
+    for i in range(10000):
+        logger.info(f"Worker {worker_id} task {i}, xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
 
 
+LOGGING_CONFIG = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    # 格式化
+    "formatters": {
+        "standard": {
+            "format": "[%(asctime)s][%(levelname)s][%(process)s](%(filename)s:%(lineno)s) | %(message)s"
+        }
+    },
+    # handler
+    "handlers": {
+        "file_log": {
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename":  "app.log",
+            "maxBytes": 50 * 1024 * 1024,
+            "backupCount": 20,
+            "formatter": "standard",
+            "encoding": "utf8"
+        }
+    },
+    # logger
+    "loggers" :{
+        # 专门用于加载 file_log
+        "queue":{
+            "handlers": ["file_log"],
+            "level": "INFO"
+        }
+    }
+}
 
+
+if __name__ == "__main__":
+    # 加载配置
+    loconfig.dictConfig(LOGGING_CONFIG)
+
+    # 启动 QueueListener
+    center = LoggerCenter()
+    center.start(handle="file_log")
+
+    logger.setup(center.log_queue)
+    logger.info("xxxx")
+    
+    # 创建子进程
+    processes = []
+    for i in range(3):
+        p = multiprocessing.Process(
+            target=worker_task,
+            args=(i+1, center.log_queue),
+            name=f"Worker-{i+1}"
+        )
+        processes.append(p)
+        p.start()
+
+    # 等待所有进程完成
+    for p in processes:
+        p.join()
+
+    center.stop()
+```

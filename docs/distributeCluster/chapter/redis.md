@@ -168,6 +168,7 @@ triangle@LEARN:~$ lindex key i // 查看 i 对应元素的值
 
 ```term
 triangle@LEARN:~$ sadd key members // 插入值
+triangle@LEARN:~$ scard key // set 长度
 triangle@LEARN:~$ smembers key  // 展示所有值
 triangle@LEARN:~$ srem key members // 删除
 triangle@LEARN:~$ spop key n // 从集合随机挑出 n 个元素
@@ -199,6 +200,7 @@ triangle@LEARN:~$ zrank key member // 查看 member 排序后的索引
 triangle@LEARN:~$ zrevrank key member // 查看 member 排序后的索引
 triangle@LEARN:~$ zincrby key n member // 给 member 元素的分数加 n
 triangle@LEARN:~$ zcard key // 查看集合个数
+triangle@LEARN:~$ zcount key min max // 查看分数在 [min,max] 范围的元素个数
 triangle@LEARN:~$ zrangebyscore key min max // 查询 [min,max] 分数范围的元素，且排序
 ```
 
@@ -296,6 +298,7 @@ name = 'felord.cn'
 local age = 18
 
 -- 数组 table 类型
+-- NOTE - table 索引从 1 开始
 arr_table = {'felord.cn','Felordcn',1}
 arr_table[1]
 
@@ -349,6 +352,12 @@ end
 -- p v = 2
 -- p i = name
 -- p v = felord.cn
+
+-- #arr : 表示 arr 的长度
+for i=1, #arr, 1 do
+    print('p i = '..i)
+    print('p v = '..arr[i])
+end
 ```
 
 - **函数**
