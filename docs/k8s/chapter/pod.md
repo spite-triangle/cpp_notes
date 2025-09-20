@@ -240,6 +240,8 @@ triangle@LEARN:~$ kubectl delete pods nginx-demo // 删除
 
 # 生命周期
 
+## 概念
+
 ![alt](../../image/k8s/pod_lifecycle.png)
 - `Init C` : 初始化容器，可以塞自己的东西
 - `postStart` ：容器启动时回调，一般不使用，功能与容器容器中的启动 `CMD` 冲突，**且 `postStart` 与 `CMD` 同时执行**
@@ -248,6 +250,8 @@ triangle@LEARN:~$ kubectl delete pods nginx-demo // 删除
   1. `Endpoint` 删除 `Pod` 的 `IP` 地址
   2. `Pod` 状态变为 `Terminating`
   3. 执行 `preStop` 回调
+
+## preStop/postStart
 
 ```yaml
 spec:
@@ -269,4 +273,55 @@ spec:
           host: api.yilingyi.com      # 主机域名，不加该字段将请求Pod本身
           scheme: HTTP                # http协议，默认值HTTP，支持HTTP、HTTPS
 ```
+
+## intc
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+  labels:
+    app: nginx-deploy
+  creationTimestamp: "2025-09-13T06:34:57Z"
+  name: nginx-deploy
+  namespace: default
+
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: nginx-deploy
+  progressDeadlineSeconds: 600
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+
+  template:                                 # pod 定义模板
+    metadata:
+      labels:
+        app: nginx-deploy
+    spec:
+      initContainers:                       # 在 containers 之前运行
+      - image: alpine
+        imagePullPolicy: IfNotPresent
+        name: init
+        command: ["sh", "-c", "echo init"]
+      containers:
+      - name: nginx
+        image: nginx:1.7.9
+        imagePullPolicy: IfNotPresent
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      terminationGracePeriodSeconds: 30
+```
+
+
+
 
