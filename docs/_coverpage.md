@@ -14,7 +14,7 @@
 - msvc、gdb
 - windbg、调试原理、SEH 机制
 - xmake、cmake、makefile、ninja
-- docker
+- docker、k8s
 - npm、vue3、electron、html、css、NodeJS
 - vscode 插件开发
 - golang、协程

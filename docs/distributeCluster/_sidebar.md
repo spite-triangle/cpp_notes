@@ -1,7 +1,7 @@
 
 - **分布式集群**
 - [目录](distributeCluster/README.md)
-- **概念辨析**
+- **概念**
   - [分布式与集群](distributeCluster/chapter/introdution.md)
 - **中间件**
   - [RabbitMQ](distributeCluster/chapter/rabbitmq.md)
