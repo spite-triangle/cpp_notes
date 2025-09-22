@@ -17,5 +17,7 @@
   - [Ansys HPC](distributeCluster/chapter/ansys.md)
 - **消息监控**
   - [Prometheus](distributeCluster/chapter/prometheus.md)
+  - [ELK](distributeCluster/chapter/elk.md)
 
+    
     
