@@ -228,6 +228,7 @@ triangle@LEARN:~$ pip install -e . // 以 dev 模式安装项目
 triangle@LEARN:~$ hello // 执行 project.scripts 命令
 ```
 
+
 ## poetry
 
 ### 介绍
@@ -404,7 +405,7 @@ test
 
 ### 介绍
 
-[pdm](https://github.com/pdm-project/pdm) 与 `poetry` 一样，通过 `pyproject.toml` 进行项目管理。pdm 的设计大部分功能都借鉴了 poetry ，且对 poetry 的不足之处进行了优化，使用更加简便，但目前 pdm 用户量没有 poetry 多，属于战未来的产品。
+[pdm](https://github.com/pdm-project/pdm) 与 `poetry` 一样，通过 `pyproject.toml` 进行项目管理。pdm 的设计大部分功能都借鉴了 poetry ，且对 poetry 的不足之处进行了优化，使用更加简便，但目前 `pdm` 用户量没有 `poetry` 多，属于战未来的产品。**`pdm` 的功能最接近 `npm`**
 
 ```term
 triangle@LEARN:~$ pip install pdm
@@ -642,4 +643,113 @@ triangle@LEARN:~$ pdm update // 根据 pyproject.toml 更新 pdm.lock
 triangle@LEARN:~$ pdm lock // 生成锁定文件
 triangle@LEARN:~$ pdm lock --check // 检查锁定文件
 triangle@LEARN:~$ pdm lock --refresh // 刷新锁定文件
+```
+
+
+
+## uv
+
+> [!note]
+> 功能相对简单，但使用较多
+
+### 介绍
+
+[uv](https://uv.doczh.com/) 可以替代 `pip`、`virtualenv`、`pip-tools` 等工具，提供依赖管理、虚拟环境创建、`Python` 版本管理等一站式服务，且基于 `pyproject.toml` 进行项目管理。
+
+```term
+triangle@LEARN:~$ pip install uv
+triangle@LEARN:~$ uv help
+An extremely fast Python package manager.
+
+Usage: uv [OPTIONS] <COMMAND>
+
+Commands:
+  auth                       Manage authentication
+  run                        Run a command or script
+  init                       Create a new project
+  add                        Add dependencies to the project     
+  remove                     Remove dependencies from the project
+  version                    Read or update the project's version
+  sync                       Update the project's environment
+  lock                       Update the project's lockfile
+  export                     Export the project's lockfile to an alternate format
+  tree                       Display the project's dependency tree
+  format                     Format Python code in the project
+  tool                       Run and install commands provided by Python packages
+  python                     Manage Python versions and installations
+  pip                        Manage Python packages with a pip-compatible interface
+  venv                       Create a virtual environment
+  build                      Build Python packages into source distributions and wheels
+  publish                    Upload distributions to an index
+  cache                      Manage uv's cache
+  self                       Manage the uv executable
+  generate-shell-completion  Generate shell completion
+  help                       Display documentation for a command
+```
+
+> [!tip]
+> `uv` 除了通过 `pip` 进行安装外，还可以从 [github](https://github.com/astral-sh/uv/releases) 下载安装包，独立安装
+
+### 虚拟环境
+
+```term
+triangle@LEARN:~$ uv venv // 根据当前 python 在当前目录创建 .venv 
+triangle@LEARN:~$ uv venv --python=3.10 // 会下载指定版本 python，然后创建 .venv
+triangle@LEARN:~$ uv run <command/script> // 有 .venv 则用 .venv 的 python，没有则用当前环境的 
+```
+
+### 项目管理
+
+```term
+triangle@LEARN:~$ uv init ./ // 创建新项目
+triangle@LEARN:~$ tree . 
+    ./
+    ├── .git
+    ├── .gitignore
+    ├── .python-version
+    ├── README.md
+    ├── main.py
+    ├── uv.toml                 uv 配置，需要自己手动添加
+    ├── uv.lock                 版本锁定文件，自动生成
+    └── pyproject.toml          项目配置
+triangle@LEARN:~$ uv add <package> // 添加包，会自动更新 pyproject.toml
+Options
+    --dev                          Add the requirements to the development dependency group [env: UV_DEV=]
+    --optional <OPTIONAL>          Add the requirements to the package's optional dependencies for the specified extra
+    --group <GROUP>                Add the requirements to the specified dependency group
+    --editable                     Add the requirements as editable
+    --locked                       Assert that the `uv.lock` will remain unchanged
+triangle@LEARN:~$ uv remove <package> // 删除包，会自动更新 pyproject.toml
+triangle@LEARN:~$ uv tree  // 查看包依赖
+Resolved 2 packages in 2ms
+    uv-test v0.1.0
+    └── numpy v2.3.3
+triangle@LEARN:~$ uv lock // 根据 pyproject.toml 更新 uv.lock 文件
+triangle@LEARN:~$ uv sync // 根据 uv.lock 还原环境
+```
+
+### 配置
+
+> [!tip]
+> 支持的[配置项](https://uv.doczh.com/reference/settings/)
+
+- 方式一： `uv.toml`
+
+```toml
+# 源配置
+[[index]]
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+default = true
+```
+
+- 方式二：`pyproject.toml`，配置项使用 `tool.uv.` 前缀
+
+```toml
+[[tool.uv.index]]
+name = "pytorch"
+url = "https://download.pytorch.org/whl/cu121"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch" }
 ```

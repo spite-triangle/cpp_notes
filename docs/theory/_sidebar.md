@@ -6,3 +6,4 @@
 - [数据库设计](theory/chapter/databaseDesign.md)
 - [树结构数据库](theory/chapter/treeDatabase.md)
 - [JSON schema](theory/chapter/jsonschema.md)
+- [MCP](theory/chapter/mcp.md)
