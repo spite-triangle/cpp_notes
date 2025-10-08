@@ -2,7 +2,7 @@
 
 <div style="text-align:center;"><img width= 150px src="image/logo.png" align="middle" /></div>
 
-# 开发笔记 <small>1.1.1</small>
+# 开发笔记 <small>1.3.0</small>
 
 > 该项目用于记录日常开发学习笔记
 
