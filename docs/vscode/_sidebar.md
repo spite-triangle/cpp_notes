@@ -7,7 +7,7 @@
 - [第四章 Debbuger](vscode/chapter/debugger.md)
 - [第五章 声明语言特性](vscode/chapter/declarativeLanguageFeature.md)
 - [第六章 程序语言特性](vscode/chapter/programmaticLanguageFeatures.md)
-- [附录 copilot](vscode/chapter/programmaticLanguageFeatures.md)
+- [附录 copilot](vscode/chapter/copilot.md)
 
 
 
