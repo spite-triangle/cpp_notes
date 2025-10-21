@@ -14,7 +14,7 @@
 
 ## 传统方案
 
-![alt](../../../image/k8s/traditional_model.png)
+![alt](../../image/k8s/traditional_model.png)
 
 同一台机器上部署多个服务，服务与服务之间无法「环境隔离」
 - 无法负载均衡
@@ -23,7 +23,7 @@
 
 ## 虚拟化方案
 
-![alt](../../../image/k8s/virtual_model.png)
+![alt](../../image/k8s/virtual_model.png)
 
 在一个机器利用虚拟机分别运行多个服务，解决了服务间的「环境隔离」问题
 - 运行虚拟机需要占用过多的额外资源
@@ -31,7 +31,7 @@
 ## 容器化方案
 
 
-![alt](../../../image/k8s/container_model.png)
+![alt](../../image/k8s/container_model.png)
 
 「容器」对虚拟机进行精简，直接复用物理机操作系统内核。相对于虚拟机而言，占用资源更少，性能更好
 - 容器只提供了单机运行能力，无集群管理系统
@@ -44,7 +44,7 @@
 
 ## 集群系统
 
-![alt](../../../image/k8s/kubernetes-cluster-architecture.svg)
+![alt](../../image/k8s/kubernetes-cluster-architecture.svg)
 
 
 `k8s` 集群中，节点划分主从关系
