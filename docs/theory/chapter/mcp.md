@@ -477,6 +477,61 @@ INFO:     Uvicorn running on http://127.0.0.1:2333 (Press CTRL+C to quit)
 }
 ```
 
+
+## agent
+
+```term
+triangle@LEARN:~$ pip install openai-agents
+```
+
+```python
+import asyncio
+from agents.mcp import MCPServer
+from agents.mcp.server import MCPServerStdio,MCPServerStdioParams
+from agents import Agent, Runner, AsyncOpenAI, OpenAIChatCompletionsModel
+
+
+async def run(mcp_server: MCPServer):
+    external_client = AsyncOpenAI(
+        api_key="",
+        base_url="",
+    )
+    agent = Agent(
+        name="Assistant",
+        instructions="",
+        mcp_servers=[mcp_server],
+        model=OpenAIChatCompletionsModel(
+            model="Qwen3-Coder-Flash",
+            openai_client=external_client,
+        )
+    )
+
+    prompt = "给 mcp_hello 打个招呼"
+    print("input:",prompt)
+
+    result = await Runner.run(starting_agent=agent, input=prompt)
+    print("output:",result.final_output)
+
+async def main():
+    async with MCPServerStdio(
+            name="mcp_hello",
+            params=MCPServerStdioParams(
+                command="D:/Program/miniforge3/Scripts/uv.exe",
+                args=[
+                    "--directory",
+                    "E:/document/mcp/demo",
+                    "run",
+                    "server.py"
+                ]
+            )
+
+    ) as server:
+        await run(server)
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
 ## client
 
 ### 坑
