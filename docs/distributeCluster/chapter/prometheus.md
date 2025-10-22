@@ -26,7 +26,7 @@
   - `Alermanager`: 告警系统
   - `Grafana`: 监控指标可视化界面
 
-![alt](../../image/distributeCluster/prometheus_structure.png)
+![alt](../../image/distributeCluster/promethus_structure.png)
 
 ## 安装
 

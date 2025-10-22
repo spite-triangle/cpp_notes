@@ -95,14 +95,17 @@
 
 ## 结构
 
+![alt](../../image/theory/mcp_cs.png)
+
 `MCP` 由三个核心组件构成：`Host`、`Client` 和 `Server`。
-- `Host` : 运行 `MCP` 的主应用程序，实现 `LLM` 与 `MCP client` 的交互，例如 `coplit`、`cline`
+- `Host` : 实现 `LLM` 与 `MCP client` 交互的智能体`agent`，例如 `coplit`、`cline`
 - `Client`:  接收 `LLM` 的请求，并将请求转发给 `MCP Server` ，最后将 `Server` 的处理结果返回给 `LLM`
 - `Server`: 遵循 `MCP` 协议实现的业务服务，处理 `Client` 请求
   - `stdio`: 本地服务实现，通过 `uvx` 或 `npx` 运行
   - `SSE`: 远程服务实现，通过 `HTTP` 接口访问
 
-![alt](../../image/theory/mcp_cs.png)
+> [!tip]
+> `Host` 与 `Server` 可根据业务进行自定义开发，`Client` 则由`MCP`框架内部封装
 
 ## API 流程
 

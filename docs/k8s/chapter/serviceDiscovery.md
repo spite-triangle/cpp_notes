@@ -12,8 +12,9 @@
 - `EndPoint`: 记录与之关联 `Service` 所管理的 `Pod` 的 `IP` 地址，以及`Pod` 中应用容器暴露的 `Port`，**充当了 `Service` 所管理的 `Pod` 进行网络通信的「路由器」**
 - `Service`: 将目标 `Pod` 中需要暴露的 `Port` 与 `Node` 物理 `Port` 绑定，且管理 `EndPoint`
 
-通过 `Service` 便能构建一个通信网络，该网络中的 `Pod` 可互相通信
+通过 `Service` 便能构建一个通信网络，该网络中的 `Pod` 可互相通信； `Service` 也会反向代理所管理的 `Pod`
 - **`k8s`集群内网访问**: `Pod` 中暴露的 `Port` + `Pause` 容器的 `IP`
+- **集群内 `Pod` 负载均衡**: 通过 `Service` 的 `IP` + `Service` 的 `Port`
 - **`k8s`集群外网访问**: `Service` 中绑定的物理 `Port` + `Node` 的物理 `IP`，**生产环境应当使用 `ingress` 代替**
 
 
