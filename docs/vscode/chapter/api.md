@@ -270,6 +270,8 @@ subscription.dispose();
 
 在 vscode 中，自带配置文件 (例如 `settings.json` 、`launch.json`、`tasks.json`) 可以直接通过官方 API 进行修改
 
+>[!note]
+> 首先需要先在 `package.json` 中定义 `settings.json` 、`launch.json`、`tasks.json` 的配置，才能通过 `API` 进行访问，[官方教程](https://code.visualstudio.com/api/references/contribution-points#contributes.configuration)
 
 ```ts
 

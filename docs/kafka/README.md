@@ -1,5 +1,5 @@
 
-<h1 style="text-align:center;font-size:60px;font-weight:bold;font-family:宋体">kafka</h1>
+<h1 style="text-align:center;font-size:60px;font-weight:bold;font-family:宋体">k8s</h1>
 
 <style>
     #btn{
