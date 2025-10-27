@@ -32,11 +32,11 @@ triangle@LEARN:~$ docker run -d --name kafka -p 9092:9092 apache/kafka
 ![alt](../../image/kafka/message_ps.png)
 
 
-## kafka
+# 基本结构
 
 可看出 `P2P` 模式是 `PS` 通信模型的一种特例，因此，在 `kafka` 中将两种通信方式统一为一种实现
 
-![alt](../../image/kafka/message_kafka.png)
+![alt](../../image/kafka/model_single.png)
 
 - 话题 `Topic` : 生产者的消息存入 `Topic`，而消费者则从 `Topic` 读消息
 - 分区 `Partition` : 一个有序、不可变的消息队列
