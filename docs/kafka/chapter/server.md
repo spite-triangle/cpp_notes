@@ -83,11 +83,11 @@
 
 # 集群启动流程
 
-![alt](../../image/kafka/server_1.png)
+![alt](../../image/kafka/server_launch_1.png)
 
-![alt](../../image/kafka/server_2.png)
+![alt](../../image/kafka/server_launch_2.png)
 
-![alt](../../image/kafka/server_3.png)
+![alt](../../image/kafka/server_launch_3.png)
 
 
 
