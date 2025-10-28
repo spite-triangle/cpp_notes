@@ -14,7 +14,9 @@ triangle@LEARN:~$ docker run -d --name kafka -p 9092:9092 apache/kafka
 ```
 
 > [!note]
-> 最新版的 `kafka` 已经不需要安装 `zookeeper`
+> - `2.8.0` 版本之前，只能通过 `zookeeper` 实现节点管理
+> - `3.0.0` 版本开始，生产环境可采用 `KRaft` （`Raft`算法实现）模式替代 `zookeeper` 
+> - `3.5.0` 版本开始，`KRaft` 成为生产环境集群部署的主流模式
 
 # 通信模式
 
@@ -132,10 +134,85 @@ triangle@LEARN:~$ /opt/kafka/bin$ ./kafka-console-consumer.sh --bootstrap-server
 triangle@LEARN:~$ /opt/kafka/bin$ ./kafka-console-producer.sh --bootstrap-server localhost:9092 --topic test // 控制台消费者
 ```
 
+# 脚本
+
+```term
+triangle@LEARN:~$ pip install kafka-python
+```
+
+
+## 生产者
+
+```python
+from kafka import KafkaProducer
+
+producer = KafkaProducer(bootstrap_servers='127.0.0.1:9092')
+
+producer.send(
+        topic='test', 
+        value=b'Hello, Kafka!'
+    )
+producer.flush()
+
+producer.close()
+```
+
+## 消费者
+
+- **简单写法**
+
+```python
+from kafka import KafkaConsumer
+
+consumer = KafkaConsumer(
+    'test',
+    bootstrap_servers='127.0.0.1:9092',
+    auto_offset_reset='earliest',
+    enable_auto_commit=True
+)
+
+while True:
+    for message in consumer:
+        print(f"Received: {message.value.decode('utf-8')}")
+```
+
+- **正常流程**
+
+```python
+from kafka import KafkaConsumer
+
+consumer = KafkaConsumer(
+    bootstrap_servers='127.0.0.1:9092',
+    auto_offset_reset='earliest',
+    enable_auto_commit=True
+)
+
+# 订阅 topic
+consumer.subscribe(topics=['test'])
+
+while True:
+
+    # 从头 topic 拉取数据
+    datas = consumer.poll(timeout_ms=100)
+
+    # 解析数据
+    for key,record in datas.items():
+        print(record[0].value.decode('utf-8'))
+    
+consumer.close()
+```
+
+
 
 # 可视化界面
 
 - [Kafdrop](https://kafdrop.com/) : 项目级别工具
+
+```term
+triangle@LEARN:~$ docker pull obsidiandynamics/kafdrop
+triangle@LEARN:~$ docker run -d -p 9000:9000 --name kafdrop -e KAFKA_BROKERCONNECT=<kafka host:ip> obsidiandynamics/kafdrop
+```
+
 - `Kafka UI` :  `vscode` 插件
 
 
