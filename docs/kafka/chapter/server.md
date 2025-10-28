@@ -81,13 +81,25 @@
 
 ![alt](../../image/kafka/zookeeper_selection.png)
 
-# 集群启动流程
+# 集群启动
 
-![alt](../../image/kafka/server_1.png)
+## 启动流程
 
-![alt](../../image/kafka/server_2.png)
+![alt](../../image/kafka/server_launch_1.png)
 
-![alt](../../image/kafka/server_3.png)
+![alt](../../image/kafka/server_launch_2.png)
+
+![alt](../../image/kafka/server_launch_3.png)
+
+
+## 底层通信
+
+`controller` 启动时的底层网络通信流程
+
+![alt](../../image/kafka/kafka_setup.png)
+
+- `KafkaApis` : 实际的处理 `kafka` 业务逻辑的实现
+- `InFlightRequests` : 在途请求缓冲区，管理已发送但未收到响应的网络请求
 
 
 
