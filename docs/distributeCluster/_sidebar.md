@@ -6,6 +6,7 @@
 - **中间件**
   - [RabbitMQ](distributeCluster/chapter/rabbitmq.md)
   - [Redis](distributeCluster/chapter/redis.md)
+  - [kafka](kafka/README.md)
 - **异步框架**
   - [Celery](distributeCluster/chapter/celery.md)
 - **后端服务**

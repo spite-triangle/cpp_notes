@@ -14,7 +14,7 @@
 - vscode 插件开发
 - golang、协程
 - RSM、HFSS、PyAedt
-- RabbitMQ、Redis
+- RabbitMQ、Redis、kafka、Ngnix
 - poetry、pdm、Flask、Django、FastAPI、Celery、PyTest
 
 
