@@ -7,6 +7,8 @@
   - [RabbitMQ](distributeCluster/chapter/rabbitmq.md)
   - [Redis](distributeCluster/chapter/redis.md)
   - [kafka](kafka/README.md)
+- **协调组件**
+  - [zookeeper](zookeeper/README.md)
 - **异步框架**
   - [Celery](distributeCluster/chapter/celery.md)
 - **后端服务**

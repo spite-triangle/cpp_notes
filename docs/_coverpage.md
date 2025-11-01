@@ -19,7 +19,7 @@
 - vscode 插件开发
 - golang、协程
 - RSM、HFSS、PyAedt
-- RabbitMQ、Redis、kafka、Ngnix
+- RabbitMQ、Redis、kafka、Ngnix、zookeeper
 - poetry、pdm、Flask、Django、FastAPI、Celery、PyTest
 
 [GitHub](https://github.com/spite-triangle)

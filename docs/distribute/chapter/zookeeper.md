@@ -94,9 +94,10 @@ zookeeper 的一些应用场景
 
 ![alt|c,60](../../image/disturbute/zknamespace.jpg)
 
-在 `zookeeper` 中，状态并非以 `key-value` 的形式存储，而是通过 `data-tree` 实现
-- `ZNode`: 树中的节点，存储数据大小 `< 1MB`
-- `path`: 每个节点的路径标识，唯一不重复，用于节点定位
+在 `zookeeper` 中，状态是通过 `data-tree` 实现（本质上也是`key-value` 的形式）
+- `path  (key)`: 每个节点的路径标识，唯一不重复，用于节点定位
+- `ZNode (value)`: 树中的节点，存储数据大小 `< 1MB`
+
 
 对于 `ZNode` 还存在一些特殊属性
 - 类型 `flag`
