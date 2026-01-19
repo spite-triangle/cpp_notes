@@ -16,6 +16,7 @@
 - [第十三章 Cpp20](effective/chapter/cpp20.md)
 - [第十四章 标准库](effective/chapter/std.md)
 - [第十五章 流](effective/chapter/stream.md)
+- [附录 高级技巧](effective/chapter/advance.md)
 
 
 
