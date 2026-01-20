@@ -513,8 +513,146 @@ struct Test{
 };
 
 TEST_CASE("alignment") {
-    /* NOTE - 通过聚合初始化，便能获取 Test 中的元素类型结构  */
     tuple<char,int,double> t;
     CHECK( get<1>(t) - get<0>(t) == 4);
+}
+```
+
+### Great Type Loophole
+
+上述聚合初始化在运行时才有效，但想要在编译时使用，则需要结合「类型漏洞`Great Type loophole`」实现。**类型漏洞是编译器漏洞，后续版本可能修复，不太推荐使用。**
+1. **Friend 函数声明与定义分离**：在模板类中声明 friend 函数，但在另一个模板类中定义它
+2. **聚合初始化触发转换**：通过结构体的聚合初始化触发隐式类型转换
+3. **实例化 Friend 函数**：在转换过程中实例化 friend 函数定义
+4. **SFINAE 检测**：使用 SFINAE（Substitution Failure Is Not An Error）检测哪些转换成功了
+5. **提取类型信息**：从成功的转换中提取类型信息
+
+```cpp
+// 简化的 tag 类型
+template<class T, std::size_t N>
+struct tag {
+    friend auto loophole(tag<T, N>);
+};
+
+// friend 函数定义
+template<class T, class U, std::size_t N>
+struct fn_def {
+    friend auto loophole(tag<T, N>) {
+        return std::declval<U>();
+    }
+};
+
+// 泛左值转换操作符
+template<class T, std::size_t N>
+struct loophole_ubiq {
+    template<class U, std::size_t = sizeof(fn_def<T, U, N>)>
+    constexpr operator U&() const noexcept;
+};
+
+template<class T, class I>
+struct loophole_type_list_impl {};
+
+// 模拟 loophole_type_list 的简化版本
+template<class T, std::size_t... I>
+struct loophole_type_list_impl<T, std::index_sequence<I...>>
+    : tuple< decltype( T{loophole_ubiq<T, I>{}...} , 0)> // 聚合初始化, 生成一堆记录类型信息的 loophole_ubiq 实例
+{
+    // loophole_ubiq 会生成 loophole 函数（编译器漏洞），然后解析函数返回类型
+    using tuple_type = tuple< decltype(loophole(tag<T, I>{})) ...>;
+};
+
+/* ================================================ */
+
+struct Point {
+    int x;
+    double y;
+    char z;
+};
+
+TEST_CASE("test_loophole") {
+    // loophole_type_list 便是获取偏移量的 tuple
+    using loophole_type_list = loophole_type_list_impl<Point, std::make_index_sequence<3> >::tuple_type;
+
+    CHECK(sizeof(loophole_type_list) == sizeof(Point)); // 大小相同
+}
+```
+
+### field count
+
+```cpp
+#include <iostream>
+#include <type_traits>
+#include <utility>
+
+// 通用转换结构体 - 可以转换为任何类型的引用
+struct ubiq_constructor {
+    std::size_t ignore;
+    
+    // 可以转换为任何类型的左值引用
+    // 注意：这个函数永远不会被实际调用，仅用于编译期类型检查
+    template <class Type>
+    constexpr operator Type&() const noexcept {
+        Type* ptr = nullptr;
+        return *ptr; // 未定义行为，但仅用于编译期 SFINAE 检查
+    }
+};
+
+// SFINAE 检测器 - 检查类型 T 是否可以用 N 个参数构造
+template <class T, std::size_t... I>
+constexpr auto is_constructible_with_n(std::index_sequence<I...>) noexcept
+    -> decltype(T{ ubiq_constructor{I}... }, std::true_type{})
+{
+    return std::true_type{};
+}
+
+template <class T, std::size_t... I>
+constexpr auto is_constructible_with_n(...) noexcept
+    -> std::false_type
+{
+    return std::false_type{};
+}
+
+// 辅助模板：检查 T 是否可以用 N 个参数构造
+template <class T, std::size_t N>
+struct is_constructible_with_n_t {
+    static constexpr bool value = decltype(
+        is_constructible_with_n<T>(std::make_index_sequence<N>{})
+    )::value;
+};
+
+
+// 通过三元运算符，实现二分查找
+template <class T, std::size_t Begin, std::size_t End>
+constexpr std::size_t detect_fields_count_binary() noexcept {
+    return  
+        (Begin == End) ? 
+            Begin
+        : (Begin + 1 == End) ?
+            (is_constructible_with_n_t<T, Begin>::value ? End : Begin) 
+        : (is_constructible_with_n_t<T, (Begin + End) / 2>::value ?
+            detect_fields_count_binary<T, (Begin + End) / 2, End>() 
+        :
+            detect_fields_count_binary<T, Begin, (Begin + End) / 2>());
+}
+
+// 计算字段的最大值，然后通过二分查找找到正确个数
+template <class T>
+constexpr std::size_t fields_count_binary() noexcept {
+#if defined(_MSC_VER) && (_MSC_VER <= 1920)
+    // Workaround for msvc compilers. Versions <= 1920 have a limit of max 1024 elements in template parameter pack
+    return detect_fields_count_binary<T, 0, (sizeof(T) * CHAR_BIT >= 1024 ? 1024 : sizeof(T) * CHAR_BIT)>();
+#else
+    return detect_fields_count_binary<T, 0, sizeof(T) * CHAR_BIT>();
+#endif
+}
+
+struct Point {
+    int a;
+    char b;
+};
+
+TEST_CASE("test_count") {
+    constexpr auto count = fields_count_binary<Point>();
+    CHECK(count == 2);
 }
 ```
