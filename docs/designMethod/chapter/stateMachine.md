@@ -43,7 +43,10 @@
 #ifndef __FSM__
 #define __FSM__
 
+#include <mutex>
 #include <memory>
+#include <typeindex>
+#include <unordered_map>
 
 enum STATUS_E{
     STATUS_TRAN,    /**< 状态转换标志 */
@@ -51,29 +54,36 @@ enum STATUS_E{
 };
 
 class Fsm;
-
-/*
-    NOTE - 直接使用类定义来描述一个状态，而非单独定义状态枚举
-*/
-class State{
+class AbstractState{
 public:
-    using ptr = std::shared_ptr<State>;
+    using ptr = AbstractState*;
 public:
-    virtual void enter() {};
     virtual STATUS_E transit(Fsm & fsm , int event) = 0;
+    virtual void enter() {};
     virtual void exit() {};
 };
 
 class Fsm{
 public:
-    State::ptr m_state; // 状态机当前状态
+    Fsm()
+        :m_state(nullptr)
+    {}
 
-    Fsm(State::ptr state){
-        m_state = state;
+    template<class T>
+    static AbstractState::ptr state(){
+        std::lock_guard<std::mutex> lock(m_mutex);
+        auto index = std::type_index(typeid(T));
+        auto item = m_mapStates.find(index);
+        if (item != m_mapStates.end()){
+            return item->second.get();
+        }
+        auto ptr = std::static_pointer_cast<AbstractState>(std::make_shared<T>());
+        m_mapStates.insert(std::pair(index, ptr));
+        return ptr.get(); 
     }
 
-    void init(int event){
-        m_state->transit(*this,event);
+    void init(AbstractState::ptr state){
+        m_state = state;
         m_state->enter();
     }
 
@@ -81,13 +91,23 @@ public:
         auto preState = m_state;
         auto status = m_state->transit(*this, event);
 
-        // NOTE - 状态转移成功后，才处理相应的 exit 与 enter 类型的 action
         if (status == STATUS_E::STATUS_TRAN){
             preState->exit();
             m_state->enter();
         }
     }
+
+    void setState(AbstractState::ptr state) { m_state = state;}
+    AbstractState::ptr & state() { return m_state;}
+private:
+    AbstractState::ptr m_state;
+
+    static std::mutex m_mutex;
+    static std::unordered_map<std::type_index, std::shared_ptr<AbstractState> > m_mapStates;
 };
+
+std::mutex Fsm::m_mutex;
+std::unordered_map<std::type_index, std::shared_ptr<AbstractState> > Fsm::m_mapStates;
 
 #endif /* __FSM__ */
 ```
@@ -95,7 +115,8 @@ public:
 使用
 
 ```cpp
-#include "fsm.hpp"
+#include "Fsm.hpp"
+
 #include <iostream>
 
 class RunState;
@@ -107,57 +128,73 @@ enum EVENT_E{
     EVENT_STOP
 };
 
-class RunState : public State{
+class RunState : public AbstractState{
 public:
+
      virtual STATUS_E transit(Fsm & fsm , int event) override{
         switch (event)
         {
         case EVENT_E::EVENT_STOP:
             std::cout << "run -> idle" << std::endl;
-            fsm.m_state = std::static_pointer_cast<State>(std::make_shared<IdleState>());
+            fsm.setState(Fsm::state<IdleState>());
             return STATUS_E::STATUS_TRAN;
         default:
             break;
         }
         return STATUS_E::STATUS_HANDLED;
      }
+
+    virtual void enter() {
+        printf("\t run enter\n");
+    };
+    virtual void exit() {
+        printf("\t run exit\n");
+    }
 };
 
-class IdleState : public State{
+class IdleState : public AbstractState{
 public:
-     virtual STATUS_E transit(Fsm & fsm , int event) override {
-        switch (event)
-        {
-        case EVENT_E::EVENT_RUN:
-            std::cout << "idle -> run" << std::endl;
-            fsm.m_state = std::static_pointer_cast<State>(std::make_shared<RunState>());
-            return STATUS_E::STATUS_TRAN;
-        default:
-            break;
-        }
-        return STATUS_E::STATUS_HANDLED;
-     }
+    virtual STATUS_E transit(Fsm & fsm , int event) override {
+    switch (event)
+    {
+    case EVENT_E::EVENT_RUN:
+        std::cout << "idle -> run" << std::endl;
+        fsm.setState(Fsm::state<RunState>());
+        return STATUS_E::STATUS_TRAN;
+    default:
+        break;
+    }
+    return STATUS_E::STATUS_HANDLED;
+    }
+    virtual void enter() {
+        printf("\t idle enter\n");
+    };
+    virtual void exit() {
+        printf("\t idle exit\n");
+    }
 };
 
 
 int main(int argc, char const *argv[])
 {
-    Fsm fsm(std::make_shared<IdleState>());
-    fsm.init(EVENT_E::EVENT_NONE);
+    Fsm fsm;
+    fsm.init(Fsm::state<IdleState>());
 
     fsm.dispatch(EVENT_E::EVENT_RUN);
     fsm.dispatch(EVENT_E::EVENT_STOP);
     return 0;
 }
-
 ```
 
 ```term
 triangle@LEARN:~$ ./demo
+         idle enter
 idle -> run
+         idle exit
+         run enter
 run -> idle
-idle -> run 
-run -> idle
+         run exit
+         idle enter
 ```
 
 # 分层状态机
@@ -218,5 +255,399 @@ run -> idle
 ## 实现
 
 ```cpp
+#ifndef __HIERARCHY_FSM__
+#define __HIERARCHY_FSM__
 
+#include <memory>
+#include <vector>
+#include <mutex>
+#include <typeindex>
+#include <unordered_map>
+
+enum STATUS_E{
+    STATUS_NONE,    // 空状态
+    STATUS_TRAN,    // 发生状态
+    STATUS_HANDLED, // 事件处理
+    STATUS_PARENT,   // 事件传递给父状态
+};
+
+
+/* 状态父类定义 */
+class HierarchyFsm;
+class AbstractState{
+public:
+    using ptr = AbstractState*;
+public:
+    virtual ~AbstractState() = default;
+
+    virtual ptr upState() { return nullptr; };
+    virtual ptr downState() { return nullptr; };
+
+    virtual STATUS_E transit(HierarchyFsm & fsm , int event) = 0;
+    virtual void enter() {};    // 状态进入 action
+    virtual void exit() {};     // 状态退出 action
+};
+
+
+class HierarchyFsm{
+ 
+public:
+
+    HierarchyFsm()
+        :m_root(nullptr),m_state(nullptr)
+    {
+
+    }
+
+    template<class T>
+    static AbstractState::ptr state(){
+        std::lock_guard<std::mutex> lock(m_mutex);
+        auto index = std::type_index(typeid(T));
+        auto item = m_mapStates.find(index);
+        if (item != m_mapStates.end()){
+            return item->second.get();
+        }
+        auto ptr = std::static_pointer_cast<AbstractState>(std::make_shared<T>());
+        m_mapStates.insert(std::pair(index, ptr));
+        return ptr.get(); 
+    }
+
+    void setState(AbstractState::ptr state) { m_state = state;}
+    AbstractState::ptr & state() { return m_state;}
+
+    void init(const AbstractState::ptr & init, const AbstractState::ptr & root){
+        m_root = root;
+        m_state = init;
+
+        // 初始化 root -> init 状态
+        m_state = moveDown(root, init);
+    }
+    void init( const AbstractState::ptr & root){
+        m_root = root;
+        m_state = root;
+
+        // 初始化 root -> init 状态
+        m_state = moveDown(root, root->downState());
+    }
+
+    void dispatch(int event){
+        auto currState = m_state;
+        auto preState = AbstractState::ptr(nullptr);
+        auto enStatus = STATUS_E::STATUS_NONE;
+
+        // 查找目标状态 
+        do {
+            preState = m_state;
+            enStatus = m_state->transit(*this, event);
+            if(enStatus == STATUS_E::STATUS_PARENT){
+                m_state = m_state->upState();
+            }
+        }while(enStatus == STATUS_E::STATUS_PARENT);
+
+        // 不用状态转移
+        if (enStatus != STATUS_E::STATUS_TRAN){
+            m_state = currState;
+            return;
+        }
+
+        // 完成状态转移 currState -> preState -> m_state
+        stateTransit(currState, preState, m_state);
+
+        // 转移到 targetState 后，完成进入默认子状态
+        m_state = moveDown(m_state, m_state->downState());
+    }
+
+
+private:
+    void stateTransit(AbstractState::ptr startState, AbstractState::ptr preState, AbstractState::ptr targetState){
+
+        // start 移动到 middle，一直退出
+        while(startState != preState){
+            startState->exit();
+            startState = startState->upState();
+        }
+
+        // 1. 跳转到自身：执行退出事件，再执行进入事件
+        if (startState == targetState){
+            startState->exit();
+            targetState->enter();
+            return;
+        }
+        
+        // // 2. 跳转到子状态：无需执行退出事件，直接执行进入事件
+        // if (startState == targetState->upState()){
+        //     targetState->enter();
+        //     return;
+        // }
+
+        // 3. 跳转到兄弟状态：执行退出事件，再执行进入事件
+        if (startState->upState() == targetState->upState()){
+            startState->exit();
+            targetState->enter();
+            return;
+        }
+
+        // 4. 跳转到父状态：执行退出事件，不执行进入事件
+        if (startState->upState() == targetState){
+            startState->exit();
+            return;
+        }
+
+        // 5. 跳转到非相邻状态：找出公共祖先状态，执行退出和进入事件
+        std::vector<AbstractState::ptr> vecPath = {targetState};
+
+        // 从当前状态开始，向上遍历到根节点，记录路径
+        auto ancestor = targetState->upState();
+        while (ancestor != nullptr) {
+            // 5.1 preState 是 targetState 的祖先, vecPath 全部
+            if (ancestor == startState){
+                enterTargetState(vecPath, vecPath.size() - 1);
+                return;
+            }
+
+            vecPath.push_back(ancestor);
+            ancestor = ancestor->upState();
+        }
+
+        // 5.2 vecPath 中存放的就是，从 targetState 一直到 RootState 的路径
+        // 从 startState 依次退出，直到抵达 vecPath 中状态，然后进入
+        while(true){
+            startState->exit();
+            startState = startState->upState();
+
+            for (size_t i = vecPath.size()-1; i >= 0; i--){
+                if (startState == vecPath[i]){
+                    enterTargetState(vecPath, i);
+                    m_state = targetState;
+                    return;
+                }
+            }
+        }
+    }
+
+    void enterTargetState(std::vector<AbstractState::ptr> & vecPath, int nIndex){
+        while (nIndex-- >= 0){
+            vecPath[nIndex]->enter();
+        }
+    }
+
+    /* 从 startState 开始进入子状态 */
+    AbstractState::ptr moveDown(AbstractState::ptr startState, AbstractState::ptr targetState){
+
+        while(targetState != nullptr){
+            std::vector<AbstractState::ptr> vecPath;
+
+            // startState 到 endStart 的路径
+            while(targetState != startState){
+                vecPath.push_back(targetState);
+                targetState = targetState->upState();
+            }
+
+            // startState 到 endStart 激活 enter
+            for (int i = vecPath.size() - 1; i >= 0; --i){
+                vecPath[i]->enter();
+            }
+
+            // 继续进入
+            if (vecPath.size() > 0){
+                startState = vecPath.front();
+            }
+            targetState = startState->downState();
+        }
+
+        return startState;
+    }
+
+private:
+    AbstractState::ptr m_state;
+    AbstractState::ptr m_root; // 顶层状态
+
+    static std::mutex m_mutex;
+    static std::unordered_map<std::type_index, std::shared_ptr<AbstractState> > m_mapStates;
+};
+
+std::mutex HierarchyFsm::m_mutex;
+std::unordered_map<std::type_index, std::shared_ptr<AbstractState> > HierarchyFsm::m_mapStates;
+
+#endif /* __HIERARCHY_FSM__ */
+```
+
+实现一个简易的电源控制
+
+![alt](../../image/designMethod/example_power.png)
+
+```cpp
+#include "hierarchyFsm.hpp"
+
+#include <iostream>
+
+enum EVENT_E: int{
+    EVENT_NONE = 0,
+    EVENT_ON,
+    EVENT_OFF,
+    EVENT_LOW_POWER,
+    EVENT_HIGH_POWER,
+};
+
+class PowerOffState;
+class PowerOnState;
+class PowerLowState;
+class PowerHighState;
+
+
+class RootState : public AbstractState{
+public:
+    virtual ptr downState(){return HierarchyFsm::state<PowerOffState>();}
+
+     virtual STATUS_E transit(HierarchyFsm & fsm , int event) override{
+        return STATUS_E::STATUS_HANDLED;
+     }
+};
+
+class PowerOffState : public AbstractState{
+public:
+    virtual ptr upState(){return HierarchyFsm::state<RootState>();}
+
+    virtual STATUS_E transit(HierarchyFsm & fsm , int event) override{
+        switch (event)
+        {
+        case EVENT_E::EVENT_ON:
+            printf("\tpower off -> power on\n");
+            fsm.setState(HierarchyFsm::state<PowerOnState>());
+            return STATUS_E::STATUS_TRAN;
+        default:
+            break;
+        }
+        return STATUS_E::STATUS_PARENT;
+    }
+
+
+    virtual void enter() {
+        printf("\tpower off enter\n");
+    }
+    virtual void exit() {
+        printf("\tpower off exit\n");
+    }
+
+};
+
+class PowerOnState : public AbstractState{
+public:
+    virtual ptr upState(){return HierarchyFsm::state<RootState>();}
+    virtual ptr downState(){return HierarchyFsm::state<PowerLowState>();}
+
+     virtual STATUS_E transit(HierarchyFsm & fsm , int event) override{
+        switch (event)
+        {
+        case EVENT_E::EVENT_OFF:
+            printf("\tpower on -> power off\n");
+            fsm.setState(HierarchyFsm::state<PowerOffState>());
+            return STATUS_E::STATUS_TRAN;
+        default:
+            break;
+        }
+        return STATUS_E::STATUS_PARENT;
+     }
+
+    virtual void enter() {
+        printf("\tpower on enter\n");
+    }
+    virtual void exit() {
+        printf("\tpower on exit\n");
+    }
+};
+
+
+class PowerLowState : public AbstractState{
+public:
+
+    virtual ptr upState(){return HierarchyFsm::state<PowerOnState>();}
+
+     virtual STATUS_E transit(HierarchyFsm & fsm , int event) override{
+        switch (event)
+        {
+        case EVENT_E::EVENT_HIGH_POWER:
+            printf("\tpower low -> power high\n");
+            fsm.setState(HierarchyFsm::state<PowerHighState>());
+            return STATUS_E::STATUS_TRAN;
+        default:
+            break;
+        }
+        return STATUS_E::STATUS_PARENT;
+     }
+
+    virtual void enter() {
+        printf("\tpower low enter\n");
+    }
+    virtual void exit() {
+        printf("\tpower low exit\n");
+    }
+};
+
+class PowerHighState : public AbstractState{
+public:
+
+    virtual ptr upState() { return HierarchyFsm::state<PowerOnState>(); }
+
+     virtual STATUS_E transit(HierarchyFsm & fsm , int event) override{
+        switch (event)
+        {
+        case EVENT_E::EVENT_LOW_POWER:
+            printf("\tpower high -> power low\n");
+            fsm.setState(HierarchyFsm::state<PowerLowState>());
+            return STATUS_E::STATUS_TRAN; 
+        default:
+            break;
+        }
+        return STATUS_E::STATUS_PARENT;
+     }
+    virtual void enter() {
+        printf("\tpower high enter\n");
+    }
+    virtual void exit() {
+        printf("\tpower high exit\n");
+    }
+};
+
+int main(int argc, char const *argv[])
+{
+    HierarchyFsm fsm;
+    fsm.init(HierarchyFsm::state<RootState>());
+
+    printf("[event_on]\n");
+    fsm.dispatch(EVENT_E::EVENT_ON);
+    printf("[event_low_power]\n");
+    fsm.dispatch(EVENT_E::EVENT_LOW_POWER);
+    printf("[event_off]\n");
+    fsm.dispatch(EVENT_E::EVENT_OFF);
+    printf("[event_on]\n");
+    fsm.dispatch(EVENT_E::EVENT_ON);
+    printf("[event_high_power]\n");
+    fsm.dispatch(EVENT_E::EVENT_HIGH_POWER);
+    return 0;
+}
+```
+
+```term
+triangle@LEARN:~$ ./demo
+        power off enter
+[event_on]
+        power off exit
+        power on enter
+        power low enter
+[event_low_power]
+[event_off]
+        power on -> power off
+        power low exit
+        power on exit
+        power off enter
+[event_on]
+        power off -> power on
+        power off exit
+        power on enter
+        power low enter
+[event_high_power]
+        power low -> power high
+        power low exit
+        power high enter
 ```
