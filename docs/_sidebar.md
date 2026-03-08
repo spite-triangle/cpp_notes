@@ -7,6 +7,7 @@
   - [分布式系统](distribute/README.md)
   - [编译原理](compiler/README.md)
   - [算法导论](Algorithms/README.md)
+  - [设计方法](designMethod/README.md)
   - [调试原理](windbg/README.md)
   - [多媒体](Media/README.md)
 - **编码**
