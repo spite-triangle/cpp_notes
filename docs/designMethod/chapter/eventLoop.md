@@ -166,35 +166,46 @@ private:
     
     // 处理定时器事件
     void processTimers() {
-        std::lock_guard<std::mutex> lock(timerMutex);
-        auto now = std::chrono::steady_clock::now();
-        
+        std::vector<EventCallback> vecCallback;
         std::vector<int> expiredTimers;
-        for (auto& [id, info] : timers) {
-            if (now >= info.nextRun) {
-                // 执行回调
-                if (info.callback) {
-                    info.callback();
-                }
-                
-                if (info.repeating) {
-                    // 计算下次执行时间
-                    auto elapsed = now - (info.nextRun - 
-                        std::chrono::duration_cast<std::chrono::milliseconds>(
-                            info.nextRun - now));
-                    info.nextRun = info.nextRun + 
-                        std::chrono::duration_cast<std::chrono::milliseconds>(
-                            std::chrono::milliseconds(1000));
-                } else {
-                    expiredTimers.push_back(id);
+
+        {
+            std::lock_guard<std::mutex> lock(timerMutex);
+            auto now = std::chrono::steady_clock::now();
+            
+            for (auto& [id, info] : timers) {
+                if (now >= info.nextRun) {
+                    // 执行回调
+                    if (info.callback) {
+                        vecCallback.push_back(info.callback);
+                    }
+                    
+                    if (info.repeating) {
+                        // 计算下次执行时间
+                        auto elapsed = now - (info.nextRun - 
+                            std::chrono::duration_cast<std::chrono::milliseconds>(
+                                info.nextRun - now));
+                        info.nextRun = info.nextRun + 
+                            std::chrono::duration_cast<std::chrono::milliseconds>(
+                                std::chrono::milliseconds(1000));
+                    } else {
+                        expiredTimers.push_back(id);
+                    }
                 }
             }
         }
-        
-        // 移除一次性定时器
-        for (int id : expiredTimers) {
-            timers.erase(id);
+
+        for (auto callback : vecCallback){
+            callback();
         }
+
+        {
+            // 移除一次性定时器
+            std::lock_guard<std::mutex> lock(timerMutex);
+            for (int id : expiredTimers) {
+                timers.erase(id);
+            }
+        } 
     }
     
     // 处理事件
@@ -206,14 +217,18 @@ private:
             eventQueue.pop();
             
             // 查找并执行对应的处理器
+            std::vector<EventHandler> vecHandlers;
             {
                 std::lock_guard<std::mutex> handlerLock(handlerMutex);
                 auto it = handlers.find(event->type);
                 if (it != handlers.end()) {
-                    for (const auto& handler : it->second) {
-                        handler(event);
-                    }
+                    vecHandlers = it->second;
                 }
+            }
+
+            // 不在锁里面执行, 可实现事件的动态注册
+            for (auto handler : vecHandlers){
+                handler(event);
             }
         }
     }
@@ -236,7 +251,7 @@ private:
 ## 使用示例
 
 ```cpp
-#include "eventLoop.hpp"
+#include "event_loop.h"
 #include <iostream>
 #include <thread>
 
@@ -244,7 +259,7 @@ int main() {
     // 创建事件循环
     SimpleEventLoop loop;
     
-    // 提前注册自定义事件处理器
+    // 注册自定义事件处理器
     loop.registerHandler(EventType::CUSTOM, [](const std::shared_ptr<Event>& event) {
         std::cout << "[ Event::CUSTOM ] 处理自定义事件" << std::endl;
     });
@@ -256,6 +271,17 @@ int main() {
         // 生成新事件
         auto customEvent = std::make_shared<Event>(EventType::CUSTOM);
         loop.post(customEvent);
+
+        // 动态注册事件
+        loop.registerHandler(EventType::CUSTOM + 1, [](const std::shared_ptr<Event>& event) {
+            std::cout << "[ Event::CUSTOM + 1 ] 处理新事件" << std::endl;
+        });
+
+        loop.schedule(std::chrono::milliseconds(1000), [&](){
+            auto customEvent = std::make_shared<Event>(EventType::CUSTOM + 1);
+            loop.post(customEvent);
+            std::cout << "[ Timer ] 发送 Event::CUSTOM + 1 事件" << std::endl;
+        });
     });
     
     //  重复定时器（每500ms执行一次）
@@ -288,6 +314,8 @@ triangle@LEARN:~$ ./demo
 [ Timer ] 1秒后执行一次
 [ Event::CUSTOM ] 处理自定义事件
 [ Repeating Timer ] 执行次数: 2
+[ Timer ] 发送 Event::CUSTOM + 1 事件
+[ Event::CUSTOM + 1 ] 处理新事件
 [ Repeating Timer ] 执行次数: 3
 
 [ 准备停止事件循环 ]
