@@ -11,6 +11,55 @@
 triangle@LEARN:~$ node ./test.js // 执行 javascript
 ```
 
+# SDK 管理
+
+## fnm
+
+[fnm (Fast Node Manager)](https://github.com/Schniz/fnm) 是一个 `Node.js` 版本管理工具，可以在同一台机器上安装和切换多个 `Node.js` 版本，方便开发者在不同项目中使用不同版本的 `Node.js`。
+1. 特殊环境变量设置，**一定要在 `fnm env` 配置前设置**
+
+    ```bash
+    FNM_DIR = "C:\Users\GOD\AppData\Roaming\fnm"        # node 存储路径
+    FNM_NODE_DIST_MIRROR = "https://nodejs.org/dist"    # node 下载仓库
+    ```
+
+2. 安装与配置教程见仓库说明
+3. 由于 `fnm` 的工作原理是在终端启动前，修改环境变量，从而实现 `node` 版本切换，**这就导致 `windows` 桌面环境根本就没有 `node` 环境** 
+   1. windows 系统环境变量中添加 `fnm` 的 `default` 路径
+   2. 修改配置命令
+
+        ```powershell
+            fnm env --use-on-cd --shell powershell | Out-String | Invoke-Expression; 
+            # 移除系统 node 配置，使用 fnm 提供的 node
+            $env:PATH = ($env:PATH -split ';' | ? { $_ -ine '<node_default_path>' }) -join ';' ;
+        ```
+
+## vfox (推荐)
+
+[vfox](https://vfox.dev/) 是一个支持 `java`、`nodejs`、`make`、`cmake` 等开发 `SDK` 的通用版本管理工具，安装相应 `SDK` 的插件后，便能实现`SDK`版本管理功能。
+
+1. 下载 [vfox](https://github.com/version-fox/vfox)
+2. vfox 的 SDK 、插件，配置默认存放目录在 `$HOME/.fox/`
+   - 修改插件存储位置 `vfox.exe config storage.sdkPath <your_sdk_path>`
+3. 安装管理插件 `vfox add nodejs` , **下载不了也能离线安装，`vfox add --source nodejs.zip  nodejs`**
+4. 通过 `VFOX_NODEJS_MIRROR=https://registry.npmmirror.com/` 添加镜像源
+5. 安装 `vfox install nodejs@20.9.0`
+6. 使用
+   1. `vfox use nodejs[@version]` 终端切换
+   2. `vfox use -g nodejs[@version]` 系统默认
+
+如果是完全断网的离线环境，可以从 `https://registry.npmmirror.com/` 下载压缩包，然后解压到 `vfox.exe config storage.sdkPath` 目录下，目录组织结构如下
+
+```
+.
+└── nodejs
+    └── v-24.17.0
+        └── nodejs-24.17.0
+            ├── ...
+            └── node.exe
+```
+
+
 # npm
 
 ## 介绍

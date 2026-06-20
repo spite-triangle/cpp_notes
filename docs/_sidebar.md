@@ -13,7 +13,7 @@
 - **编码**
   - [Effictive C++](effective/README.md)
   - [c++并发](CppConcurrency/README.md)
-  - [Web 开发](webDevelop/README.md)
+  - [Web 开发](web/README.md)
   - [Ptyon 开发](python/README.md)
 - **框架组件**
   - [Qt](./qt/README.md)
