@@ -45,11 +45,11 @@
             </plugins>
         </build>
     ```
+
 4. 在 `com.example.demo` 创建入口类，固定写法
 
     ```java
     package com.example.demo;
-
 
     import org.springframework.boot.SpringApplication;
     import org.springframework.boot.autoconfigure.SpringBootApplication;
