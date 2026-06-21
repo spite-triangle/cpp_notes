@@ -2,7 +2,7 @@
 
 <div style="text-align:center;"><img width= 150px src="image/logo.png" align="middle" /></div>
 
-# 开发笔记 <small>1.4.1</small>
+# 开发笔记 <small>1.4.2</small>
 
 > 该项目用于记录日常开发学习笔记
 
@@ -11,6 +11,7 @@
 - 分布式系统
 - 事件循环、状态机、行为树
 - 字符集、JSON schema、MCP
+- Java、TomCat、SpringBoot、Maven
 - workflow、gtest、gmock、libcurl、qt、qml、mfc
 - msvc、gdb
 - windbg、调试原理、SEH 机制

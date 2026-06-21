@@ -1,8 +1,8 @@
-# spring
+# spring framework
 
 # 概念
 
-[spring](https://spring.io/) 是一个开源的 Java 平台，用于构建企业级应用程序。它提供了许多模块和框架，以简化开发过程并提高应用程序的可维护性和可扩展性。
+[Spring framework](https://spring.io/projects/spring-framework) 是一个用于构建企业级应用的框架，它提供了许多功能来简化开发过程，如依赖注入、面向切面编程等
 - **控制反转`IOC, Inversion of Control`** : 依赖注入`DI`机制的实现。通过将`java`对象的创建和管理交给`IOC`容器来完成，从而减少代码之间的耦合度
   - **`IOC` 容器** : 负责创建、管理和配置`Bean`对象，且能维护对象之间的依赖关系
   - **`Bean`** : `java` 类对象的抽象概念，通过 `IOC` 容器管理
@@ -10,8 +10,8 @@
 - **面向切面编程`AOP, Aspect Oriented Programming`** : 装饰器模式的实现。能 `hook` 对象的方法，在方法执行前后插入自定义逻辑，如日志、事务管理等
   - **装饰器模式**：调用 `fcn()` 时，自动完成 `pre_fcn()` -> `fcn()` -> `post_fcn()` 的调用,通过 `pre_fcn()`, `post_fcn()` 实现 `fcn()` 的增强功能, 如日志、事务管理等
 
-# 开发环境
-
+> [!tip]
+> 由于 `Spring framework` 是核心框架，通常会简称为 `Spring` ，但这样可能会和 `Spring` 家族混淆，注意区分
 
 # 开发环境
 

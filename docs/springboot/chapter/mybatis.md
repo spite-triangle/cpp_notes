@@ -72,19 +72,19 @@
 ![alt|c,60](../../image/java/mybatis_example.png)
 
 
-1. 提前准备好数据库 `database/test.db`
+   1. 提前准备好数据库 `database/test.db`
 
-    ```sql
-    CREATE TABLE student (id INTEGER PRIMARY KEY AUTOINCREMENT,
-                            username TEXT NOT NULL, 
-                            age INTEGER);
+       ```sql
+       CREATE TABLE student (id INTEGER PRIMARY KEY AUTOINCREMENT,
+                               username TEXT NOT NULL, 
+                               age INTEGER);
 
-    INSERT INTO student (username, age) VALUES ('sam', 18);
-    INSERT INTO student (username, age) VALUES ('zelda', 16);
-    INSERT INTO student (username, age) VALUES ('link', 16);
+       INSERT INTO student (username, age) VALUES ('sam', 18);
+       INSERT INTO student (username, age) VALUES ('zelda', 16);
+       INSERT INTO student (username, age) VALUES ('link', 16);
     ```
 
-2. 在 `src\main\resources` 下创建 `mybatis-config.xml` 配置文件
+1. 在 `src\main\resources` 下创建 `mybatis-config.xml` 配置文件
 
     ```xml
     <?xml version="1.0" encoding="UTF-8" ?>
@@ -118,7 +118,7 @@
     </configuration>
     ``` 
 
-3. 在 `src\main\java` 下实现 `pojo` 实体类(不依赖框架、只有属性和 `getter/setter` 的纯粹 `Java` 类)
+2. 在 `src\main\java` 下实现 `pojo` 实体类(不依赖框架、只有属性和 `getter/setter` 的纯粹 `Java` 类)
 
     ```java
     package com.example.pojo;
@@ -182,7 +182,7 @@
 
     ```
 
-4. 在 `src\main\java` 下创建 `DAO (Data Access Object)` 接口，用于定义数据库操作方法
+3. 在 `src\main\java` 下创建 `DAO (Data Access Object)` 接口，用于定义数据库操作方法
 
     ```java
     package com.example.dao;
@@ -201,15 +201,15 @@
 
     ```
 
-5. 在 `src\main\resources` 下创建 `mapper` 文件夹，并在其中创建 `StudentMapper.xml` 映射文件
+4. 在 `src\main\resources` 下创建 `mapper` 文件夹，并在其中创建 `StudentMapper.xml` 映射文件
 
     ```xml
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
     <mapper namespace="com.example.dao.IStudentDAO">
-    <select id="findAll" resultType="com.example.pojo.StudentInfo">
-            SELECT * FROM student
-    </select> 
+        <select id="findAll" resultType="com.example.pojo.StudentInfo">
+                SELECT * FROM student
+        </select> 
     </mapper>
     ```
 
@@ -221,7 +221,7 @@
         </mappers>
     ```
 
-6. 在 `src\main\java` 下实现 `DAO` 接口
+5. 在 `src\main\java` 下实现 `DAO` 接口
 
     ```java
     package com.example.dao.impl;
@@ -255,7 +255,7 @@
     }
     ```
 
-7. 在 `src\test\java` 下编写测试类
+6. 在 `src\test\java` 下编写测试类
 
     ```java
     package com.example.dao;
@@ -269,8 +269,8 @@
     import com.example.pojo.StudentInfo;
 
     public class testStudentDAO {
-        
-    @Test 
+ 
+        @Test 
         void testAll() throws IOException {
             StudentDAOImpl student = new StudentDAOImpl(); 
             List<StudentInfo> students = student.findAll();	

@@ -6,6 +6,7 @@
 - 分布式系统
 - 事件循环、状态机、行为树
 - 字符集、JSON schema、MCP
+- Java、TomCat、SpringBoot、Maven
 - workflow、gtest、gmock、libcurl、qt、qml、mfc
 - msvc、gdb
 - windbg、调试原理、SEH 机制
