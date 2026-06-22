@@ -10,14 +10,14 @@
 
     ```yaml
     spring:
-    data:
+      data:
         redis:
-        host: 127.0.0.1  # Redis服务器地址[reference:7][reference:8]
-        port: 6379       # Redis服务器端口[reference:9][reference:10]
-        database: 0      # Redis数据库索引（默认为0）[reference:11]
-        password:        # Redis服务器密码（默认为空）[reference:12]
-        timeout: 5000ms  # 连接超时时间[reference:13]
-        lettuce:
+          host: 127.0.0.1  # Redis服务器地址[reference:7][reference:8]
+          port: 6379       # Redis服务器端口[reference:9][reference:10]
+          database: 0      # Redis数据库索引（默认为0）[reference:11]
+          password:        # Redis服务器密码（默认为空）[reference:12]
+          timeout: 5000ms  # 连接超时时间[reference:13]
+          lettuce:
             pool:
             max-active: 8   # 连接池最大连接数[reference:14]
             max-idle: 8     # 连接池最大空闲连接[reference:15]
