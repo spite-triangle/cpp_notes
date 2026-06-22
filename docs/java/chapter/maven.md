@@ -63,15 +63,24 @@ PATH=%MAVEN_HOME%\bin
 # 配置
 
 
-在 `maven` 安装目录下，找到 `conf` 文件夹，里面有一个名为 `settings.xml` 的文件。
+1. 在 `maven` 安装目录下，找到 `conf` 文件夹，里面有一个名为 `settings.xml` 的文件。
+2. **修改好配置，然后复制到 `$HOME/.m2/settings.xml`**
 
 ```xml
 <!-- 本地仓库路径，默认在 `$HOME/.m2/repository` 文件夹下 -->
 <localRepository>your_local_repository_path</localRepository>
 
+<!-- 认证信息 -->
+<servers>
+    <server>
+        <id>server-id</id>
+        <username>xxx</username>
+        <password>xxx</password>
+    </server>
+</servers>
+
 <mirrors>
-    <!-- .... -->
-    <!-- 追加远程镜像仓库 -->
+    <!-- 中央镜像仓库 -->
     <mirror>
         <id>aliyunmaven</id>
         <mirrorOf>*</mirrorOf>
@@ -79,6 +88,52 @@ PATH=%MAVEN_HOME%\bin
         <url>https://maven.aliyun.com/repository/public</url>
     </mirror>
 </mirrors>
+
+
+<!-- 多配置 -->
+<profiles>
+    <profile>
+        <id>profile-id</id>
+
+        <!-- 私有仓库 -->
+        <repositories>
+            <repository>
+                <!-- `Repository` 仓库会根据 `server-id` 去对应具体的 `server` 获取账号密码 -->
+                <id>server-id</id>
+                <name>name</name>
+                <url>url</url>
+                <!-- 包版本类型 -->
+                <releases>
+                    <enabled>true</enabled>
+                </releases>
+                <snapshots>
+                    <enabled>true</enabled>
+                </snapshots>
+            </repository>
+        </repositories>
+
+        <!-- 插件仓库 -->
+        <pluginRepositories>
+            <pluginRepository>
+                <!-- `Repository` 仓库会根据 `server-id` 去对应具体的 `server` 获取账号密码 -->
+                <id>server-id</id>
+                <name>name</name>
+                <url>url</url>
+                <releases>
+                    <enabled>true</enabled>
+                </releases>
+                <snapshots>
+                    <enabled>true</enabled>
+                </snapshots>
+            </pluginRepository>
+        </pluginRepositories>
+    </profile>
+</profiles>
+
+<!-- 激活 profile -->
+<activeProfiles>	
+    <activeProfile>profile-id</activeProfile>
+</activeProfiles>
 ```
 
 # 使用

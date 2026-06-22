@@ -26,6 +26,7 @@
     INSERT INTO student (username, age) VALUES ('sam', 18);
     INSERT INTO student (username, age) VALUES ('zelda', 16);
     INSERT INTO student (username, age) VALUES ('link', 16);
+
 # 注解实现
 
 ![alt|c,50](../../image/java/springboot_mybatis_example.png)
