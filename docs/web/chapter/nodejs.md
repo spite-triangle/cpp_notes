@@ -48,7 +48,7 @@ triangle@LEARN:~$ node ./test.js // 执行 javascript
    1. `vfox use nodejs[@version]` 终端切换
    2. `vfox use -g nodejs[@version]` 系统默认
 
-如果是完全断网的离线环境，可以从 `https://registry.npmmirror.com/` 下载压缩包，然后解压到 `vfox.exe config storage.sdkPath` 目录下，目录组织结构如下
+如果是完全断网的离线环境，可以从 `https://registry.npmmirror.com/` 下载压缩包，然后通过[vfox-install](../../code/bash/vfox-install.sh)快速解压到 `vfox.exe config storage.sdkPath` 目录下，目录组织结构如下
 
 ```
 .

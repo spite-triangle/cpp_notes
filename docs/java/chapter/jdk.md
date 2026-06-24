@@ -38,7 +38,7 @@ PATH=%JAVA_HOME%\bin                            # PATH 中添加
    - `vfox use java[@version]` 终端切换
    - `vfox use -g java[@version]` 系统默认
 
-如果是完全断网的离线环境，可以从 `https://adoptium.net/zh-CN/temurin/releases` 下载压缩包，然后解压到 `vfox.exe config storage.sdkPath` 目录下，目录组织结构如下
+如果是完全断网的离线环境，可以从 `https://adoptium.net/zh-CN/temurin/releases` 下载压缩包，然后通过[vfox-install](../../code/bash/vfox-install.sh)解压到 `vfox.exe config storage.sdkPath` 目录下，目录组织结构如下
 
 ```
 ./

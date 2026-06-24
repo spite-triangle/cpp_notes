@@ -27,7 +27,7 @@ Maven 通过仓库来存储依赖`jar`包
 
 ```ini
 MAVEN_HOME=C:/Program Files/Apache/maven-3.9.9
-PATH=%MAVEN_HOME%\bin 
+PATH=%MAVEN_HOME%\bin
 ```
 
 ## vfox (推荐)
@@ -43,7 +43,7 @@ PATH=%MAVEN_HOME%\bin
    - `vfox use maven[@version]` 终端切换
    - `vfox use -g maven[@version]` 系统默认
 
-如果是完全断网的离线环境，可以从 `https://maven.apache.org/download.cgi` 下载压缩包，然后解压到 `vfox.exe config storage.sdkPath` 目录下，目录组织结构如下
+如果是完全断网的离线环境，可以从 `https://maven.apache.org/download.cgi` 下载压缩包，然后通过[vfox-install](../../code/bash/vfox-install.sh)解压到 `vfox.exe config storage.sdkPath` 目录下，目录组织结构如下
 
 ```
 ./
@@ -62,9 +62,19 @@ PATH=%MAVEN_HOME%\bin
 
 # 配置
 
+## 配置文件
 
-1. 在 `maven` 安装目录下，找到 `conf` 文件夹，里面有一个名为 `settings.xml` 的文件。
-2. **修改好配置，然后复制到 `$HOME/.m2/settings.xml`**
+
+`maven` 的配置文件是安装目录下的 `conf/settings.xml` ，可在在多个地方放置配置文件，优先级顺序如下
+1. **命令行指定**：通过 `mvn -s /path/to/settings.xml` 显式指定的文件，拥有最高优先级。
+1. **环境变量指定**：通过 `MAVEN_SETTINGS_XML` 环境变量指定的文件。
+1. **项目配置 `pom.xml`**：项目自身的配置。
+1. **用户级配置 `$HOME/.m2/settings.xml`**：当前用户的个性化配置。
+1. **默认配置 `$MAVEN_HOME/conf/settings.xml`**： `Maven` 安装的默认配置，优先级最低
+
+最常用的就是 `$HOME/.m2/settings.xml` 与 `$MAVEN_HOME/conf/settings.xml`
+
+## settings.xml
 
 ```xml
 <!-- 本地仓库路径，默认在 `$HOME/.m2/repository` 文件夹下 -->
@@ -138,7 +148,7 @@ PATH=%MAVEN_HOME%\bin
 
 # 使用
 
-## 命令
+## 项目管理
 
 ### 命令行
 
@@ -168,13 +178,28 @@ triangle@LEARN:~$ java -cp <jar_package> <entity_point_class> // 运行
 
 ###  vsocde 
 
-- 创建项目
 
-安装 `java` 全家桶插件后，使用 `ctrl + shift + p`
+安装 `java` 全家桶插件后，使用 `ctrl + shift + p` 
 - 方案一：`java: create java project` 命令
 - 方案二：`maven: new moudle` 命令
+通过这两种方案快速创建`maven`项目，交互界面在 `Explorer/maven` 侧边栏中 
 
-交互界面在 `Explorer/maven` 侧边栏中 
+> [!tip]
+> `vscode` 插件默认读取的是 `$HOME/.m2/settings.xml` ，而非 `$MAVEN_HOME/conf/settings.xml`
+
+
+## wrapper
+
+`Maven Wrapper`：在实际开发中，不同项目可能会依赖不同版本的 `Maven`，而 `Maven Wrapper` 就是为了项目明确限定一个 `Maven` 版本，功能类似 `python` 的 `venv`
+- **自动下载**：当前系统安装的 `Maven` 版本非指定版本，则会自动下载依赖的 `maven` 版本到 `$HOME/.m2/wrapper/dists`
+- **执行脚本**：不再使用 `mvn` 命令，而是运行项目中的 `./mvnw` 调用项目所指定的`maven`版本
+- **限定对象**：限定`maven`版本，而非`java`版本
+
+在 `.mvn/` 中的配置文件
+- `maven-wrapper.properties`: 用于锁定 `Maven` 版本
+- `jvm.config`: 配置 `JVM` 参数
+- `maven.properties`: 配置 `Java` 的系统属性 
+
 
 ## 目录结构
 
