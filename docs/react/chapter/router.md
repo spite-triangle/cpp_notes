@@ -1,6 +1,8 @@
 # 路由
 
-# 简介
+# 概念
+
+## 安装
 
 **路由`Route`**：用于将`url`映射到对应的组件，从而实现页面的跳转和内容的展示。
 
@@ -10,7 +12,24 @@ triangle@learn$ npm install react-router-dom
 triangle@learn$  @types/react-router-dom --save-dev
 ```
 
-# 使用
+## 类型
+
+
+| 类型                  | URL | 适用范围 | 备注 |
+| --------------------- | --- | -------- | ---- |
+| `createBrowserRouter` |  会变成 `http` 链接 |     浏览器`SPA`网页     | 路由时 `url` 会跑到后台服务，需要特殊处理  |
+| `createHashRouter` |  会变成 `http` 链接，且路由部分由`#` 开始，例如 `#/about` |     浏览器`SPA` 静态网页     |  路由时 `url` 不会跑到后台服务    |
+| `createMemoryRouter` |  不会生成 `url` |   客户端框架 `React Native, Electron`     |      |
+
+针对 `createBrowserRouter` ，使用 `Nginx` 部署时，需要增加配置
+
+```
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+```
+
+# 嵌套路由
 
 ```
 ├── App.tsx
@@ -73,7 +92,7 @@ triangle@learn$  @types/react-router-dom --save-dev
                     <Link to="/users/12?name=xxx">用户详情</Link> // 传递 `:id` 和 `?name=xxx` 参数
                 </header>
 
-                {/* 子路由在此渲染 */}
+                {/* 路由组件渲染位置 */}
                 <Outlet /> 
             </div>
         );
@@ -163,6 +182,7 @@ interface ProtectedRouteProps {
 }
 
 // 路由守卫
+// React.FC<ProtectedRouteProps> 是对 props 的简化写法
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
         children,
         isCheck,
@@ -187,3 +207,104 @@ const router = createBrowserRouter([
     },
 ]);
 ```
+
+# 路由操作
+
+路由跳转往往涉及数据的`CRUD`操作，`React` 使得这些操作变得更加规范化，增加了「路由操作」功能
+- `loader`: 用于路由跳转前，数据获取
+- `action`: 用于数据修改，修改成功后会触发 `loader` 重新加载数据，并刷新界面
+
+案例
+
+- `route.tsx`
+
+    ```tsx
+    const router = createBrowserRouter([
+        {
+            path: "/",
+            element: <AppLayout />,
+            children: [
+                { 
+                    index: true, 
+                    element: <Home />, 
+                    loader: async () => {
+                        await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate a delay
+                        return {
+                            data: 'Home page loaded successfully', 
+                            success: true,
+                        }
+                    },
+                    action: async ({ request }) => {
+                        // useSumbit 传递回来的数据
+                        const data = await request.json();
+                        console.log(data); 
+                        return {
+                            success: true,
+                        };
+                    }
+                }
+            ],
+        },
+    ]);
+
+    export default router;
+    ```
+- `AppLayout.tsx`
+
+    ```tsx
+    export function AppLayout() {
+        
+        // loader 状态
+        const navigation = useNavigation(); 
+        const isLoading = navigation.state === "loading";
+
+        // 根据 isLoading 状态决定渲染内容
+        let content : React.ReactNode;
+        if (isLoading) {
+            content = <div>Loading...</div>;
+        }else {
+            content = <Outlet />;
+        }
+
+        return (
+            <div style={{ padding: 24 }}>
+                <header style={{ display: "flex", gap: 12, marginBottom: 16 }}>
+                    <Link to="/">首页</Link>
+                </header>
+
+                {/* 子路由在此渲染 */}
+                {content}
+            </div>
+        );
+    }
+    ```
+
+- `Home.tsx`
+
+    ```tsx
+    export function Home() {
+        // loader 数据读取
+        const data = useLoaderData(); 
+        // action 返回数据
+        const actionData = useActionData();  
+
+        const submit = useSubmit(); 
+        const onClicik = () =>{
+            submit(
+                `{"value": "submit"}`,           // 提交的数据，`action` 中通过 `request.json()` 获取
+                {
+                    method: "post",              // url 请求方法，在 `action` 实现请求
+                    encType: "application/json", // 提交数据类型
+                }
+            )
+        }
+
+        return (
+            <>
+                <div>Home Page</div>
+                <div>{data.data}</div>
+                <button onClick={onClicik}>button</button>
+            </>
+        );
+    }
+    ```

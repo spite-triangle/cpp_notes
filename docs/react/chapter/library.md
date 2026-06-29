@@ -197,21 +197,3 @@ const t1 = StudentSchema.parse({ name: 'John', age: 25 })
 const t2 = StudentSchema.parse(JSON.parse(`{ "name": "John", "age": 25 }`)) 
 ```
 
-
-# 样式
-
-## Tailwind CSS
-
-`Tailwind CSS` 是一个实用程序优先的 `CSS` 框架，它提供了一组预定义的类名，可以快速构建响应式和可访问的用户界面。
-
-```term
-triangle@learn:~$ npm install tailwindcss
-```
-
-## shadcn-ui
-
-`shadcn-ui` 是一个基于 `Tailwind CSS` 的 UI 组件库，它提供了一系列现成的组件，可以快速构建现代化的用户界面。
-
-```term
-triangle@learn:~$ npx shadcn@latest init
-```
