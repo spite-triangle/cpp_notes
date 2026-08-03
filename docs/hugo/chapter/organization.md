@@ -80,6 +80,57 @@ content/products/product-1/benefits/benefit-1.md
 Home » Products » Product 1 » Benefits » Benefit 1
 ```
 
+# page bundles
+
+`Page bundles`: 用文件夹构成页面，该文件夹下包含了文章以及资源文件（如图片、视频等）
+- `leaf bundle`: 直接包含 `index.md` 的文件夹
+
+    ```txt
+    content/
+    ├── about                           # leaf bundle
+    │   └── index.md
+    ├── posts
+    │   ├── my-post                     # leaf bundle
+    │   │   ├── content-1.md            # 资源文件，非正文页
+    │   │   ├── image-1.jpg
+    │   │   └── index.md                # 正文
+    │   └── my-other-post               # leaf bundle
+    │       └── index.md
+    └── another-section
+        ├── foo.md
+        └── not-a-leaf-bundle
+            ├── bar.md
+            └── another-leaf-bundle     # leaf bundle
+                └── index.md
+    ```
+
+
+- `branch bundle`: 直接包含 `_index.md` 的文件夹
+
+    ```txt
+    content/
+    ├── branch-bundle-1/                # branch bundle (section) 
+    │   ├── _index.md
+    │   ├── content-1.md
+    │   ├── content-2.md
+    │   ├── image-1.jpg
+    │   └── image-2.png
+    ├── categories/                     # branch bundle (taxonomy)
+    │   ├── tech                        # branch bundle (term)
+    │   │   └── _index.md
+    │   └── _index.md
+    ├── branch-bundle-2/                # branch bundle (section)
+    │   ├── a-leaf-bundle/
+    │   │   └── index.md
+    │   └── _index.md
+    └── _index.md                       # branch bundle (home page)
+    ```
+
+||`leaf bundle`| `branch bundle`|
+|内容文件|`index.md`|`_index.md`|
+|网页类型|`page`|`home`、`section`、`taxonomy`、`term`|
+|父子层级| 没有子层级 | 有父子层级|
+|资源位置|与 index 同级以及子文件夹|与 index 同级以及子文件夹，且除子 `bundle`|
 
 # url
 

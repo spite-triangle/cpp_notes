@@ -52,7 +52,13 @@
   - `Shortcode` : 自定义组件, 直接给 `Markdown` 使用
 
 
-```markdown
+# 模板匹配
+
+## 默认规则
+
+`hugo` 默认会按照以下命名自动将 `content` 文档与 `layout` 模板进行自动匹配
+
+```txt
 layouts/
 ├── _markup/
 │   ├── render-image.html   <-- render hook
@@ -63,7 +69,7 @@ layouts/
 ├── _shortcodes/
 │   ├── audio.html
 │   └── video.html
-├── books/
+├── books/                  <-- 对特定 `content type` 的模板定制
 │   ├── page.html
 │   └── section.html
 ├── films/                  <-- 对特定 `content type` 的模板定制
@@ -78,6 +84,37 @@ layouts/
 ├── taxonomy.html
 └── term.html
 ```
+
+## front matter
+
+`content` 中的文档也可以显示指定该文档应当匹配的模板
+
+```txt
+my-project/
+├── layouts/
+│   └── miscellaneous/
+│       └── contact.html 
+│       └── single.html
+└── content/
+    ├── about.md
+    └── contact.md
+```
+
+- `about.md` 的配置
+
+  ```toml
+  title = 'About'
+  type = 'miscellaneous'    # 指定 content type 为 miscellaneous ，由于没有 page.html，因此会使用 single.html
+  ```
+
+- `contact.md` 的配置
+
+  ```toml
+  title = 'Contact'
+  type = 'miscellaneous'    # 指定 content type 为 miscellaneous
+  layout = 'contact'        # 使用 contact.html 
+  ```
+
 
 
 # 实现

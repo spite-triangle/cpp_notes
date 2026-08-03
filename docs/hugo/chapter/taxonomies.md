@@ -47,10 +47,9 @@ https://example.org/tags/tag2
 > - 访问 `baseurl/Taxonomy` 则跳转到展示 `Term` 的界面
 > - 访问 `baseurl/Taxonomy/Term` 则会跳转到与之关联的 `Value` 的展示界面
 
+# 配置
 
-# 使用
-
-## 分类
+## 默认
 
 `Hugo` 默认提供了两个 `Taxonomy`，可直接使用
 - `categories`
@@ -99,4 +98,18 @@ tags_weight: 22         # 在 `Tag A` 与 `Tag B` 的页面下的权重
 title: Example
 ```
  
- 
+# 正文
+
+
+```txt
+content/
+└── categories/                     # branch bundle (taxonomy)
+    ├── tech                        # branch bundle (term)
+    │   └── _index.md
+    └── _index.md
+```
+
+`taxonomy` 与 `term` 界面的正文内容均可以通过 `branch bundle` 进行修改
+
+
+

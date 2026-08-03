@@ -1,10 +1,10 @@
-# 内容
+# 正文内容
 
 # 内容结构
 
-在 `Hugo` 中可以通过 `.md` 来定义网页展示的页面内容
-- `single page`: 单页文章，普通的 `.md` 文档
-- `section page`: 节页面，修改 `_index.md` 文件
+在 `Hugo` 中可以通过 `.md` 来定义网页展示的页面内容，大致分为两类
+- `single page`: 单页文章，普通 `.md` 文档或 `index.md` 文档
+- `list page`: 文章目录，修改 `_index.md` 文件
 
 所有的 `.md` 有两部分组成：
 - `Front Matter`: 前置信息，定义了页面的元数据

@@ -12,10 +12,12 @@
 # 常用命令
 
 ```bash
-hugo new site <project> # 创建一个新的站点
-hugo new <path> # 在 content/ 下创建一个内容文件
-hugo server # 启动本地开发服务器
-hugo build # 构建部署项目，但不会主动清理 publishDir 目录中的旧文件
+hugo new site <project>     # 创建一个新的站点
+hugo new <path>             # 在 content/ 下创建一个内容文件
+hugo server                 # 启动本地开发服务器
+Options
+    -D, --buildDrafts       # 将 draft 内容也展示，**调试最好加上**
+hugo build                  # 构建部署项目，但不会主动清理 publishDir 目录中的旧文件
 ```
 
 # 项目结构
@@ -93,8 +95,6 @@ home/
 
 # 主题
 
-
-
 1. 下载主题
 2. 创建一个新的站点 `hugo create site demo`
 3. 将文件夹放入 `themes/` 目录下，即 `themes/ga-hugo-theme`
@@ -114,7 +114,7 @@ home/
 
 经过 `hugo` 渲染得到的网页主要可分为两类
 - `single page`: 单页，展示正文内容
-- `relation page`: 管理 `single page` 的访问索引
+- `list page`: 管理 `single page` 的访问索引
   - `section` : 物理结构上 `single page` 的组织结构
   - `Taxonomies`: 对 `single page` 进行平面维度分类
   - `Related content` : 相关文档推荐
