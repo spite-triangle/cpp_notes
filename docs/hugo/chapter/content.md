@@ -89,7 +89,7 @@ demo/
 
 可通过修改 `default.md` 实现自定义默认的  `Front Matter` 。
 
-## 分类定义
+## 定义
 
 
 可以为 `content type`（`top -level directory` 文件夹名）定义单独的 `archetypes` 。`hugo` 会根据 `<path>` 路径匹配目标 `content type`。
