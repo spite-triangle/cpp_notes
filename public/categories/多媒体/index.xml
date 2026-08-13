@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>多媒体 on Hugo Narrow</title>
+		<link>https://spite-triangle.github.io/cpp_notes/categories/%E5%A4%9A%E5%AA%92%E4%BD%93/</link>
+		<description>Recent content in 多媒体 on Hugo Narrow</description>
+		<generator>Hugo</generator>
+		<language>en</language>
+		
+		
+		
+		
+			<lastBuildDate>Sun, 12 May 2024 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://spite-triangle.github.io/cpp_notes/categories/%E5%A4%9A%E5%AA%92%E4%BD%93/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>图片</title>
+				<link>https://spite-triangle.github.io/cpp_notes/posts/media/image/</link>
+				<pubDate>Sun, 12 May 2024 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/posts/media/image/</guid>
+				<description>&lt;h1 id=&#34;raw&#34;&gt;RAW&lt;a href=&#34;#raw&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h1&gt;&lt;p&gt;&lt;strong&gt;RAW图：&lt;/strong&gt; 图像传感器 (CMOS、CCD) 捕捉到的光源信号转换为数字信号的最原始数据。当按下拍照快门的那一刻，摄像头的曝光就被锁定，进入传感器的光子量就被锁定，通过统计传感器矩阵各个位置光子数量，就可以确定电信号强度。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>音频</title>
+				<link>https://spite-triangle.github.io/cpp_notes/posts/media/audio/</link>
+				<pubDate>Sun, 12 May 2024 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/posts/media/audio/</guid>
+				<description>&lt;h1 id=&#34;pcm&#34;&gt;PCM&lt;a href=&#34;#pcm&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h1&gt;&lt;p&gt;音频数据在计算机中是经过采样、量化、归一化后保存为 &lt;code&gt;PCM(Pulse Code Modulation，脉冲编码调制) &lt;/code&gt; 音频数据。PCM 是未经压缩的音频采样数据裸流，它是由模拟信号经过采样、量化、编码转换成的标准数字音频数据。 通常有3个参数来描述PCM数据：&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>视频</title>
+				<link>https://spite-triangle.github.io/cpp_notes/posts/media/video/</link>
+				<pubDate>Sun, 12 May 2024 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/posts/media/video/</guid>
+				<description>&lt;h1 id=&#34;基本知识&#34;&gt;基本知识&lt;a href=&#34;#%e5%9f%ba%e6%9c%ac%e7%9f%a5%e8%af%86&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h1&gt;&lt;p&gt;所谓视频帧就是由一系列差异很小的的图像构成的序列动画。常见的视频相关概念有&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>多媒体</title>
+				<link>https://spite-triangle.github.io/cpp_notes/posts/media/media/</link>
+				<pubDate>Sun, 12 May 2024 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/posts/media/media/</guid>
+				<description>&lt;h1 id=&#34;播放器&#34;&gt;播放器&lt;a href=&#34;#%e6%92%ad%e6%94%be%e5%99%a8&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h1&gt;&lt;p&gt;&#xD;&#xA;&lt;figure&#xD;&#xA;  class=&#34;image-figure not-prose my-8&#34;&#xD;&#xA;  data-lightbox-enabled=&#34;&#xD;&#xA;    true&#xD;&#xA;  &#34;&#xD;&#xA;  data-gallery-type=&#34;auto&#34;&#xD;&#xA;  data-image-width=&#34;1500&#34;&#xD;&#xA;  data-image-height=&#34;459&#34;&#xD;&#xA;  data-image-src=&#34;https://spite-triangle.github.io/cpp_notes/posts/media/media/resources/player.webp&#34;&#xD;&#xA;&gt;&#xD;&#xA;  &lt;div class=&#34;image-container&#34;&gt;&#xD;&#xA;    &lt;img&#xD;&#xA;    src=&#34;https://spite-triangle.github.io/cpp_notes/posts/media/media/resources/player.webp&#34;&#xD;&#xA;    alt=&#34;media&#34;&#xD;&#xA;    &#xD;&#xA;    &#xD;&#xA;      &#xD;&#xA;      &#xD;&#xA;        &#xD;&#xA;          width=&#34;1500&#34; height=&#34;459&#34;&#xD;&#xA;        &#xD;&#xA;      &#xD;&#xA;    &#xD;&#xA;    loading=&#34;lazy&#34;&#xD;&#xA;    decoding=&#34;async&#34;&#xD;&#xA;    data-gallery-src=&#34;https://spite-triangle.github.io/cpp_notes/posts/media/media/resources/player.webp&#34;&#xD;&#xA;    data-gallery-alt=&#34;media&#34;&#xD;&#xA;    data-gallery-title=&#34;&#34;&#xD;&#xA;  /&gt;&lt;/div&gt;&#xD;&#xA;&#xD;&#xA;  &lt;/figure&gt;&#xD;&#xA;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;strong&gt;容器／文件（Conainer/File）&lt;/strong&gt;：特定格式的多媒体文件，例如 &lt;code&gt;mp4、flv、mkv&lt;/code&gt; 等。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>FFmpeg</title>
+				<link>https://spite-triangle.github.io/cpp_notes/posts/media/ffmpeg/</link>
+				<pubDate>Sun, 12 May 2024 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/posts/media/ffmpeg/</guid>
+				<description>&lt;h1 id=&#34;库&#34;&gt;库&lt;a href=&#34;#%e5%ba%93&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h1&gt;&lt;table&gt;&#xA;&#x9;&lt;thead&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;库名&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;描述&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/thead&gt;&#xA;&#x9;&lt;tbody&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;&lt;code&gt;libavformat&lt;/code&gt;&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;媒体文件容器格式处理库。复用器与解复用器会使用该库&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;&lt;code&gt;libavcodec&lt;/code&gt;&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;编解码器库&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;&lt;code&gt;libswresample&lt;/code&gt;&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;音频格式转换和重采样处理的库&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;&lt;code&gt;libswscale&lt;/code&gt;&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;视频格式转换和缩放处理的库&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;&lt;code&gt;libavfilter&lt;/code&gt;&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;音视频滤镜、特效处理的库，例如：视频增加滤镜、音频添加音效等可以使用这个库里的函数。&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;&lt;code&gt;libavdevice&lt;/code&gt;&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;设备操作库，例如捕获麦克风、摄像头（一般不用，各个平台的设备驱动不同）&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;&lt;code&gt;libavutil&lt;/code&gt;&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;Utility辅助函数库，提供一些独立的辅助函数功能。&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;h1 id=&#34;时间&#34;&gt;时间&lt;a href=&#34;#%e6%97%b6%e9%97%b4&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h1&gt;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;时间基&lt;/strong&gt; : FFmpeg 中用于计时用的时间单位，&lt;code&gt;1 s&lt;/code&gt; 被均匀划分 &lt;code&gt;n&lt;/code&gt; 分，&lt;code&gt;1/n s&lt;/code&gt; 即是一个时间基&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;时间戳&lt;/strong&gt; ：FFmpeg 中的时间，表示有多少个时间单位。例如 &lt;code&gt;pts、dts&lt;/code&gt; 都是时间戳&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;一个&lt;code&gt;.mp4&lt;/code&gt;文件中的时间基 &lt;code&gt;time_base = 1/200&lt;/code&gt; , 即&lt;code&gt;1000ms&lt;/code&gt;均分为&lt;code&gt;200&lt;/code&gt;等分，每个时间单位是&lt;code&gt;5ms&lt;/code&gt;。当视频帧的 &lt;code&gt;pts=1173&lt;/code&gt; 时，对应的实际时刻点是 &lt;code&gt;1173*5 = 5865ms&lt;/code&gt;。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

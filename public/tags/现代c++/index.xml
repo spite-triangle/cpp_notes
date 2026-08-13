@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>现代C&#43;&#43; on Hugo Narrow</title>
+		<link>https://spite-triangle.github.io/cpp_notes/tags/%E7%8E%B0%E4%BB%A3c&#43;&#43;/</link>
+		<description>Recent content in 现代C&#43;&#43; on Hugo Narrow</description>
+		<generator>Hugo</generator>
+		<language>en</language>
+		
+		
+		
+		
+			<lastBuildDate>Sat, 07 Mar 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://spite-triangle.github.io/cpp_notes/tags/%E7%8E%B0%E4%BB%A3c++/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Effective C&#43;&#43;</title>
+				<link>https://spite-triangle.github.io/cpp_notes/posts/effective/</link>
+				<pubDate>Sat, 07 Mar 2026 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/posts/effective/</guid>
+				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本文档围绕 Effective C++ 系列笔记展开，从语言基础特性、宏编程与类型推断入手，深入智能指针原理、模板元编程与现代 C++20/17 新特性。内容涵盖 Lambda 底层实现、右值引用与完美转发、异常处理及多线程安全等核心主题。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

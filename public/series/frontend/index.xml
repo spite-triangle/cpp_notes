@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>前端技术 on Hugo Narrow</title>
+		<link>https://spite-triangle.github.io/cpp_notes/series/frontend/</link>
+		<description>Recent content in 前端技术 on Hugo Narrow</description>
+		<generator>Hugo</generator>
+		<language>en</language>
+		
+		
+		
+		
+			<lastBuildDate>Tue, 04 Aug 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://spite-triangle.github.io/cpp_notes/series/frontend/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>hugo</title>
+				<link>https://spite-triangle.github.io/cpp_notes/posts/hugo/</link>
+				<pubDate>Tue, 04 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/posts/hugo/</guid>
+				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;Hugo 静态网站生成器使用教程，从安装配置到内容创作与模板开发完整流程。&lt;/p&gt;&#xA;&lt;!-- VOLUME_OVERVIEW_END --&gt;</description>
+			</item>
+			<item>
+				<title>React</title>
+				<link>https://spite-triangle.github.io/cpp_notes/posts/react/</link>
+				<pubDate>Mon, 29 Jun 2026 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/posts/react/</guid>
+				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;基于组件化的前端开发框架，从 JSX 语法、Hooks 机制到状态管理与路由配置。&lt;/p&gt;&#xA;&lt;!-- VOLUME_OVERVIEW_END --&gt;</description>
+			</item>
+			<item>
+				<title>Electron</title>
+				<link>https://spite-triangle.github.io/cpp_notes/posts/electron/</link>
+				<pubDate>Sun, 27 Apr 2025 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/posts/electron/</guid>
+				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本文档围绕 Electron 跨平台桌面应用开发展开，从主进程与渲染进程双进程模型入手。内容涵盖窗口管理、无边框界面设计及 Electron-vite 工程配置等实用技术。&lt;/p&gt;&#xA;&lt;!-- VOLUME_OVERVIEW_END --&gt;</description>
+			</item>
+			<item>
+				<title>vue</title>
+				<link>https://spite-triangle.github.io/cpp_notes/posts/vue/</link>
+				<pubDate>Sun, 27 Apr 2025 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/posts/vue/</guid>
+				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本文档系统介绍了 Vue 3 渐进式前端框架的核心知识体系。从项目初始化入手，讲解基于 Vite 的 Vue 工程搭建与文件结构；随后深入模板语法、数据绑定（v-bind / v-model）及事件处理等基本概念。脚本开发部分对比选项式 API 与组合式 API，介绍 setup 语法糖与 Hooks 代码组织模式。响应式数据系统涵盖 ref / reactive / computed 等核心 API，并配套 watch 与 watchEffect 侦听器实现数据变化监听。组件章节详解生命周期、props 通信、插槽内容分发及 Teleport / Suspense 功能。进阶部分涵盖 Vue Router 单页路由配置（含嵌套路由、参数传递与导航守卫）、Pinia 状态管理（Store / Getters / Actions），以及 Vite 构建工具的路径别名、跨域代理与环境变量管理等工程化配置。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>Qt</title>
+				<link>https://spite-triangle.github.io/cpp_notes/posts/qt/</link>
+				<pubDate>Sun, 30 Mar 2025 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/posts/qt/</guid>
+				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本文档围绕 Qt 框架展开，从 I/O 设备、事件循环与元对象系统入手，深入数据持久化与界面布局技术。内容涵盖 Model/View MVC 架构设计、QPainter 绘图 API、样式表定制及 PySide6 Python 绑定开发等核心技术。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>MFC</title>
+				<link>https://spite-triangle.github.io/cpp_notes/posts/mfc/</link>
+				<pubDate>Sat, 28 Dec 2024 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/posts/mfc/</guid>
+				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本文档围绕 MFC 框架展开，从 Windows 窗口机制与消息处理入手。内容涵盖 CWinApp 应用程序入口、MFC 界面开发及 Visual Studio 工程配置等实战技能。&lt;/p&gt;&#xA;&lt;!-- VOLUME_OVERVIEW_END --&gt;</description>
+			</item>
+			<item>
+				<title>QML</title>
+				<link>https://spite-triangle.github.io/cpp_notes/posts/qml/</link>
+				<pubDate>Sat, 23 Nov 2024 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/posts/qml/</guid>
+				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本文档围绕 QML 语言展开，从基础语法、布局系统及信号槽机制入手，深入 UI 控件配置、Model/View 数据绑定及 Canvas 绘图技术。内容涵盖动态对象创建、C++ 集成开发与模块打包等实用开发技能。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>AI on Hugo Narrow</title>
+		<link>https://spite-triangle.github.io/cpp_notes/tags/ai/</link>
+		<description>Recent content in AI on Hugo Narrow</description>
+		<generator>Hugo</generator>
+		<language>en</language>
+		
+		
+		
+		
+			<lastBuildDate>Fri, 22 May 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://spite-triangle.github.io/cpp_notes/tags/ai/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Copilot Completions</title>
+				<link>https://spite-triangle.github.io/cpp_notes/projects/completion/</link>
+				<pubDate>Fri, 22 May 2026 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/projects/completion/</guid>
+				<description>基于 LLM 的 VS Code 代码补全插件 — 同时支持 GHOST 内联补全和 NES 预测性编辑。</description>
+			</item>
+	</channel>
+</rss>

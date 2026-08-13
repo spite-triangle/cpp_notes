@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>分布式系统 on Hugo Narrow</title>
+		<link>https://spite-triangle.github.io/cpp_notes/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/</link>
+		<description>Recent content in 分布式系统 on Hugo Narrow</description>
+		<generator>Hugo</generator>
+		<language>en</language>
+		
+		
+		
+		
+			<lastBuildDate>Sat, 01 Nov 2025 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://spite-triangle.github.io/cpp_notes/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>简介</title>
+				<link>https://spite-triangle.github.io/cpp_notes/posts/zookeeper/introduction/</link>
+				<pubDate>Sat, 01 Nov 2025 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/posts/zookeeper/introduction/</guid>
+				<description>&lt;h1 id=&#34;zookeeper&#34;&gt;zookeeper&lt;a href=&#34;#zookeeper&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h1&gt;&lt;p&gt;&lt;a&#xD;&#xA;    href=&#34;https://zookeeper.apache.org/&#34;target=&#34;_blank&#34;&#xD;&#xA;    class=&#34;inline-flex items-center gap-1&#34;&#xD;&#xA;  &gt;zookeeper&lt;svg class=&#34;h-3 w-3 flex-shrink-0&#34; id=&#34;external-link&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;path fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34; d=&#34;M15 3h6v6m-11 5L21 3m-3 10v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6&#34;/&gt;&lt;/svg&gt;&#xD;&#xA;  &lt;/a&gt;: 是一个基于观察者模式设计的分布式服务管理框架，它负责存储和管理大家都关心的数据，然后接受观察者的注册，一旦这些数据的状态发生变化，&lt;code&gt;Zookeeper&lt;/code&gt;就将负责通知已经在&lt;code&gt;Zookeeper&lt;/code&gt;上注册的那些观察者做出相应的反应。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>介绍</title>
+				<link>https://spite-triangle.github.io/cpp_notes/posts/distribute/introduction/</link>
+				<pubDate>Sun, 20 Jul 2025 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/posts/distribute/introduction/</guid>
+				<description>&lt;h1 id=&#34;课程&#34;&gt;课程&lt;a href=&#34;#%e8%af%be%e7%a8%8b&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h1&gt;&lt;ul&gt;&#xA;&lt;li&gt;&lt;a&#xD;&#xA;    href=&#34;https://ocw.mit.edu/courses/6-824-distributed-computer-systems-engineering-spring-2006/download/&#34;target=&#34;_blank&#34;&#xD;&#xA;    class=&#34;inline-flex items-center gap-1&#34;&#xD;&#xA;  &gt;Distributed Computer Systems Engineering (MIT 6.824)&lt;svg class=&#34;h-3 w-3 flex-shrink-0&#34; id=&#34;external-link&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;path fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34; d=&#34;M15 3h6v6m-11 5L21 3m-3 10v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6&#34;/&gt;&lt;/svg&gt;&#xD;&#xA;  &lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a&#xD;&#xA;    href=&#34;https://github.com/chaozh/MIT-6.824/tree/master&#34;target=&#34;_blank&#34;&#xD;&#xA;    class=&#34;inline-flex items-center gap-1&#34;&#xD;&#xA;  &gt;配套代码&lt;svg class=&#34;h-3 w-3 flex-shrink-0&#34; id=&#34;external-link&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;path fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34; d=&#34;M15 3h6v6m-11 5L21 3m-3 10v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6&#34;/&gt;&lt;/svg&gt;&#xD;&#xA;  &lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h1 id=&#34;概念&#34;&gt;概念&lt;a href=&#34;#%e6%a6%82%e5%bf%b5&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h1&gt;&lt;h2 id=&#34;基础设施&#34;&gt;基础设施&lt;a href=&#34;#%e5%9f%ba%e7%a1%80%e8%ae%be%e6%96%bd&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h2&gt;&lt;p&gt;分布式系统构建的基础设施&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>介绍</title>
+				<link>https://spite-triangle.github.io/cpp_notes/posts/distributecluster/introdution/</link>
+				<pubDate>Sun, 02 Mar 2025 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/posts/distributecluster/introdution/</guid>
+				<description>&lt;h1 id=&#34;部署&#34;&gt;部署&lt;a href=&#34;#%e9%83%a8%e7%bd%b2&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h1&gt;&lt;div&#xD;&#xA;    class=&#34;alert alert-note my-6 overflow-hidden rounded-lg transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md&#34;&#xD;&#xA;    style=&#34;background-color: color-mix(in srgb, var(--color-note) 10%, transparent);&#xD;&#xA;              border-left-color: var(--color-note);&#xD;&#xA;              --hover-bg: color-mix(in srgb, var(--color-note) 15%, transparent);&#34;&#xD;&#xA;    onmouseover=&#34;this.style.backgroundColor = this.style.getPropertyValue(&#39;--hover-bg&#39;)&#34;&#xD;&#xA;    onmouseout=&#34;this.style.backgroundColor = &#39;color-mix(in srgb, var(--color-note) 10%, transparent)&#39;&#34;&#xD;&#xA;    role=&#34;alert&#34;&#xD;&#xA;    aria-labelledby=&#34;alert-0-title&#34;&#xD;&#xA;  &gt;&#xD;&#xA;    &#xD;&#xA;    &lt;div&#xD;&#xA;      class=&#34; flex items-center justify-between px-6 py-6&#34;&#xD;&#xA;      &#xD;&#xA;    &gt;&#xD;&#xA;      &lt;div class=&#34;flex items-center gap-3&#34;&gt;&#xD;&#xA;        &#xD;&#xA;        &lt;h4 id=&#34;alert-0-title&#34; class=&#34;text-foreground/90 m-0 font-semibold&#34;&gt;&#xD;&#xA;          Note&#xD;&#xA;        &lt;/h4&gt;&#xD;&#xA;      &lt;/div&gt;&#xD;&#xA;&#xD;&#xA;      &#xD;&#xA;      &#xD;&#xA;    &lt;/div&gt;&#xD;&#xA;&#xD;&#xA;    &#xD;&#xA;    &lt;div&#xD;&#xA;      id=&#34;alert-0-content&#34;&#xD;&#xA;      class=&#34;alert-content  px-6 pb-6&#34;&#xD;&#xA;    &gt;&#xD;&#xA;      &lt;div class=&#34;prose prose-sm text-foreground/90 max-w-none&#34;&gt;&#xD;&#xA;        &lt;p&gt;定义本文能进行部署的「部署单位」都是可以独立运行的系统，例如软件、服务、镜像等&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>分布式系统</title>
+				<link>https://spite-triangle.github.io/cpp_notes/posts/distribute/</link>
+				<pubDate>Sat, 01 Nov 2025 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/posts/distribute/</guid>
+				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本文档围绕分布式系统核心概念展开，从基础设施与远程调用接口入手，深入 Raft 共识算法、数据复制容错及事务处理机制。内容涵盖 Google Spanner/GFS、AWS Aurora、Apache Spark/Memcache 等经典分布式系统的架构设计原理与实践分析。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>分布式集群组件</title>
+				<link>https://spite-triangle.github.io/cpp_notes/posts/distributecluster/</link>
+				<pubDate>Thu, 23 Oct 2025 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/posts/distributecluster/</guid>
+				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;分布式系统从集中式走向分布式的架构演进，涉及集群部署模式、负载均衡与服务发现机制。内容涵盖主流消息中间件的选型对比与生产实践、异步任务调度方案以及高性能计算的资源管理策略。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

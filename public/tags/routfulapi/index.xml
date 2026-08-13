@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>RoutfulAPI on Hugo Narrow</title>
+		<link>https://spite-triangle.github.io/cpp_notes/tags/routfulapi/</link>
+		<description>Recent content in RoutfulAPI on Hugo Narrow</description>
+		<generator>Hugo</generator>
+		<language>en</language>
+		
+		
+		
+		
+			<lastBuildDate>Sat, 29 Mar 2025 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://spite-triangle.github.io/cpp_notes/tags/routfulapi/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>CRUD</title>
+				<link>https://spite-triangle.github.io/cpp_notes/posts/fastapi/crud/</link>
+				<pubDate>Sat, 29 Mar 2025 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/posts/fastapi/crud/</guid>
+				<description>&lt;h1 id=&#34;概念&#34;&gt;概念&lt;a href=&#34;#%e6%a6%82%e5%bf%b5&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h1&gt;&lt;p&gt;&lt;code&gt;FastAPI&lt;/code&gt; 是用于快速开发 &lt;code&gt;Restful API&lt;/code&gt; 范式的 HTTP 服务框架，因此，服务 API 接口设计应当符合 &lt;code&gt;CRUD(Create Read Update Delete)&lt;/code&gt; 规范。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

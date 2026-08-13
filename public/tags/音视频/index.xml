@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>音视频 on Hugo Narrow</title>
+		<link>https://spite-triangle.github.io/cpp_notes/tags/%E9%9F%B3%E8%A7%86%E9%A2%91/</link>
+		<description>Recent content in 音视频 on Hugo Narrow</description>
+		<generator>Hugo</generator>
+		<language>en</language>
+		
+		
+		
+		
+			<lastBuildDate>Sun, 12 May 2024 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://spite-triangle.github.io/cpp_notes/tags/%E9%9F%B3%E8%A7%86%E9%A2%91/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>多媒体技术</title>
+				<link>https://spite-triangle.github.io/cpp_notes/posts/media/</link>
+				<pubDate>Sun, 12 May 2024 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/posts/media/</guid>
+				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;图像、音频和视频等数字媒体的编码格式与处理方法，结合 FFmpeg 命令行工具的常用操作示例。&lt;/p&gt;&#xA;&lt;!-- VOLUME_OVERVIEW_END --&gt;</description>
+			</item>
+	</channel>
+</rss>

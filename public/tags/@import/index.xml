@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>@Import on Hugo Narrow</title>
+		<link>https://spite-triangle.github.io/cpp_notes/tags/@import/</link>
+		<description>Recent content in @Import on Hugo Narrow</description>
+		<generator>Hugo</generator>
+		<language>en</language>
+		
+		
+		
+		
+			<lastBuildDate>Mon, 22 Jun 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://spite-triangle.github.io/cpp_notes/tags/@import/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>自动配置</title>
+				<link>https://spite-triangle.github.io/cpp_notes/posts/springboot/autoconfiguration/</link>
+				<pubDate>Mon, 22 Jun 2026 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/posts/springboot/autoconfiguration/</guid>
+				<description>&lt;h1 id=&#34;作用&#34;&gt;作用&lt;a href=&#34;#%e4%bd%9c%e7%94%a8&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h1&gt;&lt;p&gt;&lt;strong&gt;自动配置 &lt;code&gt;AutoConfiguration&lt;/code&gt;&lt;/strong&gt; : 根据项目依赖的 &lt;code&gt;Jar&lt;/code&gt; 包、环境变量和配置文件，在 &lt;code&gt;Spring&lt;/code&gt; 容器启动时，自动创建好所需的 &lt;code&gt;Bean&lt;/code&gt;，并赋予合理的默认值，让我们开箱即用&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

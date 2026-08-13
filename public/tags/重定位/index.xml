@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>重定位 on Hugo Narrow</title>
+		<link>https://spite-triangle.github.io/cpp_notes/tags/%E9%87%8D%E5%AE%9A%E4%BD%8D/</link>
+		<description>Recent content in 重定位 on Hugo Narrow</description>
+		<generator>Hugo</generator>
+		<language>en</language>
+		
+		
+		
+		
+			<lastBuildDate>Sun, 12 May 2024 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://spite-triangle.github.io/cpp_notes/tags/%E9%87%8D%E5%AE%9A%E4%BD%8D/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>可执行文件管理</title>
+				<link>https://spite-triangle.github.io/cpp_notes/posts/operatesystem/executablefile/</link>
+				<pubDate>Sun, 12 May 2024 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/posts/operatesystem/executablefile/</guid>
+				<description>&lt;h1 id=&#34;可执行文件&#34;&gt;可执行文件&lt;a href=&#34;#%e5%8f%af%e6%89%a7%e8%a1%8c%e6%96%87%e4%bb%b6&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h1&gt;&lt;div&#xD;&#xA;    class=&#34;alert alert-note my-6 overflow-hidden rounded-lg transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md&#34;&#xD;&#xA;    style=&#34;background-color: color-mix(in srgb, var(--color-note) 10%, transparent);&#xD;&#xA;              border-left-color: var(--color-note);&#xD;&#xA;              --hover-bg: color-mix(in srgb, var(--color-note) 15%, transparent);&#34;&#xD;&#xA;    onmouseover=&#34;this.style.backgroundColor = this.style.getPropertyValue(&#39;--hover-bg&#39;)&#34;&#xD;&#xA;    onmouseout=&#34;this.style.backgroundColor = &#39;color-mix(in srgb, var(--color-note) 10%, transparent)&#39;&#34;&#xD;&#xA;    role=&#34;alert&#34;&#xD;&#xA;    aria-labelledby=&#34;alert-0-title&#34;&#xD;&#xA;  &gt;&#xD;&#xA;    &#xD;&#xA;    &lt;div&#xD;&#xA;      class=&#34; flex items-center justify-between px-6 py-6&#34;&#xD;&#xA;      &#xD;&#xA;    &gt;&#xD;&#xA;      &lt;div class=&#34;flex items-center gap-3&#34;&gt;&#xD;&#xA;        &#xD;&#xA;        &lt;h4 id=&#34;alert-0-title&#34; class=&#34;text-foreground/90 m-0 font-semibold&#34;&gt;&#xD;&#xA;          Note&#xD;&#xA;        &lt;/h4&gt;&#xD;&#xA;      &lt;/div&gt;&#xD;&#xA;&#xD;&#xA;      &#xD;&#xA;      &#xD;&#xA;    &lt;/div&gt;&#xD;&#xA;&#xD;&#xA;    &#xD;&#xA;    &lt;div&#xD;&#xA;      id=&#34;alert-0-content&#34;&#xD;&#xA;      class=&#34;alert-content  px-6 pb-6&#34;&#xD;&#xA;    &gt;&#xD;&#xA;      &lt;div class=&#34;prose prose-sm text-foreground/90 max-w-none&#34;&gt;&#xD;&#xA;        &lt;p&gt;进程在操作系统中是一个状态机，而可执行文件就是描述这个状态机的「数据结构」，包含状态机的初始状态、状态机转移流程。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>集群系统 on Hugo Narrow</title>
+		<link>https://spite-triangle.github.io/cpp_notes/series/cluster/</link>
+		<description>Recent content in 集群系统 on Hugo Narrow</description>
+		<generator>Hugo</generator>
+		<language>en</language>
+		
+		
+		
+		
+			<lastBuildDate>Sat, 07 Feb 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://spite-triangle.github.io/cpp_notes/series/cluster/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>kafka</title>
+				<link>https://spite-triangle.github.io/cpp_notes/posts/kafka/</link>
+				<pubDate>Sat, 07 Feb 2026 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/posts/kafka/</guid>
+				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;Apache Kafka 分布式消息队列全面指南，涵盖生产者消费者模型、Broker部署与日志存储机制。&lt;/p&gt;&#xA;&lt;!-- VOLUME_OVERVIEW_END --&gt;</description>
+			</item>
+			<item>
+				<title>zookeeper</title>
+				<link>https://spite-triangle.github.io/cpp_notes/posts/zookeeper/</link>
+				<pubDate>Sat, 01 Nov 2025 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/posts/zookeeper/</guid>
+				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;ZooKeeper分布式协调服务入门教程，介绍配置管理与数据模型设计。&lt;/p&gt;&#xA;&lt;!-- VOLUME_OVERVIEW_END --&gt;</description>
+			</item>
+			<item>
+				<title>k8s</title>
+				<link>https://spite-triangle.github.io/cpp_notes/posts/k8s/</link>
+				<pubDate>Thu, 23 Oct 2025 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/posts/k8s/</guid>
+				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xD;&#xA;&lt;p&gt;本文档围绕 Kubernetes 容器编排系统展开，从集群搭建与核心概念入手。内容涵盖 Pod 配置管理、存储体系、服务发现及 RBAC 权限控制等核心组件。&lt;/p&gt;&#xA;&lt;!-- VOLUME_OVERVIEW_END --&gt;</description>
+			</item>
+			<item>
+				<title>分布式集群组件</title>
+				<link>https://spite-triangle.github.io/cpp_notes/posts/distributecluster/</link>
+				<pubDate>Thu, 23 Oct 2025 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/posts/distributecluster/</guid>
+				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;分布式系统从集中式走向分布式的架构演进，涉及集群部署模式、负载均衡与服务发现机制。内容涵盖主流消息中间件的选型对比与生产实践、异步任务调度方案以及高性能计算的资源管理策略。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>Docker</title>
+				<link>https://spite-triangle.github.io/cpp_notes/posts/docker/</link>
+				<pubDate>Tue, 04 Mar 2025 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/posts/docker/</guid>
+				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本文档围绕 Docker 容器技术展开，从基础概念与守护进程架构入手，深入镜像构建、联合文件系统及数据持久化。内容涵盖命令行操作、Dockerfile 语法规则、网络体系配置与可视化管理工具等实用技能。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

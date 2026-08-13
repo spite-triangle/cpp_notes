@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>GDB调试 on Hugo Narrow</title>
+		<link>https://spite-triangle.github.io/cpp_notes/tags/gdb%E8%B0%83%E8%AF%95/</link>
+		<description>Recent content in GDB调试 on Hugo Narrow</description>
+		<generator>Hugo</generator>
+		<language>en</language>
+		
+		
+		
+		
+			<lastBuildDate>Sat, 02 Mar 2024 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://spite-triangle.github.io/cpp_notes/tags/gdb%E8%B0%83%E8%AF%95/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>程序</title>
+				<link>https://spite-triangle.github.io/cpp_notes/posts/operatesystem/program/</link>
+				<pubDate>Sat, 02 Mar 2024 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/posts/operatesystem/program/</guid>
+				<description>&lt;h1 id=&#34;状态机&#34;&gt;状态机&lt;a href=&#34;#%e7%8a%b6%e6%80%81%e6%9c%ba&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h1&gt;&lt;p&gt;c程序是状态机&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;状态：堆+栈&lt;/li&gt;&#xA;&lt;li&gt;初始值&lt;/li&gt;&#xA;&lt;li&gt;状态转移：执行一条语句，堆栈的状态会改变&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;源码&#34;&gt;源码&lt;a href=&#34;#%e6%ba%90%e7%a0%81&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h2&gt;&lt;p&gt;c程序的实际状态机定义：&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

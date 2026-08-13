@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>编程语言 on Hugo Narrow</title>
+		<link>https://spite-triangle.github.io/cpp_notes/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/</link>
+		<description>Recent content in 编程语言 on Hugo Narrow</description>
+		<generator>Hugo</generator>
+		<language>en</language>
+		
+		
+		
+		
+			<lastBuildDate>Wed, 24 Jun 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://spite-triangle.github.io/cpp_notes/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Java SDK</title>
+				<link>https://spite-triangle.github.io/cpp_notes/posts/java/</link>
+				<pubDate>Wed, 24 Jun 2026 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/posts/java/</guid>
+				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本文档围绕 Java 开发展展，从 JDK 发行版对比与 vfox 版本管理入手。内容涵盖 Maven 构建系统、Helix 编辑器配置及 PowerJob 分布式任务调度平台等核心开发技能。&lt;/p&gt;&#xA;&lt;!-- VOLUME_OVERVIEW_END --&gt;</description>
+			</item>
+			<item>
+				<title>Effective C&#43;&#43;</title>
+				<link>https://spite-triangle.github.io/cpp_notes/posts/effective/</link>
+				<pubDate>Sat, 07 Mar 2026 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/posts/effective/</guid>
+				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本文档围绕 Effective C++ 系列笔记展开，从语言基础特性、宏编程与类型推断入手，深入智能指针原理、模板元编程与现代 C++20/17 新特性。内容涵盖 Lambda 底层实现、右值引用与完美转发、异常处理及多线程安全等核心主题。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>Python</title>
+				<link>https://spite-triangle.github.io/cpp_notes/posts/python/</link>
+				<pubDate>Wed, 24 Sep 2025 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/posts/python/</guid>
+				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本文档围绕 Python 语言展开，从基础语法、变量传参与泛型模板入手，深入装饰器、上下文管理等进阶特性。内容涵盖并发编程、协程异步机制及项目日志记录测试部署等工程化实践技能。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>QML</title>
+				<link>https://spite-triangle.github.io/cpp_notes/posts/qml/</link>
+				<pubDate>Sat, 23 Nov 2024 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/posts/qml/</guid>
+				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本文档围绕 QML 语言展开，从基础语法、布局系统及信号槽机制入手，深入 UI 控件配置、Model/View 数据绑定及 Canvas 绘图技术。内容涵盖动态对象创建、C++ 集成开发与模块打包等实用开发技能。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>GoLang</title>
+				<link>https://spite-triangle.github.io/cpp_notes/posts/go/</link>
+				<pubDate>Sat, 02 Mar 2024 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/posts/go/</guid>
+				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本文档围绕 Go 语言核心特性展开，从基础语法、指针与面向对象编程入手，深入 GMP 并发调度模型。内容涵盖 Channel 通信机制、Module 依赖管理及反射类型推断等关键技术。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

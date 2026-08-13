@@ -1,0 +1,2592 @@
+<!doctype html>
+<html
+  lang="en"
+  data-theme="default"
+>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+<title>Zookeeper |
+    Hugo Narrow</title>
+
+<meta
+  name="description"
+  content="ZooKeeper分布式协调服务，介绍树形目录结构、配置管理与分布式锁机制。"
+/>
+<meta
+  name="keywords"
+  content="ZooKeeper, 协调服务, 分布式锁"
+/>
+<meta
+  name="author"
+  content="海拉鲁的三角"
+/>
+<meta name="language" content="en" />
+
+<meta
+  name="robots"
+  content="index, follow"
+/>
+<link rel="canonical" href="https://spite-triangle.github.io/cpp_notes/posts/distribute/zookeeper/" />
+
+
+  <link rel="icon" type="image/svg+xml" href="/cpp_notes/favicon.svg" />
+<link rel="manifest" href="/cpp_notes/site.webmanifest" />
+<meta property="og:url" content="https://spite-triangle.github.io/cpp_notes/posts/distribute/zookeeper/">
+	<meta property="og:site_name" content="Hugo Narrow">
+	<meta property="og:title" content="Zookeeper">
+	<meta property="og:description" content="ZooKeeper分布式协调服务，介绍树形目录结构、配置管理与分布式锁机制。">
+	<meta property="og:locale" content="en">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="posts">
+		<meta property="article:published_time" content="2025-11-01T00:00:00+00:00">
+		<meta property="article:modified_time" content="2025-11-01T00:00:00+00:00">
+		<meta property="article:tag" content="ZooKeeper">
+		<meta property="article:tag" content="协调服务">
+		<meta property="article:tag" content="分布式锁">
+		<meta property="og:image" content="https://spite-triangle.github.io/images/og-default.avif">
+
+
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:image" content="https://spite-triangle.github.io/images/og-default.avif">
+	<meta name="twitter:title" content="Zookeeper">
+	<meta name="twitter:description" content="ZooKeeper分布式协调服务，介绍树形目录结构、配置管理与分布式锁机制。">
+
+
+	<meta itemprop="name" content="Zookeeper">
+	<meta itemprop="description" content="ZooKeeper分布式协调服务，介绍树形目录结构、配置管理与分布式锁机制。">
+	<meta itemprop="datePublished" content="2025-11-01T00:00:00+00:00">
+	<meta itemprop="dateModified" content="2025-11-01T00:00:00+00:00">
+	<meta itemprop="wordCount" content="2430">
+	<meta itemprop="image" content="https://spite-triangle.github.io/images/og-default.avif">
+	<meta itemprop="keywords" content="ZooKeeper,协调服务,分布式锁">
+
+
+
+
+
+<script id="search-config" type="application/json">"{\"searchIndexURL\":\"/cpp_notes/index.json\"}"</script>
+
+
+  <script id="gallery-config" type="application/json">"{\"gallery\":true,\"galleryOptions\":{\"columns\":4,\"columnwidth\":200,\"defaultlayout\":\"justified\",\"gap\":10,\"lastrowbehavior\":\"center\",\"targetrowheight\":200},\"lightbox\":true}"</script>
+
+
+
+
+
+
+  
+    
+      <link
+        rel="stylesheet"
+        href="/cpp_notes/css/compiled.min.882c8bb9b3deec5a84cddfd768d37a08c2c4dd5c6a0c0bd0b51a1b08c09c9adc.css"
+        integrity="sha256-iCyLubPe7FqEzd/XaNN6CMLE3VxqDAvQtRobCMCcmtw="
+        crossorigin="anonymous"
+      />
+    
+  
+
+
+
+
+  
+    
+      <link
+        rel="stylesheet"
+        href="/cpp_notes/css/chroma.min.491df36221f739b5948a747a0351f100ee7ccaaf466d9f46288bf06de1d59123.css"
+        integrity="sha256-SR3zYiH3ObWUinR6A1HxAO58yq9GbZ9GKIvwbeHVkSM="
+        crossorigin="anonymous"
+      />
+    
+  
+
+
+
+
+
+
+        <script
+          src="/cpp_notes/js/main.b003624716b5b9344efafc302bd75df711e73d0da196be724be6daebb2b6964d.js"
+          integrity="sha256-sANiRxa1uTRO&#43;vwwK9dd9xHnPQ2hlr5yS&#43;ba67K2lk0="
+          crossorigin="anonymous"
+          defer
+        ></script>
+
+
+
+            <script
+              src="/cpp_notes/js/toc.92c3534ee382ab7e31e364f704a91b9052ed119e89453fb6837a451b56dbef48.js"
+              integrity="sha256-ksNTTuOCq34x42T3BKkbkFLtEZ6JRT&#43;2g3pFG1bb70g="
+              crossorigin="anonymous"
+              defer
+            ></script>
+
+
+
+        <script
+          src="/cpp_notes/js/search.33fef1d91398b17cbc46483d902493b800642d25754e7ff8e998b12499c7fde3.js"
+          integrity="sha256-M/7x2ROYsXy8Rkg9kCSTuABkLSV1Tn/46ZixJJnH/eM="
+          crossorigin="anonymous"
+          defer
+        ></script>
+
+
+
+        <script
+          src="/cpp_notes/js/dock.b1c2d4314c86813f5baaa2a5b524b4613dc7803303402315d0a2c19217e13278.js"
+          integrity="sha256-scLUMUyGgT9bqqKltSS0YT3HgDMDQCMV0KLBkhfhMng="
+          crossorigin="anonymous"
+          defer
+        ></script>
+
+
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/smart-gallery@latest/dist/smart-gallery.umd.js"
+    defer
+  ></script>
+
+
+
+          <script
+            src="/cpp_notes/js/gallery.c8c99001b2f625137e3cbf8e2ecf758eabf72776a89735e56ee081a30b8fe7f5.js"
+            integrity="sha256-yMmQAbL2JRN&#43;PL&#43;OLs91jqv3J3aolzXlbuCBowuP5/U="
+            crossorigin="anonymous"
+            defer
+          ></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    <script>(function(){const t=localStorage.getItem("theme")||"system",s=localStorage.getItem("colorScheme")||"default",e=Number.parseInt(localStorage.getItem("contentWidth"),10);Number.isInteger(e)&&e>=40&&e<=90&&document.documentElement.style.setProperty("--content-width",`${e}rem`),document.documentElement.setAttribute("data-theme",s);function n(){t==="dark"||t==="system"&&window.matchMedia("(prefers-color-scheme: dark)").matches?document.documentElement.classList.add("dark"):document.documentElement.classList.remove("dark")}n(),t==="system"&&window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",n)})()</script>
+  </head><body class="bg-background text-foreground min-h-screen antialiased">
+    <main
+      id="page-container"
+      class="mx-auto w-full"
+      style="max-width: var(--content-width, 56rem)"
+    >
+      <div
+    id="reading-progress-bar"
+    class="from-primary to-primary/80 pointer-events-none fixed top-0 left-0 z-50 h-[3px] w-0 bg-linear-to-r transition-[width] duration-150 ease-out"
+  ></div>
+
+  <script>
+    (function () {
+      const bar = document.getElementById("reading-progress-bar");
+      if (!bar) return;
+
+      function update() {
+        const scrolled = window.scrollY;
+        const total = document.documentElement.scrollHeight - window.innerHeight;
+        bar.style.width = total > 0 ? (scrolled / total) * 100 + "%" : "0%";
+      }
+
+      let ticking = false;
+      window.addEventListener(
+        "scroll",
+        () => {
+          if (!ticking) {
+            requestAnimationFrame(() => {
+              update();
+              ticking = false;
+            });
+            ticking = true;
+          }
+        },
+        { passive: true }
+      );
+
+      update();
+    })();
+  </script>
+
+      <header class="sticky top-0 z-50 px-4 py-6">
+  <div
+    class="border-border bg-card/80 flex items-center rounded-xl border px-6 py-4 shadow-sm backdrop-blur-sm"
+  >
+    
+    <div class="hidden w-full items-center md:flex md:min-w-0">
+      
+      <div class="flex items-center">
+        
+          <a
+            href="
+              /cpp_notes/
+            "
+            class="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full transition-transform duration-200 hover:scale-105"
+            aria-label="Hugo Narrow"
+          >
+            <img
+              src="/cpp_notes/images/logo.svg"
+              alt="Hugo Narrow"
+              class="h-full w-full object-cover"
+            />
+          </a>
+        
+      </div>
+
+      
+      <nav class="mx-8 flex min-w-0 flex-1 items-center justify-center">
+        <div class="flex flex-wrap items-center justify-center space-x-1">
+          
+          
+            
+            
+            
+              
+                
+              
+            
+            
+              
+              <a
+                href="/cpp_notes/series/"
+                class="nav-link 
+                  text-muted-foreground hover:text-primary hover:bg-primary/10
+                 focus:ring-primary/20 relative flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 focus:ring-2 focus:outline-none"
+              >
+                
+                  <svg class="h-5 w-5" aria-label="Series" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="m12 18l-4.2 1.8q-1 .425-1.9-.162T5 17.975V5q0-.825.588-1.412T7 3h10q.825 0 1.413.588T19 5v12.975q0 1.075-.9 1.663t-1.9.162zm0-2.2l5 2.15V5H7v12.95zM12 5H7h10z"/></svg>
+                
+                <span>Series</span>
+              </a>
+            
+          
+            
+            
+            
+              
+                
+              
+            
+            
+              
+              <a
+                href="/cpp_notes/posts/"
+                class="nav-link 
+                  text-muted-foreground hover:text-primary hover:bg-primary/10
+                 focus:ring-primary/20 relative flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 focus:ring-2 focus:outline-none"
+              >
+                
+                  <svg class="h-5 w-5" aria-label="Posts" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+</svg>
+
+                
+                <span>Posts</span>
+              </a>
+            
+          
+            
+            
+            
+            
+              
+              
+              <div class="relative">
+                <button
+                  class="nav-link nav-submenu-toggle text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 relative flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 focus:ring-2 focus:outline-none"
+                  data-submenu-id="more"
+                  aria-expanded="false"
+                  aria-haspopup="true"
+                >
+                  
+                    <svg class="h-5 w-5" aria-label="More" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3.09 6.26L22 9l-5.91.74L12 16l-4.09-6.26L2 9l5.91-.74L12 2z" />
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 17l10 5 10-5" />
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 12l10 5 10-5" />
+</svg>
+                  
+                  <span>More</span>
+                  <svg class="h-4 w-4 submenu-chevron transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+                </button>
+                <div
+                  class="nav-submenu border-border bg-popover/95 absolute top-full left-0 z-50 mt-2 hidden min-w-44 space-y-1.5 rounded-xl border p-1.5 shadow-lg backdrop-blur-sm"
+                  data-submenu-id="more"
+                  role="menu"
+                >
+                  
+                    
+                    
+                      
+                        
+                      
+                    
+                    
+                    <a
+                      href="/cpp_notes/categories/"
+                      class="nav-link 
+                        text-muted-foreground hover:text-primary hover:bg-primary/10
+                       focus:ring-primary/20 flex items-center gap-2 rounded-lg px-2 py-2 text-sm leading-snug transition-colors duration-200 focus:ring-2 focus:outline-none"
+                      role="menuitem"
+                      
+                    >
+                      
+                        <svg class="h-4 w-4" aria-label="Categories" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+</svg>
+
+                      
+                      <span>Categories</span>
+                    </a>
+                  
+                    
+                    
+                      
+                        
+                      
+                    
+                    
+                    <a
+                      href="/cpp_notes/tags/"
+                      class="nav-link 
+                        text-muted-foreground hover:text-primary hover:bg-primary/10
+                       focus:ring-primary/20 flex items-center gap-2 rounded-lg px-2 py-2 text-sm leading-snug transition-colors duration-200 focus:ring-2 focus:outline-none"
+                      role="menuitem"
+                      
+                    >
+                      
+                        <svg class="h-4 w-4" aria-label="Tags" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+</svg>
+
+                      
+                      <span>Tags</span>
+                    </a>
+                  
+                    
+                    
+                      
+                        
+                      
+                    
+                    
+                    <a
+                      href="/cpp_notes/projects/"
+                      class="nav-link 
+                        text-muted-foreground hover:text-primary hover:bg-primary/10
+                       focus:ring-primary/20 flex items-center gap-2 rounded-lg px-2 py-2 text-sm leading-snug transition-colors duration-200 focus:ring-2 focus:outline-none"
+                      role="menuitem"
+                      
+                    >
+                      
+                        <svg class="h-4 w-4" aria-label="Projects" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="6" r="1" fill="currentColor"/><path fill="currentColor" d="M6 17h12v2H6zm4-5.17l2.792 2.794l3.932-3.935L18 12V8h-4l1.31 1.275l-2.519 2.519L10 9l-4 4l1.414 1.414z"/><path fill="currentColor" d="M19 3h-3.298a5 5 0 0 0-.32-.425l-.01-.012a4.43 4.43 0 0 0-2.89-1.518a2.6 2.6 0 0 0-.964 0a4.43 4.43 0 0 0-2.89 1.518l-.01.012a5 5 0 0 0-.32.424V3H5a3.003 3.003 0 0 0-3 3v14a3.003 3.003 0 0 0 3 3h14a3.003 3.003 0 0 0 3-3V6a3.003 3.003 0 0 0-3-3m1 17a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h4.55a2.5 2.5 0 0 1 4.9 0H19a1 1 0 0 1 1 1Z"/></svg>
+
+
+                      
+                      <span>Projects</span>
+                    </a>
+                  
+                    
+                    
+                      
+                        
+                      
+                    
+                    
+                    <a
+                      href="/cpp_notes/archives/"
+                      class="nav-link 
+                        text-muted-foreground hover:text-primary hover:bg-primary/10
+                       focus:ring-primary/20 flex items-center gap-2 rounded-lg px-2 py-2 text-sm leading-snug transition-colors duration-200 focus:ring-2 focus:outline-none"
+                      role="menuitem"
+                      
+                    >
+                      
+                        <svg class="h-4 w-4" aria-label="Archives" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+</svg>
+
+                      
+                      <span>Archives</span>
+                    </a>
+                  
+                </div>
+              </div>
+            
+          
+        </div>
+      </nav>
+
+      
+      <div class="flex items-center space-x-2">
+        
+        <div class="hidden lg:block"><div class="relative">
+    <button
+      id="content-width-toggle"
+      class="dropdown-toggle border-border bg-background text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex h-10 w-10 items-center justify-center rounded-lg border transition-all duration-300 ease-out hover:scale-105 focus:ring-2 focus:outline-none active:scale-95"
+      data-dropdown-type="content-width"
+      aria-label="Adjust page width"
+      aria-expanded="false"
+      aria-haspopup="true"
+    ><svg class="h-5 w-5 relative z-10" aria-label="Adjust page width" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+	<path d="M0 0h24v24H0z" fill="none" />
+	<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 12H3l3-3m0 6l-3-3m11 0h7l-3-3m0 6l3-3M3 6V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v1M3 18v1a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-1" />
+</svg>
+</button>
+
+    <div
+      id="content-width-dropdown"
+      class="dropdown-menu border-border bg-popover/95 w-64 absolute top-12 right-0 z-60 hidden rounded-lg border p-1 shadow-lg backdrop-blur-sm transition-all duration-200 ease-out"
+      data-dropdown-type="content-width"
+      
+    >
+    <div class="space-y-3 p-3">
+    <div class="flex items-center justify-between gap-4">
+    <label for="content-width-range" class="text-foreground text-sm font-medium">Page width</label>
+    <output id="content-width-value" for="content-width-range" class="text-muted-foreground min-w-12 text-right text-sm tabular-nums"></output>
+    </div>
+    <input id="content-width-range" class="accent-primary w-full cursor-pointer" type="range" min="40" max="90" step="1" aria-label="Page width" />
+    <button id="content-width-reset" type="button" class="border-border text-muted-foreground hover:bg-accent hover:text-accent-foreground focus:ring-primary/20 w-full rounded-md border px-3 py-2 text-sm transition-colors focus:ring-2 focus:outline-none">Restore default</button>
+    </div></div>
+  </div></div>
+
+
+        
+        
+
+
+        
+        <div class="relative">
+    <button
+      id="color-scheme-toggle"
+      class="dropdown-toggle border-border bg-background text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex h-10 w-10 items-center justify-center rounded-lg border transition-all duration-300 ease-out hover:scale-105 focus:ring-2 focus:outline-none active:scale-95"
+      data-dropdown-type="color-scheme"
+      aria-label="Toggle theme"
+      aria-expanded="false"
+      aria-haspopup="true"
+    ><svg class="h-5 w-5 relative z-10" aria-label="Toggle theme" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v6a2 2 0 002 2h4a2 2 0 002-2V5z" />
+</svg>
+</button>
+
+    <div
+      id="color-scheme-dropdown"
+      class="dropdown-menu border-border bg-popover/95 w-44 absolute top-12 right-0 z-60 hidden rounded-lg border p-1 shadow-lg backdrop-blur-sm transition-all duration-200 ease-out"
+      data-dropdown-type="color-scheme"
+      
+    ><button data-color-scheme="default" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Default</span></button><button data-color-scheme="claude" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Claude</span></button><button data-color-scheme="bumblebee" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Bumblebee</span></button><button data-color-scheme="emerald" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Emerald</span></button><button data-color-scheme="nord" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Nord</span></button><button data-color-scheme="sunset" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Sunset</span></button><button data-color-scheme="abyss" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Abyss</span></button><button data-color-scheme="dracula" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Dracula</span></button><button data-color-scheme="amethyst" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Amethyst</span></button><button data-color-scheme="slate" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Slate</span></button><button data-color-scheme="twitter" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Twitter</span></button><button data-color-scheme="minimal" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Minimal</span></button></div>
+  </div>
+
+
+        
+        <div class="relative">
+    <button
+      id="theme-toggle"
+      class="dropdown-toggle border-border bg-background text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex h-10 w-10 items-center justify-center rounded-lg border transition-all duration-300 ease-out hover:scale-105 focus:ring-2 focus:outline-none active:scale-95"
+      data-dropdown-type="theme"
+      aria-label="Toggle theme"
+      aria-expanded="false"
+      aria-haspopup="true"
+    ><svg class="h-5 w-5 sun-icon hidden relative z-10" aria-label="Light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+</svg>
+
+        <svg class="h-5 w-5 moon-icon hidden relative z-10" aria-label="Dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+</svg>
+
+        <svg class="h-5 w-5 system-icon hidden relative z-10" aria-label="System" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+</svg>
+</button>
+
+    <div
+      id="theme-dropdown"
+      class="dropdown-menu border-border bg-popover/95 w-40 absolute top-12 right-0 z-60 hidden rounded-lg border p-1 shadow-lg backdrop-blur-sm transition-all duration-200 ease-out"
+      data-dropdown-type="theme"
+      
+    ><button data-theme="light" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><svg class="h-5 w-5 mr-3 h-4 w-4" aria-label="Light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+</svg>
+<span>Light</span></button><button data-theme="dark" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><svg class="h-5 w-5 mr-3 h-4 w-4" aria-label="Dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+</svg>
+<span>Dark</span></button><button data-theme="system" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><svg class="h-5 w-5 mr-3 h-4 w-4" aria-label="System" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+</svg>
+<span>System</span></button></div>
+  </div>
+
+
+        
+        
+<button
+  id="header-search"
+  class="border-border bg-background text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex h-10 w-10 items-center justify-center rounded-lg border transition-all duration-300 ease-out hover:scale-105 focus:ring-2 focus:outline-none active:scale-95"
+  title="Search"
+  aria-label="Search"
+>
+  <svg class="h-5 w-5 relative z-10" aria-label="Search" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+</svg>
+
+</button>
+
+      </div>
+    </div>
+
+    
+    <div class="flex w-full items-center justify-between md:hidden">
+      
+      
+<button
+  id="mobile-nav-toggle"
+  class="nav-panel-toggle border-border bg-background text-muted-foreground hover:bg-accent hover:text-foreground flex h-10 w-10 items-center justify-center rounded-lg border transition-colors duration-200"
+  aria-label="Menu"
+  aria-expanded="false"
+  aria-controls="mobile-nav-panel"
+>
+  <svg class="h-5 w-5" aria-label="Menu" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+</svg>
+
+</button>
+
+
+
+      
+      <div class="flex items-center space-x-2">
+        
+        
+
+
+        
+        <div class="relative">
+    <button
+      id="color-scheme-toggle"
+      class="dropdown-toggle border-border bg-background text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex h-10 w-10 items-center justify-center rounded-lg border transition-all duration-300 ease-out hover:scale-105 focus:ring-2 focus:outline-none active:scale-95"
+      data-dropdown-type="color-scheme"
+      aria-label="Toggle theme"
+      aria-expanded="false"
+      aria-haspopup="true"
+    ><svg class="h-5 w-5 relative z-10" aria-label="Toggle theme" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v6a2 2 0 002 2h4a2 2 0 002-2V5z" />
+</svg>
+</button>
+
+    <div
+      id="color-scheme-dropdown"
+      class="dropdown-menu border-border bg-popover/95 w-44 absolute top-12 right-0 z-60 hidden rounded-lg border p-1 shadow-lg backdrop-blur-sm transition-all duration-200 ease-out"
+      data-dropdown-type="color-scheme"
+      
+    ><button data-color-scheme="default" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Default</span></button><button data-color-scheme="claude" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Claude</span></button><button data-color-scheme="bumblebee" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Bumblebee</span></button><button data-color-scheme="emerald" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Emerald</span></button><button data-color-scheme="nord" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Nord</span></button><button data-color-scheme="sunset" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Sunset</span></button><button data-color-scheme="abyss" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Abyss</span></button><button data-color-scheme="dracula" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Dracula</span></button><button data-color-scheme="amethyst" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Amethyst</span></button><button data-color-scheme="slate" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Slate</span></button><button data-color-scheme="twitter" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Twitter</span></button><button data-color-scheme="minimal" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Minimal</span></button></div>
+  </div>
+
+
+        
+        <div class="relative">
+    <button
+      id="theme-toggle"
+      class="dropdown-toggle border-border bg-background text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex h-10 w-10 items-center justify-center rounded-lg border transition-all duration-300 ease-out hover:scale-105 focus:ring-2 focus:outline-none active:scale-95"
+      data-dropdown-type="theme"
+      aria-label="Toggle theme"
+      aria-expanded="false"
+      aria-haspopup="true"
+    ><svg class="h-5 w-5 sun-icon hidden relative z-10" aria-label="Light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+</svg>
+
+        <svg class="h-5 w-5 moon-icon hidden relative z-10" aria-label="Dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+</svg>
+
+        <svg class="h-5 w-5 system-icon hidden relative z-10" aria-label="System" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+</svg>
+</button>
+
+    <div
+      id="theme-dropdown"
+      class="dropdown-menu border-border bg-popover/95 w-40 absolute top-12 right-0 z-60 hidden rounded-lg border p-1 shadow-lg backdrop-blur-sm transition-all duration-200 ease-out"
+      data-dropdown-type="theme"
+      
+    ><button data-theme="light" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><svg class="h-5 w-5 mr-3 h-4 w-4" aria-label="Light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+</svg>
+<span>Light</span></button><button data-theme="dark" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><svg class="h-5 w-5 mr-3 h-4 w-4" aria-label="Dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+</svg>
+<span>Dark</span></button><button data-theme="system" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><svg class="h-5 w-5 mr-3 h-4 w-4" aria-label="System" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+</svg>
+<span>System</span></button></div>
+  </div>
+
+
+        
+        
+<button
+  id="header-search"
+  class="border-border bg-background text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex h-10 w-10 items-center justify-center rounded-lg border transition-all duration-300 ease-out hover:scale-105 focus:ring-2 focus:outline-none active:scale-95"
+  title="Search"
+  aria-label="Search"
+>
+  <svg class="h-5 w-5 relative z-10" aria-label="Search" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+</svg>
+
+</button>
+
+      </div>
+    </div>
+  </div>
+
+  
+  
+<div
+  id="mobile-nav-panel"
+  class="mt-2 hidden md:hidden"
+  role="navigation"
+  aria-label="Menu"
+  aria-hidden="true"
+  tabindex="-1"
+>
+  <div
+    class="border-border bg-popover/95 overflow-hidden rounded-xl border shadow-lg backdrop-blur-sm"
+  >
+    
+    <nav class="flex flex-col p-2">
+      
+      
+        
+        
+        
+          
+            
+          
+        
+        
+          
+          <a
+            href="/cpp_notes/series/"
+            class="nav-panel-link 
+              text-muted-foreground hover:text-primary hover:bg-primary/10
+             focus:ring-primary/20 flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+            role="menuitem"
+            
+          >
+            
+              <svg class="h-5 w-5" aria-label="Series" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="m12 18l-4.2 1.8q-1 .425-1.9-.162T5 17.975V5q0-.825.588-1.412T7 3h10q.825 0 1.413.588T19 5v12.975q0 1.075-.9 1.663t-1.9.162zm0-2.2l5 2.15V5H7v12.95zM12 5H7h10z"/></svg>
+            
+            <span>Series</span>
+          </a>
+        
+      
+        
+        
+        
+          
+            
+          
+        
+        
+          
+          <a
+            href="/cpp_notes/posts/"
+            class="nav-panel-link 
+              text-muted-foreground hover:text-primary hover:bg-primary/10
+             focus:ring-primary/20 flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+            role="menuitem"
+            
+          >
+            
+              <svg class="h-5 w-5" aria-label="Posts" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+</svg>
+
+            
+            <span>Posts</span>
+          </a>
+        
+      
+        
+        
+        
+        
+          
+          
+          <div class="nav-accordion-group">
+            <button
+              class="nav-accordion-toggle text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex w-full items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+              data-accordion-id="more"
+              aria-expanded="false"
+              aria-controls="accordion-more"
+            >
+              
+                <svg class="h-5 w-5" aria-label="More" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3.09 6.26L22 9l-5.91.74L12 16l-4.09-6.26L2 9l5.91-.74L12 2z" />
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 17l10 5 10-5" />
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 12l10 5 10-5" />
+</svg>
+              
+              <span class="flex-1 text-left">More</span>
+              <svg class="h-4 w-4 accordion-chevron transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+            </button>
+            
+            <div
+              id="accordion-more"
+              class="nav-accordion-panel grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out"
+              data-accordion-id="more"
+              aria-hidden="true"
+            >
+              <div class="overflow-hidden">
+                <div class="border-primary/20 ml-4 space-y-0.5 border-l-2 py-1 pl-3">
+                  
+                    
+                    
+                      
+                        
+                      
+                    
+                    
+                    <a
+                      href="/cpp_notes/categories/"
+                      class="nav-panel-link 
+                        text-muted-foreground hover:text-primary hover:bg-primary/10
+                       focus:ring-primary/20 flex items-center gap-3 rounded-md px-3 py-2.5 text-sm transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+                      role="menuitem"
+                      
+                    >
+                      
+                        <svg class="h-4 w-4" aria-label="Categories" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+</svg>
+
+                      
+                      <span>Categories</span>
+                    </a>
+                  
+                    
+                    
+                      
+                        
+                      
+                    
+                    
+                    <a
+                      href="/cpp_notes/tags/"
+                      class="nav-panel-link 
+                        text-muted-foreground hover:text-primary hover:bg-primary/10
+                       focus:ring-primary/20 flex items-center gap-3 rounded-md px-3 py-2.5 text-sm transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+                      role="menuitem"
+                      
+                    >
+                      
+                        <svg class="h-4 w-4" aria-label="Tags" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+</svg>
+
+                      
+                      <span>Tags</span>
+                    </a>
+                  
+                    
+                    
+                      
+                        
+                      
+                    
+                    
+                    <a
+                      href="/cpp_notes/projects/"
+                      class="nav-panel-link 
+                        text-muted-foreground hover:text-primary hover:bg-primary/10
+                       focus:ring-primary/20 flex items-center gap-3 rounded-md px-3 py-2.5 text-sm transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+                      role="menuitem"
+                      
+                    >
+                      
+                        <svg class="h-4 w-4" aria-label="Projects" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="6" r="1" fill="currentColor"/><path fill="currentColor" d="M6 17h12v2H6zm4-5.17l2.792 2.794l3.932-3.935L18 12V8h-4l1.31 1.275l-2.519 2.519L10 9l-4 4l1.414 1.414z"/><path fill="currentColor" d="M19 3h-3.298a5 5 0 0 0-.32-.425l-.01-.012a4.43 4.43 0 0 0-2.89-1.518a2.6 2.6 0 0 0-.964 0a4.43 4.43 0 0 0-2.89 1.518l-.01.012a5 5 0 0 0-.32.424V3H5a3.003 3.003 0 0 0-3 3v14a3.003 3.003 0 0 0 3 3h14a3.003 3.003 0 0 0 3-3V6a3.003 3.003 0 0 0-3-3m1 17a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h4.55a2.5 2.5 0 0 1 4.9 0H19a1 1 0 0 1 1 1Z"/></svg>
+
+
+                      
+                      <span>Projects</span>
+                    </a>
+                  
+                    
+                    
+                      
+                        
+                      
+                    
+                    
+                    <a
+                      href="/cpp_notes/archives/"
+                      class="nav-panel-link 
+                        text-muted-foreground hover:text-primary hover:bg-primary/10
+                       focus:ring-primary/20 flex items-center gap-3 rounded-md px-3 py-2.5 text-sm transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+                      role="menuitem"
+                      
+                    >
+                      
+                        <svg class="h-4 w-4" aria-label="Archives" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+</svg>
+
+                      
+                      <span>Archives</span>
+                    </a>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        
+      
+    </nav>
+  </div>
+</div>
+
+</header>
+
+
+
+      <div class="px-4 py-6">
+        
+  <nav class="breadcrumb mb-4 py-1 md:mb-6" aria-label="Breadcrumb">
+    <ol
+      class="text-muted-foreground scrollbar-hide flex items-center space-x-1 overflow-x-auto py-1 text-sm whitespace-nowrap md:space-x-2"
+    >
+      
+        
+          
+          <li class="shrink-0">
+            <a
+              href="/cpp_notes/"
+              class="text-muted-foreground hover:text-primary hover:bg-primary/10 flex items-center gap-1 rounded-lg px-1 py-0.5 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-[1.02] md:py-1.5"
+            >
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m3 12 2-2m0 0 7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+</svg>
+
+              <span class="max-w-16 truncate md:max-w-none">Home</span>
+            </a>
+          </li>
+        
+      
+        
+          
+          <li class="flex min-w-0 items-center gap-1 md:gap-2">
+            <span class="text-muted-foreground/50 shrink-0"
+              ><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+</svg>
+            </span>
+            <a
+              href="/cpp_notes/posts/"
+              class="text-muted-foreground hover:text-primary hover:bg-primary/10 flex shrink-0 items-center gap-1 rounded-lg px-1 py-0.5 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-[1.02] md:px-3 md:py-1.5"
+            >
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+</svg>
+              <span class="max-w-16 truncate md:max-w-none">Posts</span>
+            </a>
+          </li>
+        
+      
+        
+          
+          <li class="flex min-w-0 items-center gap-1 md:gap-2">
+            <span class="text-muted-foreground/50 shrink-0"
+              ><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+</svg>
+            </span>
+            <a
+              href="/cpp_notes/posts/distribute/"
+              class="text-muted-foreground hover:text-primary hover:bg-primary/10 flex shrink-0 items-center gap-1 rounded-lg px-1 py-0.5 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-[1.02] md:px-3 md:py-1.5"
+            >
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+</svg>
+              <span class="max-w-16 truncate md:max-w-none">分布式系统</span>
+            </a>
+          </li>
+        
+      
+
+
+      
+      <li class="flex min-w-0 items-center gap-1 md:gap-2">
+        <span class="text-muted-foreground/50 shrink-0"
+          ><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+</svg>
+        </span>
+        <span class="text-foreground flex min-w-0 items-center gap-1 font-medium">
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+</svg>
+          <span class="max-w-32 truncate md:max-w-[16rem] lg:max-w-none">Zookeeper</span>
+        </span>
+      </li>
+    </ol>
+  </nav>
+
+
+        
+  
+
+
+  
+  <header class="mb-8">
+    
+
+
+
+
+<div class="post-meta mb-8">
+  
+  
+    <h1 class="text-foreground mb-6 text-3xl leading-tight font-bold md:text-4xl">
+      Zookeeper
+    </h1>
+  
+
+  
+  
+
+  
+  <div class="bg-card border-border rounded-xl border">
+
+    
+        
+        <div class="p-6">
+
+          
+          <div class="text-muted-foreground flex flex-wrap items-center gap-3 text-sm mb-4">
+            
+            
+            <div class="flex items-center gap-2">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+</svg>
+
+              <time datetime="2025-11-01">
+                November 1, 2025
+              </time>
+            </div>
+            
+
+            
+            
+            <div class="flex items-center gap-2">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+</svg>
+
+              <span>5 min</span>
+            </div>
+            
+
+            
+            
+            <div class="flex items-center gap-2">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
+</svg>
+
+              <span>2430 words</span>
+            </div>
+            
+          </div>
+
+          
+          <div class="text-muted-foreground space-y-3 pt-4 border-t border-border">
+            <div class="flex items-center gap-2">
+              <div class="shrink-0">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+</svg>
+
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex flex-wrap items-center gap-1.5">
+                  <span class="text-muted-foreground text-sm font-medium">
+                    Categories:
+                  </span>
+                  <a href="/cpp_notes/categories/%E5%9F%BA%E7%A1%80%E8%AE%BE%E6%96%BD/"
+                    class="inline-flex items-center rounded-full px-2.5 py-1 text-sm font-medium transition-all duration-200 bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground">
+                    基础设施
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="shrink-0">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+</svg>
+
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex flex-wrap items-center gap-1.5">
+                  <span class="text-muted-foreground text-sm font-medium">
+                    Tags:
+                  </span>
+                  <a href="/cpp_notes/tags/zookeeper/"
+                    class="inline-flex items-center rounded-full px-2.5 py-1 text-sm font-medium transition-all duration-200 bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground">
+                    ZooKeeper
+                  </a>
+                  <a href="/cpp_notes/tags/%E5%8D%8F%E8%B0%83%E6%9C%8D%E5%8A%A1/"
+                    class="inline-flex items-center rounded-full px-2.5 py-1 text-sm font-medium transition-all duration-200 bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground">
+                    协调服务
+                  </a>
+                  <a href="/cpp_notes/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"
+                    class="inline-flex items-center rounded-full px-2.5 py-1 text-sm font-medium transition-all duration-200 bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground">
+                    分布式锁
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+  </div>
+</div>
+
+  </header>
+
+  
+  <article class="prose prose-neutral dark:prose-invert mb-12 max-w-none">
+    <h1 id="介绍">介绍<a href="#%e4%bb%8b%e7%bb%8d" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h1><h2 id="概述">概述<a href="#%e6%a6%82%e8%bf%b0" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h2><p><a
+    href="https://zookeeper.readthedocs.io/zh/latest/intro.html"target="_blank"
+    class="inline-flex items-center gap-1"
+  >zookeeper<svg class="h-3 w-3 flex-shrink-0" id="external-link" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 3h6v6m-11 5L21 3m-3 10v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
+  </a>: 是一个开源的分布式协调服务，广泛应用于分布式系统中。它采用树形目录结构，提供统一命名服务、配置管理、分布式锁、集群管理等功能，确保数据一致性和高可用性。</p>
+<ul>
+<li>通用的分布式框架</li>
+<li>支持复制</li>
+</ul>
+<p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="270"
+  data-image-height="355"
+  data-image-src="/cpp_notes/posts/distribute/zookeeper/resources/zookeeper_structure.png"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/distribute/zookeeper/resources/zookeeper_structure.png"
+    alt="alt"
+    
+    
+      
+      
+        
+          width="270" height="355"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/distribute/zookeeper/resources/zookeeper_structure.png"
+    data-gallery-alt="alt"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+<p><code>zookeeper</code> 主要结构如图</p>
+<ul>
+<li><code>ZK app</code> : zookeeper 的应用层，以服务的形式提供，用于处理客户端业务逻辑</li>
+<li><code>ZAB</code> : 一套实现了类似 <code>Raft</code> 算法机制的系统，用于支持 <code>ZK app</code> 的「复制」部署能力</li>
+</ul>
+<h2 id="应用">应用<a href="#%e5%ba%94%e7%94%a8" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h2><p>zookeeper 的一些应用场景</p>
+<ul>
+<li>
+<p><code>Test-and-Set</code> 语意</p>
+<div
+  class="code-block-container border-border bg-card my-6 overflow-hidden rounded-xl border shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md"
+  data-code-block
+  data-code-id="code-0"
+  data-collapsible="true"
+  data-default-state="expanded"
+  data-collapsed="false"
+  data-auto-collapse-lines="30"
+  data-auto-collapse-height="400"
+  data-collapsed-height="120"
+>
+  
+  <div
+    class="code-block-header bg-muted/30 border-border flex items-center justify-between border-b px-4 py-3"
+  >
+    
+    <div class="flex items-center gap-2">
+      <div class="text-muted-foreground shrink-0">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+</svg>
+      </div>
+      <span class="text-muted-foreground text-sm font-medium">
+        CPP
+      </span>
+    </div>
+
+    
+    <div class="flex items-center gap-2">
+      <button
+          class="collapse-code-btn text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+          type="button"
+          data-code-action="toggle-collapse"
+          data-label-expand="Expand"
+          data-label-collapse="Collapse"
+          title="Collapse"
+          aria-label="Collapse"
+          aria-controls="code-0"
+          aria-expanded="true"
+        >
+          <span class="collapse-chevron transition-transform duration-200 ease-out">
+            <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+          </span>
+          <span class="collapse-text hidden sm:inline">Collapse</span>
+        </button>
+      <button
+        class="copy-code-btn text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+        type="button"
+        data-code-action="copy"
+        data-label-copy="Copy"
+        data-label-copied="Copied"
+        title="Copy"
+        aria-label="Copy"
+      >
+        <span class="copy-icon">
+          <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+</svg>
+        </span>
+        <span class="copy-text hidden sm:inline">Copy</span>
+      </button>
+    </div>
+  </div>
+
+  
+  <div class="code-block-content relative" id="code-0">
+    <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl">  <span class="k">volatile</span> <span class="kt">int</span> <span class="n">lock</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">// 共享变量
+</span></span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kt">int</span> <span class="nf">test_and_set</span><span class="p">(</span><span class="kt">int</span> <span class="o">&amp;</span> <span class="n">value</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">      <span class="c1">// 只要保证下述操作是原子的，便能实现
+</span></span></span><span class="line"><span class="cl">      <span class="kt">int</span> <span class="n">old</span> <span class="o">=</span> <span class="n">value</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">      <span class="n">value</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">      <span class="k">return</span> <span class="n">old</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kt">void</span> <span class="nf">critical</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="c1">// 自旋锁：无限循环直到获取锁
+</span></span></span><span class="line"><span class="cl">      <span class="k">while</span> <span class="p">(</span><span class="n">test_and_set</span><span class="p">(</span><span class="o">&amp;</span><span class="n">lock</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">      <span class="c1">// 临界区代码，一次只有一个进程可以进入此区域
+</span></span></span><span class="line"><span class="cl">      <span class="c1">// ...（执行临界区操作）
+</span></span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">      <span class="n">lock</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">// 完成临界区操作后释放锁
+</span></span></span><span class="line"><span class="cl">  <span class="p">}</span></span></span></code></pre></div>
+    <div hidden data-code-source>  volatile int lock = 0; // 共享变量
+
+  int test_and_set(int &amp; value){
+      // 只要保证下述操作是原子的，便能实现
+      int old = value;
+      value = 1;
+      return old;
+  }
+
+  void critical() {
+      // 自旋锁：无限循环直到获取锁
+      while (test_and_set(&amp;lock) == 1);
+
+      // 临界区代码，一次只有一个进程可以进入此区域
+      // ...（执行临界区操作）
+
+      lock = 0; // 完成临界区操作后释放锁
+  }</div>
+    
+    <div
+      class="collapse-overlay to-card/90 pointer-events-none absolute inset-0 bg-linear-to-b from-transparent via-transparent opacity-0 transition-opacity duration-300"
+      hidden
+    >
+      <button
+        class="collapse-overlay-btn text-muted-foreground bg-card/80 border-border/50 hover:bg-primary/10 hover:text-primary hover:border-primary/30 absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center justify-center rounded-full border p-2 backdrop-blur-sm transition-all duration-200"
+        type="button"
+        data-code-action="expand"
+        aria-label="Expand"
+        title="Expand"
+      >
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+      </button>
+    </div>
+  </div>
+</div>
+</li>
+<li>
+<p>配置管理: 将<a
+    href="#%e4%b9%90%e8%a7%82%e9%94%81">乐观锁</a>描述案例中的 <code>a,b</code> 状态换成配置文件即可</p>
+</li>
+<li>
+<p>主/备节点管理：<code>ZAB</code> 本来就是魔改的 <code>Raft</code> 算法，天然支持</p>
+</li>
+<li>
+<p>乐观锁</p>
+</li>
+</ul>
+<h1 id="一致性">一致性<a href="#%e4%b8%80%e8%87%b4%e6%80%a7" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h1><h2 id="zab-vs-raft">ZAB vs Raft<a href="#zab-vs-raft" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h2><p>但 <code>ZAB</code> 与 <code>Raft</code> 有着显著差异：<strong><code>ZAB</code>允许 <code>follower</code> 节点响应用户的「读操作」，而 <code>Raft</code> 只允许 <code>leader</code> 处理用户请求与响应</strong> 。<code>Raft</code> 算法无法通过增加节点机器，使得读/写操作加速（可能还会不如单机性能），而 <code>ZAB</code> 随着节点机器的增加，会大大增强「读操作」性能。<strong>但代价是 <code>ZAB</code> 并不保证系统读/写操作「强一致性」。</strong></p>
+<h2 id="fifo">FIFO<a href="#fifo" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h2><p><code>zookeeper</code> 虽然舍弃「强一致性」换来了「读操作」的性能提升，但也不是完全放弃了读/写操作的一致性，其保证</p>
+<ul>
+<li><strong>写操作一定是线性化的</strong>：对于同一状态，系统不会同时执行两个写操作，写操作具有先后顺序</li>
+<li>在客户端视角，zookeeper 会按照 <code>FIFO</code> 的顺序执行客户端的读/写操作请求并响应
+<ul>
+<li>先写后读情况：备节点会等待主节点执行完相邻的写操作后，才执行读操作</li>
+</ul>
+</li>
+</ul>
+<div
+    class="alert alert-tip my-6 overflow-hidden rounded-lg transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md"
+    style="background-color: color-mix(in srgb, var(--color-tip) 10%, transparent);
+              border-left-color: var(--color-tip);
+              --hover-bg: color-mix(in srgb, var(--color-tip) 15%, transparent);"
+    onmouseover="this.style.backgroundColor = this.style.getPropertyValue('--hover-bg')"
+    onmouseout="this.style.backgroundColor = 'color-mix(in srgb, var(--color-tip) 10%, transparent)'"
+    role="alert"
+    aria-labelledby="alert-0-title"
+  >
+    
+    <div
+      class=" flex items-center justify-between px-6 py-6"
+      
+    >
+      <div class="flex items-center gap-3">
+        
+        <h4 id="alert-0-title" class="text-foreground/90 m-0 font-semibold">
+          Tip
+        </h4>
+      </div>
+
+      
+      
+    </div>
+
+    
+    <div
+      id="alert-0-content"
+      class="alert-content  px-6 pb-6"
+    >
+      <div class="prose prose-sm text-foreground/90 max-w-none">
+        <p><code>zookeeper</code> 只保证了同一客户端读/写操作的「强一致性」，而非整个系统</p>
+<ul>
+<li>每个客户端是独立线程</li>
+<li><code>state</code> 是全局变量
+在 zookeeper 系统下，这些线程对 <code>state</code> 的写上锁，而只要检测到没上写锁，便能随便读。<strong>即两个线程间同时读的操作，在系统中并没有强制约束谁先谁后。</strong></li>
+</ul>
+      </div>
+    </div>
+  </div><script>
+  function toggleAlert(alertId) {
+    const content = document.getElementById(alertId + "-content");
+    const chevron = document.getElementById(alertId + "-chevron");
+    const header = content.previousElementSibling;
+
+    if (content.classList.contains("hidden")) {
+      content.classList.remove("hidden");
+      chevron.style.transform = "rotate(0deg)";
+      header.setAttribute("aria-expanded", "true");
+    } else {
+      content.classList.add("hidden");
+      chevron.style.transform = "rotate(-90deg)";
+      header.setAttribute("aria-expanded", "false");
+    }
+  }
+
+  
+  document.addEventListener("DOMContentLoaded", function () {
+    const collapsedAlerts = document.querySelectorAll(".alert-content.hidden");
+    collapsedAlerts.forEach(function (content) {
+      const alertId = content.id.replace("-content", "");
+      const chevron = document.getElementById(alertId + "-chevron");
+      if (chevron) {
+        chevron.style.transform = "rotate(-90deg)";
+      }
+    });
+  });
+</script>
+<h2 id="sync">sync<a href="#sync" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h2><p>假设存在多个客户端对 <code>A</code> 状态进行读写操作，若某个客户端想读取到 <code>A</code> 最新的写入状态，可在读取前发送一个 <code>sync</code> 同步操作，<strong>保证在 <code>read(A)</code> 之前，其他客户端的写入操作肯定都完成了</strong>。</p>
+<h2 id="乐观锁">乐观锁<a href="#%e4%b9%90%e8%a7%82%e9%94%81" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h2><p>假设有两个客户端 <code>C1</code> 与 <code>C2</code> 再对状态 <code>a,b</code> 进行读/写操作，<strong>且保证<code>C2</code> 只能在 <code>C1</code> 更新好 <code>a,b</code> 状态成功后，才能对数据进行读取</strong>。针对该问题，便能基于 <code>zookeeper</code> 提供的 <code>FIFO</code> 特性，实现「乐观锁」</p>
+<ol>
+<li>使用 <code>ready</code> 状态来标记 <code>C1</code> 是否已经准备好了 <code>a,b</code></li>
+<li>在 <code>T2</code>时刻， <code>C2</code> 使用 <code>exist</code> 指令检测 <code>ready</code> 是否存在</li>
+</ol>
+<ul>
+<li>不存在：<code>exist</code> 返回失败</li>
+<li>存在：<code>exist</code> 返回成功，且 <code>zookeeper</code> 会对 <code>ready</code> 状态进行监控</li>
+</ul>
+<ol start="3">
+<li>在 <code>T3</code> 时刻，<code>C1</code> 想要对 <code>a,b</code> 进行修改，删除了 <code>ready</code>。<strong>由于 zookeeper 对 <code>ready</code> 进行了监控<code>watch</code>，便会记录 <code>ready</code> 已经被修改</strong></li>
+<li><code>C2</code> 由于在 <code>T2</code> 检测 <code>ready</code> 成功，因此在<code>T4,T5</code> 时刻，对 <code>a,b</code> 数据进行读取。<strong>但 zookeeper 已经知道 <code>ready</code> 被修改，<code>C1</code> 正在改数据，因此<code>read(a)，read(b)</code> 都将返回失败</strong></li>
+</ol>
+<p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="790"
+  data-image-height="600"
+  data-image-src="/cpp_notes/posts/distribute/zookeeper/resources/zookeeper_fifo.png"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/distribute/zookeeper/resources/zookeeper_fifo.png"
+    alt="alt"
+    
+    
+      
+      
+        
+          width="790" height="600"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/distribute/zookeeper/resources/zookeeper_fifo.png"
+    data-gallery-alt="alt"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+<h1 id="api">API<a href="#api" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h1><h2 id="状态表">状态表<a href="#%e7%8a%b6%e6%80%81%e8%a1%a8" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h2><p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="442"
+  data-image-height="253"
+  data-image-src="/cpp_notes/posts/distribute/zookeeper/resources/zknamespace.jpg"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/distribute/zookeeper/resources/zknamespace.jpg"
+    alt="alt"
+    
+    
+      
+      
+        
+          width="442" height="253"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/distribute/zookeeper/resources/zknamespace.jpg"
+    data-gallery-alt="alt"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+<p>在 <code>zookeeper</code> 中，状态是通过 <code>data-tree</code> 实现（本质上也是<code>key-value</code> 的形式）</p>
+<ul>
+<li><code>path  (key)</code>: 每个节点的路径标识，唯一不重复，用于节点定位</li>
+<li><code>ZNode (value)</code>: 树中的节点，存储数据大小 <code>&lt; 1MB</code></li>
+</ul>
+<p>对于 <code>ZNode</code> 还存在一些特殊属性</p>
+<ul>
+<li>类型 <code>flag</code>
+<ul>
+<li>常规 <code>regular</code>：一旦创建，只能手动删除</li>
+<li>临时 <code>ephemeral</code> : 需要客户端定时发送心跳，若心跳消失，则自动删除</li>
+<li>序列 <code>sequential</code> : zookeeper 会为同一个节点标识自动添加一个编号</li>
+</ul>
+</li>
+<li>版本号 <code>version</code> : 当节点数据创建、修改、删除时，会自增</li>
+</ul>
+<h2 id="操作">操作<a href="#%e6%93%8d%e4%bd%9c" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h2><p><code>zookeeper</code> 中数据的状态存储与文件系统类似，因此其操作指令也十分雷同</p>
+<ul>
+<li><code>create(path,data,flag)</code>
+<ul>
+<li>成功： <code>path</code> 不存在，且创建成功</li>
+<li>失败：其他情况</li>
+</ul>
+</li>
+<li><code>delete(path,version)</code> : 检测 <code>ZNode</code> 当前版本号与 <code>version</code> 是否一致，一致才执行操作</li>
+<li><code>exist(path,is_watch)</code> : 通过设置 <code>is_watch</code>，告知 zookeeper 是否监听该 <code>path</code> 是否执行写操作（删除、修改、创建），<strong>当 zookeeper 监听到修改后，会通知客户端</strong></li>
+<li><code>getData(path,is_watch)</code></li>
+<li><code>setData(path, data, version)</code> ：检测 <code>ZNode</code> 当前版本号与 <code>version</code> 是否一致，一致才执行操作</li>
+<li><code>lists(path)</code> : 获取 <code>sequential</code> 类型 <code>path</code> 的所有实际路径名，例如 <code>path=/a/b/c</code> 其对应的真实路径有 <code>/a/b/c_1</code>，<code>/a/b/c_2</code>,<code>/a/b/c_3</code></li>
+</ul>
+<h2 id="同步应用">同步应用<a href="#%e5%90%8c%e6%ad%a5%e5%ba%94%e7%94%a8" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h2><h3 id="小型事务">小型事务<a href="#%e5%b0%8f%e5%9e%8b%e4%ba%8b%e5%8a%a1" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h3><p>通过 <code>version</code> 也能实现针对单个 <code>ZNode</code> 节点数据的「乐观锁」</p>
+<div
+  class="code-block-container border-border bg-card my-6 overflow-hidden rounded-xl border shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md"
+  data-code-block
+  data-code-id="code-1"
+  data-collapsible="true"
+  data-default-state="expanded"
+  data-collapsed="false"
+  data-auto-collapse-lines="30"
+  data-auto-collapse-height="400"
+  data-collapsed-height="120"
+>
+  
+  <div
+    class="code-block-header bg-muted/30 border-border flex items-center justify-between border-b px-4 py-3"
+  >
+    
+    <div class="flex items-center gap-2">
+      <div class="text-muted-foreground shrink-0">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+</svg>
+      </div>
+      <span class="text-muted-foreground text-sm font-medium">
+        PYTHON
+      </span>
+    </div>
+
+    
+    <div class="flex items-center gap-2">
+      <button
+          class="collapse-code-btn text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+          type="button"
+          data-code-action="toggle-collapse"
+          data-label-expand="Expand"
+          data-label-collapse="Collapse"
+          title="Collapse"
+          aria-label="Collapse"
+          aria-controls="code-1"
+          aria-expanded="true"
+        >
+          <span class="collapse-chevron transition-transform duration-200 ease-out">
+            <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+          </span>
+          <span class="collapse-text hidden sm:inline">Collapse</span>
+        </button>
+      <button
+        class="copy-code-btn text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+        type="button"
+        data-code-action="copy"
+        data-label-copy="Copy"
+        data-label-copied="Copied"
+        title="Copy"
+        aria-label="Copy"
+      >
+        <span class="copy-icon">
+          <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+</svg>
+        </span>
+        <span class="copy-text hidden sm:inline">Copy</span>
+      </button>
+    </div>
+  </div>
+
+  
+  <div class="code-block-content relative" id="code-1">
+    <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">update_count</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;
+</span></span></span><span class="line"><span class="cl"><span class="s2">        利用 path 变量进行计数
+</span></span></span><span class="line"><span class="cl"><span class="s2">        注意：
+</span></span></span><span class="line"><span class="cl"><span class="s2">            该方式只适用于低负载情况，在高负责会存在严重性能问题
+</span></span></span><span class="line"><span class="cl"><span class="s2">            例如若 1000 个客户端同时更新，那么当1个客户端成功后，另外 999个都将失败，重新进入循环
+</span></span></span><span class="line"><span class="cl"><span class="s2">    &#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">val</span><span class="p">,</span><span class="n">version</span> <span class="o">=</span> <span class="n">getData</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">val</span> <span class="o">+=</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">setData</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">version</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">            <span class="k">break</span></span></span></code></pre></div>
+    <div hidden data-code-source>def update_count(path):
+    &#34;&#34;&#34;
+        利用 path 变量进行计数
+        注意：
+            该方式只适用于低负载情况，在高负责会存在严重性能问题
+            例如若 1000 个客户端同时更新，那么当1个客户端成功后，另外 999个都将失败，重新进入循环
+    &#34;&#34;&#34;
+    while True:
+        val,version = getData(path)
+        val &#43;= 1
+        if setData(path, val, version):
+            break</div>
+    
+    <div
+      class="collapse-overlay to-card/90 pointer-events-none absolute inset-0 bg-linear-to-b from-transparent via-transparent opacity-0 transition-opacity duration-300"
+      hidden
+    >
+      <button
+        class="collapse-overlay-btn text-muted-foreground bg-card/80 border-border/50 hover:bg-primary/10 hover:text-primary hover:border-primary/30 absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center justify-center rounded-full border p-2 backdrop-blur-sm transition-all duration-200"
+        type="button"
+        data-code-action="expand"
+        aria-label="Expand"
+        title="Expand"
+      >
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+      </button>
+    </div>
+  </div>
+</div>
+<p>该方式通过循环重试与 <code>version</code>，在客户端层面保证了针对 <code>path</code> 数据的读/写操作的原子性，即一个简单的「小型事务<code>min-transition</code>」。</p>
+<h3 id="分布式锁">分布式锁<a href="#%e5%88%86%e5%b8%83%e5%bc%8f%e9%94%81" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h3><div
+  class="code-block-container border-border bg-card my-6 overflow-hidden rounded-xl border shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md"
+  data-code-block
+  data-code-id="code-2"
+  data-collapsible="true"
+  data-default-state="expanded"
+  data-collapsed="false"
+  data-auto-collapse-lines="30"
+  data-auto-collapse-height="400"
+  data-collapsed-height="120"
+>
+  
+  <div
+    class="code-block-header bg-muted/30 border-border flex items-center justify-between border-b px-4 py-3"
+  >
+    
+    <div class="flex items-center gap-2">
+      <div class="text-muted-foreground shrink-0">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+</svg>
+      </div>
+      <span class="text-muted-foreground text-sm font-medium">
+        PYTHON
+      </span>
+    </div>
+
+    
+    <div class="flex items-center gap-2">
+      <button
+          class="collapse-code-btn text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+          type="button"
+          data-code-action="toggle-collapse"
+          data-label-expand="Expand"
+          data-label-collapse="Collapse"
+          title="Collapse"
+          aria-label="Collapse"
+          aria-controls="code-2"
+          aria-expanded="true"
+        >
+          <span class="collapse-chevron transition-transform duration-200 ease-out">
+            <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+          </span>
+          <span class="collapse-text hidden sm:inline">Collapse</span>
+        </button>
+      <button
+        class="copy-code-btn text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+        type="button"
+        data-code-action="copy"
+        data-label-copy="Copy"
+        data-label-copied="Copied"
+        title="Copy"
+        aria-label="Copy"
+      >
+        <span class="copy-icon">
+          <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+</svg>
+        </span>
+        <span class="copy-text hidden sm:inline">Copy</span>
+      </button>
+    </div>
+  </div>
+
+  
+  <div class="code-block-content relative" id="code-2">
+    <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">lock</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 尝试创建锁</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">version</span> <span class="o">:=</span> <span class="n">create</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&#34;lock&#34;</span><span class="p">,</span><span class="n">ephemeral</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="n">version</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">exist</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">is_watch</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">            <span class="c1"># 等待 path 被修改，zookeeper 下发通知</span>
+</span></span><span class="line"><span class="cl">            <span class="n">wait</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">unlock</span><span class="p">(</span><span class="n">path</span><span class="p">,</span><span class="n">version</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">delete</span><span class="p">(</span><span class="n">path</span><span class="p">,</span><span class="n">version</span><span class="p">)</span></span></span></code></pre></div>
+    <div hidden data-code-source>def lock(path):
+    while True:
+        # 尝试创建锁
+        if version := create(path, &#34;lock&#34;,ephemeral = True):
+            return version
+
+        if exist(path, is_watch = True):
+            # 等待 path 被修改，zookeeper 下发通知
+            wait(path)
+
+def unlock(path,version):
+    delete(path,version)</div>
+    
+    <div
+      class="collapse-overlay to-card/90 pointer-events-none absolute inset-0 bg-linear-to-b from-transparent via-transparent opacity-0 transition-opacity duration-300"
+      hidden
+    >
+      <button
+        class="collapse-overlay-btn text-muted-foreground bg-card/80 border-border/50 hover:bg-primary/10 hover:text-primary hover:border-primary/30 absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center justify-center rounded-full border p-2 backdrop-blur-sm transition-all duration-200"
+        type="button"
+        data-code-action="expand"
+        aria-label="Expand"
+        title="Expand"
+      >
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+      </button>
+    </div>
+  </div>
+</div>
+<p>上述 zookeeper 通知客户端退出等待获取锁的方式类似条件量的 <code>condition.notifyAll()</code>，zookeeper 会唤醒所有的客户端，在高负载下，也会造成性能问题。</p>
+<div
+  class="code-block-container border-border bg-card my-6 overflow-hidden rounded-xl border shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md"
+  data-code-block
+  data-code-id="code-3"
+  data-collapsible="true"
+  data-default-state="expanded"
+  data-collapsed="false"
+  data-auto-collapse-lines="30"
+  data-auto-collapse-height="400"
+  data-collapsed-height="120"
+>
+  
+  <div
+    class="code-block-header bg-muted/30 border-border flex items-center justify-between border-b px-4 py-3"
+  >
+    
+    <div class="flex items-center gap-2">
+      <div class="text-muted-foreground shrink-0">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+</svg>
+      </div>
+      <span class="text-muted-foreground text-sm font-medium">
+        PYTHON
+      </span>
+    </div>
+
+    
+    <div class="flex items-center gap-2">
+      <button
+          class="collapse-code-btn text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+          type="button"
+          data-code-action="toggle-collapse"
+          data-label-expand="Expand"
+          data-label-collapse="Collapse"
+          title="Collapse"
+          aria-label="Collapse"
+          aria-controls="code-3"
+          aria-expanded="true"
+        >
+          <span class="collapse-chevron transition-transform duration-200 ease-out">
+            <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+          </span>
+          <span class="collapse-text hidden sm:inline">Collapse</span>
+        </button>
+      <button
+        class="copy-code-btn text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+        type="button"
+        data-code-action="copy"
+        data-label-copy="Copy"
+        data-label-copied="Copied"
+        title="Copy"
+        aria-label="Copy"
+      >
+        <span class="copy-icon">
+          <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+</svg>
+        </span>
+        <span class="copy-text hidden sm:inline">Copy</span>
+      </button>
+    </div>
+  </div>
+
+  
+  <div class="code-block-content relative" id="code-3">
+    <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">lock</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># num 就是 sequential 模式下，zookeeper 创建 path 时，自动生成编号</span>
+</span></span><span class="line"><span class="cl">    <span class="n">version</span><span class="p">,</span><span class="n">num</span> <span class="o">=</span> <span class="n">create</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&#34;lock&#34;</span><span class="p">,</span><span class="n">sequential</span> <span class="o">=</span><span class="kc">True</span> <span class="p">,</span> <span class="n">ephemeral</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 获取所有现在还存在的 path </span>
+</span></span><span class="line"><span class="cl">        <span class="n">paths</span> <span class="o">=</span> <span class="n">lists</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">paths</span> <span class="o">=</span> <span class="n">sort_ascend_by_num</span><span class="p">(</span><span class="n">paths</span><span class="p">)</span> 
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># 编号 &lt; num 的 path 均已经被删除，即已经获取锁并释放，或者持有锁的时间已经超时</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">paths</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">num</span> <span class="o">&gt;=</span> <span class="n">num</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="p">(</span><span class="n">version</span><span class="p">,</span><span class="n">num</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># 等待 num - 1 对应的 path 被删除</span>
+</span></span><span class="line"><span class="cl">        <span class="n">pre</span> <span class="o">=</span> <span class="n">path</span> <span class="o">+</span> <span class="s2">&#34;_&#34;</span> <span class="o">+</span> <span class="p">(</span><span class="n">num</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">exists</span><span class="p">(</span><span class="n">pre</span><span class="p">,</span><span class="n">is_watch</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">            <span class="n">wait</span><span class="p">(</span><span class="n">pre</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">unlock</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">num</span><span class="p">,</span><span class="n">version</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">     <span class="n">delete</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="s2">&#34;_&#34;</span> <span class="o">+</span> <span class="n">num</span><span class="p">,</span><span class="n">version</span><span class="p">)</span></span></span></code></pre></div>
+    <div hidden data-code-source>def lock(path):
+    # num 就是 sequential 模式下，zookeeper 创建 path 时，自动生成编号
+    version,num = create(path, &#34;lock&#34;,sequential =True , ephemeral = True)
+    while True:
+        # 获取所有现在还存在的 path 
+        paths = lists(path)
+        paths = sort_ascend_by_num(paths) 
+
+        # 编号 &lt; num 的 path 均已经被删除，即已经获取锁并释放，或者持有锁的时间已经超时
+        if paths[0].num &gt;= num:
+            return (version,num)
+
+        # 等待 num - 1 对应的 path 被删除
+        pre = path &#43; &#34;_&#34; &#43; (num - 1)
+        if exists(pre,is_watch=True):
+            wait(pre)
+
+def unlock(path, num,version):
+     delete(path &#43; &#34;_&#34; &#43; num,version)</div>
+    
+    <div
+      class="collapse-overlay to-card/90 pointer-events-none absolute inset-0 bg-linear-to-b from-transparent via-transparent opacity-0 transition-opacity duration-300"
+      hidden
+    >
+      <button
+        class="collapse-overlay-btn text-muted-foreground bg-card/80 border-border/50 hover:bg-primary/10 hover:text-primary hover:border-primary/30 absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center justify-center rounded-full border p-2 backdrop-blur-sm transition-all duration-200"
+        type="button"
+        data-code-action="expand"
+        aria-label="Expand"
+        title="Expand"
+      >
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+      </button>
+    </div>
+  </div>
+</div>
+<p>利用 <code>sequential</code> 类型的 <code>path</code> 便能实现  <code>condition.notifyOne()</code> 的效果</p>
+
+  </article>
+
+  
+  
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  <div class="post-license bg-muted/30 border-border mb-8 rounded-xl border p-6">
+    <div class="flex items-start gap-4">
+      
+      <div class="bg-primary/10 flex h-12 w-12 shrink-0 items-center justify-center rounded-lg">
+        <svg class="h-6 w-6" aria-label="许可证" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+</svg>
+      </div>
+
+      
+      <div class="min-w-0 flex-1">
+        <h3 class="text-foreground mb-2 text-lg font-semibold">
+          License
+        </h3>
+
+        <div class="text-muted-foreground space-y-2 text-sm">
+          
+          
+            <p>
+              <strong>Author:</strong>
+              海拉鲁的三角
+            </p>
+          
+
+
+          
+          <p>
+            <strong>Link:</strong>
+            <a
+              href="https://spite-triangle.github.io/cpp_notes/posts/distribute/zookeeper/"
+              class="text-primary hover:text-primary/80 break-all hyphens-auto transition-colors duration-200"
+            >
+              https://spite-triangle.github.io/cpp_notes/posts/distribute/zookeeper/
+            </a>
+          </p>
+
+          
+          <p>
+            <strong>License:</strong>
+            
+              <a
+                href="https://mit-license.org/"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-primary hover:text-primary/80 transition-colors duration-200"
+              >
+                MIT
+              </a>
+            
+          </p>
+
+          
+          
+            <p class="text-xs">
+              只要学不死，就往死里学
+            </p>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  
+  
+
+
+
+
+
+  <nav class="post-navigation mb-12">
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+      
+      <div class="nav-item">
+        
+          <a
+            href="/cpp_notes/posts/distribute/replication/"
+            class="group bg-card border-border hover:bg-primary/5 hover:border-primary/20 focus:ring-primary/20 flex min-h-[140px] flex-col justify-between rounded-xl border p-6 transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.02] hover:shadow-lg focus:ring-2 focus:outline-none"
+          >
+            <div>
+              <div class="mb-3 flex items-center gap-3">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+</svg>
+                <span class="text-muted-foreground text-sm font-medium">
+                  Previous
+                </span>
+              </div>
+
+              <h3
+                class="text-foreground group-hover:text-primary mb-3 line-clamp-2 text-lg leading-tight font-semibold transition-colors duration-200"
+              >
+                复制
+              </h3>
+            </div>
+
+            <div class="text-muted-foreground mt-auto flex items-center gap-2 text-xs">
+              <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+</svg>
+
+              <time datetime="2025-07-24">
+                7/24/25
+              </time>
+            </div>
+          </a>
+        
+      </div>
+
+      
+      <div class="nav-item">
+        
+          <a
+            href="/cpp_notes/posts/distribute/craq/"
+            class="group bg-card border-border hover:bg-primary/5 hover:border-primary/20 focus:ring-primary/20 flex min-h-[140px] flex-col justify-between rounded-xl border p-6 transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.02] hover:shadow-lg focus:ring-2 focus:outline-none"
+          >
+            <div>
+              <div class="mb-3 flex items-center justify-end gap-3">
+                <span class="text-muted-foreground text-sm font-medium">
+                  Next
+                </span>
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+</svg>
+              </div>
+
+              <h3
+                class="text-foreground group-hover:text-primary mb-3 line-clamp-2 text-right text-lg leading-tight font-semibold transition-colors duration-200"
+              >
+                CRAQ
+              </h3>
+            </div>
+
+            <div class="text-muted-foreground mt-auto flex items-center justify-end gap-2 text-xs">
+              <time datetime="2025-07-23">
+                7/23/25
+              </time>
+              <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+</svg>
+
+            </div>
+          </a>
+        
+      </div>
+    </div>
+  </nav>
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+  <section class="related-posts mb-12">
+    
+    <div class="mb-6 flex items-center gap-3">
+      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+</svg>
+      <h2 class="text-foreground text-2xl font-bold">
+        Related content
+      </h2>
+    </div>
+
+    
+    <div class="grid w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+      
+        <article class="group">
+          <a href="/cpp_notes/posts/zookeeper/introduction/" class="block">
+            <div
+              class="bg-card border-border hover:bg-primary/5 hover:border-primary/20 focus:ring-primary/20 flex min-h-[120px] items-center rounded-xl border p-5 transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.02] hover:shadow-lg focus:ring-2 focus:outline-none"
+            >
+              <h3
+                class="text-foreground group-hover:text-primary line-clamp-3 w-full text-lg leading-snug font-semibold"
+              >
+                简介
+              </h3>
+            </div>
+          </a>
+        </article>
+      
+        <article class="group">
+          <a href="/cpp_notes/posts/zookeeper/python/" class="block">
+            <div
+              class="bg-card border-border hover:bg-primary/5 hover:border-primary/20 focus:ring-primary/20 flex min-h-[120px] items-center rounded-xl border p-5 transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.02] hover:shadow-lg focus:ring-2 focus:outline-none"
+            >
+              <h3
+                class="text-foreground group-hover:text-primary line-clamp-3 w-full text-lg leading-snug font-semibold"
+              >
+                python
+              </h3>
+            </div>
+          </a>
+        </article>
+      
+        <article class="group">
+          <a href="/cpp_notes/posts/kafka/server/" class="block">
+            <div
+              class="bg-card border-border hover:bg-primary/5 hover:border-primary/20 focus:ring-primary/20 flex min-h-[120px] items-center rounded-xl border p-5 transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.02] hover:shadow-lg focus:ring-2 focus:outline-none"
+            >
+              <h3
+                class="text-foreground group-hover:text-primary line-clamp-3 w-full text-lg leading-snug font-semibold"
+              >
+                集群服务
+              </h3>
+            </div>
+          </a>
+        </article>
+      
+    </div>
+  </section>
+
+
+
+
+  
+  
+
+
+      </div>
+
+      <footer class="px-4 py-6">
+  
+  
+    <nav class="mb-6">
+      <div class="flex flex-wrap items-center justify-center gap-1">
+        
+          
+          
+          
+            
+              
+            
+          
+          <a
+            href="/cpp_notes/projects/"
+            
+            class="nav-link hover:text-primary hover:bg-primary/10 text-muted-foreground flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 hover:scale-105"
+          >
+            
+              <svg class="h-5 w-5" aria-label="Projects" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="m8.85 16.825l3.15-1.9l3.15 1.925l-.825-3.6l2.775-2.4l-3.65-.325l-1.45-3.4l-1.45 3.375l-3.65.325l2.775 2.425zm3.15.45l-4.15 2.5q-.275.175-.575.15t-.525-.2t-.35-.437t-.05-.588l1.1-4.725L3.775 10.8q-.25-.225-.312-.513t.037-.562t.3-.45t.55-.225l4.85-.425l1.875-4.45q.125-.3.388-.45t.537-.15t.537.15t.388.45l1.875 4.45l4.85.425q.35.05.55.225t.3.45t.038.563t-.313.512l-3.675 3.175l1.1 4.725q.075.325-.05.588t-.35.437t-.525.2t-.575-.15zm0-5.025"/></svg>
+            
+            <span>Projects</span>
+          </a>
+        
+          
+          
+          
+            
+              
+            
+          
+          <a
+            href="/cpp_notes/about/"
+            
+            class="nav-link hover:text-primary hover:bg-primary/10 text-muted-foreground flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 hover:scale-105"
+          >
+            
+              <svg class="h-5 w-5" aria-label="About" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+</svg>
+
+            
+            <span>About</span>
+          </a>
+        
+      </div>
+    </nav>
+  
+
+
+  
+  
+    <div class="border-border mb-6 border-t"></div>
+  
+
+
+  
+  <div class="flex flex-col items-center justify-between gap-4 md:flex-row">
+    
+    <div class="text-muted-foreground text-center text-sm md:text-left">
+      <p class="mb-2">
+        &copy;
+        2026
+        Hugo Narrow
+      </p>
+      <p class="flex flex-wrap items-center justify-center gap-1 md:justify-start">
+        <span>Powered by</span>
+        <a
+          href="https://gohugo.io/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-primary hover:text-primary/80 font-medium transition-colors duration-200 hover:underline"
+        >
+          Hugo
+        </a>
+        <span>&</span>
+        <a
+          href="https://github.com/tom2almighty/hugo-narrow"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-primary hover:text-primary/80 font-medium transition-colors duration-200 hover:underline"
+        >
+          Narrow
+        </a>
+      </p>
+    </div>
+
+    
+    
+      <div class="flex items-center gap-3">
+        
+          <a
+            href="https://github.com/spite-triangle"
+            
+              target="_blank" rel="noopener noreferrer"
+            
+            class="text-muted-foreground hover:text-primary focus:ring-primary/20 rounded-lg p-1 transition-all duration-300 ease-out hover:scale-110 focus:ring-2 focus:outline-none"
+            title="GitHub"
+            aria-label="GitHub"
+          >
+            
+              <svg class="h-6 w-6" aria-label="GitHub" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5c.08-1.25-.27-2.48-1-3.5c.28-1.15.28-2.35 0-3.5c0 0-1 0-3 1.5c-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5c-.39.49-.68 1.05-.85 1.65S8.93 17.38 9 18v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></g></svg>
+            
+          </a>
+        
+          <a
+            href="https://space.bilibili.com/27206875"
+            
+              target="_blank" rel="noopener noreferrer"
+            
+            class="text-muted-foreground hover:text-primary focus:ring-primary/20 rounded-lg p-1 transition-all duration-300 ease-out hover:scale-110 focus:ring-2 focus:outline-none"
+            title="Bilibili"
+            aria-label="Bilibili"
+          >
+            
+              <svg class="h-6 w-6" aria-label="Bilibili" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+  <path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.653 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0-.373.129-.689.386-.947.258-.257.574-.386.947-.386zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373Z"/>
+</svg>
+            
+          </a>
+        
+      </div>
+    
+
+  </div>
+</footer>
+
+      
+
+
+
+
+
+<div
+  id="dock"
+  class="pointer-events-none fixed bottom-4 left-1/2 z-9999 w-fit -translate-x-1/2 translate-y-24 opacity-0 transition-all duration-300 ease-out sm:right-0 sm:left-0 sm:mx-auto sm:translate-x-0"
+  data-dock-mode="scroll"
+  role="toolbar"
+  aria-label="Quick actions toolbar"
+>
+  <nav
+    class="border-border bg-card/80 scrollbar-hide xs:px-3 xs:py-2 mx-auto flex max-w-[calc(100vw-2rem)] min-w-fit items-center justify-center overflow-x-auto rounded-2xl border px-4 py-3 shadow-lg backdrop-blur-sm sm:px-4 sm:py-3"
+  >
+    
+    
+      <button
+        id="dock-back"
+        class="text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 xs:px-2 xs:py-1.5 flex shrink-0 items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 focus:ring-2 focus:outline-none sm:px-3 sm:py-2"
+        title="Back"
+        aria-label="Back"
+      >
+        <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="m12 19-7-7 7-7"/>
+  <path d="M19 12H5"/>
+</svg>
+
+        <span class="hidden sm:inline">Back</span>
+      </button>
+
+      
+      <div class="bg-border xs:mx-1 mx-2 h-6 w-px sm:mx-2"></div>
+    
+
+
+    
+
+    
+    
+
+    
+    
+    
+
+
+    
+    <button
+      id="dock-top"
+      class="text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 xs:px-2 xs:py-1.5 flex shrink-0 items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 focus:ring-2 focus:outline-none sm:px-3 sm:py-2"
+      title="Back to top"
+      aria-label="Back to top"
+    >
+      <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="m18 15-6-6-6 6"/>
+</svg>
+
+      <span class="hidden sm:inline">Top</span>
+    </button>
+  </nav>
+</div>
+
+
+
+
+      <aside
+    id="toc-container"
+    class="toc-left"
+    data-position="left"
+  >
+      <div id="toc-center" class="pointer-events-none fixed top-28 ml-auto w-full max-w-4xl px-4">
+        <div class="pointer-events-auto fixed flex">
+          <div class="pointer-events-auto relative ml-auto w-fit">
+            <button
+              id="section-center-toggle"
+              class="bg-card/80 border-border text-muted-foreground hover:text-primary hover:bg-primary/10 ring-offset-background focus-visible:ring-ring flex cursor-pointer items-center gap-2 rounded-full border px-4 py-1.5 text-sm shadow-sm backdrop-blur-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+            >
+              <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <line x1="8" x2="21" y1="6" y2="6"/>
+  <line x1="8" x2="21" y1="12" y2="12"/>
+  <line x1="8" x2="21" y1="18" y2="18"/>
+  <line x1="3" x2="3.01" y1="6" y2="6"/>
+  <line x1="3" x2="3.01" y1="12" y2="12"/>
+  <line x1="3" x2="3.01" y1="18" y2="18"/>
+</svg>
+
+              <span id="section-center-title" class="max-w-[200px] truncate">Zookeeper</span>
+              <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+            </button>
+
+            
+            <div
+              id="section-center-dropdown"
+              class="bg-card border-border scrollbar-hide absolute top-full left-0 mt-2 hidden max-h-[60vh] w-[280px] origin-top scale-95 overflow-y-auto rounded-xl border p-4 opacity-0 shadow-lg transition-all"
+            >
+              <div
+                id="section-center-content"
+                class="[&_a]:text-muted-foreground [&_a:hover]:bg-primary/10 [&_a:hover]:text-primary [&_a.active]:bg-primary/10 [&_a.active]:text-primary text-sm [&_a]:block [&_a]:truncate [&_a]:rounded-md [&_a]:px-2 [&_a]:py-1 [&_a]:transition-colors [&_a.active]:font-medium [&_li]:my-1.5 [&_nav>ul]:pl-0 [&_ul]:list-none [&_ul]:pl-4"
+              >
+                
+                
+                
+                  
+                    <h2>
+                      <a href="/cpp_notes/posts/distribute/introduction/">介绍</a>
+                    </h2>
+                  
+                
+                  
+                    <h2>
+                      <a href="/cpp_notes/posts/distribute/mapreduce/">MapReduce</a>
+                    </h2>
+                  
+                
+                  
+                    <h2>
+                      <a href="/cpp_notes/posts/distribute/gfs/">GFS</a>
+                    </h2>
+                  
+                
+                  
+                    <h2>
+                      <a href="/cpp_notes/posts/distribute/replication/">复制</a>
+                    </h2>
+                  
+                
+                  
+                    <h2 class="active">
+                      <a href="/cpp_notes/posts/distribute/zookeeper/" class="active font-medium">Zookeeper</a>
+                    </h2>
+                  
+                
+                  
+                    <h2>
+                      <a href="/cpp_notes/posts/distribute/craq/">CRAQ</a>
+                    </h2>
+                  
+                
+                  
+                    <h2>
+                      <a href="/cpp_notes/posts/distribute/aurora/">Amazon Aurora</a>
+                    </h2>
+                  
+                
+                  
+                    <h2>
+                      <a href="/cpp_notes/posts/distribute/frangipani/">Frangipani</a>
+                    </h2>
+                  
+                
+                  
+                    <h2>
+                      <a href="/cpp_notes/posts/distribute/transaction/">分布式事务</a>
+                    </h2>
+                  
+                
+                  
+                    <h2>
+                      <a href="/cpp_notes/posts/distribute/spanner/">Spanner</a>
+                    </h2>
+                  
+                
+                  
+                    <h2>
+                      <a href="/cpp_notes/posts/distribute/farm/">farm</a>
+                    </h2>
+                  
+                
+                  
+                    <h2>
+                      <a href="/cpp_notes/posts/distribute/spark/">spark</a>
+                    </h2>
+                  
+                
+                  
+                    <h2>
+                      <a href="/cpp_notes/posts/distribute/memcache/">Memcache</a>
+                    </h2>
+                  
+                
+                  
+                    <h2>
+                      <a href="/cpp_notes/posts/distribute/cops/">COPS</a>
+                    </h2>
+                  
+                
+                  
+                    <h2>
+                      <a href="/cpp_notes/posts/distribute/certificate/">证书透明</a>
+                    </h2>
+                  
+                
+                  
+                    <h2>
+                      <a href="/cpp_notes/posts/distribute/raft/">Raft</a>
+                    </h2>
+                  
+                
+              </div>
+            </div>
+          </div>
+
+          <div class="pointer-events-auto relative ml-auto w-fit"><button
+                id="toc-center-toggle"
+                class="bg-card/80 border-border text-muted-foreground hover:text-primary hover:bg-primary/10 ring-offset-background focus-visible:ring-ring flex cursor-pointer items-center gap-2 rounded-full border px-4 py-1.5 text-sm shadow-sm backdrop-blur-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+              >
+                <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <line x1="8" x2="21" y1="6" y2="6"/>
+  <line x1="8" x2="21" y1="12" y2="12"/>
+  <line x1="8" x2="21" y1="18" y2="18"/>
+  <line x1="3" x2="3.01" y1="6" y2="6"/>
+  <line x1="3" x2="3.01" y1="12" y2="12"/>
+  <line x1="3" x2="3.01" y1="18" y2="18"/>
+</svg>
+
+                <span id="toc-center-title" class="max-w-[200px] truncate">Table of contents</span>
+                <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+              </button>
+
+              
+              <div
+                id="toc-center-dropdown"
+                class="bg-card border-border scrollbar-hide absolute top-full left-0 mt-2 hidden max-h-[60vh] w-[280px] origin-top scale-95 overflow-y-auto rounded-xl border p-4 opacity-0 shadow-lg transition-all"
+              >
+                <div
+                  id="toc-center-content"
+                  class="[&_a]:text-muted-foreground [&_a:hover]:bg-primary/10 [&_a:hover]:text-primary [&_a.active]:bg-primary/10 [&_a.active]:text-primary text-sm [&_a]:block [&_a]:truncate [&_a]:rounded-md [&_a]:px-2 [&_a]:py-1 [&_a]:transition-colors [&_a.active]:font-medium [&_li]:my-1.5 [&_nav>ul]:pl-0 [&_ul]:list-none [&_ul]:pl-4"
+                >
+                  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#介绍">介绍</a>
+      <ul>
+        <li><a href="#概述">概述</a></li>
+        <li><a href="#应用">应用</a></li>
+      </ul>
+    </li>
+    <li><a href="#一致性">一致性</a>
+      <ul>
+        <li><a href="#zab-vs-raft">ZAB vs Raft</a></li>
+        <li><a href="#fifo">FIFO</a></li>
+        <li><a href="#sync">sync</a></li>
+        <li><a href="#乐观锁">乐观锁</a></li>
+      </ul>
+    </li>
+    <li><a href="#api">API</a>
+      <ul>
+        <li><a href="#状态表">状态表</a></li>
+        <li><a href="#操作">操作</a></li>
+        <li><a href="#同步应用">同步应用</a>
+          <ul>
+            <li><a href="#小型事务">小型事务</a></li>
+            <li><a href="#分布式锁">分布式锁</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                </div>
+              </div></div>
+        </div>
+      </div></aside>
+      
+<div
+  id="search-overlay"
+  class="pointer-events-none fixed inset-0 z-40 bg-black/50 opacity-0 transition-opacity duration-300"
+></div>
+
+
+<div
+  id="search-modal"
+  class="bg-card border-border pointer-events-none fixed top-1/2 left-1/2 z-50 max-h-[80vh] w-full max-w-2xl -translate-x-1/2 -translate-y-1/2 scale-95 transform overflow-hidden rounded-xl border opacity-0 shadow-xl transition-all duration-300"
+  role="dialog"
+  aria-modal="true"
+  aria-hidden="true"
+  aria-labelledby="search-title"
+  tabindex="-1"
+>
+  
+  <div class="border-border flex items-center gap-3 border-b p-4">
+    
+    <div class="text-muted-foreground h-5 w-5 shrink-0">
+      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+</svg>
+
+    </div>
+    <h2 id="search-title" class="sr-only">Search</h2>
+
+    
+    <div class="relative flex-1">
+      
+      <button
+        id="search-clear"
+        class="text-muted-foreground hover:text-foreground hover:bg-muted/50 pointer-events-none absolute top-1/2 left-0 z-10 h-5 w-5 -translate-y-1/2 rounded opacity-0 transition-all duration-200"
+        title="Clear"
+        aria-label="Clear"
+      >
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+</svg>
+
+      </button>
+
+      
+      <input
+        id="search-input"
+        type="text"
+        placeholder="Search posts..."
+        class="text-foreground placeholder:text-muted-foreground w-full border-none bg-transparent pl-8 text-lg outline-none"
+        autocomplete="off"
+        spellcheck="false"
+      />
+    </div>
+
+    
+    <button
+      id="search-close"
+      class="text-muted-foreground hover:text-foreground hover:bg-muted/50 flex h-6 w-6 items-center justify-center rounded-md p-0.5 transition-all duration-200"
+      title="Close"
+      aria-label="Close"
+    >
+      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+</svg>
+
+    </button>
+  </div>
+
+  
+  <div id="search-results" class="max-h-96 overflow-y-auto">
+    
+    <div id="search-empty" class="flex flex-col items-center justify-center py-12 text-center">
+      <div class="bg-muted/50 mb-4 flex h-16 w-16 items-center justify-center rounded-full">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+</svg>
+
+      </div>
+      <h3 class="text-foreground mb-2 text-lg font-semibold">
+        Start searching
+      </h3>
+    </div>
+
+    
+    <div id="search-loading" class="flex items-center justify-center py-8" hidden>
+      <div
+        class="mr-3 h-6 w-6 animate-spin rounded-full border-2 border-current border-t-transparent"
+      ></div>
+      <span class="text-muted-foreground">Searching...</span>
+    </div>
+
+    
+    <div
+      id="search-no-results"
+      class="flex flex-col items-center justify-center py-12 text-center"
+      hidden
+    >
+      <div class="bg-muted/50 mb-4 flex h-16 w-16 items-center justify-center rounded-full">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
+</svg>
+
+      </div>
+      <h3 class="text-foreground mb-2 text-lg font-semibold">
+        No results
+      </h3>
+    </div>
+
+    
+    <div id="search-results-list" hidden>
+      
+      <div
+        id="search-stats"
+        class="text-muted-foreground border-border border-b px-4 py-3 text-sm"
+        data-count-other="Found %d results"
+      ></div>
+
+      
+      <div id="search-items" class="divide-border divide-y" role="list">
+        
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="border-border bg-muted/20 border-t px-4 py-3"><div class="text-muted-foreground flex items-center justify-between text-xs">
+      <div class="flex items-center gap-2 md:gap-4">
+        <div class="flex items-center gap-1">
+          <kbd class="bg-muted border-border rounded border px-1.5 py-0.5 text-xs">↑↓</kbd>
+          <span class="hidden sm:inline">Navigate</span>
+        </div>
+        <div class="flex items-center gap-1">
+          <kbd class="bg-muted border-border rounded border px-1.5 py-0.5 text-xs">↵</kbd>
+          <span class="hidden sm:inline">Select</span>
+        </div>
+        <div class="flex items-center gap-1">
+          <kbd class="bg-muted border-border rounded border px-1.5 py-0.5 text-xs">ESC</kbd>
+          <span class="hidden sm:inline">Close</span>
+        </div>
+      </div>
+      <div class="search-hint-desktop flex items-center gap-1">
+        <kbd class="bg-muted border-border rounded border px-1.5 py-0.5 text-xs">⌘K</kbd>
+        <span>Shortcut</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+      
+
+
+      
+
+
+    </main>
+  </body>
+</html>

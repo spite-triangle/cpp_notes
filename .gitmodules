@@ -1,0 +1,3 @@
+[submodule "themes/hugo-narrow"]
+	path = themes/hugo-narrow
+	url = https://github.com/spite-triangle/hugo-narrow.git

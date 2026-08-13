@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Extension API on Hugo Narrow</title>
+		<link>https://spite-triangle.github.io/cpp_notes/tags/extension-api/</link>
+		<description>Recent content in Extension API on Hugo Narrow</description>
+		<generator>Hugo</generator>
+		<language>en</language>
+		
+		
+		
+		
+			<lastBuildDate>Sun, 19 Oct 2025 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://spite-triangle.github.io/cpp_notes/tags/extension-api/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Vscode 插件开发</title>
+				<link>https://spite-triangle.github.io/cpp_notes/posts/vscode/</link>
+				<pubDate>Sun, 19 Oct 2025 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/posts/vscode/</guid>
+				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本卷系统性地梳理了 VSCode 插件开发的核心技术栈，从项目搭建到高级语言服务实现，涵盖七个关键领域。&amp;ldquo;基本概念&amp;quot;介绍扩展项目的创建、配置与发布流程；&amp;ldquo;API&amp;quot;深入解析资源管理（IDisposable）、异步处理（Promise/CancelablePromise）、事件机制（Emitter）及终端操作等通用编程模式；&amp;ldquo;Webview&amp;quot;讲解如何在编辑器内嵌入 Web 页面并实现双向通信；&amp;ldquo;Debugger&amp;quot;基于 Debug Adapter Protocol 阐述自定义调试适配器的开发与配置方法；&amp;ldquo;声明语言特性&amp;quot;聚焦无需编写代码即可实现的文本级功能，包括 TextMate 语法高亮、语义标记和主题定制；&amp;ldquo;程序语言特性&amp;quot;通过 Language Server Protocol (LSP) 实现自动补全、悬停提示等动态分析能力，并详解 LSP 通信协议与客户端/服务端开发模式；&amp;ldquo;Event Emitter&amp;quot;则系统总结了 vscode 事件系统的核心工具类（Emitter/PauseableEmitter/AsyncEmitter）及防抖、缓冲等实用函数。本卷内容从入门到进阶，为开发者提供完整的 VSCode 扩展 API 实践指南。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

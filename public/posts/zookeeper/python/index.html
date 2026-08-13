@@ -1,0 +1,3296 @@
+<!doctype html>
+<html
+  lang="en"
+  data-theme="default"
+>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+<title>python |
+    Hugo Narrow</title>
+
+<meta
+  name="description"
+  content="使用kazoo库进行Python客户端开发，实现服务注册发现与分布式锁机制"
+/>
+<meta
+  name="keywords"
+  content="python, kazoo, 服务发现, 分布式锁, Keeper"
+/>
+<meta
+  name="author"
+  content="海拉鲁的三角"
+/>
+<meta name="language" content="en" />
+
+<meta
+  name="robots"
+  content="index, follow"
+/>
+<link rel="canonical" href="https://spite-triangle.github.io/cpp_notes/posts/zookeeper/python/" />
+
+
+  <link rel="icon" type="image/svg+xml" href="/cpp_notes/favicon.svg" />
+<link rel="manifest" href="/cpp_notes/site.webmanifest" />
+<meta property="og:url" content="https://spite-triangle.github.io/cpp_notes/posts/zookeeper/python/">
+	<meta property="og:site_name" content="Hugo Narrow">
+	<meta property="og:title" content="python">
+	<meta property="og:description" content="使用kazoo库进行Python客户端开发，实现服务注册发现与分布式锁机制">
+	<meta property="og:locale" content="en">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="posts">
+		<meta property="article:published_time" content="2025-11-01T00:00:00+00:00">
+		<meta property="article:modified_time" content="2025-11-01T00:00:00+00:00">
+		<meta property="article:tag" content="Python">
+		<meta property="article:tag" content="Kazoo">
+		<meta property="article:tag" content="服务发现">
+		<meta property="article:tag" content="分布式锁">
+		<meta property="article:tag" content="Keeper">
+		<meta property="og:image" content="https://spite-triangle.github.io/images/og-default.avif">
+
+
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:image" content="https://spite-triangle.github.io/images/og-default.avif">
+	<meta name="twitter:title" content="python">
+	<meta name="twitter:description" content="使用kazoo库进行Python客户端开发，实现服务注册发现与分布式锁机制">
+
+
+	<meta itemprop="name" content="python">
+	<meta itemprop="description" content="使用kazoo库进行Python客户端开发，实现服务注册发现与分布式锁机制">
+	<meta itemprop="datePublished" content="2025-11-01T00:00:00+00:00">
+	<meta itemprop="dateModified" content="2025-11-01T00:00:00+00:00">
+	<meta itemprop="wordCount" content="3601">
+	<meta itemprop="image" content="https://spite-triangle.github.io/images/og-default.avif">
+	<meta itemprop="keywords" content="Python,Kazoo,服务发现,分布式锁,Keeper">
+
+
+
+
+
+<script id="search-config" type="application/json">"{\"searchIndexURL\":\"/cpp_notes/index.json\"}"</script>
+
+
+  <script id="gallery-config" type="application/json">"{\"gallery\":true,\"galleryOptions\":{\"columns\":4,\"columnwidth\":200,\"defaultlayout\":\"justified\",\"gap\":10,\"lastrowbehavior\":\"center\",\"targetrowheight\":200},\"lightbox\":true}"</script>
+
+
+
+
+
+
+  
+    
+      <link
+        rel="stylesheet"
+        href="/cpp_notes/css/compiled.min.882c8bb9b3deec5a84cddfd768d37a08c2c4dd5c6a0c0bd0b51a1b08c09c9adc.css"
+        integrity="sha256-iCyLubPe7FqEzd/XaNN6CMLE3VxqDAvQtRobCMCcmtw="
+        crossorigin="anonymous"
+      />
+    
+  
+
+
+
+
+  
+    
+      <link
+        rel="stylesheet"
+        href="/cpp_notes/css/chroma.min.491df36221f739b5948a747a0351f100ee7ccaaf466d9f46288bf06de1d59123.css"
+        integrity="sha256-SR3zYiH3ObWUinR6A1HxAO58yq9GbZ9GKIvwbeHVkSM="
+        crossorigin="anonymous"
+      />
+    
+  
+
+
+
+
+
+
+        <script
+          src="/cpp_notes/js/main.b003624716b5b9344efafc302bd75df711e73d0da196be724be6daebb2b6964d.js"
+          integrity="sha256-sANiRxa1uTRO&#43;vwwK9dd9xHnPQ2hlr5yS&#43;ba67K2lk0="
+          crossorigin="anonymous"
+          defer
+        ></script>
+
+
+
+            <script
+              src="/cpp_notes/js/toc.92c3534ee382ab7e31e364f704a91b9052ed119e89453fb6837a451b56dbef48.js"
+              integrity="sha256-ksNTTuOCq34x42T3BKkbkFLtEZ6JRT&#43;2g3pFG1bb70g="
+              crossorigin="anonymous"
+              defer
+            ></script>
+
+
+
+        <script
+          src="/cpp_notes/js/search.33fef1d91398b17cbc46483d902493b800642d25754e7ff8e998b12499c7fde3.js"
+          integrity="sha256-M/7x2ROYsXy8Rkg9kCSTuABkLSV1Tn/46ZixJJnH/eM="
+          crossorigin="anonymous"
+          defer
+        ></script>
+
+
+
+        <script
+          src="/cpp_notes/js/dock.b1c2d4314c86813f5baaa2a5b524b4613dc7803303402315d0a2c19217e13278.js"
+          integrity="sha256-scLUMUyGgT9bqqKltSS0YT3HgDMDQCMV0KLBkhfhMng="
+          crossorigin="anonymous"
+          defer
+        ></script>
+
+
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/smart-gallery@latest/dist/smart-gallery.umd.js"
+    defer
+  ></script>
+
+
+
+          <script
+            src="/cpp_notes/js/gallery.c8c99001b2f625137e3cbf8e2ecf758eabf72776a89735e56ee081a30b8fe7f5.js"
+            integrity="sha256-yMmQAbL2JRN&#43;PL&#43;OLs91jqv3J3aolzXlbuCBowuP5/U="
+            crossorigin="anonymous"
+            defer
+          ></script>
+
+
+
+
+          <script
+            src="/cpp_notes/js/term.321822a6a26efeaba2fc22150d06128515edf15d6844ac23a9c03c138877be4f.js"
+            integrity="sha256-MhgipqJu/qui/CIVDQYShRXt8V1oRKwjqcA8E4h3vk8="
+            crossorigin="anonymous"
+            defer
+          ></script>
+
+
+
+
+
+
+
+
+
+    
+    <script>(function(){const t=localStorage.getItem("theme")||"system",s=localStorage.getItem("colorScheme")||"default",e=Number.parseInt(localStorage.getItem("contentWidth"),10);Number.isInteger(e)&&e>=40&&e<=90&&document.documentElement.style.setProperty("--content-width",`${e}rem`),document.documentElement.setAttribute("data-theme",s);function n(){t==="dark"||t==="system"&&window.matchMedia("(prefers-color-scheme: dark)").matches?document.documentElement.classList.add("dark"):document.documentElement.classList.remove("dark")}n(),t==="system"&&window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",n)})()</script>
+  </head><body class="bg-background text-foreground min-h-screen antialiased">
+    <main
+      id="page-container"
+      class="mx-auto w-full"
+      style="max-width: var(--content-width, 56rem)"
+    >
+      <div
+    id="reading-progress-bar"
+    class="from-primary to-primary/80 pointer-events-none fixed top-0 left-0 z-50 h-[3px] w-0 bg-linear-to-r transition-[width] duration-150 ease-out"
+  ></div>
+
+  <script>
+    (function () {
+      const bar = document.getElementById("reading-progress-bar");
+      if (!bar) return;
+
+      function update() {
+        const scrolled = window.scrollY;
+        const total = document.documentElement.scrollHeight - window.innerHeight;
+        bar.style.width = total > 0 ? (scrolled / total) * 100 + "%" : "0%";
+      }
+
+      let ticking = false;
+      window.addEventListener(
+        "scroll",
+        () => {
+          if (!ticking) {
+            requestAnimationFrame(() => {
+              update();
+              ticking = false;
+            });
+            ticking = true;
+          }
+        },
+        { passive: true }
+      );
+
+      update();
+    })();
+  </script>
+
+      <header class="sticky top-0 z-50 px-4 py-6">
+  <div
+    class="border-border bg-card/80 flex items-center rounded-xl border px-6 py-4 shadow-sm backdrop-blur-sm"
+  >
+    
+    <div class="hidden w-full items-center md:flex md:min-w-0">
+      
+      <div class="flex items-center">
+        
+          <a
+            href="
+              /cpp_notes/
+            "
+            class="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full transition-transform duration-200 hover:scale-105"
+            aria-label="Hugo Narrow"
+          >
+            <img
+              src="/cpp_notes/images/logo.svg"
+              alt="Hugo Narrow"
+              class="h-full w-full object-cover"
+            />
+          </a>
+        
+      </div>
+
+      
+      <nav class="mx-8 flex min-w-0 flex-1 items-center justify-center">
+        <div class="flex flex-wrap items-center justify-center space-x-1">
+          
+          
+            
+            
+            
+              
+                
+              
+            
+            
+              
+              <a
+                href="/cpp_notes/series/"
+                class="nav-link 
+                  text-muted-foreground hover:text-primary hover:bg-primary/10
+                 focus:ring-primary/20 relative flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 focus:ring-2 focus:outline-none"
+              >
+                
+                  <svg class="h-5 w-5" aria-label="Series" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="m12 18l-4.2 1.8q-1 .425-1.9-.162T5 17.975V5q0-.825.588-1.412T7 3h10q.825 0 1.413.588T19 5v12.975q0 1.075-.9 1.663t-1.9.162zm0-2.2l5 2.15V5H7v12.95zM12 5H7h10z"/></svg>
+                
+                <span>Series</span>
+              </a>
+            
+          
+            
+            
+            
+              
+                
+              
+            
+            
+              
+              <a
+                href="/cpp_notes/posts/"
+                class="nav-link 
+                  text-muted-foreground hover:text-primary hover:bg-primary/10
+                 focus:ring-primary/20 relative flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 focus:ring-2 focus:outline-none"
+              >
+                
+                  <svg class="h-5 w-5" aria-label="Posts" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+</svg>
+
+                
+                <span>Posts</span>
+              </a>
+            
+          
+            
+            
+            
+            
+              
+              
+              <div class="relative">
+                <button
+                  class="nav-link nav-submenu-toggle text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 relative flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 focus:ring-2 focus:outline-none"
+                  data-submenu-id="more"
+                  aria-expanded="false"
+                  aria-haspopup="true"
+                >
+                  
+                    <svg class="h-5 w-5" aria-label="More" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3.09 6.26L22 9l-5.91.74L12 16l-4.09-6.26L2 9l5.91-.74L12 2z" />
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 17l10 5 10-5" />
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 12l10 5 10-5" />
+</svg>
+                  
+                  <span>More</span>
+                  <svg class="h-4 w-4 submenu-chevron transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+                </button>
+                <div
+                  class="nav-submenu border-border bg-popover/95 absolute top-full left-0 z-50 mt-2 hidden min-w-44 space-y-1.5 rounded-xl border p-1.5 shadow-lg backdrop-blur-sm"
+                  data-submenu-id="more"
+                  role="menu"
+                >
+                  
+                    
+                    
+                      
+                        
+                      
+                    
+                    
+                    <a
+                      href="/cpp_notes/categories/"
+                      class="nav-link 
+                        text-muted-foreground hover:text-primary hover:bg-primary/10
+                       focus:ring-primary/20 flex items-center gap-2 rounded-lg px-2 py-2 text-sm leading-snug transition-colors duration-200 focus:ring-2 focus:outline-none"
+                      role="menuitem"
+                      
+                    >
+                      
+                        <svg class="h-4 w-4" aria-label="Categories" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+</svg>
+
+                      
+                      <span>Categories</span>
+                    </a>
+                  
+                    
+                    
+                      
+                        
+                      
+                    
+                    
+                    <a
+                      href="/cpp_notes/tags/"
+                      class="nav-link 
+                        text-muted-foreground hover:text-primary hover:bg-primary/10
+                       focus:ring-primary/20 flex items-center gap-2 rounded-lg px-2 py-2 text-sm leading-snug transition-colors duration-200 focus:ring-2 focus:outline-none"
+                      role="menuitem"
+                      
+                    >
+                      
+                        <svg class="h-4 w-4" aria-label="Tags" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+</svg>
+
+                      
+                      <span>Tags</span>
+                    </a>
+                  
+                    
+                    
+                      
+                        
+                      
+                    
+                    
+                    <a
+                      href="/cpp_notes/projects/"
+                      class="nav-link 
+                        text-muted-foreground hover:text-primary hover:bg-primary/10
+                       focus:ring-primary/20 flex items-center gap-2 rounded-lg px-2 py-2 text-sm leading-snug transition-colors duration-200 focus:ring-2 focus:outline-none"
+                      role="menuitem"
+                      
+                    >
+                      
+                        <svg class="h-4 w-4" aria-label="Projects" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="6" r="1" fill="currentColor"/><path fill="currentColor" d="M6 17h12v2H6zm4-5.17l2.792 2.794l3.932-3.935L18 12V8h-4l1.31 1.275l-2.519 2.519L10 9l-4 4l1.414 1.414z"/><path fill="currentColor" d="M19 3h-3.298a5 5 0 0 0-.32-.425l-.01-.012a4.43 4.43 0 0 0-2.89-1.518a2.6 2.6 0 0 0-.964 0a4.43 4.43 0 0 0-2.89 1.518l-.01.012a5 5 0 0 0-.32.424V3H5a3.003 3.003 0 0 0-3 3v14a3.003 3.003 0 0 0 3 3h14a3.003 3.003 0 0 0 3-3V6a3.003 3.003 0 0 0-3-3m1 17a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h4.55a2.5 2.5 0 0 1 4.9 0H19a1 1 0 0 1 1 1Z"/></svg>
+
+
+                      
+                      <span>Projects</span>
+                    </a>
+                  
+                    
+                    
+                      
+                        
+                      
+                    
+                    
+                    <a
+                      href="/cpp_notes/archives/"
+                      class="nav-link 
+                        text-muted-foreground hover:text-primary hover:bg-primary/10
+                       focus:ring-primary/20 flex items-center gap-2 rounded-lg px-2 py-2 text-sm leading-snug transition-colors duration-200 focus:ring-2 focus:outline-none"
+                      role="menuitem"
+                      
+                    >
+                      
+                        <svg class="h-4 w-4" aria-label="Archives" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+</svg>
+
+                      
+                      <span>Archives</span>
+                    </a>
+                  
+                </div>
+              </div>
+            
+          
+        </div>
+      </nav>
+
+      
+      <div class="flex items-center space-x-2">
+        
+        <div class="hidden lg:block"><div class="relative">
+    <button
+      id="content-width-toggle"
+      class="dropdown-toggle border-border bg-background text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex h-10 w-10 items-center justify-center rounded-lg border transition-all duration-300 ease-out hover:scale-105 focus:ring-2 focus:outline-none active:scale-95"
+      data-dropdown-type="content-width"
+      aria-label="Adjust page width"
+      aria-expanded="false"
+      aria-haspopup="true"
+    ><svg class="h-5 w-5 relative z-10" aria-label="Adjust page width" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+	<path d="M0 0h24v24H0z" fill="none" />
+	<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 12H3l3-3m0 6l-3-3m11 0h7l-3-3m0 6l3-3M3 6V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v1M3 18v1a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-1" />
+</svg>
+</button>
+
+    <div
+      id="content-width-dropdown"
+      class="dropdown-menu border-border bg-popover/95 w-64 absolute top-12 right-0 z-60 hidden rounded-lg border p-1 shadow-lg backdrop-blur-sm transition-all duration-200 ease-out"
+      data-dropdown-type="content-width"
+      
+    >
+    <div class="space-y-3 p-3">
+    <div class="flex items-center justify-between gap-4">
+    <label for="content-width-range" class="text-foreground text-sm font-medium">Page width</label>
+    <output id="content-width-value" for="content-width-range" class="text-muted-foreground min-w-12 text-right text-sm tabular-nums"></output>
+    </div>
+    <input id="content-width-range" class="accent-primary w-full cursor-pointer" type="range" min="40" max="90" step="1" aria-label="Page width" />
+    <button id="content-width-reset" type="button" class="border-border text-muted-foreground hover:bg-accent hover:text-accent-foreground focus:ring-primary/20 w-full rounded-md border px-3 py-2 text-sm transition-colors focus:ring-2 focus:outline-none">Restore default</button>
+    </div></div>
+  </div></div>
+
+
+        
+        
+
+
+        
+        <div class="relative">
+    <button
+      id="color-scheme-toggle"
+      class="dropdown-toggle border-border bg-background text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex h-10 w-10 items-center justify-center rounded-lg border transition-all duration-300 ease-out hover:scale-105 focus:ring-2 focus:outline-none active:scale-95"
+      data-dropdown-type="color-scheme"
+      aria-label="Toggle theme"
+      aria-expanded="false"
+      aria-haspopup="true"
+    ><svg class="h-5 w-5 relative z-10" aria-label="Toggle theme" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v6a2 2 0 002 2h4a2 2 0 002-2V5z" />
+</svg>
+</button>
+
+    <div
+      id="color-scheme-dropdown"
+      class="dropdown-menu border-border bg-popover/95 w-44 absolute top-12 right-0 z-60 hidden rounded-lg border p-1 shadow-lg backdrop-blur-sm transition-all duration-200 ease-out"
+      data-dropdown-type="color-scheme"
+      
+    ><button data-color-scheme="default" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Default</span></button><button data-color-scheme="claude" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Claude</span></button><button data-color-scheme="bumblebee" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Bumblebee</span></button><button data-color-scheme="emerald" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Emerald</span></button><button data-color-scheme="nord" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Nord</span></button><button data-color-scheme="sunset" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Sunset</span></button><button data-color-scheme="abyss" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Abyss</span></button><button data-color-scheme="dracula" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Dracula</span></button><button data-color-scheme="amethyst" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Amethyst</span></button><button data-color-scheme="slate" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Slate</span></button><button data-color-scheme="twitter" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Twitter</span></button><button data-color-scheme="minimal" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Minimal</span></button></div>
+  </div>
+
+
+        
+        <div class="relative">
+    <button
+      id="theme-toggle"
+      class="dropdown-toggle border-border bg-background text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex h-10 w-10 items-center justify-center rounded-lg border transition-all duration-300 ease-out hover:scale-105 focus:ring-2 focus:outline-none active:scale-95"
+      data-dropdown-type="theme"
+      aria-label="Toggle theme"
+      aria-expanded="false"
+      aria-haspopup="true"
+    ><svg class="h-5 w-5 sun-icon hidden relative z-10" aria-label="Light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+</svg>
+
+        <svg class="h-5 w-5 moon-icon hidden relative z-10" aria-label="Dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+</svg>
+
+        <svg class="h-5 w-5 system-icon hidden relative z-10" aria-label="System" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+</svg>
+</button>
+
+    <div
+      id="theme-dropdown"
+      class="dropdown-menu border-border bg-popover/95 w-40 absolute top-12 right-0 z-60 hidden rounded-lg border p-1 shadow-lg backdrop-blur-sm transition-all duration-200 ease-out"
+      data-dropdown-type="theme"
+      
+    ><button data-theme="light" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><svg class="h-5 w-5 mr-3 h-4 w-4" aria-label="Light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+</svg>
+<span>Light</span></button><button data-theme="dark" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><svg class="h-5 w-5 mr-3 h-4 w-4" aria-label="Dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+</svg>
+<span>Dark</span></button><button data-theme="system" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><svg class="h-5 w-5 mr-3 h-4 w-4" aria-label="System" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+</svg>
+<span>System</span></button></div>
+  </div>
+
+
+        
+        
+<button
+  id="header-search"
+  class="border-border bg-background text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex h-10 w-10 items-center justify-center rounded-lg border transition-all duration-300 ease-out hover:scale-105 focus:ring-2 focus:outline-none active:scale-95"
+  title="Search"
+  aria-label="Search"
+>
+  <svg class="h-5 w-5 relative z-10" aria-label="Search" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+</svg>
+
+</button>
+
+      </div>
+    </div>
+
+    
+    <div class="flex w-full items-center justify-between md:hidden">
+      
+      
+<button
+  id="mobile-nav-toggle"
+  class="nav-panel-toggle border-border bg-background text-muted-foreground hover:bg-accent hover:text-foreground flex h-10 w-10 items-center justify-center rounded-lg border transition-colors duration-200"
+  aria-label="Menu"
+  aria-expanded="false"
+  aria-controls="mobile-nav-panel"
+>
+  <svg class="h-5 w-5" aria-label="Menu" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+</svg>
+
+</button>
+
+
+
+      
+      <div class="flex items-center space-x-2">
+        
+        
+
+
+        
+        <div class="relative">
+    <button
+      id="color-scheme-toggle"
+      class="dropdown-toggle border-border bg-background text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex h-10 w-10 items-center justify-center rounded-lg border transition-all duration-300 ease-out hover:scale-105 focus:ring-2 focus:outline-none active:scale-95"
+      data-dropdown-type="color-scheme"
+      aria-label="Toggle theme"
+      aria-expanded="false"
+      aria-haspopup="true"
+    ><svg class="h-5 w-5 relative z-10" aria-label="Toggle theme" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v6a2 2 0 002 2h4a2 2 0 002-2V5z" />
+</svg>
+</button>
+
+    <div
+      id="color-scheme-dropdown"
+      class="dropdown-menu border-border bg-popover/95 w-44 absolute top-12 right-0 z-60 hidden rounded-lg border p-1 shadow-lg backdrop-blur-sm transition-all duration-200 ease-out"
+      data-dropdown-type="color-scheme"
+      
+    ><button data-color-scheme="default" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Default</span></button><button data-color-scheme="claude" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Claude</span></button><button data-color-scheme="bumblebee" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Bumblebee</span></button><button data-color-scheme="emerald" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Emerald</span></button><button data-color-scheme="nord" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Nord</span></button><button data-color-scheme="sunset" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Sunset</span></button><button data-color-scheme="abyss" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Abyss</span></button><button data-color-scheme="dracula" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Dracula</span></button><button data-color-scheme="amethyst" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Amethyst</span></button><button data-color-scheme="slate" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Slate</span></button><button data-color-scheme="twitter" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Twitter</span></button><button data-color-scheme="minimal" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Minimal</span></button></div>
+  </div>
+
+
+        
+        <div class="relative">
+    <button
+      id="theme-toggle"
+      class="dropdown-toggle border-border bg-background text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex h-10 w-10 items-center justify-center rounded-lg border transition-all duration-300 ease-out hover:scale-105 focus:ring-2 focus:outline-none active:scale-95"
+      data-dropdown-type="theme"
+      aria-label="Toggle theme"
+      aria-expanded="false"
+      aria-haspopup="true"
+    ><svg class="h-5 w-5 sun-icon hidden relative z-10" aria-label="Light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+</svg>
+
+        <svg class="h-5 w-5 moon-icon hidden relative z-10" aria-label="Dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+</svg>
+
+        <svg class="h-5 w-5 system-icon hidden relative z-10" aria-label="System" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+</svg>
+</button>
+
+    <div
+      id="theme-dropdown"
+      class="dropdown-menu border-border bg-popover/95 w-40 absolute top-12 right-0 z-60 hidden rounded-lg border p-1 shadow-lg backdrop-blur-sm transition-all duration-200 ease-out"
+      data-dropdown-type="theme"
+      
+    ><button data-theme="light" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><svg class="h-5 w-5 mr-3 h-4 w-4" aria-label="Light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+</svg>
+<span>Light</span></button><button data-theme="dark" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><svg class="h-5 w-5 mr-3 h-4 w-4" aria-label="Dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+</svg>
+<span>Dark</span></button><button data-theme="system" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><svg class="h-5 w-5 mr-3 h-4 w-4" aria-label="System" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+</svg>
+<span>System</span></button></div>
+  </div>
+
+
+        
+        
+<button
+  id="header-search"
+  class="border-border bg-background text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex h-10 w-10 items-center justify-center rounded-lg border transition-all duration-300 ease-out hover:scale-105 focus:ring-2 focus:outline-none active:scale-95"
+  title="Search"
+  aria-label="Search"
+>
+  <svg class="h-5 w-5 relative z-10" aria-label="Search" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+</svg>
+
+</button>
+
+      </div>
+    </div>
+  </div>
+
+  
+  
+<div
+  id="mobile-nav-panel"
+  class="mt-2 hidden md:hidden"
+  role="navigation"
+  aria-label="Menu"
+  aria-hidden="true"
+  tabindex="-1"
+>
+  <div
+    class="border-border bg-popover/95 overflow-hidden rounded-xl border shadow-lg backdrop-blur-sm"
+  >
+    
+    <nav class="flex flex-col p-2">
+      
+      
+        
+        
+        
+          
+            
+          
+        
+        
+          
+          <a
+            href="/cpp_notes/series/"
+            class="nav-panel-link 
+              text-muted-foreground hover:text-primary hover:bg-primary/10
+             focus:ring-primary/20 flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+            role="menuitem"
+            
+          >
+            
+              <svg class="h-5 w-5" aria-label="Series" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="m12 18l-4.2 1.8q-1 .425-1.9-.162T5 17.975V5q0-.825.588-1.412T7 3h10q.825 0 1.413.588T19 5v12.975q0 1.075-.9 1.663t-1.9.162zm0-2.2l5 2.15V5H7v12.95zM12 5H7h10z"/></svg>
+            
+            <span>Series</span>
+          </a>
+        
+      
+        
+        
+        
+          
+            
+          
+        
+        
+          
+          <a
+            href="/cpp_notes/posts/"
+            class="nav-panel-link 
+              text-muted-foreground hover:text-primary hover:bg-primary/10
+             focus:ring-primary/20 flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+            role="menuitem"
+            
+          >
+            
+              <svg class="h-5 w-5" aria-label="Posts" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+</svg>
+
+            
+            <span>Posts</span>
+          </a>
+        
+      
+        
+        
+        
+        
+          
+          
+          <div class="nav-accordion-group">
+            <button
+              class="nav-accordion-toggle text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex w-full items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+              data-accordion-id="more"
+              aria-expanded="false"
+              aria-controls="accordion-more"
+            >
+              
+                <svg class="h-5 w-5" aria-label="More" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3.09 6.26L22 9l-5.91.74L12 16l-4.09-6.26L2 9l5.91-.74L12 2z" />
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 17l10 5 10-5" />
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 12l10 5 10-5" />
+</svg>
+              
+              <span class="flex-1 text-left">More</span>
+              <svg class="h-4 w-4 accordion-chevron transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+            </button>
+            
+            <div
+              id="accordion-more"
+              class="nav-accordion-panel grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out"
+              data-accordion-id="more"
+              aria-hidden="true"
+            >
+              <div class="overflow-hidden">
+                <div class="border-primary/20 ml-4 space-y-0.5 border-l-2 py-1 pl-3">
+                  
+                    
+                    
+                      
+                        
+                      
+                    
+                    
+                    <a
+                      href="/cpp_notes/categories/"
+                      class="nav-panel-link 
+                        text-muted-foreground hover:text-primary hover:bg-primary/10
+                       focus:ring-primary/20 flex items-center gap-3 rounded-md px-3 py-2.5 text-sm transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+                      role="menuitem"
+                      
+                    >
+                      
+                        <svg class="h-4 w-4" aria-label="Categories" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+</svg>
+
+                      
+                      <span>Categories</span>
+                    </a>
+                  
+                    
+                    
+                      
+                        
+                      
+                    
+                    
+                    <a
+                      href="/cpp_notes/tags/"
+                      class="nav-panel-link 
+                        text-muted-foreground hover:text-primary hover:bg-primary/10
+                       focus:ring-primary/20 flex items-center gap-3 rounded-md px-3 py-2.5 text-sm transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+                      role="menuitem"
+                      
+                    >
+                      
+                        <svg class="h-4 w-4" aria-label="Tags" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+</svg>
+
+                      
+                      <span>Tags</span>
+                    </a>
+                  
+                    
+                    
+                      
+                        
+                      
+                    
+                    
+                    <a
+                      href="/cpp_notes/projects/"
+                      class="nav-panel-link 
+                        text-muted-foreground hover:text-primary hover:bg-primary/10
+                       focus:ring-primary/20 flex items-center gap-3 rounded-md px-3 py-2.5 text-sm transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+                      role="menuitem"
+                      
+                    >
+                      
+                        <svg class="h-4 w-4" aria-label="Projects" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="6" r="1" fill="currentColor"/><path fill="currentColor" d="M6 17h12v2H6zm4-5.17l2.792 2.794l3.932-3.935L18 12V8h-4l1.31 1.275l-2.519 2.519L10 9l-4 4l1.414 1.414z"/><path fill="currentColor" d="M19 3h-3.298a5 5 0 0 0-.32-.425l-.01-.012a4.43 4.43 0 0 0-2.89-1.518a2.6 2.6 0 0 0-.964 0a4.43 4.43 0 0 0-2.89 1.518l-.01.012a5 5 0 0 0-.32.424V3H5a3.003 3.003 0 0 0-3 3v14a3.003 3.003 0 0 0 3 3h14a3.003 3.003 0 0 0 3-3V6a3.003 3.003 0 0 0-3-3m1 17a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h4.55a2.5 2.5 0 0 1 4.9 0H19a1 1 0 0 1 1 1Z"/></svg>
+
+
+                      
+                      <span>Projects</span>
+                    </a>
+                  
+                    
+                    
+                      
+                        
+                      
+                    
+                    
+                    <a
+                      href="/cpp_notes/archives/"
+                      class="nav-panel-link 
+                        text-muted-foreground hover:text-primary hover:bg-primary/10
+                       focus:ring-primary/20 flex items-center gap-3 rounded-md px-3 py-2.5 text-sm transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+                      role="menuitem"
+                      
+                    >
+                      
+                        <svg class="h-4 w-4" aria-label="Archives" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+</svg>
+
+                      
+                      <span>Archives</span>
+                    </a>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        
+      
+    </nav>
+  </div>
+</div>
+
+</header>
+
+
+
+      <div class="px-4 py-6">
+        
+  <nav class="breadcrumb mb-4 py-1 md:mb-6" aria-label="Breadcrumb">
+    <ol
+      class="text-muted-foreground scrollbar-hide flex items-center space-x-1 overflow-x-auto py-1 text-sm whitespace-nowrap md:space-x-2"
+    >
+      
+        
+          
+          <li class="shrink-0">
+            <a
+              href="/cpp_notes/"
+              class="text-muted-foreground hover:text-primary hover:bg-primary/10 flex items-center gap-1 rounded-lg px-1 py-0.5 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-[1.02] md:py-1.5"
+            >
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m3 12 2-2m0 0 7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+</svg>
+
+              <span class="max-w-16 truncate md:max-w-none">Home</span>
+            </a>
+          </li>
+        
+      
+        
+          
+          <li class="flex min-w-0 items-center gap-1 md:gap-2">
+            <span class="text-muted-foreground/50 shrink-0"
+              ><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+</svg>
+            </span>
+            <a
+              href="/cpp_notes/posts/"
+              class="text-muted-foreground hover:text-primary hover:bg-primary/10 flex shrink-0 items-center gap-1 rounded-lg px-1 py-0.5 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-[1.02] md:px-3 md:py-1.5"
+            >
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+</svg>
+              <span class="max-w-16 truncate md:max-w-none">Posts</span>
+            </a>
+          </li>
+        
+      
+        
+          
+          <li class="flex min-w-0 items-center gap-1 md:gap-2">
+            <span class="text-muted-foreground/50 shrink-0"
+              ><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+</svg>
+            </span>
+            <a
+              href="/cpp_notes/posts/zookeeper/"
+              class="text-muted-foreground hover:text-primary hover:bg-primary/10 flex shrink-0 items-center gap-1 rounded-lg px-1 py-0.5 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-[1.02] md:px-3 md:py-1.5"
+            >
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+</svg>
+              <span class="max-w-16 truncate md:max-w-none">zookeeper</span>
+            </a>
+          </li>
+        
+      
+
+
+      
+      <li class="flex min-w-0 items-center gap-1 md:gap-2">
+        <span class="text-muted-foreground/50 shrink-0"
+          ><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+</svg>
+        </span>
+        <span class="text-foreground flex min-w-0 items-center gap-1 font-medium">
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+</svg>
+          <span class="max-w-32 truncate md:max-w-[16rem] lg:max-w-none">python</span>
+        </span>
+      </li>
+    </ol>
+  </nav>
+
+
+        
+  
+
+
+  
+  <header class="mb-8">
+    
+
+
+
+
+<div class="post-meta mb-8">
+  
+  
+    <h1 class="text-foreground mb-6 text-3xl leading-tight font-bold md:text-4xl">
+      python
+    </h1>
+  
+
+  
+  
+
+  
+  <div class="bg-card border-border rounded-xl border">
+
+    
+        
+        <div class="p-6">
+
+          
+          <div class="text-muted-foreground flex flex-wrap items-center gap-3 text-sm mb-4">
+            
+            
+            <div class="flex items-center gap-2">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+</svg>
+
+              <time datetime="2025-11-01">
+                November 1, 2025
+              </time>
+            </div>
+            
+
+            
+            
+            <div class="flex items-center gap-2">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+</svg>
+
+              <span>8 min</span>
+            </div>
+            
+
+            
+            
+            <div class="flex items-center gap-2">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
+</svg>
+
+              <span>3601 words</span>
+            </div>
+            
+          </div>
+
+          
+          <div class="text-muted-foreground space-y-3 pt-4 border-t border-border">
+            <div class="flex items-center gap-2">
+              <div class="shrink-0">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+</svg>
+
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex flex-wrap items-center gap-1.5">
+                  <span class="text-muted-foreground text-sm font-medium">
+                    Categories:
+                  </span>
+                  <a href="/cpp_notes/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/"
+                    class="inline-flex items-center rounded-full px-2.5 py-1 text-sm font-medium transition-all duration-200 bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground">
+                    中间件
+                  </a>
+                  <a href="/cpp_notes/categories/%E7%BC%96%E7%A8%8B%E5%AE%9E%E8%B7%B5/"
+                    class="inline-flex items-center rounded-full px-2.5 py-1 text-sm font-medium transition-all duration-200 bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground">
+                    编程实践
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="shrink-0">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+</svg>
+
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex flex-wrap items-center gap-1.5">
+                  <span class="text-muted-foreground text-sm font-medium">
+                    Tags:
+                  </span>
+                  <a href="/cpp_notes/tags/python/"
+                    class="inline-flex items-center rounded-full px-2.5 py-1 text-sm font-medium transition-all duration-200 bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground">
+                    Python
+                  </a>
+                  <a href="/cpp_notes/tags/kazoo/"
+                    class="inline-flex items-center rounded-full px-2.5 py-1 text-sm font-medium transition-all duration-200 bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground">
+                    Kazoo
+                  </a>
+                  <a href="/cpp_notes/tags/%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0/"
+                    class="inline-flex items-center rounded-full px-2.5 py-1 text-sm font-medium transition-all duration-200 bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground">
+                    服务发现
+                  </a>
+                  <a href="/cpp_notes/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"
+                    class="inline-flex items-center rounded-full px-2.5 py-1 text-sm font-medium transition-all duration-200 bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground">
+                    分布式锁
+                  </a>
+                  <a href="/cpp_notes/tags/keeper/"
+                    class="inline-flex items-center rounded-full px-2.5 py-1 text-sm font-medium transition-all duration-200 bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground">
+                    Keeper
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+  </div>
+</div>
+
+  </header>
+
+  
+  <article class="prose prose-neutral dark:prose-invert mb-12 max-w-none">
+    <h1 id="库">库<a href="#%e5%ba%93" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h1><div
+  class="term-block my-6 overflow-hidden rounded-xl border shadow-sm"
+  data-term-block
+  data-term-id="term-0"
+>
+  <div class="term-header flex items-center justify-between border-b px-4 py-3">
+    <div class="flex items-center gap-3">
+      <span class="flex items-center gap-1.5" aria-hidden="true">
+        <span class="h-3 w-3 rounded-full bg-[#ff5f57]"></span>
+        <span class="h-3 w-3 rounded-full bg-[#febc2e]"></span>
+        <span class="h-3 w-3 rounded-full bg-[#28c840]"></span>
+      </span>
+      <span class="term-title text-sm font-medium">Terminal</span>
+    </div>
+  </div>
+  <div class="overflow-x-auto p-4">
+    <div class="term-body font-mono text-sm leading-relaxed"><div class="group relative pr-10" data-term-group data-copy="pip install kazoo">
+            <button
+              class="term-copy-btn absolute top-0 right-0 z-10 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium opacity-0 transition-all duration-200 ease-out group-hover:opacity-100 focus:ring-2 focus:ring-[#3fb950]/20 focus:outline-none"
+              type="button"
+              data-term-copy
+              data-label-copy="Copy"
+              data-label-copied="Copied"
+              title="Copy"
+              aria-label="Copy"
+            >
+              <span class="copy-icon">
+                <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+</svg>
+              </span>
+              <span class="copy-text hidden sm:inline">Copy</span>
+            </button>
+            <div class="whitespace-pre"><div><span class="term-prompt font-semibold select-none">$</span
+                    ><span class="pl-2">pip install kazoo</span></div></div>
+          </div></div>
+  </div>
+</div>
+<h1 id="api">API<a href="#api" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h1><h2 id="基本操作">基本操作<a href="#%e5%9f%ba%e6%9c%ac%e6%93%8d%e4%bd%9c" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h2><div
+  class="code-block-container border-border bg-card my-6 overflow-hidden rounded-xl border shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md"
+  data-code-block
+  data-code-id="code-1"
+  data-collapsible="true"
+  data-default-state="expanded"
+  data-collapsed="false"
+  data-auto-collapse-lines="30"
+  data-auto-collapse-height="400"
+  data-collapsed-height="120"
+>
+  
+  <div
+    class="code-block-header bg-muted/30 border-border flex items-center justify-between border-b px-4 py-3"
+  >
+    
+    <div class="flex items-center gap-2">
+      <div class="text-muted-foreground shrink-0">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+</svg>
+      </div>
+      <span class="text-muted-foreground text-sm font-medium">
+        PYTHON
+      </span>
+    </div>
+
+    
+    <div class="flex items-center gap-2">
+      <button
+          class="collapse-code-btn text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+          type="button"
+          data-code-action="toggle-collapse"
+          data-label-expand="Expand"
+          data-label-collapse="Collapse"
+          title="Collapse"
+          aria-label="Collapse"
+          aria-controls="code-1"
+          aria-expanded="true"
+        >
+          <span class="collapse-chevron transition-transform duration-200 ease-out">
+            <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+          </span>
+          <span class="collapse-text hidden sm:inline">Collapse</span>
+        </button>
+      <button
+        class="copy-code-btn text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+        type="button"
+        data-code-action="copy"
+        data-label-copy="Copy"
+        data-label-copied="Copied"
+        title="Copy"
+        aria-label="Copy"
+      >
+        <span class="copy-icon">
+          <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+</svg>
+        </span>
+        <span class="copy-text hidden sm:inline">Copy</span>
+      </button>
+    </div>
+  </div>
+
+  
+  <div class="code-block-content relative" id="code-1">
+    <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">kazoo.client</span> <span class="kn">import</span> <span class="n">KazooClient</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&#34;__main__&#34;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">zk</span> <span class="o">=</span> <span class="n">KazooClient</span><span class="p">(</span><span class="n">hosts</span><span class="o">=</span><span class="s1">&#39;localhost:2181&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">zk</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">zk</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s1">&#39;/my_node&#39;</span><span class="p">,</span> <span class="sa">b</span><span class="s1">&#39;my_data&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">has</span> <span class="o">=</span> <span class="n">zk</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;/my_node&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">has</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;/my_node exists&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">val</span> <span class="o">=</span> <span class="n">zk</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/my_node&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">val</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;Data at /my_node: </span><span class="si">{</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">zk</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span></span></span></code></pre></div>
+    <div hidden data-code-source>from kazoo.client import KazooClient
+
+if __name__ == &#34;__main__&#34;:
+    zk = KazooClient(hosts=&#39;localhost:2181&#39;)
+    zk.start()
+
+    zk.create(&#39;/my_node&#39;, b&#39;my_data&#39;)
+
+    has = zk.exists(&#39;/my_node&#39;)
+    if has:
+        print(&#34;/my_node exists&#34;)
+
+    val = zk.get(&#39;/my_node&#39;)
+    if val:
+        print(f&#34;Data at /my_node: {val[0].decode(&#39;utf-8&#39;)}&#34;)
+
+    zk.stop()</div>
+    
+    <div
+      class="collapse-overlay to-card/90 pointer-events-none absolute inset-0 bg-linear-to-b from-transparent via-transparent opacity-0 transition-opacity duration-300"
+      hidden
+    >
+      <button
+        class="collapse-overlay-btn text-muted-foreground bg-card/80 border-border/50 hover:bg-primary/10 hover:text-primary hover:border-primary/30 absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center justify-center rounded-full border p-2 backdrop-blur-sm transition-all duration-200"
+        type="button"
+        data-code-action="expand"
+        aria-label="Expand"
+        title="Expand"
+      >
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+      </button>
+    </div>
+  </div>
+</div>
+<h2 id="监听器">监听器<a href="#%e7%9b%91%e5%90%ac%e5%99%a8" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h2><div
+  class="code-block-container border-border bg-card my-6 overflow-hidden rounded-xl border shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md"
+  data-code-block
+  data-code-id="code-2"
+  data-collapsible="true"
+  data-default-state="expanded"
+  data-collapsed="false"
+  data-auto-collapse-lines="30"
+  data-auto-collapse-height="400"
+  data-collapsed-height="120"
+>
+  
+  <div
+    class="code-block-header bg-muted/30 border-border flex items-center justify-between border-b px-4 py-3"
+  >
+    
+    <div class="flex items-center gap-2">
+      <div class="text-muted-foreground shrink-0">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+</svg>
+      </div>
+      <span class="text-muted-foreground text-sm font-medium">
+        PYTHON
+      </span>
+    </div>
+
+    
+    <div class="flex items-center gap-2">
+      <button
+          class="collapse-code-btn text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+          type="button"
+          data-code-action="toggle-collapse"
+          data-label-expand="Expand"
+          data-label-collapse="Collapse"
+          title="Collapse"
+          aria-label="Collapse"
+          aria-controls="code-2"
+          aria-expanded="true"
+        >
+          <span class="collapse-chevron transition-transform duration-200 ease-out">
+            <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+          </span>
+          <span class="collapse-text hidden sm:inline">Collapse</span>
+        </button>
+      <button
+        class="copy-code-btn text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+        type="button"
+        data-code-action="copy"
+        data-label-copy="Copy"
+        data-label-copied="Copied"
+        title="Copy"
+        aria-label="Copy"
+      >
+        <span class="copy-icon">
+          <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+</svg>
+        </span>
+        <span class="copy-text hidden sm:inline">Copy</span>
+      </button>
+    </div>
+  </div>
+
+  
+  <div class="code-block-content relative" id="code-2">
+    <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">kazoo.client</span> <span class="kn">import</span> <span class="n">KazooClient</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">kazoo.protocol.states</span> <span class="kn">import</span> <span class="n">WatchedEvent</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 定义监听器函数</span>
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">my_listener</span><span class="p">(</span><span class="n">event</span><span class="p">:</span> <span class="n">WatchedEvent</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;当被监视的节点发生变化时，此函数将被调用&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;监听到事件: </span><span class="si">{</span><span class="n">event</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&#34;CHANGED&#34;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># NOTE - 重新设置监听器</span>
+</span></span><span class="line"><span class="cl">        <span class="n">result</span> <span class="o">=</span> <span class="n">zk</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">watch</span><span class="o">=</span><span class="n">my_listener</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">result</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">data</span><span class="p">,</span> <span class="n">stat</span> <span class="o">=</span> <span class="n">result</span>
+</span></span><span class="line"><span class="cl">            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;节点 </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s2"> 的新数据是: </span><span class="si">{</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">elif</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&#34;DELETED&#34;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># NOTE - 重新设置监听器</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">zk</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">watch</span><span class="o">=</span><span class="n">my_listener</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;在 </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s2"> 重新设置了监听。&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&#34;__main__&#34;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">zk</span> <span class="o">=</span> <span class="n">KazooClient</span><span class="p">(</span><span class="n">hosts</span><span class="o">=</span><span class="s1">&#39;localhost:2181&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">zk</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 确保节点存在，如果不存在则创建</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="ow">not</span> <span class="n">zk</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">&#34;/my_node&#34;</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="n">zk</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s2">&#34;/my_node&#34;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&#34;initial data&#34;</span><span class="p">,</span> <span class="n">makepath</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 获取节点数据，并设置监听器</span>
+</span></span><span class="line"><span class="cl">    <span class="n">result</span> <span class="o">=</span> <span class="n">zk</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&#34;/my_node&#34;</span><span class="p">,</span> <span class="n">watch</span><span class="o">=</span><span class="n">my_listener</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">result</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">data</span><span class="p">,</span> <span class="n">stat</span> <span class="o">=</span> <span class="n">result</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;当前节点 /my_node 的数据是: </span><span class="si">{</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 保持程序运行以接收事件</span>
+</span></span><span class="line"><span class="cl">    <span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="kn">import</span> <span class="nn">time</span>
+</span></span><span class="line"><span class="cl">        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">finally</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">zk</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="n">zk</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></span></span></code></pre></div>
+    <div hidden data-code-source>from kazoo.client import KazooClient
+from kazoo.protocol.states import WatchedEvent
+
+
+# 定义监听器函数
+def my_listener(event: WatchedEvent):
+    &#34;&#34;&#34;当被监视的节点发生变化时，此函数将被调用&#34;&#34;&#34;
+    print(f&#34;监听到事件: {event}&#34;)
+    if event.type == &#34;CHANGED&#34;:
+        # NOTE - 重新设置监听器
+        result = zk.get(event.path, watch=my_listener)
+        if result:
+            data, stat = result
+            print(f&#34;节点 {event.path} 的新数据是: {data.decode(&#39;utf-8&#39;)}&#34;)
+    elif event.type == &#34;DELETED&#34;:
+        # NOTE - 重新设置监听器
+        if zk.exists(event.path, watch=my_listener):
+             print(f&#34;在 {event.path} 重新设置了监听。&#34;)
+
+
+if __name__ == &#34;__main__&#34;:
+    zk = KazooClient(hosts=&#39;localhost:2181&#39;)
+    zk.start()
+
+    # 确保节点存在，如果不存在则创建
+    if not zk.exists(&#34;/my_node&#34;):
+        zk.create(&#34;/my_node&#34;, b&#34;initial data&#34;, makepath=True)
+
+    # 获取节点数据，并设置监听器
+    result = zk.get(&#34;/my_node&#34;, watch=my_listener)
+    if result:
+        data, stat = result
+        print(f&#34;当前节点 /my_node 的数据是: {data.decode(&#39;utf-8&#39;)}&#34;)
+
+    # 保持程序运行以接收事件
+    try:
+        import time
+        while True:
+            time.sleep(1)
+    finally:
+        zk.stop()
+        zk.close()</div>
+    
+    <div
+      class="collapse-overlay to-card/90 pointer-events-none absolute inset-0 bg-linear-to-b from-transparent via-transparent opacity-0 transition-opacity duration-300"
+      hidden
+    >
+      <button
+        class="collapse-overlay-btn text-muted-foreground bg-card/80 border-border/50 hover:bg-primary/10 hover:text-primary hover:border-primary/30 absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center justify-center rounded-full border p-2 backdrop-blur-sm transition-all duration-200"
+        type="button"
+        data-code-action="expand"
+        aria-label="Expand"
+        title="Expand"
+      >
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+      </button>
+    </div>
+  </div>
+</div>
+<h1 id="案例">案例<a href="#%e6%a1%88%e4%be%8b" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h1><h2 id="服务动态上下线">服务动态上下线<a href="#%e6%9c%8d%e5%8a%a1%e5%8a%a8%e6%80%81%e4%b8%8a%e4%b8%8b%e7%ba%bf" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h2><p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="1096"
+  data-image-height="557"
+  data-image-src="/cpp_notes/posts/zookeeper/python/resources/application_server.png"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/zookeeper/python/resources/application_server.png"
+    alt="alt"
+    
+    
+      
+      
+        
+          width="1096" height="557"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/zookeeper/python/resources/application_server.png"
+    data-gallery-alt="alt"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+<ul>
+<li><code>server.py</code></li>
+</ul>
+<div
+  class="code-block-container border-border bg-card my-6 overflow-hidden rounded-xl border shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md"
+  data-code-block
+  data-code-id="code-3"
+  data-collapsible="true"
+  data-default-state="expanded"
+  data-collapsed="false"
+  data-auto-collapse-lines="30"
+  data-auto-collapse-height="400"
+  data-collapsed-height="120"
+>
+  
+  <div
+    class="code-block-header bg-muted/30 border-border flex items-center justify-between border-b px-4 py-3"
+  >
+    
+    <div class="flex items-center gap-2">
+      <div class="text-muted-foreground shrink-0">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+</svg>
+      </div>
+      <span class="text-muted-foreground text-sm font-medium">
+        PYTHON
+      </span>
+    </div>
+
+    
+    <div class="flex items-center gap-2">
+      <button
+          class="collapse-code-btn text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+          type="button"
+          data-code-action="toggle-collapse"
+          data-label-expand="Expand"
+          data-label-collapse="Collapse"
+          title="Collapse"
+          aria-label="Collapse"
+          aria-controls="code-3"
+          aria-expanded="true"
+        >
+          <span class="collapse-chevron transition-transform duration-200 ease-out">
+            <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+          </span>
+          <span class="collapse-text hidden sm:inline">Collapse</span>
+        </button>
+      <button
+        class="copy-code-btn text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+        type="button"
+        data-code-action="copy"
+        data-label-copy="Copy"
+        data-label-copied="Copied"
+        title="Copy"
+        aria-label="Copy"
+      >
+        <span class="copy-icon">
+          <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+</svg>
+        </span>
+        <span class="copy-text hidden sm:inline">Copy</span>
+      </button>
+    </div>
+  </div>
+
+  
+  <div class="code-block-content relative" id="code-3">
+    <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">time</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">kazoo.client</span> <span class="kn">import</span> <span class="n">KazooClient</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Server</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">hosts</span><span class="o">=</span><span class="s1">&#39;localhost:2181&#39;</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">zk</span><span class="p">:</span> <span class="n">KazooClient</span><span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">hosts</span> <span class="o">=</span> <span class="n">hosts</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">register_node</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">zk</span> <span class="o">=</span> <span class="n">KazooClient</span><span class="p">(</span><span class="n">hosts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">hosts</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">zk</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&#34;ZooKeeper client is not initialized.&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">zk</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">zk</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;/servers/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&#34;active&#34;</span><span class="p">,</span> <span class="n">makepath</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">ephemeral</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">do_something</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">zk</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">zk</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">zk</span><span class="o">.</span><span class="n">close</span><span class="p">()</span> 
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">zk</span> <span class="o">=</span> <span class="kc">None</span></span></span></code></pre></div>
+    <div hidden data-code-source>import time
+from kazoo.client import KazooClient
+
+class Server:
+
+    def __init__(self, name, hosts=&#39;localhost:2181&#39;):
+        self.zk: KazooClient| None = None
+        self.hosts = hosts
+        self.name = name
+
+    def register_node(self):
+        self.zk = KazooClient(hosts=self.hosts)
+        if self.zk is None:
+            raise Exception(&#34;ZooKeeper client is not initialized.&#34;)
+        self.zk.start()
+
+        self.zk.create(f&#34;/servers/{self.name}&#34;, b&#34;active&#34;, makepath=True,ephemeral=True)
+    
+    def do_something(self):
+        time.sleep(2)
+
+    def close(self):
+        if self.zk is not None:
+            self.zk.stop()
+            self.zk.close() 
+            self.zk = None</div>
+    
+    <div
+      class="collapse-overlay to-card/90 pointer-events-none absolute inset-0 bg-linear-to-b from-transparent via-transparent opacity-0 transition-opacity duration-300"
+      hidden
+    >
+      <button
+        class="collapse-overlay-btn text-muted-foreground bg-card/80 border-border/50 hover:bg-primary/10 hover:text-primary hover:border-primary/30 absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center justify-center rounded-full border p-2 backdrop-blur-sm transition-all duration-200"
+        type="button"
+        data-code-action="expand"
+        aria-label="Expand"
+        title="Expand"
+      >
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+      </button>
+    </div>
+  </div>
+</div>
+<ul>
+<li><code>application.py</code></li>
+</ul>
+<div
+  class="code-block-container border-border bg-card my-6 overflow-hidden rounded-xl border shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md"
+  data-code-block
+  data-code-id="code-4"
+  data-collapsible="true"
+  data-default-state="expanded"
+  data-collapsed="false"
+  data-auto-collapse-lines="30"
+  data-auto-collapse-height="400"
+  data-collapsed-height="120"
+>
+  
+  <div
+    class="code-block-header bg-muted/30 border-border flex items-center justify-between border-b px-4 py-3"
+  >
+    
+    <div class="flex items-center gap-2">
+      <div class="text-muted-foreground shrink-0">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+</svg>
+      </div>
+      <span class="text-muted-foreground text-sm font-medium">
+        PYTHON
+      </span>
+    </div>
+
+    
+    <div class="flex items-center gap-2">
+      <button
+          class="collapse-code-btn text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+          type="button"
+          data-code-action="toggle-collapse"
+          data-label-expand="Expand"
+          data-label-collapse="Collapse"
+          title="Collapse"
+          aria-label="Collapse"
+          aria-controls="code-4"
+          aria-expanded="true"
+        >
+          <span class="collapse-chevron transition-transform duration-200 ease-out">
+            <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+          </span>
+          <span class="collapse-text hidden sm:inline">Collapse</span>
+        </button>
+      <button
+        class="copy-code-btn text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+        type="button"
+        data-code-action="copy"
+        data-label-copy="Copy"
+        data-label-copied="Copied"
+        title="Copy"
+        aria-label="Copy"
+      >
+        <span class="copy-icon">
+          <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+</svg>
+        </span>
+        <span class="copy-text hidden sm:inline">Copy</span>
+      </button>
+    </div>
+  </div>
+
+  
+  <div class="code-block-content relative" id="code-4">
+    <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">time</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">kazoo.client</span> <span class="kn">import</span> <span class="n">KazooClient</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Application</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hosts</span><span class="o">=</span><span class="s1">&#39;localhost:2181&#39;</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">zk</span><span class="p">:</span> <span class="n">KazooClient</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">hosts</span> <span class="o">=</span> <span class="n">hosts</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">_servers</span><span class="p">:</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nd">@property</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">servers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_servers</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">zk</span> <span class="o">=</span> <span class="n">KazooClient</span><span class="p">(</span><span class="n">hosts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">hosts</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">zk</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&#34;ZooKeeper client is not initialized.&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">zk</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># 使用 exists 监听 /servers 节点本身的创建/删除</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">zk</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">&#34;/servers&#34;</span><span class="p">,</span> <span class="n">watch</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_watch_servers_node</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># /servers 下的子服务节点</span>
+</span></span><span class="line"><span class="cl">        <span class="n">datas</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">zk</span><span class="o">.</span><span class="n">get_children</span><span class="p">(</span><span class="s2">&#34;/servers&#34;</span><span class="p">,</span> <span class="n">watch</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_server_change_listener</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">datas</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">_servers</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">datas</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">_servers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">do_something</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">zk</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">zk</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">zk</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">zk</span> <span class="o">=</span> <span class="kc">None</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">_watch_servers_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;监听 /servers 节点本身的事件 (创建/删除)&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;监听到 /servers 节点事件: </span><span class="si">{</span><span class="n">event</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">zk</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">event</span><span class="o">.</span><span class="n">state</span> <span class="o">==</span> <span class="s2">&#34;CLOSED&#34;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># 如果节点被创建，则开始监听其子节点</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;CREATED&#39;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">datas</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">zk</span><span class="o">.</span><span class="n">get_children</span><span class="p">(</span><span class="s2">&#34;/servers&#34;</span><span class="p">,</span> <span class="n">watch</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_server_change_listener</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="n">datas</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="k">return</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">_servers</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">            <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">datas</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="bp">self</span><span class="o">.</span><span class="n">_servers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">_server_change_listener</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;监听 /servers/ 下子节点的事件&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;服务器列表发生变化: </span><span class="si">{</span><span class="n">event</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">zk</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">event</span><span class="o">.</span><span class="n">state</span> <span class="o">==</span> <span class="s2">&#34;CLOSED&#34;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># 重新监听子节点变化。如果此时 /servers 节点被删除了，get_children 会抛出 NoNodeError</span>
+</span></span><span class="line"><span class="cl">        <span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">datas</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">zk</span><span class="o">.</span><span class="n">get_children</span><span class="p">(</span><span class="s2">&#34;/servers&#34;</span><span class="p">,</span> <span class="n">watch</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_server_change_listener</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="n">datas</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="k">return</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">_servers</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">            <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">datas</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="bp">self</span><span class="o">.</span><span class="n">_servers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="c1"># 如果 get_children 失败（很可能是因为 /servers 节点被删了），我们需要退回到监听 /servers 节点本身的状态</span>
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">_servers</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">zk</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">&#34;/servers&#34;</span><span class="p">,</span> <span class="n">watch</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_watch_servers_node</span><span class="p">)</span></span></span></code></pre></div>
+    <div hidden data-code-source>import time
+from kazoo.client import KazooClient
+
+class Application:
+    def __init__(self, hosts=&#39;localhost:2181&#39;):
+        self.zk: KazooClient | None = None
+        self.hosts = hosts
+        self._servers:list[str] = []
+
+    @property
+    def servers(self) -&gt; list[str]:
+        return self._servers
+
+    def start(self):
+        self.zk = KazooClient(hosts=self.hosts)
+        if self.zk is None:
+            raise Exception(&#34;ZooKeeper client is not initialized.&#34;)
+        self.zk.start()
+
+        # 使用 exists 监听 /servers 节点本身的创建/删除
+        if self.zk.exists(&#34;/servers&#34;, watch=self._watch_servers_node) is None:
+            return
+
+        # /servers 下的子服务节点
+        datas = self.zk.get_children(&#34;/servers&#34;, watch=self._server_change_listener)
+        if datas is None:
+            return
+
+        self._servers.clear()
+        for data in datas:
+            self._servers.append(data)
+
+    def do_something(self):
+        time.sleep(1)
+
+    def close(self):
+        if self.zk is not None:
+            self.zk.stop()
+            self.zk.close()
+            self.zk = None
+
+    def _watch_servers_node(self, event):
+        &#34;&#34;&#34;监听 /servers 节点本身的事件 (创建/删除)&#34;&#34;&#34;
+        print(f&#34;监听到 /servers 节点事件: {event}&#34;)
+        if self.zk is None or event.state == &#34;CLOSED&#34;:
+            return
+
+        # 如果节点被创建，则开始监听其子节点
+        if event.type == &#39;CREATED&#39;:
+            datas = self.zk.get_children(&#34;/servers&#34;, watch=self._server_change_listener)
+            if datas is None:
+                return
+
+            self._servers.clear()
+            for data in datas:
+                self._servers.append(data)
+
+    def _server_change_listener(self, event):
+        &#34;&#34;&#34;监听 /servers/ 下子节点的事件&#34;&#34;&#34;
+        print(f&#34;服务器列表发生变化: {event}&#34;)
+        if self.zk is None or event.state == &#34;CLOSED&#34;:
+            return
+
+        # 重新监听子节点变化。如果此时 /servers 节点被删除了，get_children 会抛出 NoNodeError
+        try:
+            datas = self.zk.get_children(&#34;/servers&#34;, watch=self._server_change_listener)
+            if datas is None:
+                return
+
+            self._servers.clear()
+            for data in datas:
+                self._servers.append(data)
+
+        except Exception:
+            # 如果 get_children 失败（很可能是因为 /servers 节点被删了），我们需要退回到监听 /servers 节点本身的状态
+            self._servers.clear()
+            self.zk.exists(&#34;/servers&#34;, watch=self._watch_servers_node)</div>
+    
+    <div
+      class="collapse-overlay to-card/90 pointer-events-none absolute inset-0 bg-linear-to-b from-transparent via-transparent opacity-0 transition-opacity duration-300"
+      hidden
+    >
+      <button
+        class="collapse-overlay-btn text-muted-foreground bg-card/80 border-border/50 hover:bg-primary/10 hover:text-primary hover:border-primary/30 absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center justify-center rounded-full border p-2 backdrop-blur-sm transition-all duration-200"
+        type="button"
+        data-code-action="expand"
+        aria-label="Expand"
+        title="Expand"
+      >
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+      </button>
+    </div>
+  </div>
+</div>
+<ul>
+<li><code>main.py</code></li>
+</ul>
+<div
+  class="code-block-container border-border bg-card my-6 overflow-hidden rounded-xl border shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md"
+  data-code-block
+  data-code-id="code-5"
+  data-collapsible="true"
+  data-default-state="expanded"
+  data-collapsed="false"
+  data-auto-collapse-lines="30"
+  data-auto-collapse-height="400"
+  data-collapsed-height="120"
+>
+  
+  <div
+    class="code-block-header bg-muted/30 border-border flex items-center justify-between border-b px-4 py-3"
+  >
+    
+    <div class="flex items-center gap-2">
+      <div class="text-muted-foreground shrink-0">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+</svg>
+      </div>
+      <span class="text-muted-foreground text-sm font-medium">
+        PYTHON
+      </span>
+    </div>
+
+    
+    <div class="flex items-center gap-2">
+      <button
+          class="collapse-code-btn text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+          type="button"
+          data-code-action="toggle-collapse"
+          data-label-expand="Expand"
+          data-label-collapse="Collapse"
+          title="Collapse"
+          aria-label="Collapse"
+          aria-controls="code-5"
+          aria-expanded="true"
+        >
+          <span class="collapse-chevron transition-transform duration-200 ease-out">
+            <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+          </span>
+          <span class="collapse-text hidden sm:inline">Collapse</span>
+        </button>
+      <button
+        class="copy-code-btn text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+        type="button"
+        data-code-action="copy"
+        data-label-copy="Copy"
+        data-label-copied="Copied"
+        title="Copy"
+        aria-label="Copy"
+      >
+        <span class="copy-icon">
+          <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+</svg>
+        </span>
+        <span class="copy-text hidden sm:inline">Copy</span>
+      </button>
+    </div>
+  </div>
+
+  
+  <div class="code-block-content relative" id="code-5">
+    <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">application</span> <span class="kn">import</span> <span class="n">Application</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">server</span> <span class="kn">import</span> <span class="n">Server</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&#34;__main__&#34;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">app</span> <span class="o">=</span> <span class="n">Application</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="n">app</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;Initial server list:&#34;</span><span class="p">,</span> <span class="n">app</span><span class="o">.</span><span class="n">servers</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">server1</span> <span class="o">=</span> <span class="n">Server</span><span class="p">(</span><span class="s2">&#34;server1&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">server1</span><span class="o">.</span><span class="n">register_node</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">server2</span> <span class="o">=</span> <span class="n">Server</span><span class="p">(</span><span class="s2">&#34;server2&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">server2</span><span class="o">.</span><span class="n">register_node</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">app</span><span class="o">.</span><span class="n">do_something</span><span class="p">()</span>    
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;After registering server:&#34;</span><span class="p">,</span> <span class="n">app</span><span class="o">.</span><span class="n">servers</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">server1</span><span class="o">.</span><span class="n">do_something</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="n">server1</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">server2</span><span class="o">.</span><span class="n">do_something</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="n">server2</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">app</span><span class="o">.</span><span class="n">do_something</span><span class="p">()</span>    
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;After closing server:&#34;</span><span class="p">,</span> <span class="n">app</span><span class="o">.</span><span class="n">servers</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">app</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></span></span></code></pre></div>
+    <div hidden data-code-source>from application import Application
+from server import Server
+
+if __name__ == &#34;__main__&#34;:
+    app = Application()
+    app.start()
+    print(&#34;Initial server list:&#34;, app.servers)
+
+    server1 = Server(&#34;server1&#34;)
+    server1.register_node()
+
+    server2 = Server(&#34;server2&#34;)
+    server2.register_node()
+
+    app.do_something()    
+    print(&#34;After registering server:&#34;, app.servers)
+
+    server1.do_something()
+    server1.close()
+
+    server2.do_something()
+    server2.close()
+
+    app.do_something()    
+    print(&#34;After closing server:&#34;, app.servers)
+
+    app.close()</div>
+    
+    <div
+      class="collapse-overlay to-card/90 pointer-events-none absolute inset-0 bg-linear-to-b from-transparent via-transparent opacity-0 transition-opacity duration-300"
+      hidden
+    >
+      <button
+        class="collapse-overlay-btn text-muted-foreground bg-card/80 border-border/50 hover:bg-primary/10 hover:text-primary hover:border-primary/30 absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center justify-center rounded-full border p-2 backdrop-blur-sm transition-all duration-200"
+        type="button"
+        data-code-action="expand"
+        aria-label="Expand"
+        title="Expand"
+      >
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+      </button>
+    </div>
+  </div>
+</div>
+<div
+  class="term-block my-6 overflow-hidden rounded-xl border shadow-sm"
+  data-term-block
+  data-term-id="term-6"
+>
+  <div class="term-header flex items-center justify-between border-b px-4 py-3">
+    <div class="flex items-center gap-3">
+      <span class="flex items-center gap-1.5" aria-hidden="true">
+        <span class="h-3 w-3 rounded-full bg-[#ff5f57]"></span>
+        <span class="h-3 w-3 rounded-full bg-[#febc2e]"></span>
+        <span class="h-3 w-3 rounded-full bg-[#28c840]"></span>
+      </span>
+      <span class="term-title text-sm font-medium">Terminal</span>
+    </div>
+  </div>
+  <div class="overflow-x-auto p-4">
+    <div class="term-body font-mono text-sm leading-relaxed"><div class="group relative pr-10" data-term-group data-copy="python main.py">
+            <button
+              class="term-copy-btn absolute top-0 right-0 z-10 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium opacity-0 transition-all duration-200 ease-out group-hover:opacity-100 focus:ring-2 focus:ring-[#3fb950]/20 focus:outline-none"
+              type="button"
+              data-term-copy
+              data-label-copy="Copy"
+              data-label-copied="Copied"
+              title="Copy"
+              aria-label="Copy"
+            >
+              <span class="copy-icon">
+                <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+</svg>
+              </span>
+              <span class="copy-text hidden sm:inline">Copy</span>
+            </button>
+            <div class="whitespace-pre"><div><span class="term-prompt font-semibold select-none">$</span
+                    ><span class="pl-2">python main.py</span></div></div>
+          </div><div class="term-output whitespace-pre">Initial server list: []</div><div class="term-output whitespace-pre">监听到 /servers 节点事件: WatchedEvent(type=&#39;CREATED&#39;, state=&#39;CONNECTED&#39;, path=&#39;/servers&#39;)</div><div class="term-output whitespace-pre">服务器列表发生变化: WatchedEvent(type=&#39;CHILD&#39;, state=&#39;CONNECTED&#39;, path=&#39;/servers&#39;)</div><div class="term-output whitespace-pre">After registering server: [&#39;server2&#39;, &#39;server1&#39;]</div><div class="term-output whitespace-pre">服务器列表发生变化: WatchedEvent(type=&#39;CHILD&#39;, state=&#39;CONNECTED&#39;, path=&#39;/servers&#39;)</div><div class="term-output whitespace-pre">服务器列表发生变化: WatchedEvent(type=&#39;CHILD&#39;, state=&#39;CONNECTED&#39;, path=&#39;/servers&#39;)</div><div class="term-output whitespace-pre">After closing server: []</div><div class="term-output whitespace-pre">服务器列表发生变化: WatchedEvent(type=&#39;NONE&#39;, state=&#39;CLOSED&#39;, path=None)</div><div class="term-output whitespace-pre">服务器列表发生变化: WatchedEvent(type=&#39;NONE&#39;, state=&#39;CLOSED&#39;, path=None)</div></div>
+  </div>
+</div>
+<div
+    class="alert alert-note my-6 overflow-hidden rounded-lg transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md"
+    style="background-color: color-mix(in srgb, var(--color-note) 10%, transparent);
+              border-left-color: var(--color-note);
+              --hover-bg: color-mix(in srgb, var(--color-note) 15%, transparent);"
+    onmouseover="this.style.backgroundColor = this.style.getPropertyValue('--hover-bg')"
+    onmouseout="this.style.backgroundColor = 'color-mix(in srgb, var(--color-note) 10%, transparent)'"
+    role="alert"
+    aria-labelledby="alert-0-title"
+  >
+    
+    <div
+      class=" flex items-center justify-between px-6 py-6"
+      
+    >
+      <div class="flex items-center gap-3">
+        
+        <h4 id="alert-0-title" class="text-foreground/90 m-0 font-semibold">
+          Note
+        </h4>
+      </div>
+
+      
+      
+    </div>
+
+    
+    <div
+      id="alert-0-content"
+      class="alert-content  px-6 pb-6"
+    >
+      <div class="prose prose-sm text-foreground/90 max-w-none">
+        <p>其中最后两行状态 <code>WatchedEvent(type='NONE', state='CLOSED', path=None)</code> 为 <code>zk client</code> 关闭时触发，<strong>但该事件不一定会执行，因此，编程不要依赖该事件。</strong></p>
+      </div>
+    </div>
+  </div><script>
+  function toggleAlert(alertId) {
+    const content = document.getElementById(alertId + "-content");
+    const chevron = document.getElementById(alertId + "-chevron");
+    const header = content.previousElementSibling;
+
+    if (content.classList.contains("hidden")) {
+      content.classList.remove("hidden");
+      chevron.style.transform = "rotate(0deg)";
+      header.setAttribute("aria-expanded", "true");
+    } else {
+      content.classList.add("hidden");
+      chevron.style.transform = "rotate(-90deg)";
+      header.setAttribute("aria-expanded", "false");
+    }
+  }
+
+  
+  document.addEventListener("DOMContentLoaded", function () {
+    const collapsedAlerts = document.querySelectorAll(".alert-content.hidden");
+    collapsedAlerts.forEach(function (content) {
+      const alertId = content.id.replace("-content", "");
+      const chevron = document.getElementById(alertId + "-chevron");
+      if (chevron) {
+        chevron.style.transform = "rotate(-90deg)";
+      }
+    });
+  });
+</script>
+<h2 id="分布式锁">分布式锁<a href="#%e5%88%86%e5%b8%83%e5%bc%8f%e9%94%81" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h2><p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="1085"
+  data-image-height="504"
+  data-image-src="/cpp_notes/posts/zookeeper/python/resources/distribute_lock.png"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/zookeeper/python/resources/distribute_lock.png"
+    alt="alt"
+    
+    
+      
+      
+        
+          width="1085" height="504"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/zookeeper/python/resources/distribute_lock.png"
+    data-gallery-alt="alt"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+<ul>
+<li><code>distributeLock.py</code></li>
+</ul>
+<div
+  class="code-block-container border-border bg-card my-6 overflow-hidden rounded-xl border shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md"
+  data-code-block
+  data-code-id="code-7"
+  data-collapsible="true"
+  data-default-state="expanded"
+  data-collapsed="false"
+  data-auto-collapse-lines="30"
+  data-auto-collapse-height="400"
+  data-collapsed-height="120"
+>
+  
+  <div
+    class="code-block-header bg-muted/30 border-border flex items-center justify-between border-b px-4 py-3"
+  >
+    
+    <div class="flex items-center gap-2">
+      <div class="text-muted-foreground shrink-0">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+</svg>
+      </div>
+      <span class="text-muted-foreground text-sm font-medium">
+        PYTHON
+      </span>
+    </div>
+
+    
+    <div class="flex items-center gap-2">
+      <button
+          class="collapse-code-btn text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+          type="button"
+          data-code-action="toggle-collapse"
+          data-label-expand="Expand"
+          data-label-collapse="Collapse"
+          title="Collapse"
+          aria-label="Collapse"
+          aria-controls="code-7"
+          aria-expanded="true"
+        >
+          <span class="collapse-chevron transition-transform duration-200 ease-out">
+            <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+          </span>
+          <span class="collapse-text hidden sm:inline">Collapse</span>
+        </button>
+      <button
+        class="copy-code-btn text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+        type="button"
+        data-code-action="copy"
+        data-label-copy="Copy"
+        data-label-copied="Copied"
+        title="Copy"
+        aria-label="Copy"
+      >
+        <span class="copy-icon">
+          <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+</svg>
+        </span>
+        <span class="copy-text hidden sm:inline">Copy</span>
+      </button>
+    </div>
+  </div>
+
+  
+  <div class="code-block-content relative" id="code-7">
+    <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">threading</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">kazoo.client</span> <span class="kn">import</span> <span class="n">KazooClient</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">kazoo.exceptions</span> <span class="kn">import</span> <span class="n">NoNodeError</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">DistributedLock</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;
+</span></span></span><span class="line"><span class="cl"><span class="s2">    基于 Zookeeper 手动实现的分布式锁
+</span></span></span><span class="line"><span class="cl"><span class="s2">    &#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lock_root</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&#34;/locks&#34;</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">zk</span> <span class="o">=</span> <span class="n">KazooClient</span><span class="p">(</span><span class="n">hosts</span><span class="o">=</span><span class="s2">&#34;localhost:2181&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">zk</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">root_node</span> <span class="o">=</span> <span class="n">lock_root</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">sub_node_prefix</span> <span class="o">=</span> <span class="s2">&#34;seq-&#34;</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="c1"># 用于阻塞等待锁的线程事件</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">_wait_lock_event</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Event</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="c1"># 当前客户端创建的节点路径</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">_current_node</span> <span class="o">=</span> <span class="kc">None</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">_wait_node</span> <span class="o">=</span> <span class="kc">None</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># 确保根节点存在</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">zk</span><span class="o">.</span><span class="n">ensure_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root_node</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">acquire</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;获取锁&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_node</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="c1"># 1. 在根节点下创建临时顺序节点</span>
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">_current_node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">zk</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">root_node</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">sub_node_prefix</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">,</span><span class="n">ephemeral</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">sequence</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_node</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&#34;创建临时顺序节点失败。&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            
+</span></span><span class="line"><span class="cl">            <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="c1"># 2. 获取根节点下的所有子节点</span>
+</span></span><span class="line"><span class="cl">                <span class="n">children</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">zk</span><span class="o">.</span><span class="n">get_children</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root_node</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="k">if</span> <span class="n">children</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&#34;无法获取子节点列表。&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">                <span class="c1"># 保证子节点按顺序排列</span>
+</span></span><span class="line"><span class="cl">                <span class="n">children</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">                <span class="c1"># 提取当前节点的名称，如 &#39;seq-0000000001&#39;</span>
+</span></span><span class="line"><span class="cl">                <span class="n">current_node_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_node</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">                
+</span></span><span class="line"><span class="cl">                <span class="c1"># 3. 判断当前节点是否是最小的节点</span>
+</span></span><span class="line"><span class="cl">                <span class="k">if</span> <span class="n">current_node_name</span> <span class="o">==</span> <span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+</span></span><span class="line"><span class="cl">                    <span class="c1"># 是最小节点，成功获取锁</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">return</span>
+</span></span><span class="line"><span class="cl">                
+</span></span><span class="line"><span class="cl">                <span class="c1"># 4. 如果不是最小节点，则监听前一个节点</span>
+</span></span><span class="line"><span class="cl">                <span class="n">my_index</span> <span class="o">=</span> <span class="n">children</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">current_node_name</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="bp">self</span><span class="o">.</span><span class="n">_wait_node</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&#34;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">root_node</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">children</span><span class="p">[</span><span class="n">my_index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">                
+</span></span><span class="line"><span class="cl">                <span class="c1"># 使用 exists 设置监听器，当节点被删除时，_watch_preceding_node 会被调用</span>
+</span></span><span class="line"><span class="cl">                <span class="c1"># 如果在前一个节点消失的瞬间调用 exists，可能会返回 None</span>
+</span></span><span class="line"><span class="cl">                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">zk</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_wait_node</span><span class="p">,</span> <span class="n">watch</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_watch_preceding_node</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">                    <span class="c1"># 进入等待状态</span>
+</span></span><span class="line"><span class="cl">                    <span class="bp">self</span><span class="o">.</span><span class="n">_wait_lock_event</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">                    <span class="c1"># 清除事件状态，为下一次等待做准备</span>
+</span></span><span class="line"><span class="cl">                    <span class="bp">self</span><span class="o">.</span><span class="n">_wait_lock_event</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">                
+</span></span><span class="line"><span class="cl">                <span class="c1"># 从等待中唤醒后，循环会继续，重新获取子节点列表并检查自己是否为最小</span>
+</span></span><span class="line"><span class="cl">        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;[</span><span class="si">{</span><span class="n">threading</span><span class="o">.</span><span class="n">current_thread</span><span class="p">()</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">] 获取锁时发生异常: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="c1"># 如果发生异常，尝试清理创建的节点</span>
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">            <span class="k">raise</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">release</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;释放锁&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_node</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span>
+</span></span><span class="line"><span class="cl">        <span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">zk</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_current_node</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">except</span> <span class="n">NoNodeError</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">pass</span>
+</span></span><span class="line"><span class="cl">        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;[</span><span class="si">{</span><span class="n">threading</span><span class="o">.</span><span class="n">current_thread</span><span class="p">()</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">] 释放锁时发生异常: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="k">raise</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">_current_node</span> <span class="o">=</span> <span class="kc">None</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">_wait_node</span> <span class="o">=</span> <span class="kc">None</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">_watch_preceding_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;监听器的回调函数。当前一个节点被删除时，此函数被触发。&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&#34;DELETED&#34;</span> <span class="ow">and</span> <span class="n">event</span><span class="o">.</span><span class="n">path</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wait_node</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;监听到事件: </span><span class="si">{</span><span class="n">event</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="c1"># 唤醒正在等待的线程</span>
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">_wait_lock_event</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">acquire</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="bp">self</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">release</span><span class="p">()</span></span></span></code></pre></div>
+    <div hidden data-code-source>import threading
+from kazoo.client import KazooClient
+from kazoo.exceptions import NoNodeError
+
+class DistributedLock:
+    &#34;&#34;&#34;
+    基于 Zookeeper 手动实现的分布式锁
+    &#34;&#34;&#34;
+    def __init__(self, lock_root: str = &#34;/locks&#34;):
+        
+        self.zk = KazooClient(hosts=&#34;localhost:2181&#34;)
+        self.zk.start()
+
+        self.root_node = lock_root
+        self.sub_node_prefix = &#34;seq-&#34;
+        
+        # 用于阻塞等待锁的线程事件
+        self._wait_lock_event = threading.Event()
+        
+        # 当前客户端创建的节点路径
+        self._current_node = None
+        self._wait_node = None
+
+        # 确保根节点存在
+        self.zk.ensure_path(self.root_node)
+
+    def acquire(self):
+        &#34;&#34;&#34;获取锁&#34;&#34;&#34;
+        if self._current_node:
+            return
+
+        try:
+            # 1. 在根节点下创建临时顺序节点
+            self._current_node = self.zk.create(f&#34;{self.root_node}/{self.sub_node_prefix}&#34;,ephemeral=True,sequence=True)
+            if self._current_node is None:
+                raise Exception(&#34;创建临时顺序节点失败。&#34;)
+            
+            while True:
+                # 2. 获取根节点下的所有子节点
+                children = self.zk.get_children(self.root_node)
+                if children is None:
+                    raise Exception(&#34;无法获取子节点列表。&#34;)
+
+                # 保证子节点按顺序排列
+                children.sort()
+
+                # 提取当前节点的名称，如 &#39;seq-0000000001&#39;
+                current_node_name = self._current_node.split(&#39;/&#39;)[-1]
+                
+                # 3. 判断当前节点是否是最小的节点
+                if current_node_name == children[0]:
+                    # 是最小节点，成功获取锁
+                    return
+                
+                # 4. 如果不是最小节点，则监听前一个节点
+                my_index = children.index(current_node_name)
+                self._wait_node = f&#34;{self.root_node}/{children[my_index - 1]}&#34;
+                
+                # 使用 exists 设置监听器，当节点被删除时，_watch_preceding_node 会被调用
+                # 如果在前一个节点消失的瞬间调用 exists，可能会返回 None
+                if self.zk.exists(self._wait_node, watch=self._watch_preceding_node):
+                    # 进入等待状态
+                    self._wait_lock_event.wait()
+                    # 清除事件状态，为下一次等待做准备
+                    self._wait_lock_event.clear()
+                
+                # 从等待中唤醒后，循环会继续，重新获取子节点列表并检查自己是否为最小
+        except Exception as e:
+            print(f&#34;[{threading.current_thread().name}] 获取锁时发生异常: {e}&#34;)
+            # 如果发生异常，尝试清理创建的节点
+            self.release()
+            raise
+
+
+
+    def release(self):
+        &#34;&#34;&#34;释放锁&#34;&#34;&#34;
+        if not self._current_node:
+            return
+        try:
+            self.zk.delete(self._current_node)
+        except NoNodeError:
+            pass
+        except Exception as e:
+            print(f&#34;[{threading.current_thread().name}] 释放锁时发生异常: {e}&#34;)
+            raise
+
+        self._current_node = None
+        self._wait_node = None
+
+    def _watch_preceding_node(self, event):
+        &#34;&#34;&#34;监听器的回调函数。当前一个节点被删除时，此函数被触发。&#34;&#34;&#34;
+        if event.type == &#34;DELETED&#34; and event.path == self._wait_node:
+            print(f&#34;监听到事件: {event}&#34;)
+            # 唤醒正在等待的线程
+            self._wait_lock_event.set()
+
+    def __enter__(self):
+        self.acquire()
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.release()</div>
+    
+    <div
+      class="collapse-overlay to-card/90 pointer-events-none absolute inset-0 bg-linear-to-b from-transparent via-transparent opacity-0 transition-opacity duration-300"
+      hidden
+    >
+      <button
+        class="collapse-overlay-btn text-muted-foreground bg-card/80 border-border/50 hover:bg-primary/10 hover:text-primary hover:border-primary/30 absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center justify-center rounded-full border p-2 backdrop-blur-sm transition-all duration-200"
+        type="button"
+        data-code-action="expand"
+        aria-label="Expand"
+        title="Expand"
+      >
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+      </button>
+    </div>
+  </div>
+</div>
+<ul>
+<li><code>main.py</code></li>
+</ul>
+<div
+  class="code-block-container border-border bg-card my-6 overflow-hidden rounded-xl border shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md"
+  data-code-block
+  data-code-id="code-8"
+  data-collapsible="true"
+  data-default-state="expanded"
+  data-collapsed="false"
+  data-auto-collapse-lines="30"
+  data-auto-collapse-height="400"
+  data-collapsed-height="120"
+>
+  
+  <div
+    class="code-block-header bg-muted/30 border-border flex items-center justify-between border-b px-4 py-3"
+  >
+    
+    <div class="flex items-center gap-2">
+      <div class="text-muted-foreground shrink-0">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+</svg>
+      </div>
+      <span class="text-muted-foreground text-sm font-medium">
+        PYTHON
+      </span>
+    </div>
+
+    
+    <div class="flex items-center gap-2">
+      <button
+          class="collapse-code-btn text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+          type="button"
+          data-code-action="toggle-collapse"
+          data-label-expand="Expand"
+          data-label-collapse="Collapse"
+          title="Collapse"
+          aria-label="Collapse"
+          aria-controls="code-8"
+          aria-expanded="true"
+        >
+          <span class="collapse-chevron transition-transform duration-200 ease-out">
+            <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+          </span>
+          <span class="collapse-text hidden sm:inline">Collapse</span>
+        </button>
+      <button
+        class="copy-code-btn text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+        type="button"
+        data-code-action="copy"
+        data-label-copy="Copy"
+        data-label-copied="Copied"
+        title="Copy"
+        aria-label="Copy"
+      >
+        <span class="copy-icon">
+          <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+</svg>
+        </span>
+        <span class="copy-text hidden sm:inline">Copy</span>
+      </button>
+    </div>
+  </div>
+
+  
+  <div class="code-block-content relative" id="code-8">
+    <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">time</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">threading</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">distributeLock</span> <span class="kn">import</span> <span class="n">DistributedLock</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">worker</span><span class="p">(</span><span class="n">worker_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">global</span> <span class="n">count</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="n">lock</span> <span class="o">=</span> <span class="n">DistributedLock</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="n">lock</span><span class="o">.</span><span class="n">acquire</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> 
+</span></span><span class="line"><span class="cl">        <span class="n">lock</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;[</span><span class="si">{</span><span class="n">worker_id</span><span class="si">}</span><span class="s2">]: </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&#34;__main__&#34;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">threads</span> <span class="o">=</span> <span class="p">[]</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="n">t</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">worker</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">i</span><span class="p">,))</span>
+</span></span><span class="line"><span class="cl">        <span class="n">threads</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">t</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">threads</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">t</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;Final count: </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span></span></span></code></pre></div>
+    <div hidden data-code-source>import time
+import threading
+from distributeLock import DistributedLock
+
+count = 0
+
+def worker(worker_id: int):
+    global count
+
+    for i in range(4):
+
+        lock = DistributedLock()
+        lock.acquire()
+        count &#43;= 1
+        time.sleep(1) 
+        lock.release()
+
+        print(f&#34;[{worker_id}]: {count}&#34;)
+
+
+if __name__ == &#34;__main__&#34;:
+    threads = []
+    for i in range(3):
+        t = threading.Thread(target=worker, args=(i,))
+        threads.append(t)
+        t.start()
+
+    for t in threads:
+        t.join()
+
+    print(f&#34;Final count: {count}&#34;)</div>
+    
+    <div
+      class="collapse-overlay to-card/90 pointer-events-none absolute inset-0 bg-linear-to-b from-transparent via-transparent opacity-0 transition-opacity duration-300"
+      hidden
+    >
+      <button
+        class="collapse-overlay-btn text-muted-foreground bg-card/80 border-border/50 hover:bg-primary/10 hover:text-primary hover:border-primary/30 absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center justify-center rounded-full border p-2 backdrop-blur-sm transition-all duration-200"
+        type="button"
+        data-code-action="expand"
+        aria-label="Expand"
+        title="Expand"
+      >
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+      </button>
+    </div>
+  </div>
+</div>
+<div
+  class="term-block my-6 overflow-hidden rounded-xl border shadow-sm"
+  data-term-block
+  data-term-id="term-9"
+>
+  <div class="term-header flex items-center justify-between border-b px-4 py-3">
+    <div class="flex items-center gap-3">
+      <span class="flex items-center gap-1.5" aria-hidden="true">
+        <span class="h-3 w-3 rounded-full bg-[#ff5f57]"></span>
+        <span class="h-3 w-3 rounded-full bg-[#febc2e]"></span>
+        <span class="h-3 w-3 rounded-full bg-[#28c840]"></span>
+      </span>
+      <span class="term-title text-sm font-medium">Terminal</span>
+    </div>
+  </div>
+  <div class="overflow-x-auto p-4">
+    <div class="term-body font-mono text-sm leading-relaxed"><div class="group relative pr-10" data-term-group data-copy="python main.py">
+            <button
+              class="term-copy-btn absolute top-0 right-0 z-10 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium opacity-0 transition-all duration-200 ease-out group-hover:opacity-100 focus:ring-2 focus:ring-[#3fb950]/20 focus:outline-none"
+              type="button"
+              data-term-copy
+              data-label-copy="Copy"
+              data-label-copied="Copied"
+              title="Copy"
+              aria-label="Copy"
+            >
+              <span class="copy-icon">
+                <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+</svg>
+              </span>
+              <span class="copy-text hidden sm:inline">Copy</span>
+            </button>
+            <div class="whitespace-pre"><div><span class="term-prompt font-semibold select-none">$</span
+                    ><span class="pl-2">python main.py</span></div></div>
+          </div><div class="term-output whitespace-pre">[0]: 1</div><div class="term-output whitespace-pre">监听到事件: WatchedEvent(type=&#39;DELETED&#39;, state=&#39;CONNECTED&#39;, path=&#39;/locks/seq-0000000000&#39;)</div><div class="term-output whitespace-pre">监听到事件: WatchedEvent(type=&#39;DELETED&#39;, state=&#39;CONNECTED&#39;, path=&#39;/locks/seq-0000000001&#39;)</div><div class="term-output whitespace-pre">[1]: 2</div><div class="term-output whitespace-pre">[2]: 3</div><div class="term-output whitespace-pre">监听到事件: WatchedEvent(type=&#39;DELETED&#39;, state=&#39;CONNECTED&#39;, path=&#39;/locks/seq-0000000002&#39;)</div><div class="term-output whitespace-pre">[0]: 4</div><div class="term-output whitespace-pre">监听到事件: WatchedEvent(type=&#39;DELETED&#39;, state=&#39;CONNECTED&#39;, path=&#39;/locks/seq-0000000003&#39;)</div><div class="term-output whitespace-pre">监听到事件: WatchedEvent(type=&#39;DELETED&#39;, state=&#39;CONNECTED&#39;, path=&#39;/locks/seq-0000000004&#39;)</div><div class="term-output whitespace-pre">[1]: 6</div><div class="term-output whitespace-pre">[2]: 6</div><div class="term-output whitespace-pre">监听到事件: WatchedEvent(type=&#39;DELETED&#39;, state=&#39;CONNECTED&#39;, path=&#39;/locks/seq-0000000005&#39;)</div><div class="term-output whitespace-pre">监听到事件: WatchedEvent(type=&#39;DELETED&#39;, state=&#39;CONNECTED&#39;, path=&#39;/locks/seq-0000000006&#39;)</div><div class="term-output whitespace-pre">[0]: 7</div><div class="term-output whitespace-pre">[1]: 8</div><div class="term-output whitespace-pre">监听到事件: WatchedEvent(type=&#39;DELETED&#39;, state=&#39;CONNECTED&#39;, path=&#39;/locks/seq-0000000007&#39;)</div><div class="term-output whitespace-pre">[2]: 9</div><div class="term-output whitespace-pre">监听到事件: WatchedEvent(type=&#39;DELETED&#39;, state=&#39;CONNECTED&#39;, path=&#39;/locks/seq-0000000008&#39;)</div><div class="term-output whitespace-pre">[0]: 10</div><div class="term-output whitespace-pre">监听到事件: WatchedEvent(type=&#39;DELETED&#39;, state=&#39;CONNECTED&#39;, path=&#39;/locks/seq-0000000009&#39;)</div><div class="term-output whitespace-pre">[1]: 11</div><div class="term-output whitespace-pre">监听到事件: WatchedEvent(type=&#39;DELETED&#39;, state=&#39;CONNECTED&#39;, path=&#39;/locks/seq-0000000010&#39;)</div><div class="term-output whitespace-pre">监听到事件: WatchedEvent(type=&#39;DELETED&#39;, state=&#39;CONNECTED&#39;, path=&#39;/locks/seq-0000000011&#39;)</div><div class="term-output whitespace-pre">[2]: 12</div><div class="term-output whitespace-pre">Final count: 12</div></div>
+  </div>
+</div>
+
+  </article>
+
+  
+  
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  <div class="post-license bg-muted/30 border-border mb-8 rounded-xl border p-6">
+    <div class="flex items-start gap-4">
+      
+      <div class="bg-primary/10 flex h-12 w-12 shrink-0 items-center justify-center rounded-lg">
+        <svg class="h-6 w-6" aria-label="许可证" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+</svg>
+      </div>
+
+      
+      <div class="min-w-0 flex-1">
+        <h3 class="text-foreground mb-2 text-lg font-semibold">
+          License
+        </h3>
+
+        <div class="text-muted-foreground space-y-2 text-sm">
+          
+          
+            <p>
+              <strong>Author:</strong>
+              海拉鲁的三角
+            </p>
+          
+
+
+          
+          <p>
+            <strong>Link:</strong>
+            <a
+              href="https://spite-triangle.github.io/cpp_notes/posts/zookeeper/python/"
+              class="text-primary hover:text-primary/80 break-all hyphens-auto transition-colors duration-200"
+            >
+              https://spite-triangle.github.io/cpp_notes/posts/zookeeper/python/
+            </a>
+          </p>
+
+          
+          <p>
+            <strong>License:</strong>
+            
+              <a
+                href="https://mit-license.org/"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-primary hover:text-primary/80 transition-colors duration-200"
+              >
+                MIT
+              </a>
+            
+          </p>
+
+          
+          
+            <p class="text-xs">
+              只要学不死，就往死里学
+            </p>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  
+  
+
+
+
+
+
+  <nav class="post-navigation mb-12">
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+      
+      <div class="nav-item">
+        
+          <a
+            href="/cpp_notes/posts/zookeeper/data/"
+            class="group bg-card border-border hover:bg-primary/5 hover:border-primary/20 focus:ring-primary/20 flex min-h-[140px] flex-col justify-between rounded-xl border p-6 transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.02] hover:shadow-lg focus:ring-2 focus:outline-none"
+          >
+            <div>
+              <div class="mb-3 flex items-center gap-3">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+</svg>
+                <span class="text-muted-foreground text-sm font-medium">
+                  Previous
+                </span>
+              </div>
+
+              <h3
+                class="text-foreground group-hover:text-primary mb-3 line-clamp-2 text-lg leading-tight font-semibold transition-colors duration-200"
+              >
+                数据管理
+              </h3>
+            </div>
+
+            <div class="text-muted-foreground mt-auto flex items-center gap-2 text-xs">
+              <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+</svg>
+
+              <time datetime="2025-11-01">
+                11/1/25
+              </time>
+            </div>
+          </a>
+        
+      </div>
+
+      
+      <div class="nav-item">
+        
+          <div
+            class="bg-muted/30 border-border/50 flex min-h-[140px] flex-col justify-center rounded-xl border p-6"
+          >
+            <div class="mb-3 flex items-center justify-end gap-3">
+              <span class="text-muted-foreground/50 text-sm font-medium">
+                No next
+              </span>
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+</svg>
+            </div>
+          </div>
+        
+      </div>
+    </div>
+  </nav>
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+  <section class="related-posts mb-12">
+    
+    <div class="mb-6 flex items-center gap-3">
+      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+</svg>
+      <h2 class="text-foreground text-2xl font-bold">
+        Related content
+      </h2>
+    </div>
+
+    
+    <div class="grid w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+      
+        <article class="group">
+          <a href="/cpp_notes/posts/distribute/zookeeper/" class="block">
+            <div
+              class="bg-card border-border hover:bg-primary/5 hover:border-primary/20 focus:ring-primary/20 flex min-h-[120px] items-center rounded-xl border p-5 transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.02] hover:shadow-lg focus:ring-2 focus:outline-none"
+            >
+              <h3
+                class="text-foreground group-hover:text-primary line-clamp-3 w-full text-lg leading-snug font-semibold"
+              >
+                Zookeeper
+              </h3>
+            </div>
+          </a>
+        </article>
+      
+        <article class="group">
+          <a href="/cpp_notes/posts/k8s/servicediscovery/" class="block">
+            <div
+              class="bg-card border-border hover:bg-primary/5 hover:border-primary/20 focus:ring-primary/20 flex min-h-[120px] items-center rounded-xl border p-5 transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.02] hover:shadow-lg focus:ring-2 focus:outline-none"
+            >
+              <h3
+                class="text-foreground group-hover:text-primary line-clamp-3 w-full text-lg leading-snug font-semibold"
+              >
+                服务发现
+              </h3>
+            </div>
+          </a>
+        </article>
+      
+        <article class="group">
+          <a href="/cpp_notes/posts/cpptools/grpc/" class="block">
+            <div
+              class="bg-card border-border hover:bg-primary/5 hover:border-primary/20 focus:ring-primary/20 flex min-h-[120px] items-center rounded-xl border p-5 transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.02] hover:shadow-lg focus:ring-2 focus:outline-none"
+            >
+              <h3
+                class="text-foreground group-hover:text-primary line-clamp-3 w-full text-lg leading-snug font-semibold"
+              >
+                gRPC
+              </h3>
+            </div>
+          </a>
+        </article>
+      
+    </div>
+  </section>
+
+
+
+
+  
+  
+
+
+      </div>
+
+      <footer class="px-4 py-6">
+  
+  
+    <nav class="mb-6">
+      <div class="flex flex-wrap items-center justify-center gap-1">
+        
+          
+          
+          
+            
+              
+            
+          
+          <a
+            href="/cpp_notes/projects/"
+            
+            class="nav-link hover:text-primary hover:bg-primary/10 text-muted-foreground flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 hover:scale-105"
+          >
+            
+              <svg class="h-5 w-5" aria-label="Projects" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="m8.85 16.825l3.15-1.9l3.15 1.925l-.825-3.6l2.775-2.4l-3.65-.325l-1.45-3.4l-1.45 3.375l-3.65.325l2.775 2.425zm3.15.45l-4.15 2.5q-.275.175-.575.15t-.525-.2t-.35-.437t-.05-.588l1.1-4.725L3.775 10.8q-.25-.225-.312-.513t.037-.562t.3-.45t.55-.225l4.85-.425l1.875-4.45q.125-.3.388-.45t.537-.15t.537.15t.388.45l1.875 4.45l4.85.425q.35.05.55.225t.3.45t.038.563t-.313.512l-3.675 3.175l1.1 4.725q.075.325-.05.588t-.35.437t-.525.2t-.575-.15zm0-5.025"/></svg>
+            
+            <span>Projects</span>
+          </a>
+        
+          
+          
+          
+            
+              
+            
+          
+          <a
+            href="/cpp_notes/about/"
+            
+            class="nav-link hover:text-primary hover:bg-primary/10 text-muted-foreground flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 hover:scale-105"
+          >
+            
+              <svg class="h-5 w-5" aria-label="About" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+</svg>
+
+            
+            <span>About</span>
+          </a>
+        
+      </div>
+    </nav>
+  
+
+
+  
+  
+    <div class="border-border mb-6 border-t"></div>
+  
+
+
+  
+  <div class="flex flex-col items-center justify-between gap-4 md:flex-row">
+    
+    <div class="text-muted-foreground text-center text-sm md:text-left">
+      <p class="mb-2">
+        &copy;
+        2026
+        Hugo Narrow
+      </p>
+      <p class="flex flex-wrap items-center justify-center gap-1 md:justify-start">
+        <span>Powered by</span>
+        <a
+          href="https://gohugo.io/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-primary hover:text-primary/80 font-medium transition-colors duration-200 hover:underline"
+        >
+          Hugo
+        </a>
+        <span>&</span>
+        <a
+          href="https://github.com/tom2almighty/hugo-narrow"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-primary hover:text-primary/80 font-medium transition-colors duration-200 hover:underline"
+        >
+          Narrow
+        </a>
+      </p>
+    </div>
+
+    
+    
+      <div class="flex items-center gap-3">
+        
+          <a
+            href="https://github.com/spite-triangle"
+            
+              target="_blank" rel="noopener noreferrer"
+            
+            class="text-muted-foreground hover:text-primary focus:ring-primary/20 rounded-lg p-1 transition-all duration-300 ease-out hover:scale-110 focus:ring-2 focus:outline-none"
+            title="GitHub"
+            aria-label="GitHub"
+          >
+            
+              <svg class="h-6 w-6" aria-label="GitHub" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5c.08-1.25-.27-2.48-1-3.5c.28-1.15.28-2.35 0-3.5c0 0-1 0-3 1.5c-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5c-.39.49-.68 1.05-.85 1.65S8.93 17.38 9 18v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></g></svg>
+            
+          </a>
+        
+          <a
+            href="https://space.bilibili.com/27206875"
+            
+              target="_blank" rel="noopener noreferrer"
+            
+            class="text-muted-foreground hover:text-primary focus:ring-primary/20 rounded-lg p-1 transition-all duration-300 ease-out hover:scale-110 focus:ring-2 focus:outline-none"
+            title="Bilibili"
+            aria-label="Bilibili"
+          >
+            
+              <svg class="h-6 w-6" aria-label="Bilibili" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+  <path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.653 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0-.373.129-.689.386-.947.258-.257.574-.386.947-.386zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373Z"/>
+</svg>
+            
+          </a>
+        
+      </div>
+    
+
+  </div>
+</footer>
+
+      
+
+
+
+
+
+<div
+  id="dock"
+  class="pointer-events-none fixed bottom-4 left-1/2 z-9999 w-fit -translate-x-1/2 translate-y-24 opacity-0 transition-all duration-300 ease-out sm:right-0 sm:left-0 sm:mx-auto sm:translate-x-0"
+  data-dock-mode="scroll"
+  role="toolbar"
+  aria-label="Quick actions toolbar"
+>
+  <nav
+    class="border-border bg-card/80 scrollbar-hide xs:px-3 xs:py-2 mx-auto flex max-w-[calc(100vw-2rem)] min-w-fit items-center justify-center overflow-x-auto rounded-2xl border px-4 py-3 shadow-lg backdrop-blur-sm sm:px-4 sm:py-3"
+  >
+    
+    
+      <button
+        id="dock-back"
+        class="text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 xs:px-2 xs:py-1.5 flex shrink-0 items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 focus:ring-2 focus:outline-none sm:px-3 sm:py-2"
+        title="Back"
+        aria-label="Back"
+      >
+        <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="m12 19-7-7 7-7"/>
+  <path d="M19 12H5"/>
+</svg>
+
+        <span class="hidden sm:inline">Back</span>
+      </button>
+
+      
+      <div class="bg-border xs:mx-1 mx-2 h-6 w-px sm:mx-2"></div>
+    
+
+
+    
+
+    
+    
+
+    
+    
+    
+
+
+    
+    <button
+      id="dock-top"
+      class="text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 xs:px-2 xs:py-1.5 flex shrink-0 items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 focus:ring-2 focus:outline-none sm:px-3 sm:py-2"
+      title="Back to top"
+      aria-label="Back to top"
+    >
+      <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="m18 15-6-6-6 6"/>
+</svg>
+
+      <span class="hidden sm:inline">Top</span>
+    </button>
+  </nav>
+</div>
+
+
+
+
+      <aside
+    id="toc-container"
+    class="toc-left"
+    data-position="left"
+  >
+      <div id="toc-center" class="pointer-events-none fixed top-28 ml-auto w-full max-w-4xl px-4">
+        <div class="pointer-events-auto fixed flex">
+          <div class="pointer-events-auto relative ml-auto w-fit">
+            <button
+              id="section-center-toggle"
+              class="bg-card/80 border-border text-muted-foreground hover:text-primary hover:bg-primary/10 ring-offset-background focus-visible:ring-ring flex cursor-pointer items-center gap-2 rounded-full border px-4 py-1.5 text-sm shadow-sm backdrop-blur-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+            >
+              <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <line x1="8" x2="21" y1="6" y2="6"/>
+  <line x1="8" x2="21" y1="12" y2="12"/>
+  <line x1="8" x2="21" y1="18" y2="18"/>
+  <line x1="3" x2="3.01" y1="6" y2="6"/>
+  <line x1="3" x2="3.01" y1="12" y2="12"/>
+  <line x1="3" x2="3.01" y1="18" y2="18"/>
+</svg>
+
+              <span id="section-center-title" class="max-w-[200px] truncate">python</span>
+              <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+            </button>
+
+            
+            <div
+              id="section-center-dropdown"
+              class="bg-card border-border scrollbar-hide absolute top-full left-0 mt-2 hidden max-h-[60vh] w-[280px] origin-top scale-95 overflow-y-auto rounded-xl border p-4 opacity-0 shadow-lg transition-all"
+            >
+              <div
+                id="section-center-content"
+                class="[&_a]:text-muted-foreground [&_a:hover]:bg-primary/10 [&_a:hover]:text-primary [&_a.active]:bg-primary/10 [&_a.active]:text-primary text-sm [&_a]:block [&_a]:truncate [&_a]:rounded-md [&_a]:px-2 [&_a]:py-1 [&_a]:transition-colors [&_a.active]:font-medium [&_li]:my-1.5 [&_nav>ul]:pl-0 [&_ul]:list-none [&_ul]:pl-4"
+              >
+                
+                
+                
+                  
+                    <h2>
+                      <a href="/cpp_notes/posts/zookeeper/introduction/">简介</a>
+                    </h2>
+                  
+                
+                  
+                    <h2>
+                      <a href="/cpp_notes/posts/zookeeper/configure/">配置参数</a>
+                    </h2>
+                  
+                
+                  
+                    <h2>
+                      <a href="/cpp_notes/posts/zookeeper/data/">数据管理</a>
+                    </h2>
+                  
+                
+                  
+                    <h2 class="active">
+                      <a href="/cpp_notes/posts/zookeeper/python/" class="active font-medium">python</a>
+                    </h2>
+                  
+                
+              </div>
+            </div>
+          </div>
+
+          <div class="pointer-events-auto relative ml-auto w-fit"><button
+                id="toc-center-toggle"
+                class="bg-card/80 border-border text-muted-foreground hover:text-primary hover:bg-primary/10 ring-offset-background focus-visible:ring-ring flex cursor-pointer items-center gap-2 rounded-full border px-4 py-1.5 text-sm shadow-sm backdrop-blur-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+              >
+                <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <line x1="8" x2="21" y1="6" y2="6"/>
+  <line x1="8" x2="21" y1="12" y2="12"/>
+  <line x1="8" x2="21" y1="18" y2="18"/>
+  <line x1="3" x2="3.01" y1="6" y2="6"/>
+  <line x1="3" x2="3.01" y1="12" y2="12"/>
+  <line x1="3" x2="3.01" y1="18" y2="18"/>
+</svg>
+
+                <span id="toc-center-title" class="max-w-[200px] truncate">Table of contents</span>
+                <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+              </button>
+
+              
+              <div
+                id="toc-center-dropdown"
+                class="bg-card border-border scrollbar-hide absolute top-full left-0 mt-2 hidden max-h-[60vh] w-[280px] origin-top scale-95 overflow-y-auto rounded-xl border p-4 opacity-0 shadow-lg transition-all"
+              >
+                <div
+                  id="toc-center-content"
+                  class="[&_a]:text-muted-foreground [&_a:hover]:bg-primary/10 [&_a:hover]:text-primary [&_a.active]:bg-primary/10 [&_a.active]:text-primary text-sm [&_a]:block [&_a]:truncate [&_a]:rounded-md [&_a]:px-2 [&_a]:py-1 [&_a]:transition-colors [&_a.active]:font-medium [&_li]:my-1.5 [&_nav>ul]:pl-0 [&_ul]:list-none [&_ul]:pl-4"
+                >
+                  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#库">库</a></li>
+    <li><a href="#api">API</a>
+      <ul>
+        <li><a href="#基本操作">基本操作</a></li>
+        <li><a href="#监听器">监听器</a></li>
+      </ul>
+    </li>
+    <li><a href="#案例">案例</a>
+      <ul>
+        <li><a href="#服务动态上下线">服务动态上下线</a></li>
+        <li><a href="#分布式锁">分布式锁</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                </div>
+              </div></div>
+        </div>
+      </div></aside>
+      
+<div
+  id="search-overlay"
+  class="pointer-events-none fixed inset-0 z-40 bg-black/50 opacity-0 transition-opacity duration-300"
+></div>
+
+
+<div
+  id="search-modal"
+  class="bg-card border-border pointer-events-none fixed top-1/2 left-1/2 z-50 max-h-[80vh] w-full max-w-2xl -translate-x-1/2 -translate-y-1/2 scale-95 transform overflow-hidden rounded-xl border opacity-0 shadow-xl transition-all duration-300"
+  role="dialog"
+  aria-modal="true"
+  aria-hidden="true"
+  aria-labelledby="search-title"
+  tabindex="-1"
+>
+  
+  <div class="border-border flex items-center gap-3 border-b p-4">
+    
+    <div class="text-muted-foreground h-5 w-5 shrink-0">
+      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+</svg>
+
+    </div>
+    <h2 id="search-title" class="sr-only">Search</h2>
+
+    
+    <div class="relative flex-1">
+      
+      <button
+        id="search-clear"
+        class="text-muted-foreground hover:text-foreground hover:bg-muted/50 pointer-events-none absolute top-1/2 left-0 z-10 h-5 w-5 -translate-y-1/2 rounded opacity-0 transition-all duration-200"
+        title="Clear"
+        aria-label="Clear"
+      >
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+</svg>
+
+      </button>
+
+      
+      <input
+        id="search-input"
+        type="text"
+        placeholder="Search posts..."
+        class="text-foreground placeholder:text-muted-foreground w-full border-none bg-transparent pl-8 text-lg outline-none"
+        autocomplete="off"
+        spellcheck="false"
+      />
+    </div>
+
+    
+    <button
+      id="search-close"
+      class="text-muted-foreground hover:text-foreground hover:bg-muted/50 flex h-6 w-6 items-center justify-center rounded-md p-0.5 transition-all duration-200"
+      title="Close"
+      aria-label="Close"
+    >
+      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+</svg>
+
+    </button>
+  </div>
+
+  
+  <div id="search-results" class="max-h-96 overflow-y-auto">
+    
+    <div id="search-empty" class="flex flex-col items-center justify-center py-12 text-center">
+      <div class="bg-muted/50 mb-4 flex h-16 w-16 items-center justify-center rounded-full">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+</svg>
+
+      </div>
+      <h3 class="text-foreground mb-2 text-lg font-semibold">
+        Start searching
+      </h3>
+    </div>
+
+    
+    <div id="search-loading" class="flex items-center justify-center py-8" hidden>
+      <div
+        class="mr-3 h-6 w-6 animate-spin rounded-full border-2 border-current border-t-transparent"
+      ></div>
+      <span class="text-muted-foreground">Searching...</span>
+    </div>
+
+    
+    <div
+      id="search-no-results"
+      class="flex flex-col items-center justify-center py-12 text-center"
+      hidden
+    >
+      <div class="bg-muted/50 mb-4 flex h-16 w-16 items-center justify-center rounded-full">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
+</svg>
+
+      </div>
+      <h3 class="text-foreground mb-2 text-lg font-semibold">
+        No results
+      </h3>
+    </div>
+
+    
+    <div id="search-results-list" hidden>
+      
+      <div
+        id="search-stats"
+        class="text-muted-foreground border-border border-b px-4 py-3 text-sm"
+        data-count-other="Found %d results"
+      ></div>
+
+      
+      <div id="search-items" class="divide-border divide-y" role="list">
+        
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="border-border bg-muted/20 border-t px-4 py-3"><div class="text-muted-foreground flex items-center justify-between text-xs">
+      <div class="flex items-center gap-2 md:gap-4">
+        <div class="flex items-center gap-1">
+          <kbd class="bg-muted border-border rounded border px-1.5 py-0.5 text-xs">↑↓</kbd>
+          <span class="hidden sm:inline">Navigate</span>
+        </div>
+        <div class="flex items-center gap-1">
+          <kbd class="bg-muted border-border rounded border px-1.5 py-0.5 text-xs">↵</kbd>
+          <span class="hidden sm:inline">Select</span>
+        </div>
+        <div class="flex items-center gap-1">
+          <kbd class="bg-muted border-border rounded border px-1.5 py-0.5 text-xs">ESC</kbd>
+          <span class="hidden sm:inline">Close</span>
+        </div>
+      </div>
+      <div class="search-hint-desktop flex items-center gap-1">
+        <kbd class="bg-muted border-border rounded border px-1.5 py-0.5 text-xs">⌘K</kbd>
+        <span>Shortcut</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+      
+
+
+      
+
+
+    </main>
+  </body>
+</html>

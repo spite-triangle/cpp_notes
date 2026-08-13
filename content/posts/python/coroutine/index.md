@@ -1,0 +1,643 @@
+---
+title: "协程"
+date: "2025-07-18"
+draft: false
+description: "Python协程编程详解，包括asyncio原理与greenlet/gevent并发控制。"
+weight: 4
+tags: ["异步IO", "asyncio", "事件循环"]
+categories: ["高级特性"]
+---
+
+
+# 原理
+
+在 Python 中协程本质上是基于「生成器」实现，详情键「Python 特性」章节。
+
+# 第三方库
+
+> [!tip]
+> 在新版的 python 中已经自带协程标准库 `asyncio`，第三方库了解即可
+
+## greenlet
+
+
+```python
+from greenlet import greenlet
+
+def func1():
+    print('func1 step1')
+    gr_func2.switch()
+    print('func1 step2')
+    gr_func2.switch()
+
+def func2():
+    print('func2 step1')
+    gr_func1.switch()
+    print('func2 step2')
+
+if __name__ == '__main__':
+    gr_func1 = greenlet(func1)
+    gr_func2 = greenlet(func2)
+
+    gr_func1.switch()
+```
+
+```term
+$ python demo.py
+func1 step1
+func2 step1
+func1 step2
+func2 step2
+```
+
+## gevent
+
+`gevent` 是 `greenlet` 的进一步封装版本
+
+### 概念
+
+```python
+# 使用 monkey 之后， gevent 会替换标准库的同步阻塞逻辑
+from gevent import monkey
+# NOTE - patch_all 之后的阻塞式库都会被修改为非阻塞式，例如 time、threading、requests等
+monkey.patch_all()
+
+import time
+import gevent
+import requests
+import threading
+
+def sleep():
+    print("\t\tsleep started: ",  threading.current_thread().name)
+    time.sleep(5)
+    print("\t\tsleep finished")
+
+def request():
+    print("\t\trequest started: ", threading.current_thread().name)
+    response = requests.get("https://cn.bing.com/?mkt=zh-CN")
+    print("\t\trequest received:", response.status_code)
+
+
+def run():
+    print("\tThread sleep started: ", threading.current_thread().name)
+    thread = threading.Thread(target=sleep)
+    thread.start()
+    thread.join()
+    print("\tThread sleep finished")
+
+    print("\tGevent request started: ", threading.current_thread().name) 
+    greenlet = gevent.spawn(request)
+    greenlet.join()
+    print("\tGevent request finished")
+    
+def deamnd():
+    print("\tDemand function called: ", threading.current_thread().name)
+    for i in range(10):
+        print(f"\t- Demand iteration {i}")
+        time.sleep(1)
+    print("\tDemand function finished")
+
+if __name__ == "__main__":
+    print("Main function started: ", threading.current_thread().name)
+
+    g_deamnd = gevent.spawn(deamnd)
+    g_run = gevent.spawn(run)
+    gevent.joinall([g_run])
+
+    print("All tasks completed")
+```
+
+```term
+$ python demo.py
+Main function started:  MainThread
+    Demand function called:  Dummy-1
+    - Demand iteration 0
+    Thread sleep started:  Dummy-2
+        sleep started:  Thread-3 (sleep)
+    - Demand iteration 1
+    - Demand iteration 2
+    - Demand iteration 3
+    - Demand iteration 4
+        sleep finished
+    Thread sleep finished
+    Gevent request started:  Dummy-2
+        request started:  Dummy-4
+    - Demand iteration 5
+        request received: 200
+    Gevent request finished
+All tasks completed
+```
+
+使用 `gevent` 后
+- 可将 `Dummy` 视为 `gevent` 创建的「协程对象」，而非真正线程（是否为线程由 `gevent` 内部进行控制）
+- `monkey` 可将标准库中的阻塞式操作变为非阻塞式
+- `gevent.spawn` 创建一个协程对象
+- `gevent.jointall()` 与 `Greenlet.join()` 实现协程切换操作，类似 `awaik`
+
+> [!note]
+> 建议直接使用 `gevent.spawn` 代替 `threading`，使用 `threading` 可能存在问题
+
+### monkey
+
+在 `monkey.patch_all()` 之后导入的库都将被修改为非阻塞式，且 `patch_all()` 的形参可显式控制需要替换哪些库
+
+```python
+# False : 不替换
+# True : 替换
+def patch_all(socket=True, dns=True, time=True, select=True, thread=True, os=True, ssl=True,
+              subprocess=True, sys=False, aggressive=True, Event=True,
+              builtins=True, signal=True,
+              queue=True, contextvars=True,
+              **kwargs):
+```
+
+被替换的这些库在 `gevent` 中都有实现，**建议导入 `gevent` 的库，除 `thread` 外**。
+
+```python
+import gevent.socket
+import gevent.time
+import gevent.ssl
+import gevent.os
+    ...
+# NOTE - 建议使用 gevent.spawn 代替
+import gevent.thread
+```
+
+### pool
+
+```python
+import gevent.monkey
+gevent.monkey.patch_all()
+
+
+import gevent
+import gevent.pool
+
+pool = gevent.pool.Pool(3)
+
+
+def task(n):
+    
+    print(f"Task {n} started:")
+    gevent.sleep(n)
+    print(f"Task {n} completed")    
+
+if __name__ == "__main__":
+    tasks = [pool.spawn(task, i) for i in range(10)]
+    gevent.joinall(tasks)
+    print("All tasks completed")
+```
+
+
+# asyncio
+
+## 基本用法
+
+```python
+import asyncio
+from collections.abc import Coroutine
+
+async def work(arg):
+    print(f'start {arg}')
+    await asyncio.sleep(arg)
+    print(f'end {arg}')
+
+# 同生成器，asyncio 函数会生成 Coroutine 对象
+obj : Coroutine = task(1)
+print(type(obj))
+# <class 'coroutine'>
+
+# 1. 创建事件循环
+loop = asyncio.get_event_loop()
+# 2. 构建协程任务
+works = [work(1), work(2)]
+# 3. 收集任务并开始执行
+# NOTE - 该写法在 3.9、3.10 没问题，新版本 Python 已经舍弃
+loop.run_until_complete(asyncio.wait(works))
+```
+
+## Task 对象
+
+使用 `asyncio.ensure_future` 可以对 `Coroutine` 进一步封装，使其具有 `future` 的功能
+
+```python
+import asyncio
+
+async def work(arg):
+    print(f'start {arg}')
+    await asyncio.sleep(arg)
+    print(f'end {arg}')
+
+# NOTE - 在新版本中已经废弃
+task : asyncio.Task = asyncio.ensure_future(work(1))
+print(type(task))
+# <class '_asyncio.Task'>
+
+
+def done_callback(res):
+    pass
+
+def remove_callback():
+    pass
+# future 的回调
+task.add_done_callback(done_callback)
+task.remove_done_callback(remove_callback)
+
+# 1. 创建事件循环
+loop = asyncio.get_event_loop()
+# 2. 构建协程任务
+works = [task]
+# 3. 收集任务并开始执行
+# NOTE - 该写法在 3.9、3.10 没问题，新版本 Python 已经舍弃
+loop.run_until_complete(asyncio.wait(works))
+
+# future 相关的接口
+task.done()
+task.cancel()
+task.cancelled()
+task.result()
+```
+
+## 正式写法
+
+```python
+import asyncio
+
+async def work(arg):
+    print(f'start {arg}')
+    await asyncio.sleep(arg)
+    print(f'end {arg}')
+    return 'ok'
+
+
+async def main():
+    works = [
+        asyncio.create_task(work(1)),
+        asyncio.create_task(work(2))
+    ]
+
+    # 使用 asyncio.gather 可以直接获取所有 work 的返回结果
+    res = await asyncio.gather(*works)
+    print(res)
+
+# 使用 asyncio.run 自动维护事件循环
+asyncio.run(main=main())
+```
+
+若不使用 `asyncio.gather` ，`asyncio.create_task` 创建的 `task` 虽然将在 `main` 退出或遇到 `await` 后执行，但是 `work(2)` 会执行不完整，因此，`asyncio.create_task` 创建的 `task` 必须要有 `await`
+
+
+```python
+import asyncio
+
+async def work(arg):
+    print(f'start {arg}')
+    await asyncio.sleep(arg)
+    print(f'end {arg}')
+    return 'ok'
+
+
+async def main():
+    print('main 1')
+    t = asyncio.create_task(work(1))
+    asyncio.create_task(work(2))
+    print('main 2')
+
+    await t
+
+# 使用 asyncio.run 自动维护事件循环
+asyncio.run(main=main())
+
+print('end')
+```
+
+```term
+$ python demo.py
+main 1
+main 2
+start 1
+start 2
+end 1
+end
+```
+
+## I/O协程库
+
+若想发挥协程的密集型 `I/O` 处理能力，则需使用支持协程的库
+- `aiohttp` : 网络请求库
+- `aiofiles` : 文件处理库
+- `FastAPI` : web 框架
+- `Tortoise` : 数据库
+
+```python
+import asyncio
+import aiohttp
+import aiofiles
+
+async def http_worker():
+    async with aiohttp.ClientSession() as client:
+        res = await client.get("https://cn.bing.com/")
+        print(res)
+    return 'http'
+
+async def file_worker():
+    async with aiofiles.open('./test.txt',mode='w') as f:
+        await f.write('test')
+    
+    return 'file'
+
+async def main():
+    works = [
+        asyncio.create_task(http_worker()),
+        asyncio.create_task(file_worker()),
+    ]
+
+    # 使用 asyncio.gather 可以直接获取所有 work 的返回结果
+    res = await asyncio.gather(*works)
+    print(res)
+
+# 使用 asyncio.run 自动维护事件循环
+asyncio.run(main=main())
+```
+
+## 同步阻塞任务
+
+### to_thread
+
+未使用协程框架的同步模式模块发生阻塞时，也会导致整个事件循环阻塞，可使用 `asyncio.to_thread` 将同步阻塞操作丢到其他线程执行
+
+```python
+import asyncio
+import time
+import threading
+
+def synchronous_blocking_operation():
+    # 同步阻塞的操作
+    time.sleep(2)
+    print(threading.current_thread().ident)
+
+async def async_operation():
+    # 将同步阻塞操作丢到其他线程运行
+    r1 = asyncio.to_thread(synchronous_blocking_operation)
+    r2 = asyncio.to_thread(synchronous_blocking_operation)
+    await asyncio.gather(r1,r2)
+
+async def main():
+    await async_operation()
+
+# 使用asyncio.run调用主函数
+asyncio.run(main())
+```
+
+### run_in_executor
+
+由于 `asyncio.to_thread` 每次都会创建一个新的线程，因此可通过 `loop.run_in_executor` 将多线程/进程任务放到池子里进行执行
+
+```python
+import threading
+import time
+import asyncio
+from concurrent.futures import ThreadPoolExecutor
+
+def synchronous_blocking_operation(arg):
+    # 同步阻塞的操作
+    time.sleep(arg)
+    print(threading.current_thread().ident)
+
+async def main():
+    loop = asyncio.get_running_loop()
+
+    # 线程池
+    pool = ThreadPoolExecutor(max_workers=2)
+    f1 = loop.run_in_executor(pool,synchronous_blocking_operation, 1)
+    f2 = loop.run_in_executor(pool,synchronous_blocking_operation, 2)
+
+    # 等待执行完成
+    await asyncio.gather(f1,f2)
+
+
+# 使用 asyncio.run 自动维护事件循环
+asyncio.run(main=main())
+```
+
+
+## 子线程协程
+
+在上述使用中，都是在「主线程」阻塞等待协程执行完成，但是该方式在 `GUI` 编程中便会导致界面刷新卡顿（使用协程会直接将主线程阻塞）。为了解决该问题，可通过 `asyncio.run_coroutine_threadsafe` 将协程任务放到「子线程」中运行，而不阻塞主线程。
+
+
+```python
+async def async_operation():
+    print('async thing ...')
+
+async def close_loop():
+    loop = asyncio.get_running_loop()
+    loop.stop()
+
+# 子线程启动协程
+def run_loop(loop):
+    asyncio.set_event_loop(loop)
+    loop.run_forever()
+
+if __name__ == '__main__':
+
+    loop = asyncio.new_event_loop()
+    t = threading.Thread(target=run_loop, args=(loop,))
+    t.start()
+
+    # 从主线程提交协程任务到子线程中执行
+    asyncio.run_coroutine_threadsafe(async_operation(), loop)
+
+    print('other thing ...')
+
+    # 关闭子线程中的协程
+    # 必须在事件循环中执行 loop.stop
+    asyncio.run_coroutine_threadsafe(close_loop(), loop)
+    t.join()
+    loop.close()
+```
+
+## run_forever
+
+使用 `asyncio.run` 与 `loop.run_until_complete` 启动事件循环，必须使用 `await` 才能保证协程能正常被执行完成。**若想要未使用 `await` 的协程也能被正常执行，则需要使用 `loop.run_forever` 启动事件循环。**
+
+
+```python
+import asyncio
+
+async def fcn():
+    print('fcn() called')
+    await asyncio.sleep(1)
+    print('fcn() finished')
+
+def done(arg):
+    print('done() called')
+
+async def run():
+    print('run() called')
+    r =  asyncio.create_task(fcn())
+    r.add_done_callback(done)
+    print('run() finished')
+
+if __name__ == '__main__':
+
+    loop = asyncio.new_event_loop()
+    asyncio.ensure_future(run(), loop=loop)
+    try:
+        # 使用 asyncio.run() 确保未使用 await 的协程也能被执行
+        loop.run_forever()
+    except KeyboardInterrupt:
+        print('quit')
+    finally:
+        loop.close()
+
+```
+
+## semaphore
+
+通过 `asyncio.Semaphore` 可对协程的并发数进行控制
+
+```python
+import asyncio
+import aiofiles
+
+async def async_exist_files(files: List[str], root:Optional[Path] = None, concurrency= 100) -> List[bool]:
+    semaphore = asyncio.Semaphore(concurrency)
+    async def check_with_semaphore(path: Path) -> bool:
+        async with semaphore:
+            try:
+                await aiofiles.os.stat(path)
+                return True
+            except FileNotFoundError:
+                return False
+            except Exception as e:
+                logger.warning(f'校验 {path} 存在性异常，{e}')
+                return False
+
+    if root:
+        file_paths = [root.joinpath(file) for file in files]
+    else:
+        file_paths = [Path(file) for file in files]
+
+    tasks = [check_with_semaphore(path) for path in file_paths]
+    return await asyncio.gather(*tasks)
+```
+
+
+# contextVar
+
+通过 `ContextVar` 便能定义协程级的 `threadlocal` 变量，且在各个协程间隔离。其运行规则为
+1. 不同协程间相互隔离
+2. 子协程会继承父协程的 `ContextVar`
+3. 动态作用域，上下文变量值的查找根据函数调用栈实现，而非代码定义
+4. 子线程不会继承父线程的  `ContextVar`
+
+```python
+import asyncio
+from contextvars import ContextVar
+
+var = ContextVar('var', default='default')
+
+async def task(value):
+    var.set(value)
+    print(f"Task {value}: var = {var.get()}")  # 输出各自设置的值
+
+async def main():
+    await asyncio.gather(
+        task("A"),
+        task("B")
+    )
+    print("Main after tasks:", var.get())  # 仍为默认值
+
+asyncio.run(main())
+```
+
+```term
+$ python demo.py
+Task A: var = A
+Task B: var = B
+Main after tasks: default
+```
+
+# 附录
+
+简易协程池
+
+```python
+import asyncio
+import threading
+import inspect
+from concurrent.futures import Future
+from typing import TypeVar, Callable, Coroutine,Union, Optional,Any
+
+# 定义泛型类型变量
+T = TypeVar('T')
+
+class CoroutinePool:
+    def __init__(self, worker = 20):
+        self._loop: Optional[asyncio.BaseEventLoop] = None      # 事件循环
+        self._sema_worker = asyncio.Semaphore(worker)           # 任务数控制
+        self._thread_worker:Optional[threading.Thread] = None   # 执行协程的线程
+        pass
+
+    def _run_loop(self):
+        if self._loop:
+            asyncio.set_event_loop(self._loop)
+            self._loop.run_forever()
+
+    async def _close_loop(self, timeout:Optional[int]):
+        """
+        安全关闭事件循环：
+        1. 等待所有任务完成
+        2. 停止事件循环
+        """
+        if self._loop is None:
+            return
+
+        loop = self._loop
+        
+        # 获取所有未完成的任务（排除当前任务）
+        tasks = [t for t in asyncio.all_tasks(loop) if t is not asyncio.current_task(loop)]
+        
+        if tasks:
+            # 等待所有任务完成（带超时保护）
+            try:
+                await asyncio.wait(tasks, timeout=timeout)
+            except asyncio.TimeoutError:
+                # 超时后取消剩余任务
+                for task in tasks:
+                    if not task.done():
+                        task.cancel()
+                # 等待取消的任务完成
+                await asyncio.wait(tasks)
+        
+        # 安全停止循环
+        loop.stop()
+
+    def start(self):
+        self._loop = asyncio.new_event_loop()
+        self._thread_worker = threading.Thread(target=self._run_loop)
+        self._thread_worker.start()
+
+    def submit(self,func: Callable[..., Union[T, Coroutine[Any, Any, T]]], /, *args, **kwargs) -> Future[T]:
+        if self._loop is None or self._thread_worker is None:
+            raise RuntimeError('请先调用 start() 再提交任务')
+            
+        async def runner(loop:asyncio.AbstractEventLoop):
+            async with self._sema_worker:
+                if inspect.iscoroutinefunction(func):
+                    return await func(*args,**kwargs)
+                else:
+                    return await asyncio.gather(loop.run_in_executor(None,func, *args,**kwargs))
+        return asyncio.run_coroutine_threadsafe(runner(self._loop), self._loop)
+
+    def close(self, timeout: Optional[int] = None):
+        if self._thread_worker:
+            asyncio.run_coroutine_threadsafe(self._close_loop(timeout=timeout), self._loop)
+            self._thread_worker.join()
+            self._thread_worker = None
+        if self._loop:
+            self._loop.close()
+            self._loop = None
+
+```

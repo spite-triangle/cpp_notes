@@ -1,0 +1,2738 @@
+<!doctype html>
+<html
+  lang="en"
+  data-theme="default"
+>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+<title>XV6 |
+    Hugo Narrow</title>
+
+<meta
+  name="description"
+  content="Xv6教学操作系统的核心实现机制，涵盖虚拟内存映射、进程调度策略及任务切换原理"
+/>
+<meta
+  name="keywords"
+  content="Xv6, 虚拟内存, 任务调度, CFS, 优先级继承, RISC-V, trampoline"
+/>
+<meta
+  name="author"
+  content="海拉鲁的三角"
+/>
+<meta name="language" content="en" />
+
+<meta
+  name="robots"
+  content="index, follow"
+/>
+<link rel="canonical" href="https://spite-triangle.github.io/cpp_notes/posts/operatesystem/xv6/" />
+
+
+  <link rel="icon" type="image/svg+xml" href="/cpp_notes/favicon.svg" />
+<link rel="manifest" href="/cpp_notes/site.webmanifest" />
+<meta property="og:url" content="https://spite-triangle.github.io/cpp_notes/posts/operatesystem/xv6/">
+	<meta property="og:site_name" content="Hugo Narrow">
+	<meta property="og:title" content="XV6">
+	<meta property="og:description" content="Xv6教学操作系统的核心实现机制，涵盖虚拟内存映射、进程调度策略及任务切换原理">
+	<meta property="og:locale" content="en">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="posts">
+		<meta property="article:published_time" content="2024-03-02T00:00:00+00:00">
+		<meta property="article:modified_time" content="2024-03-02T00:00:00+00:00">
+		<meta property="article:tag" content="XV6">
+		<meta property="article:tag" content="虚拟内存">
+		<meta property="article:tag" content="任务调度">
+		<meta property="article:tag" content="CFS">
+		<meta property="article:tag" content="优先级继承">
+		<meta property="article:tag" content="RISC-V">
+		<meta property="og:image" content="https://spite-triangle.github.io/images/og-default.avif">
+
+
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:image" content="https://spite-triangle.github.io/images/og-default.avif">
+	<meta name="twitter:title" content="XV6">
+	<meta name="twitter:description" content="Xv6教学操作系统的核心实现机制，涵盖虚拟内存映射、进程调度策略及任务切换原理">
+
+
+	<meta itemprop="name" content="XV6">
+	<meta itemprop="description" content="Xv6教学操作系统的核心实现机制，涵盖虚拟内存映射、进程调度策略及任务切换原理">
+	<meta itemprop="datePublished" content="2024-03-02T00:00:00+00:00">
+	<meta itemprop="dateModified" content="2024-03-02T00:00:00+00:00">
+	<meta itemprop="wordCount" content="1678">
+	<meta itemprop="image" content="https://spite-triangle.github.io/images/og-default.avif">
+	<meta itemprop="keywords" content="XV6,虚拟内存,任务调度,CFS,优先级继承,RISC-V,Trampoline">
+
+
+
+
+
+<script id="search-config" type="application/json">"{\"searchIndexURL\":\"/cpp_notes/index.json\"}"</script>
+
+
+  <script id="gallery-config" type="application/json">"{\"gallery\":true,\"galleryOptions\":{\"columns\":4,\"columnwidth\":200,\"defaultlayout\":\"justified\",\"gap\":10,\"lastrowbehavior\":\"center\",\"targetrowheight\":200},\"lightbox\":true}"</script>
+
+
+
+
+
+
+  
+    
+      <link
+        rel="stylesheet"
+        href="/cpp_notes/css/compiled.min.882c8bb9b3deec5a84cddfd768d37a08c2c4dd5c6a0c0bd0b51a1b08c09c9adc.css"
+        integrity="sha256-iCyLubPe7FqEzd/XaNN6CMLE3VxqDAvQtRobCMCcmtw="
+        crossorigin="anonymous"
+      />
+    
+  
+
+
+
+
+  
+    
+      <link
+        rel="stylesheet"
+        href="/cpp_notes/css/chroma.min.491df36221f739b5948a747a0351f100ee7ccaaf466d9f46288bf06de1d59123.css"
+        integrity="sha256-SR3zYiH3ObWUinR6A1HxAO58yq9GbZ9GKIvwbeHVkSM="
+        crossorigin="anonymous"
+      />
+    
+  
+
+
+
+
+
+
+        <script
+          src="/cpp_notes/js/main.b003624716b5b9344efafc302bd75df711e73d0da196be724be6daebb2b6964d.js"
+          integrity="sha256-sANiRxa1uTRO&#43;vwwK9dd9xHnPQ2hlr5yS&#43;ba67K2lk0="
+          crossorigin="anonymous"
+          defer
+        ></script>
+
+
+
+            <script
+              src="/cpp_notes/js/toc.92c3534ee382ab7e31e364f704a91b9052ed119e89453fb6837a451b56dbef48.js"
+              integrity="sha256-ksNTTuOCq34x42T3BKkbkFLtEZ6JRT&#43;2g3pFG1bb70g="
+              crossorigin="anonymous"
+              defer
+            ></script>
+
+
+
+        <script
+          src="/cpp_notes/js/search.33fef1d91398b17cbc46483d902493b800642d25754e7ff8e998b12499c7fde3.js"
+          integrity="sha256-M/7x2ROYsXy8Rkg9kCSTuABkLSV1Tn/46ZixJJnH/eM="
+          crossorigin="anonymous"
+          defer
+        ></script>
+
+
+
+        <script
+          src="/cpp_notes/js/dock.b1c2d4314c86813f5baaa2a5b524b4613dc7803303402315d0a2c19217e13278.js"
+          integrity="sha256-scLUMUyGgT9bqqKltSS0YT3HgDMDQCMV0KLBkhfhMng="
+          crossorigin="anonymous"
+          defer
+        ></script>
+
+
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/smart-gallery@latest/dist/smart-gallery.umd.js"
+    defer
+  ></script>
+
+
+
+          <script
+            src="/cpp_notes/js/gallery.c8c99001b2f625137e3cbf8e2ecf758eabf72776a89735e56ee081a30b8fe7f5.js"
+            integrity="sha256-yMmQAbL2JRN&#43;PL&#43;OLs91jqv3J3aolzXlbuCBowuP5/U="
+            crossorigin="anonymous"
+            defer
+          ></script>
+
+
+
+
+          <script
+            src="/cpp_notes/js/term.321822a6a26efeaba2fc22150d06128515edf15d6844ac23a9c03c138877be4f.js"
+            integrity="sha256-MhgipqJu/qui/CIVDQYShRXt8V1oRKwjqcA8E4h3vk8="
+            crossorigin="anonymous"
+            defer
+          ></script>
+
+
+
+
+
+
+
+
+
+    
+    <script>(function(){const t=localStorage.getItem("theme")||"system",s=localStorage.getItem("colorScheme")||"default",e=Number.parseInt(localStorage.getItem("contentWidth"),10);Number.isInteger(e)&&e>=40&&e<=90&&document.documentElement.style.setProperty("--content-width",`${e}rem`),document.documentElement.setAttribute("data-theme",s);function n(){t==="dark"||t==="system"&&window.matchMedia("(prefers-color-scheme: dark)").matches?document.documentElement.classList.add("dark"):document.documentElement.classList.remove("dark")}n(),t==="system"&&window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",n)})()</script>
+  </head><body class="bg-background text-foreground min-h-screen antialiased">
+    <main
+      id="page-container"
+      class="mx-auto w-full"
+      style="max-width: var(--content-width, 56rem)"
+    >
+      <div
+    id="reading-progress-bar"
+    class="from-primary to-primary/80 pointer-events-none fixed top-0 left-0 z-50 h-[3px] w-0 bg-linear-to-r transition-[width] duration-150 ease-out"
+  ></div>
+
+  <script>
+    (function () {
+      const bar = document.getElementById("reading-progress-bar");
+      if (!bar) return;
+
+      function update() {
+        const scrolled = window.scrollY;
+        const total = document.documentElement.scrollHeight - window.innerHeight;
+        bar.style.width = total > 0 ? (scrolled / total) * 100 + "%" : "0%";
+      }
+
+      let ticking = false;
+      window.addEventListener(
+        "scroll",
+        () => {
+          if (!ticking) {
+            requestAnimationFrame(() => {
+              update();
+              ticking = false;
+            });
+            ticking = true;
+          }
+        },
+        { passive: true }
+      );
+
+      update();
+    })();
+  </script>
+
+      <header class="sticky top-0 z-50 px-4 py-6">
+  <div
+    class="border-border bg-card/80 flex items-center rounded-xl border px-6 py-4 shadow-sm backdrop-blur-sm"
+  >
+    
+    <div class="hidden w-full items-center md:flex md:min-w-0">
+      
+      <div class="flex items-center">
+        
+          <a
+            href="
+              /cpp_notes/
+            "
+            class="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full transition-transform duration-200 hover:scale-105"
+            aria-label="Hugo Narrow"
+          >
+            <img
+              src="/cpp_notes/images/logo.svg"
+              alt="Hugo Narrow"
+              class="h-full w-full object-cover"
+            />
+          </a>
+        
+      </div>
+
+      
+      <nav class="mx-8 flex min-w-0 flex-1 items-center justify-center">
+        <div class="flex flex-wrap items-center justify-center space-x-1">
+          
+          
+            
+            
+            
+              
+                
+              
+            
+            
+              
+              <a
+                href="/cpp_notes/series/"
+                class="nav-link 
+                  text-muted-foreground hover:text-primary hover:bg-primary/10
+                 focus:ring-primary/20 relative flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 focus:ring-2 focus:outline-none"
+              >
+                
+                  <svg class="h-5 w-5" aria-label="Series" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="m12 18l-4.2 1.8q-1 .425-1.9-.162T5 17.975V5q0-.825.588-1.412T7 3h10q.825 0 1.413.588T19 5v12.975q0 1.075-.9 1.663t-1.9.162zm0-2.2l5 2.15V5H7v12.95zM12 5H7h10z"/></svg>
+                
+                <span>Series</span>
+              </a>
+            
+          
+            
+            
+            
+              
+                
+              
+            
+            
+              
+              <a
+                href="/cpp_notes/posts/"
+                class="nav-link 
+                  text-muted-foreground hover:text-primary hover:bg-primary/10
+                 focus:ring-primary/20 relative flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 focus:ring-2 focus:outline-none"
+              >
+                
+                  <svg class="h-5 w-5" aria-label="Posts" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+</svg>
+
+                
+                <span>Posts</span>
+              </a>
+            
+          
+            
+            
+            
+            
+              
+              
+              <div class="relative">
+                <button
+                  class="nav-link nav-submenu-toggle text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 relative flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 focus:ring-2 focus:outline-none"
+                  data-submenu-id="more"
+                  aria-expanded="false"
+                  aria-haspopup="true"
+                >
+                  
+                    <svg class="h-5 w-5" aria-label="More" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3.09 6.26L22 9l-5.91.74L12 16l-4.09-6.26L2 9l5.91-.74L12 2z" />
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 17l10 5 10-5" />
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 12l10 5 10-5" />
+</svg>
+                  
+                  <span>More</span>
+                  <svg class="h-4 w-4 submenu-chevron transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+                </button>
+                <div
+                  class="nav-submenu border-border bg-popover/95 absolute top-full left-0 z-50 mt-2 hidden min-w-44 space-y-1.5 rounded-xl border p-1.5 shadow-lg backdrop-blur-sm"
+                  data-submenu-id="more"
+                  role="menu"
+                >
+                  
+                    
+                    
+                      
+                        
+                      
+                    
+                    
+                    <a
+                      href="/cpp_notes/categories/"
+                      class="nav-link 
+                        text-muted-foreground hover:text-primary hover:bg-primary/10
+                       focus:ring-primary/20 flex items-center gap-2 rounded-lg px-2 py-2 text-sm leading-snug transition-colors duration-200 focus:ring-2 focus:outline-none"
+                      role="menuitem"
+                      
+                    >
+                      
+                        <svg class="h-4 w-4" aria-label="Categories" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+</svg>
+
+                      
+                      <span>Categories</span>
+                    </a>
+                  
+                    
+                    
+                      
+                        
+                      
+                    
+                    
+                    <a
+                      href="/cpp_notes/tags/"
+                      class="nav-link 
+                        text-muted-foreground hover:text-primary hover:bg-primary/10
+                       focus:ring-primary/20 flex items-center gap-2 rounded-lg px-2 py-2 text-sm leading-snug transition-colors duration-200 focus:ring-2 focus:outline-none"
+                      role="menuitem"
+                      
+                    >
+                      
+                        <svg class="h-4 w-4" aria-label="Tags" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+</svg>
+
+                      
+                      <span>Tags</span>
+                    </a>
+                  
+                    
+                    
+                      
+                        
+                      
+                    
+                    
+                    <a
+                      href="/cpp_notes/projects/"
+                      class="nav-link 
+                        text-muted-foreground hover:text-primary hover:bg-primary/10
+                       focus:ring-primary/20 flex items-center gap-2 rounded-lg px-2 py-2 text-sm leading-snug transition-colors duration-200 focus:ring-2 focus:outline-none"
+                      role="menuitem"
+                      
+                    >
+                      
+                        <svg class="h-4 w-4" aria-label="Projects" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="6" r="1" fill="currentColor"/><path fill="currentColor" d="M6 17h12v2H6zm4-5.17l2.792 2.794l3.932-3.935L18 12V8h-4l1.31 1.275l-2.519 2.519L10 9l-4 4l1.414 1.414z"/><path fill="currentColor" d="M19 3h-3.298a5 5 0 0 0-.32-.425l-.01-.012a4.43 4.43 0 0 0-2.89-1.518a2.6 2.6 0 0 0-.964 0a4.43 4.43 0 0 0-2.89 1.518l-.01.012a5 5 0 0 0-.32.424V3H5a3.003 3.003 0 0 0-3 3v14a3.003 3.003 0 0 0 3 3h14a3.003 3.003 0 0 0 3-3V6a3.003 3.003 0 0 0-3-3m1 17a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h4.55a2.5 2.5 0 0 1 4.9 0H19a1 1 0 0 1 1 1Z"/></svg>
+
+
+                      
+                      <span>Projects</span>
+                    </a>
+                  
+                    
+                    
+                      
+                        
+                      
+                    
+                    
+                    <a
+                      href="/cpp_notes/archives/"
+                      class="nav-link 
+                        text-muted-foreground hover:text-primary hover:bg-primary/10
+                       focus:ring-primary/20 flex items-center gap-2 rounded-lg px-2 py-2 text-sm leading-snug transition-colors duration-200 focus:ring-2 focus:outline-none"
+                      role="menuitem"
+                      
+                    >
+                      
+                        <svg class="h-4 w-4" aria-label="Archives" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+</svg>
+
+                      
+                      <span>Archives</span>
+                    </a>
+                  
+                </div>
+              </div>
+            
+          
+        </div>
+      </nav>
+
+      
+      <div class="flex items-center space-x-2">
+        
+        <div class="hidden lg:block"><div class="relative">
+    <button
+      id="content-width-toggle"
+      class="dropdown-toggle border-border bg-background text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex h-10 w-10 items-center justify-center rounded-lg border transition-all duration-300 ease-out hover:scale-105 focus:ring-2 focus:outline-none active:scale-95"
+      data-dropdown-type="content-width"
+      aria-label="Adjust page width"
+      aria-expanded="false"
+      aria-haspopup="true"
+    ><svg class="h-5 w-5 relative z-10" aria-label="Adjust page width" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+	<path d="M0 0h24v24H0z" fill="none" />
+	<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 12H3l3-3m0 6l-3-3m11 0h7l-3-3m0 6l3-3M3 6V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v1M3 18v1a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-1" />
+</svg>
+</button>
+
+    <div
+      id="content-width-dropdown"
+      class="dropdown-menu border-border bg-popover/95 w-64 absolute top-12 right-0 z-60 hidden rounded-lg border p-1 shadow-lg backdrop-blur-sm transition-all duration-200 ease-out"
+      data-dropdown-type="content-width"
+      
+    >
+    <div class="space-y-3 p-3">
+    <div class="flex items-center justify-between gap-4">
+    <label for="content-width-range" class="text-foreground text-sm font-medium">Page width</label>
+    <output id="content-width-value" for="content-width-range" class="text-muted-foreground min-w-12 text-right text-sm tabular-nums"></output>
+    </div>
+    <input id="content-width-range" class="accent-primary w-full cursor-pointer" type="range" min="40" max="90" step="1" aria-label="Page width" />
+    <button id="content-width-reset" type="button" class="border-border text-muted-foreground hover:bg-accent hover:text-accent-foreground focus:ring-primary/20 w-full rounded-md border px-3 py-2 text-sm transition-colors focus:ring-2 focus:outline-none">Restore default</button>
+    </div></div>
+  </div></div>
+
+
+        
+        
+
+
+        
+        <div class="relative">
+    <button
+      id="color-scheme-toggle"
+      class="dropdown-toggle border-border bg-background text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex h-10 w-10 items-center justify-center rounded-lg border transition-all duration-300 ease-out hover:scale-105 focus:ring-2 focus:outline-none active:scale-95"
+      data-dropdown-type="color-scheme"
+      aria-label="Toggle theme"
+      aria-expanded="false"
+      aria-haspopup="true"
+    ><svg class="h-5 w-5 relative z-10" aria-label="Toggle theme" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v6a2 2 0 002 2h4a2 2 0 002-2V5z" />
+</svg>
+</button>
+
+    <div
+      id="color-scheme-dropdown"
+      class="dropdown-menu border-border bg-popover/95 w-44 absolute top-12 right-0 z-60 hidden rounded-lg border p-1 shadow-lg backdrop-blur-sm transition-all duration-200 ease-out"
+      data-dropdown-type="color-scheme"
+      
+    ><button data-color-scheme="default" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Default</span></button><button data-color-scheme="claude" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Claude</span></button><button data-color-scheme="bumblebee" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Bumblebee</span></button><button data-color-scheme="emerald" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Emerald</span></button><button data-color-scheme="nord" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Nord</span></button><button data-color-scheme="sunset" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Sunset</span></button><button data-color-scheme="abyss" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Abyss</span></button><button data-color-scheme="dracula" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Dracula</span></button><button data-color-scheme="amethyst" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Amethyst</span></button><button data-color-scheme="slate" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Slate</span></button><button data-color-scheme="twitter" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Twitter</span></button><button data-color-scheme="minimal" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Minimal</span></button></div>
+  </div>
+
+
+        
+        <div class="relative">
+    <button
+      id="theme-toggle"
+      class="dropdown-toggle border-border bg-background text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex h-10 w-10 items-center justify-center rounded-lg border transition-all duration-300 ease-out hover:scale-105 focus:ring-2 focus:outline-none active:scale-95"
+      data-dropdown-type="theme"
+      aria-label="Toggle theme"
+      aria-expanded="false"
+      aria-haspopup="true"
+    ><svg class="h-5 w-5 sun-icon hidden relative z-10" aria-label="Light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+</svg>
+
+        <svg class="h-5 w-5 moon-icon hidden relative z-10" aria-label="Dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+</svg>
+
+        <svg class="h-5 w-5 system-icon hidden relative z-10" aria-label="System" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+</svg>
+</button>
+
+    <div
+      id="theme-dropdown"
+      class="dropdown-menu border-border bg-popover/95 w-40 absolute top-12 right-0 z-60 hidden rounded-lg border p-1 shadow-lg backdrop-blur-sm transition-all duration-200 ease-out"
+      data-dropdown-type="theme"
+      
+    ><button data-theme="light" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><svg class="h-5 w-5 mr-3 h-4 w-4" aria-label="Light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+</svg>
+<span>Light</span></button><button data-theme="dark" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><svg class="h-5 w-5 mr-3 h-4 w-4" aria-label="Dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+</svg>
+<span>Dark</span></button><button data-theme="system" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><svg class="h-5 w-5 mr-3 h-4 w-4" aria-label="System" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+</svg>
+<span>System</span></button></div>
+  </div>
+
+
+        
+        
+<button
+  id="header-search"
+  class="border-border bg-background text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex h-10 w-10 items-center justify-center rounded-lg border transition-all duration-300 ease-out hover:scale-105 focus:ring-2 focus:outline-none active:scale-95"
+  title="Search"
+  aria-label="Search"
+>
+  <svg class="h-5 w-5 relative z-10" aria-label="Search" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+</svg>
+
+</button>
+
+      </div>
+    </div>
+
+    
+    <div class="flex w-full items-center justify-between md:hidden">
+      
+      
+<button
+  id="mobile-nav-toggle"
+  class="nav-panel-toggle border-border bg-background text-muted-foreground hover:bg-accent hover:text-foreground flex h-10 w-10 items-center justify-center rounded-lg border transition-colors duration-200"
+  aria-label="Menu"
+  aria-expanded="false"
+  aria-controls="mobile-nav-panel"
+>
+  <svg class="h-5 w-5" aria-label="Menu" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+</svg>
+
+</button>
+
+
+
+      
+      <div class="flex items-center space-x-2">
+        
+        
+
+
+        
+        <div class="relative">
+    <button
+      id="color-scheme-toggle"
+      class="dropdown-toggle border-border bg-background text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex h-10 w-10 items-center justify-center rounded-lg border transition-all duration-300 ease-out hover:scale-105 focus:ring-2 focus:outline-none active:scale-95"
+      data-dropdown-type="color-scheme"
+      aria-label="Toggle theme"
+      aria-expanded="false"
+      aria-haspopup="true"
+    ><svg class="h-5 w-5 relative z-10" aria-label="Toggle theme" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v6a2 2 0 002 2h4a2 2 0 002-2V5z" />
+</svg>
+</button>
+
+    <div
+      id="color-scheme-dropdown"
+      class="dropdown-menu border-border bg-popover/95 w-44 absolute top-12 right-0 z-60 hidden rounded-lg border p-1 shadow-lg backdrop-blur-sm transition-all duration-200 ease-out"
+      data-dropdown-type="color-scheme"
+      
+    ><button data-color-scheme="default" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Default</span></button><button data-color-scheme="claude" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Claude</span></button><button data-color-scheme="bumblebee" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Bumblebee</span></button><button data-color-scheme="emerald" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Emerald</span></button><button data-color-scheme="nord" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Nord</span></button><button data-color-scheme="sunset" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Sunset</span></button><button data-color-scheme="abyss" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Abyss</span></button><button data-color-scheme="dracula" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Dracula</span></button><button data-color-scheme="amethyst" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Amethyst</span></button><button data-color-scheme="slate" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Slate</span></button><button data-color-scheme="twitter" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Twitter</span></button><button data-color-scheme="minimal" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Minimal</span></button></div>
+  </div>
+
+
+        
+        <div class="relative">
+    <button
+      id="theme-toggle"
+      class="dropdown-toggle border-border bg-background text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex h-10 w-10 items-center justify-center rounded-lg border transition-all duration-300 ease-out hover:scale-105 focus:ring-2 focus:outline-none active:scale-95"
+      data-dropdown-type="theme"
+      aria-label="Toggle theme"
+      aria-expanded="false"
+      aria-haspopup="true"
+    ><svg class="h-5 w-5 sun-icon hidden relative z-10" aria-label="Light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+</svg>
+
+        <svg class="h-5 w-5 moon-icon hidden relative z-10" aria-label="Dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+</svg>
+
+        <svg class="h-5 w-5 system-icon hidden relative z-10" aria-label="System" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+</svg>
+</button>
+
+    <div
+      id="theme-dropdown"
+      class="dropdown-menu border-border bg-popover/95 w-40 absolute top-12 right-0 z-60 hidden rounded-lg border p-1 shadow-lg backdrop-blur-sm transition-all duration-200 ease-out"
+      data-dropdown-type="theme"
+      
+    ><button data-theme="light" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><svg class="h-5 w-5 mr-3 h-4 w-4" aria-label="Light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+</svg>
+<span>Light</span></button><button data-theme="dark" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><svg class="h-5 w-5 mr-3 h-4 w-4" aria-label="Dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+</svg>
+<span>Dark</span></button><button data-theme="system" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><svg class="h-5 w-5 mr-3 h-4 w-4" aria-label="System" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+</svg>
+<span>System</span></button></div>
+  </div>
+
+
+        
+        
+<button
+  id="header-search"
+  class="border-border bg-background text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex h-10 w-10 items-center justify-center rounded-lg border transition-all duration-300 ease-out hover:scale-105 focus:ring-2 focus:outline-none active:scale-95"
+  title="Search"
+  aria-label="Search"
+>
+  <svg class="h-5 w-5 relative z-10" aria-label="Search" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+</svg>
+
+</button>
+
+      </div>
+    </div>
+  </div>
+
+  
+  
+<div
+  id="mobile-nav-panel"
+  class="mt-2 hidden md:hidden"
+  role="navigation"
+  aria-label="Menu"
+  aria-hidden="true"
+  tabindex="-1"
+>
+  <div
+    class="border-border bg-popover/95 overflow-hidden rounded-xl border shadow-lg backdrop-blur-sm"
+  >
+    
+    <nav class="flex flex-col p-2">
+      
+      
+        
+        
+        
+          
+            
+          
+        
+        
+          
+          <a
+            href="/cpp_notes/series/"
+            class="nav-panel-link 
+              text-muted-foreground hover:text-primary hover:bg-primary/10
+             focus:ring-primary/20 flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+            role="menuitem"
+            
+          >
+            
+              <svg class="h-5 w-5" aria-label="Series" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="m12 18l-4.2 1.8q-1 .425-1.9-.162T5 17.975V5q0-.825.588-1.412T7 3h10q.825 0 1.413.588T19 5v12.975q0 1.075-.9 1.663t-1.9.162zm0-2.2l5 2.15V5H7v12.95zM12 5H7h10z"/></svg>
+            
+            <span>Series</span>
+          </a>
+        
+      
+        
+        
+        
+          
+            
+          
+        
+        
+          
+          <a
+            href="/cpp_notes/posts/"
+            class="nav-panel-link 
+              text-muted-foreground hover:text-primary hover:bg-primary/10
+             focus:ring-primary/20 flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+            role="menuitem"
+            
+          >
+            
+              <svg class="h-5 w-5" aria-label="Posts" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+</svg>
+
+            
+            <span>Posts</span>
+          </a>
+        
+      
+        
+        
+        
+        
+          
+          
+          <div class="nav-accordion-group">
+            <button
+              class="nav-accordion-toggle text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex w-full items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+              data-accordion-id="more"
+              aria-expanded="false"
+              aria-controls="accordion-more"
+            >
+              
+                <svg class="h-5 w-5" aria-label="More" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3.09 6.26L22 9l-5.91.74L12 16l-4.09-6.26L2 9l5.91-.74L12 2z" />
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 17l10 5 10-5" />
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 12l10 5 10-5" />
+</svg>
+              
+              <span class="flex-1 text-left">More</span>
+              <svg class="h-4 w-4 accordion-chevron transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+            </button>
+            
+            <div
+              id="accordion-more"
+              class="nav-accordion-panel grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out"
+              data-accordion-id="more"
+              aria-hidden="true"
+            >
+              <div class="overflow-hidden">
+                <div class="border-primary/20 ml-4 space-y-0.5 border-l-2 py-1 pl-3">
+                  
+                    
+                    
+                      
+                        
+                      
+                    
+                    
+                    <a
+                      href="/cpp_notes/categories/"
+                      class="nav-panel-link 
+                        text-muted-foreground hover:text-primary hover:bg-primary/10
+                       focus:ring-primary/20 flex items-center gap-3 rounded-md px-3 py-2.5 text-sm transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+                      role="menuitem"
+                      
+                    >
+                      
+                        <svg class="h-4 w-4" aria-label="Categories" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+</svg>
+
+                      
+                      <span>Categories</span>
+                    </a>
+                  
+                    
+                    
+                      
+                        
+                      
+                    
+                    
+                    <a
+                      href="/cpp_notes/tags/"
+                      class="nav-panel-link 
+                        text-muted-foreground hover:text-primary hover:bg-primary/10
+                       focus:ring-primary/20 flex items-center gap-3 rounded-md px-3 py-2.5 text-sm transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+                      role="menuitem"
+                      
+                    >
+                      
+                        <svg class="h-4 w-4" aria-label="Tags" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+</svg>
+
+                      
+                      <span>Tags</span>
+                    </a>
+                  
+                    
+                    
+                      
+                        
+                      
+                    
+                    
+                    <a
+                      href="/cpp_notes/projects/"
+                      class="nav-panel-link 
+                        text-muted-foreground hover:text-primary hover:bg-primary/10
+                       focus:ring-primary/20 flex items-center gap-3 rounded-md px-3 py-2.5 text-sm transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+                      role="menuitem"
+                      
+                    >
+                      
+                        <svg class="h-4 w-4" aria-label="Projects" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="6" r="1" fill="currentColor"/><path fill="currentColor" d="M6 17h12v2H6zm4-5.17l2.792 2.794l3.932-3.935L18 12V8h-4l1.31 1.275l-2.519 2.519L10 9l-4 4l1.414 1.414z"/><path fill="currentColor" d="M19 3h-3.298a5 5 0 0 0-.32-.425l-.01-.012a4.43 4.43 0 0 0-2.89-1.518a2.6 2.6 0 0 0-.964 0a4.43 4.43 0 0 0-2.89 1.518l-.01.012a5 5 0 0 0-.32.424V3H5a3.003 3.003 0 0 0-3 3v14a3.003 3.003 0 0 0 3 3h14a3.003 3.003 0 0 0 3-3V6a3.003 3.003 0 0 0-3-3m1 17a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h4.55a2.5 2.5 0 0 1 4.9 0H19a1 1 0 0 1 1 1Z"/></svg>
+
+
+                      
+                      <span>Projects</span>
+                    </a>
+                  
+                    
+                    
+                      
+                        
+                      
+                    
+                    
+                    <a
+                      href="/cpp_notes/archives/"
+                      class="nav-panel-link 
+                        text-muted-foreground hover:text-primary hover:bg-primary/10
+                       focus:ring-primary/20 flex items-center gap-3 rounded-md px-3 py-2.5 text-sm transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+                      role="menuitem"
+                      
+                    >
+                      
+                        <svg class="h-4 w-4" aria-label="Archives" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+</svg>
+
+                      
+                      <span>Archives</span>
+                    </a>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        
+      
+    </nav>
+  </div>
+</div>
+
+</header>
+
+
+
+      <div class="px-4 py-6">
+        
+  <nav class="breadcrumb mb-4 py-1 md:mb-6" aria-label="Breadcrumb">
+    <ol
+      class="text-muted-foreground scrollbar-hide flex items-center space-x-1 overflow-x-auto py-1 text-sm whitespace-nowrap md:space-x-2"
+    >
+      
+        
+          
+          <li class="shrink-0">
+            <a
+              href="/cpp_notes/"
+              class="text-muted-foreground hover:text-primary hover:bg-primary/10 flex items-center gap-1 rounded-lg px-1 py-0.5 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-[1.02] md:py-1.5"
+            >
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m3 12 2-2m0 0 7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+</svg>
+
+              <span class="max-w-16 truncate md:max-w-none">Home</span>
+            </a>
+          </li>
+        
+      
+        
+          
+          <li class="flex min-w-0 items-center gap-1 md:gap-2">
+            <span class="text-muted-foreground/50 shrink-0"
+              ><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+</svg>
+            </span>
+            <a
+              href="/cpp_notes/posts/"
+              class="text-muted-foreground hover:text-primary hover:bg-primary/10 flex shrink-0 items-center gap-1 rounded-lg px-1 py-0.5 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-[1.02] md:px-3 md:py-1.5"
+            >
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+</svg>
+              <span class="max-w-16 truncate md:max-w-none">Posts</span>
+            </a>
+          </li>
+        
+      
+        
+          
+          <li class="flex min-w-0 items-center gap-1 md:gap-2">
+            <span class="text-muted-foreground/50 shrink-0"
+              ><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+</svg>
+            </span>
+            <a
+              href="/cpp_notes/posts/operatesystem/"
+              class="text-muted-foreground hover:text-primary hover:bg-primary/10 flex shrink-0 items-center gap-1 rounded-lg px-1 py-0.5 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-[1.02] md:px-3 md:py-1.5"
+            >
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+</svg>
+              <span class="max-w-16 truncate md:max-w-none">操作系统</span>
+            </a>
+          </li>
+        
+      
+
+
+      
+      <li class="flex min-w-0 items-center gap-1 md:gap-2">
+        <span class="text-muted-foreground/50 shrink-0"
+          ><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+</svg>
+        </span>
+        <span class="text-foreground flex min-w-0 items-center gap-1 font-medium">
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+</svg>
+          <span class="max-w-32 truncate md:max-w-[16rem] lg:max-w-none">XV6</span>
+        </span>
+      </li>
+    </ol>
+  </nav>
+
+
+        
+  
+
+
+  
+  <header class="mb-8">
+    
+
+
+
+
+<div class="post-meta mb-8">
+  
+  
+    <h1 class="text-foreground mb-6 text-3xl leading-tight font-bold md:text-4xl">
+      XV6
+    </h1>
+  
+
+  
+  
+
+  
+  <div class="bg-card border-border rounded-xl border">
+
+    
+        
+        <div class="p-6">
+
+          
+          <div class="text-muted-foreground flex flex-wrap items-center gap-3 text-sm mb-4">
+            
+            
+            <div class="flex items-center gap-2">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+</svg>
+
+              <time datetime="2024-03-02">
+                March 2, 2024
+              </time>
+            </div>
+            
+
+            
+            
+            <div class="flex items-center gap-2">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+</svg>
+
+              <span>4 min</span>
+            </div>
+            
+
+            
+            
+            <div class="flex items-center gap-2">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
+</svg>
+
+              <span>1678 words</span>
+            </div>
+            
+          </div>
+
+          
+          <div class="text-muted-foreground space-y-3 pt-4 border-t border-border">
+            <div class="flex items-center gap-2">
+              <div class="shrink-0">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+</svg>
+
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex flex-wrap items-center gap-1.5">
+                  <span class="text-muted-foreground text-sm font-medium">
+                    Categories:
+                  </span>
+                  <a href="/cpp_notes/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%AE%9E%E8%B7%B5/"
+                    class="inline-flex items-center rounded-full px-2.5 py-1 text-sm font-medium transition-all duration-200 bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground">
+                    操作系统实践
+                  </a>
+                  <a href="/cpp_notes/categories/xv6%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"
+                    class="inline-flex items-center rounded-full px-2.5 py-1 text-sm font-medium transition-all duration-200 bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground">
+                    Xv6源码分析
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="shrink-0">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+</svg>
+
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex flex-wrap items-center gap-1.5">
+                  <span class="text-muted-foreground text-sm font-medium">
+                    Tags:
+                  </span>
+                  <a href="/cpp_notes/tags/xv6/"
+                    class="inline-flex items-center rounded-full px-2.5 py-1 text-sm font-medium transition-all duration-200 bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground">
+                    XV6
+                  </a>
+                  <a href="/cpp_notes/tags/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/"
+                    class="inline-flex items-center rounded-full px-2.5 py-1 text-sm font-medium transition-all duration-200 bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground">
+                    虚拟内存
+                  </a>
+                  <a href="/cpp_notes/tags/%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6/"
+                    class="inline-flex items-center rounded-full px-2.5 py-1 text-sm font-medium transition-all duration-200 bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground">
+                    任务调度
+                  </a>
+                  <a href="/cpp_notes/tags/cfs/"
+                    class="inline-flex items-center rounded-full px-2.5 py-1 text-sm font-medium transition-all duration-200 bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground">
+                    CFS
+                  </a>
+                  <a href="/cpp_notes/tags/%E4%BC%98%E5%85%88%E7%BA%A7%E7%BB%A7%E6%89%BF/"
+                    class="inline-flex items-center rounded-full px-2.5 py-1 text-sm font-medium transition-all duration-200 bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground">
+                    优先级继承
+                  </a>
+                  <a href="/cpp_notes/tags/risc-v/"
+                    class="inline-flex items-center rounded-full px-2.5 py-1 text-sm font-medium transition-all duration-200 bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground">
+                    RISC-V
+                  </a>
+                  <a href="/cpp_notes/tags/trampoline/"
+                    class="inline-flex items-center rounded-full px-2.5 py-1 text-sm font-medium transition-all duration-200 bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground">
+                    Trampoline
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+  </div>
+</div>
+
+  </header>
+
+  
+  <article class="prose prose-neutral dark:prose-invert mb-12 max-w-none">
+    <h1 id="介绍">介绍<a href="#%e4%bb%8b%e7%bb%8d" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h1><p><code>XV6</code> 专为教学开发，是 <code>UNIX v6</code> 版的优化版本。</p>
+<ul>
+<li>基本工具集，例如 wc、echo、cat&hellip;</li>
+<li>命令执行、管道、重定向</li>
+<li>支持多处理器</li>
+</ul>
+<p>在 xv6 中只有 21 个系统调用</p>
+<p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="1702"
+  data-image-height="1096"
+  data-image-src="/cpp_notes/posts/operatesystem/xv6/resources/xv6-syscalls.png"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/operatesystem/xv6/resources/xv6-syscalls.png"
+    alt="alt"
+    
+    
+      
+      
+        
+          width="1702" height="1096"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/operatesystem/xv6/resources/xv6-syscalls.png"
+    data-gallery-alt="alt"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+<p><code>XV6</code> 相关资料：</p>
+<ul>
+<li><a
+    href="https://jyywiki.cn/pages/OS/manuals/xv6-riscv-rev2.pdf"target="_blank"
+    class="inline-flex items-center gap-1"
+  >xv6: A simple, Unix-like teaching operating system<svg class="h-3 w-3 flex-shrink-0" id="external-link" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 3h6v6m-11 5L21 3m-3 10v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
+  </a></li>
+<li><a
+    href="https://github.com/mit-pdos/xv6-riscv"target="_blank"
+    class="inline-flex items-center gap-1"
+  >xv6-riscv<svg class="h-3 w-3 flex-shrink-0" id="external-link" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 3h6v6m-11 5L21 3m-3 10v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
+  </a></li>
+</ul>
+<h1 id="虚拟内存">虚拟内存<a href="#%e8%99%9a%e6%8b%9f%e5%86%85%e5%ad%98" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h1><p>作用：让每一个进程都拥有一个独立且完整的内存，但实际运行中，这些虚拟内存会被映射到真正的物理地址上。这样做的好处是每个进程间的内存操作互不干涉，且每个进程都有大量的内存能使用。</p>
+<p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="557"
+  data-image-height="172"
+  data-image-src="/cpp_notes/posts/operatesystem/xv6/resources/vadd.jpg"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/operatesystem/xv6/resources/vadd.jpg"
+    alt="vadd"
+    
+    
+      
+      
+        
+          width="557" height="172"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/operatesystem/xv6/resources/vadd.jpg"
+    data-gallery-alt="vadd"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+<p>在 <code>riscv</code> 中，会在 <code>satp</code> 寄存器中存储当前进程的虚拟内存映射表，进程访问虚拟内存地址 <code>vaddr</code> 就会被内存管理单元转换为真正的内存物理地址 <code>paddr</code>。</p>
+<h1 id="进程切换">进程切换<a href="#%e8%bf%9b%e7%a8%8b%e5%88%87%e6%8d%a2" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h1><p>在 <code>riscv</code> 中，一个进程的虚拟内存模型在高地址会有两块特殊内存</p>
+<ul>
+<li><code>trampoline</code>：用于保存进程当前运行状态的代码，全局共享</li>
+<li><code>trapframe</code>: 储存进程当前运行状态的寄存器、内存信息，进程肚子维护一份</li>
+</ul>
+<p>当前发生中断、系统调用时，会首先调用 <code>trampoline</code> 将当前进程的寄存器、内存信息保存到 <code>trapframe</code> 内存中，然后才让操作系统介入，处理业务。当前要恢复某个进程时，就只需将 <code>trapframe</code> 的信息重新恢复到寄存器、内存就行。</p>
+<p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="446"
+  data-image-height="664"
+  data-image-src="/cpp_notes/posts/operatesystem/xv6/resources/xv6-process-memory.png"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/operatesystem/xv6/resources/xv6-process-memory.png"
+    alt="memory"
+    
+    
+      
+      
+        
+          width="446" height="664"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/operatesystem/xv6/resources/xv6-process-memory.png"
+    data-gallery-alt="memory"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+<h1 id="任务调度">任务调度<a href="#%e4%bb%bb%e5%8a%a1%e8%b0%83%e5%ba%a6" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h1><h2 id="时间片轮转">时间片轮转<a href="#%e6%97%b6%e9%97%b4%e7%89%87%e8%bd%ae%e8%bd%ac" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h2><p>策略：操作系统固定时间发生中断，依次轮转进程进行运行。</p>
+<p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="1068"
+  data-image-height="438"
+  data-image-src="/cpp_notes/posts/operatesystem/xv6/resources/sched-rr.png"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/operatesystem/xv6/resources/sched-rr.png"
+    alt="shed"
+    
+    
+      
+      
+        
+          width="1068" height="438"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/operatesystem/xv6/resources/sched-rr.png"
+    data-gallery-alt="shed"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+<p>缺陷：如果大部分进程都在等待，那么依次轮询执行，就会浪费大量的cpu资源。</p>
+<h2 id="优先级">优先级<a href="#%e4%bc%98%e5%85%88%e7%ba%a7" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h2><p>策略：为进程划分优先级，让高优先级的进程先执行。UNIX 采用 <code>niceness</code> 值进行评判，数值为 <code>-20 ~ 19</code> 的整数</p>
+<ul>
+<li><code>-20</code> : 最坏，会抢着 cpu 执行</li>
+<li><code>19</code> : 最好，会把 cpu 让给其他进程执行</li>
+</ul>
+<p>缺陷：会饿死好人</p>
+<div
+    class="alert alert-tip my-6 overflow-hidden rounded-lg transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md"
+    style="background-color: color-mix(in srgb, var(--color-tip) 10%, transparent);
+              border-left-color: var(--color-tip);
+              --hover-bg: color-mix(in srgb, var(--color-tip) 15%, transparent);"
+    onmouseover="this.style.backgroundColor = this.style.getPropertyValue('--hover-bg')"
+    onmouseout="this.style.backgroundColor = 'color-mix(in srgb, var(--color-tip) 10%, transparent)'"
+    role="alert"
+    aria-labelledby="alert-0-title"
+  >
+    
+    <div
+      class=" flex items-center justify-between px-6 py-6"
+      
+    >
+      <div class="flex items-center gap-3">
+        
+        <h4 id="alert-0-title" class="text-foreground/90 m-0 font-semibold">
+          Tip
+        </h4>
+      </div>
+
+      
+      
+    </div>
+
+    
+    <div
+      id="alert-0-content"
+      class="alert-content  px-6 pb-6"
+    >
+      <div class="prose prose-sm text-foreground/90 max-w-none">
+        <p>在 Linux 中，<code>niceness</code> 值是用来指定进程分配 cpu 的概率，防止好人饿死</p>
+      </div>
+    </div>
+  </div><script>
+  function toggleAlert(alertId) {
+    const content = document.getElementById(alertId + "-content");
+    const chevron = document.getElementById(alertId + "-chevron");
+    const header = content.previousElementSibling;
+
+    if (content.classList.contains("hidden")) {
+      content.classList.remove("hidden");
+      chevron.style.transform = "rotate(0deg)";
+      header.setAttribute("aria-expanded", "true");
+    } else {
+      content.classList.add("hidden");
+      chevron.style.transform = "rotate(-90deg)";
+      header.setAttribute("aria-expanded", "false");
+    }
+  }
+
+  
+  document.addEventListener("DOMContentLoaded", function () {
+    const collapsedAlerts = document.querySelectorAll(".alert-content.hidden");
+    collapsedAlerts.forEach(function (content) {
+      const alertId = content.id.replace("-content", "");
+      const chevron = document.getElementById(alertId + "-chevron");
+      if (chevron) {
+        chevron.style.transform = "rotate(-90deg)";
+      }
+    });
+  });
+</script>
+<div
+  class="term-block my-6 overflow-hidden rounded-xl border shadow-sm"
+  data-term-block
+  data-term-id="term-0"
+>
+  <div class="term-header flex items-center justify-between border-b px-4 py-3">
+    <div class="flex items-center gap-3">
+      <span class="flex items-center gap-1.5" aria-hidden="true">
+        <span class="h-3 w-3 rounded-full bg-[#ff5f57]"></span>
+        <span class="h-3 w-3 rounded-full bg-[#febc2e]"></span>
+        <span class="h-3 w-3 rounded-full bg-[#28c840]"></span>
+      </span>
+      <span class="term-title text-sm font-medium">Terminal</span>
+    </div>
+  </div>
+  <div class="overflow-x-auto p-4">
+    <div class="term-body font-mono text-sm leading-relaxed"><div class="group relative pr-10" data-term-group data-copy="taskset -c 0 yes">
+            <button
+              class="term-copy-btn absolute top-0 right-0 z-10 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium opacity-0 transition-all duration-200 ease-out group-hover:opacity-100 focus:ring-2 focus:ring-[#3fb950]/20 focus:outline-none"
+              type="button"
+              data-term-copy
+              data-label-copy="Copy"
+              data-label-copied="Copied"
+              title="Copy"
+              aria-label="Copy"
+            >
+              <span class="copy-icon">
+                <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+</svg>
+              </span>
+              <span class="copy-text hidden sm:inline">Copy</span>
+            </button>
+            <div class="whitespace-pre"><div><span class="term-prompt font-semibold select-none">$</span
+                    ><span class="pl-2">taskset -c 0 yes</span><span class="term-comment pl-2 italic select-none"># 将进程绑定到指定 cpu 执行</span></div></div>
+          </div><div class="group relative pr-10" data-term-group data-copy="nice -n 19  yes">
+            <button
+              class="term-copy-btn absolute top-0 right-0 z-10 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium opacity-0 transition-all duration-200 ease-out group-hover:opacity-100 focus:ring-2 focus:ring-[#3fb950]/20 focus:outline-none"
+              type="button"
+              data-term-copy
+              data-label-copy="Copy"
+              data-label-copied="Copied"
+              title="Copy"
+              aria-label="Copy"
+            >
+              <span class="copy-icon">
+                <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+</svg>
+              </span>
+              <span class="copy-text hidden sm:inline">Copy</span>
+            </button>
+            <div class="whitespace-pre"><div><span class="term-prompt font-semibold select-none">$</span
+                    ><span class="pl-2">nice -n 19  yes</span><span class="term-comment pl-2 italic select-none"># 指定进程的 niceness 值</span></div></div>
+          </div><div class="group relative pr-10" data-term-group data-copy="taskset -c 0 nice -n 9 yes &gt; /dev/null &amp;">
+            <button
+              class="term-copy-btn absolute top-0 right-0 z-10 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium opacity-0 transition-all duration-200 ease-out group-hover:opacity-100 focus:ring-2 focus:ring-[#3fb950]/20 focus:outline-none"
+              type="button"
+              data-term-copy
+              data-label-copy="Copy"
+              data-label-copied="Copied"
+              title="Copy"
+              aria-label="Copy"
+            >
+              <span class="copy-icon">
+                <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+</svg>
+              </span>
+              <span class="copy-text hidden sm:inline">Copy</span>
+            </button>
+            <div class="whitespace-pre"><div><span class="term-prompt font-semibold select-none">$</span
+                    ><span class="pl-2">taskset -c 0 nice -n 9 yes &gt; /dev/null &amp;</span></div></div>
+          </div><div class="group relative pr-10" data-term-group data-copy="taskset -c 0 nice -n 19 yes &gt; /dev/null &amp;">
+            <button
+              class="term-copy-btn absolute top-0 right-0 z-10 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium opacity-0 transition-all duration-200 ease-out group-hover:opacity-100 focus:ring-2 focus:ring-[#3fb950]/20 focus:outline-none"
+              type="button"
+              data-term-copy
+              data-label-copy="Copy"
+              data-label-copied="Copied"
+              title="Copy"
+              aria-label="Copy"
+            >
+              <span class="copy-icon">
+                <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+</svg>
+              </span>
+              <span class="copy-text hidden sm:inline">Copy</span>
+            </button>
+            <div class="whitespace-pre"><div><span class="term-prompt font-semibold select-none">$</span
+                    ><span class="pl-2">taskset -c 0 nice -n 19 yes &gt; /dev/null &amp;</span></div></div>
+          </div><div class="group relative pr-10" data-term-group data-copy="top">
+            <button
+              class="term-copy-btn absolute top-0 right-0 z-10 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium opacity-0 transition-all duration-200 ease-out group-hover:opacity-100 focus:ring-2 focus:ring-[#3fb950]/20 focus:outline-none"
+              type="button"
+              data-term-copy
+              data-label-copy="Copy"
+              data-label-copied="Copied"
+              title="Copy"
+              aria-label="Copy"
+            >
+              <span class="copy-icon">
+                <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+</svg>
+              </span>
+              <span class="copy-text hidden sm:inline">Copy</span>
+            </button>
+            <div class="whitespace-pre"><div><span class="term-prompt font-semibold select-none">$</span
+                    ><span class="pl-2">top</span><span class="term-comment pl-2 italic select-none"># NI 就是 niceness 值；两个 yes 进程 cpu 占比 9 ：1</span></div></div>
+          </div><div class="term-output whitespace-pre">PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME&#43; COMMAND</div><div class="term-output whitespace-pre">882 triangle  29   9    7236    512    448 R  89.7   0.0   0:11.79 yes</div><div class="term-output whitespace-pre">879 triangle  39  19    7236    584    516 R  10.0   0.0   0:25.60 yes   </div></div>
+  </div>
+</div>
+<h2 id="动态优先级-mlfq">动态优先级 (MLFQ)<a href="#%e5%8a%a8%e6%80%81%e4%bc%98%e5%85%88%e7%ba%a7-mlfq" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h2><p>策略：靠操作系统自动设置进程优先级。</p>
+<ul>
+<li>坏人：让坏人变好点，提升 niceness 值</li>
+<li>好人：可以变坏点，降低 niceness 值</li>
+</ul>
+<p>缺陷：会有坏人装好人</p>
+<h2 id="完全公平策略-cfs">完全公平策略 (CFS)<a href="#%e5%ae%8c%e5%85%a8%e5%85%ac%e5%b9%b3%e7%ad%96%e7%95%a5-cfs" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h2><p>策略：对每个进程的运行时间进行记录，确保所有进程的运行总时间尽可能一样。</p>
+<ul>
+<li>好人：加快时间</li>
+<li>坏人：减缓时间</li>
+</ul>
+<p>问题：</p>
+<ol>
+<li>进程 <code>fork</code> 后，子进程的运行时间设置方式</li>
+<li>进程 <code>sleep</code> 后，运行时间要补充</li>
+<li>运行时间无限增长，数据会存在溢出风险，运行时间归零</li>
+</ol>
+<h2 id="复杂调度问题">复杂调度问题<a href="#%e5%a4%8d%e6%9d%82%e8%b0%83%e5%ba%a6%e9%97%ae%e9%a2%98" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h2><ul>
+<li><strong>进程同步调度</strong></li>
+</ul>
+<p>问题：当优先级高的进程和优先级低的进程发生同步时，会给调度器造成严重问题。低优先级的进程拿着锁睡觉，高优先级的进程一直等待低优先级运行完，造成中级任务持续运行。</p>
+<p>解决方案：</p>
+<ul>
+<li>
+<p>优先级继承：低优先级持有了高优先级的锁，低优先变高优先级</p>
+</li>
+<li>
+<p><strong>多处理器</strong></p>
+</li>
+</ul>
+<ol>
+<li>进程怎么分配到 cpu 上运行</li>
+<li>cpu 区分大小核</li>
+</ol>
+<h1 id="附加">附加<a href="#%e9%99%84%e5%8a%a0" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h1><h2 id="依赖文件">依赖文件<a href="#%e4%be%9d%e8%b5%96%e6%96%87%e4%bb%b6" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h2><p>对于 <code>makefile</code> 而言，其只能检测目标依赖的文件是否发生改变。然后再写 <code>makefile</code> 的时候，一般只会将 <code>*.c</code> 或 <code>*.cpp</code> 文件写入依赖，而并不涉及 <code>*.h</code> 。这就会导致当头文件发生改变时，进行项目编译，make 并不能识别出头文件变化，导致出现一系列问题。为解决该问题，gcc 编译器可以自动生成源文件的依赖文件，即 <code>*.d</code>，用于 <code>makefile</code> 能够识别头文件的变化。</p>
+<div
+  class="term-block my-6 overflow-hidden rounded-xl border shadow-sm"
+  data-term-block
+  data-term-id="term-1"
+>
+  <div class="term-header flex items-center justify-between border-b px-4 py-3">
+    <div class="flex items-center gap-3">
+      <span class="flex items-center gap-1.5" aria-hidden="true">
+        <span class="h-3 w-3 rounded-full bg-[#ff5f57]"></span>
+        <span class="h-3 w-3 rounded-full bg-[#febc2e]"></span>
+        <span class="h-3 w-3 rounded-full bg-[#28c840]"></span>
+      </span>
+      <span class="term-title text-sm font-medium">Terminal</span>
+    </div>
+  </div>
+  <div class="overflow-x-auto p-4">
+    <div class="term-body font-mono text-sm leading-relaxed"><div class="group relative pr-10" data-term-group data-copy="gcc -MD -c main.c">
+            <button
+              class="term-copy-btn absolute top-0 right-0 z-10 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium opacity-0 transition-all duration-200 ease-out group-hover:opacity-100 focus:ring-2 focus:ring-[#3fb950]/20 focus:outline-none"
+              type="button"
+              data-term-copy
+              data-label-copy="Copy"
+              data-label-copied="Copied"
+              title="Copy"
+              aria-label="Copy"
+            >
+              <span class="copy-icon">
+                <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+</svg>
+              </span>
+              <span class="copy-text hidden sm:inline">Copy</span>
+            </button>
+            <div class="whitespace-pre"><div><span class="term-prompt font-semibold select-none">$</span
+                    ><span class="pl-2">gcc -MD -c main.c</span><span class="term-comment pl-2 italic select-none"># MD 告诉编译器生成 .d 文件</span></div></div>
+          </div><div class="group relative pr-10" data-term-group data-copy="ll">
+            <button
+              class="term-copy-btn absolute top-0 right-0 z-10 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium opacity-0 transition-all duration-200 ease-out group-hover:opacity-100 focus:ring-2 focus:ring-[#3fb950]/20 focus:outline-none"
+              type="button"
+              data-term-copy
+              data-label-copy="Copy"
+              data-label-copied="Copied"
+              title="Copy"
+              aria-label="Copy"
+            >
+              <span class="copy-icon">
+                <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+</svg>
+              </span>
+              <span class="copy-text hidden sm:inline">Copy</span>
+            </button>
+            <div class="whitespace-pre"><div><span class="term-prompt font-semibold select-none">$</span
+                    ><span class="pl-2">ll</span></div></div>
+          </div><div class="term-output whitespace-pre">-rwxrwxrwx 1 triangle triangle  102 Sep  2 14:45 main.c*</div><div class="term-output whitespace-pre">-rwxrwxrwx 1 triangle triangle   48 Sep  2 14:52 main.d*</div><div class="term-output whitespace-pre">-rwxrwxrwx 1 triangle triangle 1560 Sep  2 14:52 main.o*</div><div class="group relative pr-10" data-term-group data-copy="cat main.d">
+            <button
+              class="term-copy-btn absolute top-0 right-0 z-10 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium opacity-0 transition-all duration-200 ease-out group-hover:opacity-100 focus:ring-2 focus:ring-[#3fb950]/20 focus:outline-none"
+              type="button"
+              data-term-copy
+              data-label-copy="Copy"
+              data-label-copied="Copied"
+              title="Copy"
+              aria-label="Copy"
+            >
+              <span class="copy-icon">
+                <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+</svg>
+              </span>
+              <span class="copy-text hidden sm:inline">Copy</span>
+            </button>
+            <div class="whitespace-pre"><div><span class="term-prompt font-semibold select-none">$</span
+                    ><span class="pl-2">cat main.d</span></div></div>
+          </div><div class="term-output whitespace-pre">main.o: main.c /usr/include/stdc-predef.h add.h</div></div>
+  </div>
+</div>
+<p>让 <code>makefile</code> 自动维护这些东西</p>
+<div
+  class="code-block-container border-border bg-card my-6 overflow-hidden rounded-xl border shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md"
+  data-code-block
+  data-code-id="code-2"
+  data-collapsible="true"
+  data-default-state="expanded"
+  data-collapsed="false"
+  data-auto-collapse-lines="30"
+  data-auto-collapse-height="400"
+  data-collapsed-height="120"
+>
+  
+  <div
+    class="code-block-header bg-muted/30 border-border flex items-center justify-between border-b px-4 py-3"
+  >
+    
+    <div class="flex items-center gap-2">
+      <div class="text-muted-foreground shrink-0">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+</svg>
+      </div>
+      <span class="text-muted-foreground text-sm font-medium">
+        MAKEFILE
+      </span>
+    </div>
+
+    
+    <div class="flex items-center gap-2">
+      <button
+          class="collapse-code-btn text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+          type="button"
+          data-code-action="toggle-collapse"
+          data-label-expand="Expand"
+          data-label-collapse="Collapse"
+          title="Collapse"
+          aria-label="Collapse"
+          aria-controls="code-2"
+          aria-expanded="true"
+        >
+          <span class="collapse-chevron transition-transform duration-200 ease-out">
+            <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+          </span>
+          <span class="collapse-text hidden sm:inline">Collapse</span>
+        </button>
+      <button
+        class="copy-code-btn text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+        type="button"
+        data-code-action="copy"
+        data-label-copy="Copy"
+        data-label-copied="Copied"
+        title="Copy"
+        aria-label="Copy"
+      >
+        <span class="copy-icon">
+          <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+</svg>
+        </span>
+        <span class="copy-text hidden sm:inline">Copy</span>
+      </button>
+    </div>
+  </div>
+
+  
+  <div class="code-block-content relative" id="code-2">
+    <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-makefile" data-lang="makefile"><span class="line"><span class="cl"><span class="c"># 获取所有的 cpp
+</span></span></span><span class="line"><span class="cl"><span class="nv">SRC</span><span class="o">=</span><span class="k">$(</span>wildcard *.c<span class="k">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c"># 替换 .cpp 为 .o
+</span></span></span><span class="line"><span class="cl"><span class="nv">OBJ</span><span class="o">=</span><span class="k">$(</span>SRC:.c<span class="o">=</span>.o<span class="k">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c"># .d 文件
+</span></span></span><span class="line"><span class="cl"><span class="nv">DEP</span><span class="o">=</span><span class="k">$(</span>SRC:.c<span class="o">=</span>.d<span class="k">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nf">.PHONY</span><span class="o">:</span> <span class="n">all</span> <span class="n">clean</span>
+</span></span><span class="line"><span class="cl"><span class="nf">all</span><span class="o">:</span> <span class="n">a</span>.<span class="n">out</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c"># - 当语句执行错误，会忽略继续执行
+</span></span></span><span class="line"><span class="cl"><span class="c"># 包含所有的 .d 文件
+</span></span></span><span class="line"><span class="cl"><span class="err">-include</span> <span class="k">$(</span><span class="nv">DEP</span><span class="k">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c"># a.out 依赖所有 .o 目标，即执行完 .o 目标再执行 a.out
+</span></span></span><span class="line"><span class="cl"><span class="nf">a.out</span><span class="o">:</span> <span class="k">$(</span><span class="nv">OBJ</span><span class="k">)</span>
+</span></span><span class="line"><span class="cl">	gcc $^ -o <span class="nv">$@</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c"># 批量生成 .o 的目标
+</span></span></span><span class="line"><span class="cl"><span class="nf">%.o</span><span class="o">:</span> %.<span class="n">c</span>
+</span></span><span class="line"><span class="cl">	gcc -MD -c $&lt; -o <span class="nv">$@</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nf">clean</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">	rm ./*.d ./*.o a.out
+</span></span></code></pre></div>
+    <div hidden data-code-source># 获取所有的 cpp
+SRC=$(wildcard *.c)
+
+# 替换 .cpp 为 .o
+OBJ=$(SRC:.c=.o)
+
+# .d 文件
+DEP=$(SRC:.c=.d)
+
+.PHONY: all clean
+all: a.out
+
+# - 当语句执行错误，会忽略继续执行
+# 包含所有的 .d 文件
+-include $(DEP)
+
+# a.out 依赖所有 .o 目标，即执行完 .o 目标再执行 a.out
+a.out: $(OBJ)
+	gcc $^ -o $@
+
+# 批量生成 .o 的目标
+%.o: %.c
+	gcc -MD -c $&lt; -o $@
+
+clean:
+	rm ./*.d ./*.o a.out</div>
+    
+    <div
+      class="collapse-overlay to-card/90 pointer-events-none absolute inset-0 bg-linear-to-b from-transparent via-transparent opacity-0 transition-opacity duration-300"
+      hidden
+    >
+      <button
+        class="collapse-overlay-btn text-muted-foreground bg-card/80 border-border/50 hover:bg-primary/10 hover:text-primary hover:border-primary/30 absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center justify-center rounded-full border p-2 backdrop-blur-sm transition-all duration-200"
+        type="button"
+        data-code-action="expand"
+        aria-label="Expand"
+        title="Expand"
+      >
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+      </button>
+    </div>
+  </div>
+</div>
+<div
+    class="alert alert-tip my-6 overflow-hidden rounded-lg transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md"
+    style="background-color: color-mix(in srgb, var(--color-tip) 10%, transparent);
+              border-left-color: var(--color-tip);
+              --hover-bg: color-mix(in srgb, var(--color-tip) 15%, transparent);"
+    onmouseover="this.style.backgroundColor = this.style.getPropertyValue('--hover-bg')"
+    onmouseout="this.style.backgroundColor = 'color-mix(in srgb, var(--color-tip) 10%, transparent)'"
+    role="alert"
+    aria-labelledby="alert-1-title"
+  >
+    
+    <div
+      class=" flex items-center justify-between px-6 py-6"
+      
+    >
+      <div class="flex items-center gap-3">
+        
+        <h4 id="alert-1-title" class="text-foreground/90 m-0 font-semibold">
+          Tip
+        </h4>
+      </div>
+
+      
+      
+    </div>
+
+    
+    <div
+      id="alert-1-content"
+      class="alert-content  px-6 pb-6"
+    >
+      <div class="prose prose-sm text-foreground/90 max-w-none">
+        <div
+  class="term-block my-6 overflow-hidden rounded-xl border shadow-sm"
+  data-term-block
+  data-term-id="term-3"
+>
+  <div class="term-header flex items-center justify-between border-b px-4 py-3">
+    <div class="flex items-center gap-3">
+      <span class="flex items-center gap-1.5" aria-hidden="true">
+        <span class="h-3 w-3 rounded-full bg-[#ff5f57]"></span>
+        <span class="h-3 w-3 rounded-full bg-[#febc2e]"></span>
+        <span class="h-3 w-3 rounded-full bg-[#28c840]"></span>
+      </span>
+      <span class="term-title text-sm font-medium">Terminal</span>
+    </div>
+  </div>
+  <div class="overflow-x-auto p-4">
+    <div class="term-body font-mono text-sm leading-relaxed"><div class="term-output whitespace-pre">triangle@LEARN:~$ make -nB target // 查看命令序列的展开</div></div>
+  </div>
+</div>
+      </div>
+    </div>
+  </div><script>
+  function toggleAlert(alertId) {
+    const content = document.getElementById(alertId + "-content");
+    const chevron = document.getElementById(alertId + "-chevron");
+    const header = content.previousElementSibling;
+
+    if (content.classList.contains("hidden")) {
+      content.classList.remove("hidden");
+      chevron.style.transform = "rotate(0deg)";
+      header.setAttribute("aria-expanded", "true");
+    } else {
+      content.classList.add("hidden");
+      chevron.style.transform = "rotate(-90deg)";
+      header.setAttribute("aria-expanded", "false");
+    }
+  }
+
+  
+  document.addEventListener("DOMContentLoaded", function () {
+    const collapsedAlerts = document.querySelectorAll(".alert-content.hidden");
+    collapsedAlerts.forEach(function (content) {
+      const alertId = content.id.replace("-content", "");
+      const chevron = document.getElementById(alertId + "-chevron");
+      if (chevron) {
+        chevron.style.transform = "rotate(-90deg)";
+      }
+    });
+  });
+</script>
+<h2 id="compile_commands">compile_commands<a href="#compile_commands" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h2><p><code>vscode</code> 本身就是一个文本编辑器，若进行 <code>c/c++</code> 项目开发时，拥有代码提示、语法检测、宏定义检测等功能，就得对工程进行配置。<code>compile_commands.json</code> 就是一个不错的配置方案，可以针对单个的源文件进行配置（<code>c_cpp_properties.json</code> 是针对整个项目配置）</p>
+<ul>
+<li>makefile</li>
+</ul>
+<div
+  class="term-block my-6 overflow-hidden rounded-xl border shadow-sm"
+  data-term-block
+  data-term-id="term-4"
+>
+  <div class="term-header flex items-center justify-between border-b px-4 py-3">
+    <div class="flex items-center gap-3">
+      <span class="flex items-center gap-1.5" aria-hidden="true">
+        <span class="h-3 w-3 rounded-full bg-[#ff5f57]"></span>
+        <span class="h-3 w-3 rounded-full bg-[#febc2e]"></span>
+        <span class="h-3 w-3 rounded-full bg-[#28c840]"></span>
+      </span>
+      <span class="term-title text-sm font-medium">Terminal</span>
+    </div>
+  </div>
+  <div class="overflow-x-auto p-4">
+    <div class="term-body font-mono text-sm leading-relaxed"><div class="group relative pr-10" data-term-group data-copy="bear make target">
+            <button
+              class="term-copy-btn absolute top-0 right-0 z-10 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium opacity-0 transition-all duration-200 ease-out group-hover:opacity-100 focus:ring-2 focus:ring-[#3fb950]/20 focus:outline-none"
+              type="button"
+              data-term-copy
+              data-label-copy="Copy"
+              data-label-copied="Copied"
+              title="Copy"
+              aria-label="Copy"
+            >
+              <span class="copy-icon">
+                <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+</svg>
+              </span>
+              <span class="copy-text hidden sm:inline">Copy</span>
+            </button>
+            <div class="whitespace-pre"><div><span class="term-prompt font-semibold select-none">$</span
+                    ><span class="pl-2">bear make target</span><span class="term-comment pl-2 italic select-none"># bear 会解惑编译指令，生成 compile_commands.json</span></div></div>
+          </div></div>
+  </div>
+</div>
+<ul>
+<li>visual studio</li>
+</ul>
+<p><a
+    href="https://github.com/paopaol/vs_export"target="_blank"
+    class="inline-flex items-center gap-1"
+  >vs_export<svg class="h-3 w-3 flex-shrink-0" id="external-link" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 3h6v6m-11 5L21 3m-3 10v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
+  </a> : 只支持 15/17/19/22 的 <code>.sln</code> 项目文件解析</p>
+<ul>
+<li>cmake</li>
+</ul>
+<div
+  class="code-block-container border-border bg-card my-6 overflow-hidden rounded-xl border shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md"
+  data-code-block
+  data-code-id="code-5"
+  data-collapsible="true"
+  data-default-state="expanded"
+  data-collapsed="false"
+  data-auto-collapse-lines="30"
+  data-auto-collapse-height="400"
+  data-collapsed-height="120"
+>
+  
+  <div
+    class="code-block-header bg-muted/30 border-border flex items-center justify-between border-b px-4 py-3"
+  >
+    
+    <div class="flex items-center gap-2">
+      <div class="text-muted-foreground shrink-0">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+</svg>
+      </div>
+      <span class="text-muted-foreground text-sm font-medium">
+        CMAKELIST
+      </span>
+    </div>
+
+    
+    <div class="flex items-center gap-2">
+      <button
+          class="collapse-code-btn text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+          type="button"
+          data-code-action="toggle-collapse"
+          data-label-expand="Expand"
+          data-label-collapse="Collapse"
+          title="Collapse"
+          aria-label="Collapse"
+          aria-controls="code-5"
+          aria-expanded="true"
+        >
+          <span class="collapse-chevron transition-transform duration-200 ease-out">
+            <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+          </span>
+          <span class="collapse-text hidden sm:inline">Collapse</span>
+        </button>
+      <button
+        class="copy-code-btn text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+        type="button"
+        data-code-action="copy"
+        data-label-copy="Copy"
+        data-label-copied="Copied"
+        title="Copy"
+        aria-label="Copy"
+      >
+        <span class="copy-icon">
+          <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+</svg>
+        </span>
+        <span class="copy-text hidden sm:inline">Copy</span>
+      </button>
+    </div>
+  </div>
+
+  
+  <div class="code-block-content relative" id="code-5">
+    <pre tabindex="0"><code class="language-cmakelist" data-lang="cmakelist">set(CMAKE_EXPORT_COMPILE_COMMANDS ON)</code></pre>
+    <div hidden data-code-source>set(CMAKE_EXPORT_COMPILE_COMMANDS ON)</div>
+    
+    <div
+      class="collapse-overlay to-card/90 pointer-events-none absolute inset-0 bg-linear-to-b from-transparent via-transparent opacity-0 transition-opacity duration-300"
+      hidden
+    >
+      <button
+        class="collapse-overlay-btn text-muted-foreground bg-card/80 border-border/50 hover:bg-primary/10 hover:text-primary hover:border-primary/30 absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center justify-center rounded-full border p-2 backdrop-blur-sm transition-all duration-200"
+        type="button"
+        data-code-action="expand"
+        aria-label="Expand"
+        title="Expand"
+      >
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+      </button>
+    </div>
+  </div>
+</div>
+<ul>
+<li>xmake</li>
+</ul>
+<div
+  class="term-block my-6 overflow-hidden rounded-xl border shadow-sm"
+  data-term-block
+  data-term-id="term-6"
+>
+  <div class="term-header flex items-center justify-between border-b px-4 py-3">
+    <div class="flex items-center gap-3">
+      <span class="flex items-center gap-1.5" aria-hidden="true">
+        <span class="h-3 w-3 rounded-full bg-[#ff5f57]"></span>
+        <span class="h-3 w-3 rounded-full bg-[#febc2e]"></span>
+        <span class="h-3 w-3 rounded-full bg-[#28c840]"></span>
+      </span>
+      <span class="term-title text-sm font-medium">Terminal</span>
+    </div>
+  </div>
+  <div class="overflow-x-auto p-4">
+    <div class="term-body font-mono text-sm leading-relaxed"><div class="group relative pr-10" data-term-group data-copy="xmake project -k compile_commands">
+            <button
+              class="term-copy-btn absolute top-0 right-0 z-10 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium opacity-0 transition-all duration-200 ease-out group-hover:opacity-100 focus:ring-2 focus:ring-[#3fb950]/20 focus:outline-none"
+              type="button"
+              data-term-copy
+              data-label-copy="Copy"
+              data-label-copied="Copied"
+              title="Copy"
+              aria-label="Copy"
+            >
+              <span class="copy-icon">
+                <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+</svg>
+              </span>
+              <span class="copy-text hidden sm:inline">Copy</span>
+            </button>
+            <div class="whitespace-pre"><div><span class="term-prompt font-semibold select-none">$</span
+                    ><span class="pl-2">xmake project -k compile_commands</span></div></div>
+          </div></div>
+  </div>
+</div>
+
+  </article>
+
+  
+  
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  <div class="post-license bg-muted/30 border-border mb-8 rounded-xl border p-6">
+    <div class="flex items-start gap-4">
+      
+      <div class="bg-primary/10 flex h-12 w-12 shrink-0 items-center justify-center rounded-lg">
+        <svg class="h-6 w-6" aria-label="许可证" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+</svg>
+      </div>
+
+      
+      <div class="min-w-0 flex-1">
+        <h3 class="text-foreground mb-2 text-lg font-semibold">
+          License
+        </h3>
+
+        <div class="text-muted-foreground space-y-2 text-sm">
+          
+          
+            <p>
+              <strong>Author:</strong>
+              海拉鲁的三角
+            </p>
+          
+
+
+          
+          <p>
+            <strong>Link:</strong>
+            <a
+              href="https://spite-triangle.github.io/cpp_notes/posts/operatesystem/xv6/"
+              class="text-primary hover:text-primary/80 break-all hyphens-auto transition-colors duration-200"
+            >
+              https://spite-triangle.github.io/cpp_notes/posts/operatesystem/xv6/
+            </a>
+          </p>
+
+          
+          <p>
+            <strong>License:</strong>
+            
+              <a
+                href="https://mit-license.org/"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-primary hover:text-primary/80 transition-colors duration-200"
+              >
+                MIT
+              </a>
+            
+          </p>
+
+          
+          
+            <p class="text-xs">
+              只要学不死，就往死里学
+            </p>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  
+  
+
+
+
+
+
+  <nav class="post-navigation mb-12">
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+      
+      <div class="nav-item">
+        
+          <a
+            href="/cpp_notes/posts/operatesystem/executablefile/"
+            class="group bg-card border-border hover:bg-primary/5 hover:border-primary/20 focus:ring-primary/20 flex min-h-[140px] flex-col justify-between rounded-xl border p-6 transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.02] hover:shadow-lg focus:ring-2 focus:outline-none"
+          >
+            <div>
+              <div class="mb-3 flex items-center gap-3">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+</svg>
+                <span class="text-muted-foreground text-sm font-medium">
+                  Previous
+                </span>
+              </div>
+
+              <h3
+                class="text-foreground group-hover:text-primary mb-3 line-clamp-2 text-lg leading-tight font-semibold transition-colors duration-200"
+              >
+                可执行文件管理
+              </h3>
+            </div>
+
+            <div class="text-muted-foreground mt-auto flex items-center gap-2 text-xs">
+              <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+</svg>
+
+              <time datetime="2024-05-12">
+                5/12/24
+              </time>
+            </div>
+          </a>
+        
+      </div>
+
+      
+      <div class="nav-item">
+        
+          <a
+            href="/cpp_notes/posts/operatesystem/iodevice/"
+            class="group bg-card border-border hover:bg-primary/5 hover:border-primary/20 focus:ring-primary/20 flex min-h-[140px] flex-col justify-between rounded-xl border p-6 transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.02] hover:shadow-lg focus:ring-2 focus:outline-none"
+          >
+            <div>
+              <div class="mb-3 flex items-center justify-end gap-3">
+                <span class="text-muted-foreground text-sm font-medium">
+                  Next
+                </span>
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+</svg>
+              </div>
+
+              <h3
+                class="text-foreground group-hover:text-primary mb-3 line-clamp-2 text-right text-lg leading-tight font-semibold transition-colors duration-200"
+              >
+                IO 设备
+              </h3>
+            </div>
+
+            <div class="text-muted-foreground mt-auto flex items-center justify-end gap-2 text-xs">
+              <time datetime="2024-03-02">
+                3/2/24
+              </time>
+              <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+</svg>
+
+            </div>
+          </a>
+        
+      </div>
+    </div>
+  </nav>
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+  <section class="related-posts mb-12">
+    
+    <div class="mb-6 flex items-center gap-3">
+      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+</svg>
+      <h2 class="text-foreground text-2xl font-bold">
+        Related content
+      </h2>
+    </div>
+
+    
+    <div class="grid w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+      
+        <article class="group">
+          <a href="/cpp_notes/posts/operatesystem/xv6_filesystem/" class="block">
+            <div
+              class="bg-card border-border hover:bg-primary/5 hover:border-primary/20 focus:ring-primary/20 flex min-h-[120px] items-center rounded-xl border p-5 transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.02] hover:shadow-lg focus:ring-2 focus:outline-none"
+            >
+              <h3
+                class="text-foreground group-hover:text-primary line-clamp-3 w-full text-lg leading-snug font-semibold"
+              >
+                XV6 文件系统
+              </h3>
+            </div>
+          </a>
+        </article>
+      
+    </div>
+  </section>
+
+
+
+
+  
+  
+
+
+      </div>
+
+      <footer class="px-4 py-6">
+  
+  
+    <nav class="mb-6">
+      <div class="flex flex-wrap items-center justify-center gap-1">
+        
+          
+          
+          
+            
+              
+            
+          
+          <a
+            href="/cpp_notes/projects/"
+            
+            class="nav-link hover:text-primary hover:bg-primary/10 text-muted-foreground flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 hover:scale-105"
+          >
+            
+              <svg class="h-5 w-5" aria-label="Projects" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="m8.85 16.825l3.15-1.9l3.15 1.925l-.825-3.6l2.775-2.4l-3.65-.325l-1.45-3.4l-1.45 3.375l-3.65.325l2.775 2.425zm3.15.45l-4.15 2.5q-.275.175-.575.15t-.525-.2t-.35-.437t-.05-.588l1.1-4.725L3.775 10.8q-.25-.225-.312-.513t.037-.562t.3-.45t.55-.225l4.85-.425l1.875-4.45q.125-.3.388-.45t.537-.15t.537.15t.388.45l1.875 4.45l4.85.425q.35.05.55.225t.3.45t.038.563t-.313.512l-3.675 3.175l1.1 4.725q.075.325-.05.588t-.35.437t-.525.2t-.575-.15zm0-5.025"/></svg>
+            
+            <span>Projects</span>
+          </a>
+        
+          
+          
+          
+            
+              
+            
+          
+          <a
+            href="/cpp_notes/about/"
+            
+            class="nav-link hover:text-primary hover:bg-primary/10 text-muted-foreground flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 hover:scale-105"
+          >
+            
+              <svg class="h-5 w-5" aria-label="About" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+</svg>
+
+            
+            <span>About</span>
+          </a>
+        
+      </div>
+    </nav>
+  
+
+
+  
+  
+    <div class="border-border mb-6 border-t"></div>
+  
+
+
+  
+  <div class="flex flex-col items-center justify-between gap-4 md:flex-row">
+    
+    <div class="text-muted-foreground text-center text-sm md:text-left">
+      <p class="mb-2">
+        &copy;
+        2026
+        Hugo Narrow
+      </p>
+      <p class="flex flex-wrap items-center justify-center gap-1 md:justify-start">
+        <span>Powered by</span>
+        <a
+          href="https://gohugo.io/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-primary hover:text-primary/80 font-medium transition-colors duration-200 hover:underline"
+        >
+          Hugo
+        </a>
+        <span>&</span>
+        <a
+          href="https://github.com/tom2almighty/hugo-narrow"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-primary hover:text-primary/80 font-medium transition-colors duration-200 hover:underline"
+        >
+          Narrow
+        </a>
+      </p>
+    </div>
+
+    
+    
+      <div class="flex items-center gap-3">
+        
+          <a
+            href="https://github.com/spite-triangle"
+            
+              target="_blank" rel="noopener noreferrer"
+            
+            class="text-muted-foreground hover:text-primary focus:ring-primary/20 rounded-lg p-1 transition-all duration-300 ease-out hover:scale-110 focus:ring-2 focus:outline-none"
+            title="GitHub"
+            aria-label="GitHub"
+          >
+            
+              <svg class="h-6 w-6" aria-label="GitHub" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5c.08-1.25-.27-2.48-1-3.5c.28-1.15.28-2.35 0-3.5c0 0-1 0-3 1.5c-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5c-.39.49-.68 1.05-.85 1.65S8.93 17.38 9 18v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></g></svg>
+            
+          </a>
+        
+          <a
+            href="https://space.bilibili.com/27206875"
+            
+              target="_blank" rel="noopener noreferrer"
+            
+            class="text-muted-foreground hover:text-primary focus:ring-primary/20 rounded-lg p-1 transition-all duration-300 ease-out hover:scale-110 focus:ring-2 focus:outline-none"
+            title="Bilibili"
+            aria-label="Bilibili"
+          >
+            
+              <svg class="h-6 w-6" aria-label="Bilibili" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+  <path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.653 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0-.373.129-.689.386-.947.258-.257.574-.386.947-.386zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373Z"/>
+</svg>
+            
+          </a>
+        
+      </div>
+    
+
+  </div>
+</footer>
+
+      
+
+
+
+
+
+<div
+  id="dock"
+  class="pointer-events-none fixed bottom-4 left-1/2 z-9999 w-fit -translate-x-1/2 translate-y-24 opacity-0 transition-all duration-300 ease-out sm:right-0 sm:left-0 sm:mx-auto sm:translate-x-0"
+  data-dock-mode="scroll"
+  role="toolbar"
+  aria-label="Quick actions toolbar"
+>
+  <nav
+    class="border-border bg-card/80 scrollbar-hide xs:px-3 xs:py-2 mx-auto flex max-w-[calc(100vw-2rem)] min-w-fit items-center justify-center overflow-x-auto rounded-2xl border px-4 py-3 shadow-lg backdrop-blur-sm sm:px-4 sm:py-3"
+  >
+    
+    
+      <button
+        id="dock-back"
+        class="text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 xs:px-2 xs:py-1.5 flex shrink-0 items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 focus:ring-2 focus:outline-none sm:px-3 sm:py-2"
+        title="Back"
+        aria-label="Back"
+      >
+        <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="m12 19-7-7 7-7"/>
+  <path d="M19 12H5"/>
+</svg>
+
+        <span class="hidden sm:inline">Back</span>
+      </button>
+
+      
+      <div class="bg-border xs:mx-1 mx-2 h-6 w-px sm:mx-2"></div>
+    
+
+
+    
+
+    
+    
+
+    
+    
+    
+
+
+    
+    <button
+      id="dock-top"
+      class="text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 xs:px-2 xs:py-1.5 flex shrink-0 items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 focus:ring-2 focus:outline-none sm:px-3 sm:py-2"
+      title="Back to top"
+      aria-label="Back to top"
+    >
+      <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="m18 15-6-6-6 6"/>
+</svg>
+
+      <span class="hidden sm:inline">Top</span>
+    </button>
+  </nav>
+</div>
+
+
+
+
+      <aside
+    id="toc-container"
+    class="toc-left"
+    data-position="left"
+  >
+      <div id="toc-center" class="pointer-events-none fixed top-28 ml-auto w-full max-w-4xl px-4">
+        <div class="pointer-events-auto fixed flex">
+          <div class="pointer-events-auto relative ml-auto w-fit">
+            <button
+              id="section-center-toggle"
+              class="bg-card/80 border-border text-muted-foreground hover:text-primary hover:bg-primary/10 ring-offset-background focus-visible:ring-ring flex cursor-pointer items-center gap-2 rounded-full border px-4 py-1.5 text-sm shadow-sm backdrop-blur-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+            >
+              <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <line x1="8" x2="21" y1="6" y2="6"/>
+  <line x1="8" x2="21" y1="12" y2="12"/>
+  <line x1="8" x2="21" y1="18" y2="18"/>
+  <line x1="3" x2="3.01" y1="6" y2="6"/>
+  <line x1="3" x2="3.01" y1="12" y2="12"/>
+  <line x1="3" x2="3.01" y1="18" y2="18"/>
+</svg>
+
+              <span id="section-center-title" class="max-w-[200px] truncate">XV6</span>
+              <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+            </button>
+
+            
+            <div
+              id="section-center-dropdown"
+              class="bg-card border-border scrollbar-hide absolute top-full left-0 mt-2 hidden max-h-[60vh] w-[280px] origin-top scale-95 overflow-y-auto rounded-xl border p-4 opacity-0 shadow-lg transition-all"
+            >
+              <div
+                id="section-center-content"
+                class="[&_a]:text-muted-foreground [&_a:hover]:bg-primary/10 [&_a:hover]:text-primary [&_a.active]:bg-primary/10 [&_a.active]:text-primary text-sm [&_a]:block [&_a]:truncate [&_a]:rounded-md [&_a]:px-2 [&_a]:py-1 [&_a]:transition-colors [&_a.active]:font-medium [&_li]:my-1.5 [&_nav>ul]:pl-0 [&_ul]:list-none [&_ul]:pl-4"
+              >
+                
+                
+                
+                  
+                    <h2>
+                      <a href="/cpp_notes/posts/operatesystem/program/">程序</a>
+                    </h2>
+                  
+                
+                  
+                    <h2>
+                      <a href="/cpp_notes/posts/operatesystem/concurrency/">并发</a>
+                    </h2>
+                  
+                
+                  
+                    <h2>
+                      <a href="/cpp_notes/posts/operatesystem/operatesystem/">操作系统</a>
+                    </h2>
+                  
+                
+                  
+                    <h2>
+                      <a href="/cpp_notes/posts/operatesystem/process/">进程管理</a>
+                    </h2>
+                  
+                
+                  
+                    <h2>
+                      <a href="/cpp_notes/posts/operatesystem/interface/">用户接口</a>
+                    </h2>
+                  
+                
+                  
+                    <h2>
+                      <a href="/cpp_notes/posts/operatesystem/executablefile/">可执行文件管理</a>
+                    </h2>
+                  
+                
+                  
+                    <h2 class="active">
+                      <a href="/cpp_notes/posts/operatesystem/xv6/" class="active font-medium">XV6</a>
+                    </h2>
+                  
+                
+                  
+                    <h2>
+                      <a href="/cpp_notes/posts/operatesystem/iodevice/">IO 设备</a>
+                    </h2>
+                  
+                
+                  
+                    <h2>
+                      <a href="/cpp_notes/posts/operatesystem/filesystem/">文件系统</a>
+                    </h2>
+                  
+                
+                  
+                    <h2>
+                      <a href="/cpp_notes/posts/operatesystem/xv6_filesystem/">XV6 文件系统</a>
+                    </h2>
+                  
+                
+                  
+                    <h2>
+                      <a href="/cpp_notes/posts/operatesystem/handle/">句柄</a>
+                    </h2>
+                  
+                
+                  
+                    <h2>
+                      <a href="/cpp_notes/posts/operatesystem/charset/">字符集</a>
+                    </h2>
+                  
+                
+              </div>
+            </div>
+          </div>
+
+          <div class="pointer-events-auto relative ml-auto w-fit"><button
+                id="toc-center-toggle"
+                class="bg-card/80 border-border text-muted-foreground hover:text-primary hover:bg-primary/10 ring-offset-background focus-visible:ring-ring flex cursor-pointer items-center gap-2 rounded-full border px-4 py-1.5 text-sm shadow-sm backdrop-blur-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+              >
+                <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <line x1="8" x2="21" y1="6" y2="6"/>
+  <line x1="8" x2="21" y1="12" y2="12"/>
+  <line x1="8" x2="21" y1="18" y2="18"/>
+  <line x1="3" x2="3.01" y1="6" y2="6"/>
+  <line x1="3" x2="3.01" y1="12" y2="12"/>
+  <line x1="3" x2="3.01" y1="18" y2="18"/>
+</svg>
+
+                <span id="toc-center-title" class="max-w-[200px] truncate">Table of contents</span>
+                <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+              </button>
+
+              
+              <div
+                id="toc-center-dropdown"
+                class="bg-card border-border scrollbar-hide absolute top-full left-0 mt-2 hidden max-h-[60vh] w-[280px] origin-top scale-95 overflow-y-auto rounded-xl border p-4 opacity-0 shadow-lg transition-all"
+              >
+                <div
+                  id="toc-center-content"
+                  class="[&_a]:text-muted-foreground [&_a:hover]:bg-primary/10 [&_a:hover]:text-primary [&_a.active]:bg-primary/10 [&_a.active]:text-primary text-sm [&_a]:block [&_a]:truncate [&_a]:rounded-md [&_a]:px-2 [&_a]:py-1 [&_a]:transition-colors [&_a.active]:font-medium [&_li]:my-1.5 [&_nav>ul]:pl-0 [&_ul]:list-none [&_ul]:pl-4"
+                >
+                  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#介绍">介绍</a></li>
+    <li><a href="#虚拟内存">虚拟内存</a></li>
+    <li><a href="#进程切换">进程切换</a></li>
+    <li><a href="#任务调度">任务调度</a>
+      <ul>
+        <li><a href="#时间片轮转">时间片轮转</a></li>
+        <li><a href="#优先级">优先级</a></li>
+        <li><a href="#动态优先级-mlfq">动态优先级 (MLFQ)</a></li>
+        <li><a href="#完全公平策略-cfs">完全公平策略 (CFS)</a></li>
+        <li><a href="#复杂调度问题">复杂调度问题</a></li>
+      </ul>
+    </li>
+    <li><a href="#附加">附加</a>
+      <ul>
+        <li><a href="#依赖文件">依赖文件</a></li>
+        <li><a href="#compile_commands">compile_commands</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                </div>
+              </div></div>
+        </div>
+      </div></aside>
+      
+<div
+  id="search-overlay"
+  class="pointer-events-none fixed inset-0 z-40 bg-black/50 opacity-0 transition-opacity duration-300"
+></div>
+
+
+<div
+  id="search-modal"
+  class="bg-card border-border pointer-events-none fixed top-1/2 left-1/2 z-50 max-h-[80vh] w-full max-w-2xl -translate-x-1/2 -translate-y-1/2 scale-95 transform overflow-hidden rounded-xl border opacity-0 shadow-xl transition-all duration-300"
+  role="dialog"
+  aria-modal="true"
+  aria-hidden="true"
+  aria-labelledby="search-title"
+  tabindex="-1"
+>
+  
+  <div class="border-border flex items-center gap-3 border-b p-4">
+    
+    <div class="text-muted-foreground h-5 w-5 shrink-0">
+      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+</svg>
+
+    </div>
+    <h2 id="search-title" class="sr-only">Search</h2>
+
+    
+    <div class="relative flex-1">
+      
+      <button
+        id="search-clear"
+        class="text-muted-foreground hover:text-foreground hover:bg-muted/50 pointer-events-none absolute top-1/2 left-0 z-10 h-5 w-5 -translate-y-1/2 rounded opacity-0 transition-all duration-200"
+        title="Clear"
+        aria-label="Clear"
+      >
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+</svg>
+
+      </button>
+
+      
+      <input
+        id="search-input"
+        type="text"
+        placeholder="Search posts..."
+        class="text-foreground placeholder:text-muted-foreground w-full border-none bg-transparent pl-8 text-lg outline-none"
+        autocomplete="off"
+        spellcheck="false"
+      />
+    </div>
+
+    
+    <button
+      id="search-close"
+      class="text-muted-foreground hover:text-foreground hover:bg-muted/50 flex h-6 w-6 items-center justify-center rounded-md p-0.5 transition-all duration-200"
+      title="Close"
+      aria-label="Close"
+    >
+      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+</svg>
+
+    </button>
+  </div>
+
+  
+  <div id="search-results" class="max-h-96 overflow-y-auto">
+    
+    <div id="search-empty" class="flex flex-col items-center justify-center py-12 text-center">
+      <div class="bg-muted/50 mb-4 flex h-16 w-16 items-center justify-center rounded-full">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+</svg>
+
+      </div>
+      <h3 class="text-foreground mb-2 text-lg font-semibold">
+        Start searching
+      </h3>
+    </div>
+
+    
+    <div id="search-loading" class="flex items-center justify-center py-8" hidden>
+      <div
+        class="mr-3 h-6 w-6 animate-spin rounded-full border-2 border-current border-t-transparent"
+      ></div>
+      <span class="text-muted-foreground">Searching...</span>
+    </div>
+
+    
+    <div
+      id="search-no-results"
+      class="flex flex-col items-center justify-center py-12 text-center"
+      hidden
+    >
+      <div class="bg-muted/50 mb-4 flex h-16 w-16 items-center justify-center rounded-full">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
+</svg>
+
+      </div>
+      <h3 class="text-foreground mb-2 text-lg font-semibold">
+        No results
+      </h3>
+    </div>
+
+    
+    <div id="search-results-list" hidden>
+      
+      <div
+        id="search-stats"
+        class="text-muted-foreground border-border border-b px-4 py-3 text-sm"
+        data-count-other="Found %d results"
+      ></div>
+
+      
+      <div id="search-items" class="divide-border divide-y" role="list">
+        
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="border-border bg-muted/20 border-t px-4 py-3"><div class="text-muted-foreground flex items-center justify-between text-xs">
+      <div class="flex items-center gap-2 md:gap-4">
+        <div class="flex items-center gap-1">
+          <kbd class="bg-muted border-border rounded border px-1.5 py-0.5 text-xs">↑↓</kbd>
+          <span class="hidden sm:inline">Navigate</span>
+        </div>
+        <div class="flex items-center gap-1">
+          <kbd class="bg-muted border-border rounded border px-1.5 py-0.5 text-xs">↵</kbd>
+          <span class="hidden sm:inline">Select</span>
+        </div>
+        <div class="flex items-center gap-1">
+          <kbd class="bg-muted border-border rounded border px-1.5 py-0.5 text-xs">ESC</kbd>
+          <span class="hidden sm:inline">Close</span>
+        </div>
+      </div>
+      <div class="search-hint-desktop flex items-center gap-1">
+        <kbd class="bg-muted border-border rounded border px-1.5 py-0.5 text-xs">⌘K</kbd>
+        <span>Shortcut</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+      
+
+
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css"
+    integrity="sha384-5TcZemv2l/9On385z///+d7MSYlvIEw9FuZTIdZ14vJLqWphw7e7ZPuOiCHJcFCP"
+    crossorigin="anonymous"
+  />
+  <script
+    defer
+    src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js"
+    integrity="sha384-cMkvdD8LoxVzGF/RPUKAcvmm49FQ0oxwDF3BGKtDXcEc+T1b2N+teh/OJfpU0jr6"
+    crossorigin="anonymous"
+  ></script>
+  <script
+    defer
+    src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js"
+    integrity="sha384-hCXGrW6PitJEwbkoStFjeJxv+fSOOQKOPbJxSfM6G5sWZjAyWhXiTIIAmQqnlLlh"
+    crossorigin="anonymous"
+  ></script>
+
+  <script>
+    function initKaTeX() {
+      if (typeof renderMathInElement === "undefined") {
+        setTimeout(initKaTeX, 100);
+        return;
+      }renderMathInElement(document.body, {
+        delimiters: [{"display":true,"left":"$$","right":"$$"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"},{"display":true,"left":"\\[","right":"\\]"}],
+        throwOnError: false,
+        errorColor: "#cc0000",
+        fleqn: false,
+        leqno: false,
+        trust: false,
+      });
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initKaTeX, { once: true });
+    } else {
+      initKaTeX();
+    }
+  </script>
+      
+
+
+    </main>
+  </body>
+</html>

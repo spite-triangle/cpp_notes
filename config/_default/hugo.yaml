@@ -1,0 +1,82 @@
+baseURL: https://spite-triangle.github.io/cpp_notes/
+locale: en
+defaultContentLanguage: en
+defaultContentLanguageInSubdir: false
+title: Hugo Narrow
+theme: "hugo-narrow"
+
+hasCJKLanguage: true
+enableEmoji: true
+
+
+# Main Section Configuration (Optional)
+# If not configured, Hugo will automatically select the section with the most pages
+# This configuration affects functions such as recent articles on the homepage, search index, and archive pages
+mainSections: ["posts"]  # Multiple values can be configured, e.g. ["posts", "blog", "articles"]
+
+permalinks:
+  posts: /posts/:sections[last]/:contentbasename
+  projects: /projects/:contentbasename
+  pages: /:contentbasename
+
+page:
+  nextPrevInSectionSortOrder: "asc" 
+
+# pagination
+pagination:
+  pagerSize: 10
+  path: "page"
+
+taxonomies:
+  category: categories
+  tag: tags
+  series: series
+
+markup:
+  tableOfContents:
+    startLevel: 1
+    endLevel: 4
+    ordered: false
+  goldmark:
+    renderer:
+      unsafe: true
+    extensions:
+      # 注意：subscript/superscript 必须保持禁用。
+      # 它们把 ^ 和 ~ 当作上标/下标分隔符，会破坏 LaTeX 数学公式中的 ^ / ~
+      # （例如 $A^*$ 会被解析成 <sup>*</sup>）。需要上下标时请使用 HTML 标签
+      # <sub>/<sup>（unsafe: true 已开启）。
+      extras:
+        delete:
+          enable: true
+        insert:
+          enable: true
+        mark:
+          enable: true
+        subscript:
+          enable: false
+        superscript:
+          enable: false
+      strikethrough: true 
+  highlight:
+    codeFences: true
+    guessSyntax: false
+    lineNos: false
+    lineNumbersInTable: false # Set to false
+    noClasses: false
+    style: github # No need to change
+    tabWidth: 2
+
+outputs:
+  home: ["HTML", "RSS", "JSON", "WebAppManifest"]
+
+# Custom output formats
+outputFormats:
+  WebAppManifest:
+    mediaType: "application/manifest+json"
+    baseName: "site"
+    isPlainText: true
+
+module:
+  hugoVersion:
+    extended: true
+    min: 0.158.0

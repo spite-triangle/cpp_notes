@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>容器化 on Hugo Narrow</title>
+		<link>https://spite-triangle.github.io/cpp_notes/tags/%E5%AE%B9%E5%99%A8%E5%8C%96/</link>
+		<description>Recent content in 容器化 on Hugo Narrow</description>
+		<generator>Hugo</generator>
+		<language>en</language>
+		
+		
+		
+		
+			<lastBuildDate>Tue, 04 Mar 2025 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://spite-triangle.github.io/cpp_notes/tags/%E5%AE%B9%E5%99%A8%E5%8C%96/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Docker</title>
+				<link>https://spite-triangle.github.io/cpp_notes/posts/docker/</link>
+				<pubDate>Tue, 04 Mar 2025 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/posts/docker/</guid>
+				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本文档围绕 Docker 容器技术展开，从基础概念与守护进程架构入手，深入镜像构建、联合文件系统及数据持久化。内容涵盖命令行操作、Dockerfile 语法规则、网络体系配置与可视化管理工具等实用技能。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

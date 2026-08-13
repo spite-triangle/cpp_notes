@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Series on Hugo Narrow</title>
+		<link>https://spite-triangle.github.io/cpp_notes/series/</link>
+		<description>Recent content in Series on Hugo Narrow</description>
+		<generator>Hugo</generator>
+		<language>en</language>
+		
+		
+		
+		
+			<lastBuildDate>Tue, 04 Aug 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://spite-triangle.github.io/cpp_notes/series/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>前端技术</title>
+				<link>https://spite-triangle.github.io/cpp_notes/series/frontend/</link>
+				<pubDate>Tue, 04 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/series/frontend/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>编程语言</title>
+				<link>https://spite-triangle.github.io/cpp_notes/series/programe/</link>
+				<pubDate>Mon, 29 Jun 2026 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/series/programe/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>后端技术</title>
+				<link>https://spite-triangle.github.io/cpp_notes/series/backend/</link>
+				<pubDate>Wed, 24 Jun 2026 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/series/backend/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>理论知识</title>
+				<link>https://spite-triangle.github.io/cpp_notes/series/theory/</link>
+				<pubDate>Wed, 10 Jun 2026 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/series/theory/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>开发框架</title>
+				<link>https://spite-triangle.github.io/cpp_notes/series/framework/</link>
+				<pubDate>Sat, 07 Mar 2026 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/series/framework/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>集群系统</title>
+				<link>https://spite-triangle.github.io/cpp_notes/series/cluster/</link>
+				<pubDate>Sat, 07 Feb 2026 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/series/cluster/</guid>
+				<description></description>
+			</item>
+	</channel>
+</rss>

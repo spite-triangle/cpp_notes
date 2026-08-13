@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>GMP on Hugo Narrow</title>
+		<link>https://spite-triangle.github.io/cpp_notes/tags/gmp/</link>
+		<description>Recent content in GMP on Hugo Narrow</description>
+		<generator>Hugo</generator>
+		<language>en</language>
+		
+		
+		
+		
+			<lastBuildDate>Sat, 02 Mar 2024 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://spite-triangle.github.io/cpp_notes/tags/gmp/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>GoLang</title>
+				<link>https://spite-triangle.github.io/cpp_notes/posts/go/</link>
+				<pubDate>Sat, 02 Mar 2024 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/posts/go/</guid>
+				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本文档围绕 Go 语言核心特性展开，从基础语法、指针与面向对象编程入手，深入 GMP 并发调度模型。内容涵盖 Channel 通信机制、Module 依赖管理及反射类型推断等关键技术。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

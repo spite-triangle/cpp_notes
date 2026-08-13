@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>符号管理 on Hugo Narrow</title>
+		<link>https://spite-triangle.github.io/cpp_notes/tags/%E7%AC%A6%E5%8F%B7%E7%AE%A1%E7%90%86/</link>
+		<description>Recent content in 符号管理 on Hugo Narrow</description>
+		<generator>Hugo</generator>
+		<language>en</language>
+		
+		
+		
+		
+			<lastBuildDate>Sat, 11 Jan 2025 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://spite-triangle.github.io/cpp_notes/tags/%E7%AC%A6%E5%8F%B7%E7%AE%A1%E7%90%86/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Windbg</title>
+				<link>https://spite-triangle.github.io/cpp_notes/posts/windbg/windbg/</link>
+				<pubDate>Sat, 11 Jan 2025 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/posts/windbg/windbg/</guid>
+				<description>&lt;blockquote&#xD;&#xA;    class=&#34;border-primary bg-muted/30 hover:bg-muted/40 my-6 rounded-r-lg border-l-4 py-4 pr-4 pl-6 italic transition-all duration-200 ease-out hover:translate-x-1&#34;&#xD;&#xA;  &gt;&#xD;&#xA;    &lt;div class=&#34;prose prose-sm max-w-none&#34;&gt;&#xD;&#xA;      &lt;p&gt;[!warning|style:flat]&#xA;要想使用 &lt;code&gt;!heap -p&lt;/code&gt; 相关命令，&lt;code&gt;windbg&lt;/code&gt; 一定要下载 &lt;a&#xD;&#xA;    href=&#34;https://developer.microsoft.com/zh-cn/windows/downloads/sdk-archive/&#34;target=&#34;_blank&#34;&#xD;&#xA;    class=&#34;inline-flex items-center gap-1&#34;&#xD;&#xA;  &gt;Windows 10 SDK 版本 2104 (10.0.20348.0)&lt;svg class=&#34;h-3 w-3 flex-shrink-0&#34; id=&#34;external-link&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;path fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34; d=&#34;M15 3h6v6m-11 5L21 3m-3 10v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6&#34;/&gt;&lt;/svg&gt;&#xD;&#xA;  &lt;/a&gt;&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

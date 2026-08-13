@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>设计模式 on Hugo Narrow</title>
+		<link>https://spite-triangle.github.io/cpp_notes/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</link>
+		<description>Recent content in 设计模式 on Hugo Narrow</description>
+		<generator>Hugo</generator>
+		<language>en</language>
+		
+		
+		
+		
+			<lastBuildDate>Wed, 10 Jun 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://spite-triangle.github.io/cpp_notes/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>系统设计方案</title>
+				<link>https://spite-triangle.github.io/cpp_notes/posts/systeamdesign/</link>
+				<pubDate>Wed, 10 Jun 2026 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/posts/systeamdesign/</guid>
+				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本文档涵盖系统设计中的核心方法论，包括有限状态机与行为树的设计实现、事件循环框架搭建、数据库设计范式以及权限管理模型。内容涉及关系型数据存储模式、树形数据结构建模及元数据驱动架构等实用技术。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

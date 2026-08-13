@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Django on Hugo Narrow</title>
+		<link>https://spite-triangle.github.io/cpp_notes/tags/django/</link>
+		<description>Recent content in Django on Hugo Narrow</description>
+		<generator>Hugo</generator>
+		<language>en</language>
+		
+		
+		
+		
+			<lastBuildDate>Sun, 09 Mar 2025 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://spite-triangle.github.io/cpp_notes/tags/django/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Django</title>
+				<link>https://spite-triangle.github.io/cpp_notes/posts/django/</link>
+				<pubDate>Sun, 09 Mar 2025 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/posts/django/</guid>
+				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xD;&#xA;&lt;p&gt;Django Web框架入门与实践，涵盖ORM、路由视图及模板引擎等核心功能。&lt;/p&gt;&#xA;&lt;!-- VOLUME_OVERVIEW_END --&gt;</description>
+			</item>
+	</channel>
+</rss>

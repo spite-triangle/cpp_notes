@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Spanner on Hugo Narrow</title>
+		<link>https://spite-triangle.github.io/cpp_notes/tags/spanner/</link>
+		<description>Recent content in Spanner on Hugo Narrow</description>
+		<generator>Hugo</generator>
+		<language>en</language>
+		
+		
+		
+		
+			<lastBuildDate>Sat, 01 Nov 2025 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://spite-triangle.github.io/cpp_notes/tags/spanner/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Spanner</title>
+				<link>https://spite-triangle.github.io/cpp_notes/posts/distribute/spanner/</link>
+				<pubDate>Sun, 27 Jul 2025 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/posts/distribute/spanner/</guid>
+				<description>&lt;h1 id=&#34;系统结构&#34;&gt;系统结构&lt;a href=&#34;#%e7%b3%bb%e7%bb%9f%e7%bb%93%e6%9e%84&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h1&gt;&lt;p&gt;&lt;code&gt;spanner&lt;/code&gt;: &lt;code&gt;Google&lt;/code&gt; 公开的新一代分布式数据库，它既具有&lt;code&gt;NoSQL&lt;/code&gt;系统的可扩展性，也具有关系数据库的功能。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>分布式系统</title>
+				<link>https://spite-triangle.github.io/cpp_notes/posts/distribute/</link>
+				<pubDate>Sat, 01 Nov 2025 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/posts/distribute/</guid>
+				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本文档围绕分布式系统核心概念展开，从基础设施与远程调用接口入手，深入 Raft 共识算法、数据复制容错及事务处理机制。内容涵盖 Google Spanner/GFS、AWS Aurora、Apache Spark/Memcache 等经典分布式系统的架构设计原理与实践分析。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

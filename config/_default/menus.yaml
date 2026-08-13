@@ -1,0 +1,86 @@
+main:
+  - name: Series
+    weight: 10
+    pageRef: /series
+    params:
+      icon: bookmark
+
+  - name: Posts
+    pageRef: /posts
+    weight: 20
+    params:
+      icon: posts
+
+  # Example: parent item with dropdown submenu children
+  - name: More
+    weight: 30
+    params:
+      icon: layers
+
+  - name: Categories
+    weight: 1
+    pageRef: /categories
+    parent: More
+    params:
+      icon: categories
+
+  - name: Tags
+    weight: 2
+    pageRef: /tags
+    parent: More
+    params:
+      icon: tags
+
+  - name: Projects
+    weight: 3
+    pageRef: /projects
+    parent: More
+    params:
+      icon: projects
+
+  - name: Archives
+    pageRef: /archives
+    weight: 4
+    parent: More
+    params:
+      icon: archive
+
+
+# footer menu
+footer:
+  - name: Projects
+    pageRef: /projects
+    weight: 10
+    params:
+      icon: star
+
+  - name: About
+    pageRef: /about
+    weight: 20
+    params:
+      icon: about
+
+  # - name: Resume
+  #   pageRef: /resume
+  #   weight: 25
+  #   params:
+  #     icon: file-text
+
+  # - name: RSS Feed
+  #   url: /index.xml
+  #   weight: 30
+  #   params:
+  #     icon: rss
+
+# footer social link
+social:
+  - name: GitHub
+    url: https://github.com/spite-triangle
+    weight: 10
+    params:
+      icon: github
+  - name: Bilibili
+    url: https://space.bilibili.com/27206875
+    weight: 20
+    params:
+      icon: bilibili

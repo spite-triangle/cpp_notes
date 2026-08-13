@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>非阻塞 on Hugo Narrow</title>
+		<link>https://spite-triangle.github.io/cpp_notes/tags/%E9%9D%9E%E9%98%BB%E5%A1%9E/</link>
+		<description>Recent content in 非阻塞 on Hugo Narrow</description>
+		<generator>Hugo</generator>
+		<language>en</language>
+		
+		
+		
+		
+			<lastBuildDate>Sat, 02 Mar 2024 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://spite-triangle.github.io/cpp_notes/tags/%E9%9D%9E%E9%98%BB%E5%A1%9E/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>无锁数据结构</title>
+				<link>https://spite-triangle.github.io/cpp_notes/posts/cppconcurrency/datastructureatomic/</link>
+				<pubDate>Sat, 02 Mar 2024 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/posts/cppconcurrency/datastructureatomic/</guid>
+				<description>&lt;blockquote&#xD;&#xA;    class=&#34;border-primary bg-muted/30 hover:bg-muted/40 my-6 rounded-r-lg border-l-4 py-4 pr-4 pl-6 italic transition-all duration-200 ease-out hover:translate-x-1&#34;&#xD;&#xA;  &gt;&#xD;&#xA;    &lt;div class=&#34;prose prose-sm max-w-none&#34;&gt;&#xD;&#xA;      &lt;p&gt;[!note|style:flat]&#xA;无锁数据结构，能抄尽量抄，实现太复杂。&lt;/p&gt;&#xA;&#xD;&#xA;    &lt;/div&gt;&#xD;&#xA;  &lt;/blockquote&gt;&lt;script&gt;&#xD;&#xA;  function toggleAlert(alertId) {&#xD;&#xA;    const content = document.getElementById(alertId + &#34;-content&#34;);&#xD;&#xA;    const chevron = document.getElementById(alertId + &#34;-chevron&#34;);&#xD;&#xA;    const header = content.previousElementSibling;&#xD;&#xA;&#xD;&#xA;    if (content.classList.contains(&#34;hidden&#34;)) {&#xD;&#xA;      content.classList.remove(&#34;hidden&#34;);&#xD;&#xA;      chevron.style.transform = &#34;rotate(0deg)&#34;;&#xD;&#xA;      header.setAttribute(&#34;aria-expanded&#34;, &#34;true&#34;);&#xD;&#xA;    } else {&#xD;&#xA;      content.classList.add(&#34;hidden&#34;);&#xD;&#xA;      chevron.style.transform = &#34;rotate(-90deg)&#34;;&#xD;&#xA;      header.setAttribute(&#34;aria-expanded&#34;, &#34;false&#34;);&#xD;&#xA;    }&#xD;&#xA;  }&#xD;&#xA;&#xD;&#xA;  &#xD;&#xA;  document.addEventListener(&#34;DOMContentLoaded&#34;, function () {&#xD;&#xA;    const collapsedAlerts = document.querySelectorAll(&#34;.alert-content.hidden&#34;);&#xD;&#xA;    collapsedAlerts.forEach(function (content) {&#xD;&#xA;      const alertId = content.id.replace(&#34;-content&#34;, &#34;&#34;);&#xD;&#xA;      const chevron = document.getElementById(alertId + &#34;-chevron&#34;);&#xD;&#xA;      if (chevron) {&#xD;&#xA;        chevron.style.transform = &#34;rotate(-90deg)&#34;;&#xD;&#xA;      }&#xD;&#xA;    });&#xD;&#xA;  });&#xD;&#xA;&lt;/script&gt;&#xD;&#xA;&lt;h1 id=&#34;基本定义&#34;&gt;基本定义&lt;a href=&#34;#%e5%9f%ba%e6%9c%ac%e5%ae%9a%e4%b9%89&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h1&gt;&lt;h2 id=&#34;阻塞与非阻塞&#34;&gt;阻塞与非阻塞&lt;a href=&#34;#%e9%98%bb%e5%a1%9e%e4%b8%8e%e9%9d%9e%e9%98%bb%e5%a1%9e&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;阻塞：&lt;/strong&gt; 使用互斥量、条件变量、&lt;code&gt;std::future&lt;/code&gt; 来同步数据，线程会处于阻塞态，不会抢占CPU并等待资源达成。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

@@ -1,0 +1,281 @@
+# Basic site info with SEO
+description: "开发笔记，包含数据库，Web，C/C++，Python, Java, 操作系统，编译器等."
+keywords: ["Hugo", "Blog"]
+defaultAuthor: "海拉鲁的三角"
+language: "en"
+shortName: "海拉鲁的三角" # PWA
+images:
+  - "/images/og-default.avif"
+
+# Favicon
+favicon:
+  svg: "/favicon.svg" # SVG format favicon (recommended)
+
+# Author info
+author:
+  name: "海拉鲁的三角"
+  title: "工作学习笔记"
+  description: "开发笔记，包含数据库，Web，C/C++，Python, Java, 操作系统，编译器等."
+  avatar: "/images/avatar.svg"
+
+
+# Header configuration (modularized)
+header:
+  sticky: true # Enable sticky navigation bar
+  logo:
+    image: "/images/logo.svg" # Logo path relative to static folder, leave empty to use site title first letter
+    link: "/" # Click to home page
+  # UI Components Control (header controls)
+  showThemeSwitch: true # Set to false to hide theme style switcher (palette icon)
+  showDarkModeSwitch: true # Set to false to hide dark mode switcher (sun/moon icon)
+  showContentWidthSwitch: true # Set to false to hide the desktop content width switcher
+  showLanguageSwitch: false # Set to false to hide language switcher
+  languageSwitchMode: "dropdown" # Language switch mode: "dropdown" (show panel) or "cycle" (direct cycle)
+
+# Dock display mode
+# Options: "scroll" (show on scroll up), "always" (always visible), "float" (floating button)
+dock: "scroll"
+
+# Content width
+# The ,max content width is set to "56rem" by default, which is a good balance between readability and aesthetics.
+# You can change it to "56rem" to make the content wider, or "48rem" to make it narrower.
+contentWidth: "56rem"
+
+# TOC (Table of Contents)
+toc:
+  enabled: true # Enable or disable TOC globally
+  position: "left" # Options: center | side | left
+
+# Default color scheme
+colorScheme: "default"
+themes:
+  default:
+    name: "Default"
+    order: 1
+  claude:
+    name: "Claude"
+    order: 2
+  bumblebee:
+    name: "Bumblebee"
+    order: 3
+  emerald:
+    name: "Emerald"
+    order: 4
+  nord:
+    name: "Nord"
+    order: 5
+  sunset:
+    name: "Sunset"
+    order: 6
+  abyss:
+    name: "Abyss"
+    order: 7
+  dracula:
+    name: "Dracula"
+    order: 8
+  amethyst:
+    name: "Amethyst"
+    order: 9
+  slate:
+    name: "Slate"
+    order: 10
+  twitter:
+    name: "Twitter"
+    order: 11
+  minimal:
+    name: "Minimal"
+    order: 12
+
+# Home page configuration
+home:
+  recentPostsCount: 5 # Number of recent posts to show on the home page
+
+  # Content order configuration - customize the order of home page sections
+  # Available sections: author-section, recent-posts, featured-projects, page-content
+  # You can add your custom content by creating files in `layouts/_partials/home/` folder, then add it to the list
+  contentOrder:
+    - author-section
+    - page-content
+    - recent-posts
+    - featured-projects.html
+
+# Post configuration
+post:
+  showRelated: true # show related posts
+  relatedPostsCount: 3 # posts number
+  license:
+    show: true
+    author: "海拉鲁的三角"
+    name: "MIT"
+    description: "只要学不死，就往死里学"
+    url: "https://mit-license.org/"
+    displayName: "MIT"
+
+# Comments
+comments:
+  enabled: false
+  # giscus, disqus, utterances, waline, artalk, twikoo, comentario
+  system: "giscus"
+  giscus:
+    repo: "tom2almighty/hugo-narrow-giscus"
+    repoId: "R_kgDOO2gwLg"
+    category: "General"
+    categoryId: "DIC_kwDOO2gwLs4CrEaf"
+    mapping: "pathname"
+    strict: "0"
+    reactionsEnabled: "1"
+    emitMetadata: "0"
+    inputPosition: "bottom"
+    theme: "preferred_color_scheme"
+    lang: "en"
+  disqus:
+    shortname: ""
+  utterances:
+    repo: ""
+    issueTerm: "pathname"
+    label: "comment"
+    theme: "preferred-color-scheme"
+  waline:
+    serverURL: ""
+    lang: "zh-CN"
+  artalk:
+    server: ""
+    site: ""
+    locale: "zh-CN" # String|Object|"auto"
+    darkMode: "auto"
+    gravatar:
+      mirror: "https://cravatar.cn/avatar/"
+  twikoo:
+    envId: ""
+    region: "ap-shanghai"
+    path: ""
+    lang: "zh-CN"
+  comentario:
+    server: ""
+    lang: "zh-CN"
+    theme: "" # light, dark, or empty to follow browser preference
+    domainId: ""
+    cssOverride: ""
+    liveUpdate: true
+    maxLevel: 10
+    noFonts: false
+    autoInit: true
+    autoNonInteractiveSso: false
+
+# Analytics
+analytics:
+  enabled: false
+  baidu:
+    enabled: false
+    id: "your-baidu-analytics-id"
+  clarity:
+    enabled: false
+    id: "your-clarity-analytics-id"
+  google:
+    enabled: false
+    id: "your-google-analytics-id"
+  umami:
+    enabled: false
+    id: "your-umami-website-id"
+    src: "https://umami.com/myscript.js"
+    domains: "example.domain.com"
+
+# KaTeX
+katex:
+  enabled: true
+  delimiters:
+    - left: "$$"
+      right: "$$"
+      display: true
+    - left: "$"
+      right: "$"
+      display: false
+    - left: "\\("
+      right: "\\)"
+      display: false
+    - left: "\\["
+      right: "\\]"
+      display: true
+
+# Mermaid
+mermaid:
+  enabled: true
+
+# Gallery 配置
+gallery:
+  enabled: true
+  defaultLayout: justified # justified, masonry, grid
+  gap: 10
+  targetRowHeight: 200
+  lastRowBehavior: center # left, center, right, fill, hide
+  columnWidth: 200
+  columns: 4 # auto 或具体数字
+
+# Lightbox
+lightbox:
+  enabled: true
+
+# Code block
+codeblock:
+  collapse:
+    enabled: true
+    defaultState: expanded # expanded, collapsed
+    autoCollapseLines: 30
+    autoCollapseHeight: 400
+    collapsedHeight: 120
+
+# Reading progress
+readingProgress:
+  enabled: true
+  showOnHomepage: false
+
+# Date format
+
+# Customize the display format for article/page dates.
+# Accepted values:
+#   1) Hugo localization tokens (recommended): ":date_full" / ":date_long" / ":date_medium" / ":date_short"
+#      Automatically localized based on the current language's locale
+#      (e.g., en → "January 2, 2006", zh-Hans → "2006年1月2日").
+#      NOTE: ":date_medium" currently has an upstream bug under en-GB (month is omitted except September),
+#      so the theme uses ":date_long" for places that previously used medium.
+#   2) Go time layout string: reference time is "Mon Jan 2 15:04:05 MST 2006". Examples:
+#        "2006-01-02"           → 2024-05-01
+#        "January 2, 2006"      → May 1, 2024
+#        "2006年1月2日"         → 2024年5月1日
+#        "Jan 2, 2006"          → May 1, 2024
+#        "02 Jan 2006"          → 01 May 2024
+# Usage (which variants the theme actually renders):
+#   full   : reserved for opt-in custom usage
+#   long   : article detail page, homepage hero, list / card / timeline / JSON Feed,
+#            archive page, previous/next article (i.e. all theme-rendered dates)
+#   medium : not used by the theme by default (kept here for user customization)
+#   short  : not used by the theme by default (kept here for user customization)
+# Leave empty to keep the defaults below.
+# To configure per language, override via languages.<lang>.params.dateFormat in languages.yaml.
+dateFormat:
+  full: ":date_full"
+  long: ":date_long"
+  medium: ":date_medium"
+  short: ":date_short"
+  # Custom examples:
+  # long: "January 2, 2006"
+  # medium: "2006-01-02"
+  # short: "01/02"
+
+# Time format (optional)
+#
+# Used by helpers/date.html when called with kind="time", e.g.:
+#   {{ partial "helpers/date.html" (dict "date" .Date "variant" "short" "kind" "time") }}
+# Same value rules as dateFormat: either Hugo localization tokens
+# (":time_full" / ":time_long" / ":time_medium" / ":time_short") or a Go time layout
+# string (e.g. "15:04", "3:04 PM"). The theme does not render time values out of the
+# box; this block exists so users / custom partials can use it without extra config.
+# Per-language override is also supported via languages.<lang>.params.timeFormat.
+timeFormat:
+  full: ":time_full"
+  long: ":time_long"
+  medium: ":time_medium"
+  short: ":time_short"
+  # Custom examples:
+  # long: "15:04:05"
+  # short: "3:04 PM"

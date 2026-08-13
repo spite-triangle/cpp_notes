@@ -1,0 +1,2946 @@
+<!doctype html>
+<html
+  lang="en"
+  data-theme="default"
+>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+<title>行为树 |
+    Hugo Narrow</title>
+
+<meta
+  name="description"
+  content="行为树的设计原理、节点类型及与状态机的对比分析，含Python实现示例，适用于AI和业务流程编排。"
+/>
+<meta
+  name="keywords"
+  content="行为树, AI决策, 游戏开发"
+/>
+<meta
+  name="author"
+  content="海拉鲁的三角"
+/>
+<meta name="language" content="en" />
+
+<meta
+  name="robots"
+  content="index, follow"
+/>
+<link rel="canonical" href="https://spite-triangle.github.io/cpp_notes/posts/systeamdesign/behaviortree/" />
+
+
+  <link rel="icon" type="image/svg+xml" href="/cpp_notes/favicon.svg" />
+<link rel="manifest" href="/cpp_notes/site.webmanifest" />
+<meta property="og:url" content="https://spite-triangle.github.io/cpp_notes/posts/systeamdesign/behaviortree/">
+	<meta property="og:site_name" content="Hugo Narrow">
+	<meta property="og:title" content="行为树">
+	<meta property="og:description" content="行为树的设计原理、节点类型及与状态机的对比分析，含Python实现示例，适用于AI和业务流程编排。">
+	<meta property="og:locale" content="en">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="posts">
+		<meta property="article:published_time" content="2026-03-08T00:00:00+00:00">
+		<meta property="article:modified_time" content="2026-03-08T00:00:00+00:00">
+		<meta property="article:tag" content="行为树">
+		<meta property="article:tag" content="AI决策">
+		<meta property="article:tag" content="游戏开发">
+		<meta property="og:image" content="https://spite-triangle.github.io/images/og-default.avif">
+
+
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:image" content="https://spite-triangle.github.io/images/og-default.avif">
+	<meta name="twitter:title" content="行为树">
+	<meta name="twitter:description" content="行为树的设计原理、节点类型及与状态机的对比分析，含Python实现示例，适用于AI和业务流程编排。">
+
+
+	<meta itemprop="name" content="行为树">
+	<meta itemprop="description" content="行为树的设计原理、节点类型及与状态机的对比分析，含Python实现示例，适用于AI和业务流程编排。">
+	<meta itemprop="datePublished" content="2026-03-08T00:00:00+00:00">
+	<meta itemprop="dateModified" content="2026-03-08T00:00:00+00:00">
+	<meta itemprop="wordCount" content="3275">
+	<meta itemprop="image" content="https://spite-triangle.github.io/images/og-default.avif">
+	<meta itemprop="keywords" content="行为树,AI决策,游戏开发">
+
+
+
+
+
+<script id="search-config" type="application/json">"{\"searchIndexURL\":\"/cpp_notes/index.json\"}"</script>
+
+
+  <script id="gallery-config" type="application/json">"{\"gallery\":true,\"galleryOptions\":{\"columns\":4,\"columnwidth\":200,\"defaultlayout\":\"justified\",\"gap\":10,\"lastrowbehavior\":\"center\",\"targetrowheight\":200},\"lightbox\":true}"</script>
+
+
+
+
+
+
+  
+    
+      <link
+        rel="stylesheet"
+        href="/cpp_notes/css/compiled.min.882c8bb9b3deec5a84cddfd768d37a08c2c4dd5c6a0c0bd0b51a1b08c09c9adc.css"
+        integrity="sha256-iCyLubPe7FqEzd/XaNN6CMLE3VxqDAvQtRobCMCcmtw="
+        crossorigin="anonymous"
+      />
+    
+  
+
+
+
+
+  
+    
+      <link
+        rel="stylesheet"
+        href="/cpp_notes/css/chroma.min.491df36221f739b5948a747a0351f100ee7ccaaf466d9f46288bf06de1d59123.css"
+        integrity="sha256-SR3zYiH3ObWUinR6A1HxAO58yq9GbZ9GKIvwbeHVkSM="
+        crossorigin="anonymous"
+      />
+    
+  
+
+
+
+
+
+
+        <script
+          src="/cpp_notes/js/main.b003624716b5b9344efafc302bd75df711e73d0da196be724be6daebb2b6964d.js"
+          integrity="sha256-sANiRxa1uTRO&#43;vwwK9dd9xHnPQ2hlr5yS&#43;ba67K2lk0="
+          crossorigin="anonymous"
+          defer
+        ></script>
+
+
+
+            <script
+              src="/cpp_notes/js/toc.92c3534ee382ab7e31e364f704a91b9052ed119e89453fb6837a451b56dbef48.js"
+              integrity="sha256-ksNTTuOCq34x42T3BKkbkFLtEZ6JRT&#43;2g3pFG1bb70g="
+              crossorigin="anonymous"
+              defer
+            ></script>
+
+
+
+        <script
+          src="/cpp_notes/js/search.33fef1d91398b17cbc46483d902493b800642d25754e7ff8e998b12499c7fde3.js"
+          integrity="sha256-M/7x2ROYsXy8Rkg9kCSTuABkLSV1Tn/46ZixJJnH/eM="
+          crossorigin="anonymous"
+          defer
+        ></script>
+
+
+
+        <script
+          src="/cpp_notes/js/dock.b1c2d4314c86813f5baaa2a5b524b4613dc7803303402315d0a2c19217e13278.js"
+          integrity="sha256-scLUMUyGgT9bqqKltSS0YT3HgDMDQCMV0KLBkhfhMng="
+          crossorigin="anonymous"
+          defer
+        ></script>
+
+
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/smart-gallery@latest/dist/smart-gallery.umd.js"
+    defer
+  ></script>
+
+
+
+          <script
+            src="/cpp_notes/js/gallery.c8c99001b2f625137e3cbf8e2ecf758eabf72776a89735e56ee081a30b8fe7f5.js"
+            integrity="sha256-yMmQAbL2JRN&#43;PL&#43;OLs91jqv3J3aolzXlbuCBowuP5/U="
+            crossorigin="anonymous"
+            defer
+          ></script>
+
+
+
+
+          <script
+            src="/cpp_notes/js/term.321822a6a26efeaba2fc22150d06128515edf15d6844ac23a9c03c138877be4f.js"
+            integrity="sha256-MhgipqJu/qui/CIVDQYShRXt8V1oRKwjqcA8E4h3vk8="
+            crossorigin="anonymous"
+            defer
+          ></script>
+
+
+
+
+
+
+
+
+
+    
+    <script>(function(){const t=localStorage.getItem("theme")||"system",s=localStorage.getItem("colorScheme")||"default",e=Number.parseInt(localStorage.getItem("contentWidth"),10);Number.isInteger(e)&&e>=40&&e<=90&&document.documentElement.style.setProperty("--content-width",`${e}rem`),document.documentElement.setAttribute("data-theme",s);function n(){t==="dark"||t==="system"&&window.matchMedia("(prefers-color-scheme: dark)").matches?document.documentElement.classList.add("dark"):document.documentElement.classList.remove("dark")}n(),t==="system"&&window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",n)})()</script>
+  </head><body class="bg-background text-foreground min-h-screen antialiased">
+    <main
+      id="page-container"
+      class="mx-auto w-full"
+      style="max-width: var(--content-width, 56rem)"
+    >
+      <div
+    id="reading-progress-bar"
+    class="from-primary to-primary/80 pointer-events-none fixed top-0 left-0 z-50 h-[3px] w-0 bg-linear-to-r transition-[width] duration-150 ease-out"
+  ></div>
+
+  <script>
+    (function () {
+      const bar = document.getElementById("reading-progress-bar");
+      if (!bar) return;
+
+      function update() {
+        const scrolled = window.scrollY;
+        const total = document.documentElement.scrollHeight - window.innerHeight;
+        bar.style.width = total > 0 ? (scrolled / total) * 100 + "%" : "0%";
+      }
+
+      let ticking = false;
+      window.addEventListener(
+        "scroll",
+        () => {
+          if (!ticking) {
+            requestAnimationFrame(() => {
+              update();
+              ticking = false;
+            });
+            ticking = true;
+          }
+        },
+        { passive: true }
+      );
+
+      update();
+    })();
+  </script>
+
+      <header class="sticky top-0 z-50 px-4 py-6">
+  <div
+    class="border-border bg-card/80 flex items-center rounded-xl border px-6 py-4 shadow-sm backdrop-blur-sm"
+  >
+    
+    <div class="hidden w-full items-center md:flex md:min-w-0">
+      
+      <div class="flex items-center">
+        
+          <a
+            href="
+              /cpp_notes/
+            "
+            class="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full transition-transform duration-200 hover:scale-105"
+            aria-label="Hugo Narrow"
+          >
+            <img
+              src="/cpp_notes/images/logo.svg"
+              alt="Hugo Narrow"
+              class="h-full w-full object-cover"
+            />
+          </a>
+        
+      </div>
+
+      
+      <nav class="mx-8 flex min-w-0 flex-1 items-center justify-center">
+        <div class="flex flex-wrap items-center justify-center space-x-1">
+          
+          
+            
+            
+            
+              
+                
+              
+            
+            
+              
+              <a
+                href="/cpp_notes/series/"
+                class="nav-link 
+                  text-muted-foreground hover:text-primary hover:bg-primary/10
+                 focus:ring-primary/20 relative flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 focus:ring-2 focus:outline-none"
+              >
+                
+                  <svg class="h-5 w-5" aria-label="Series" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="m12 18l-4.2 1.8q-1 .425-1.9-.162T5 17.975V5q0-.825.588-1.412T7 3h10q.825 0 1.413.588T19 5v12.975q0 1.075-.9 1.663t-1.9.162zm0-2.2l5 2.15V5H7v12.95zM12 5H7h10z"/></svg>
+                
+                <span>Series</span>
+              </a>
+            
+          
+            
+            
+            
+              
+                
+              
+            
+            
+              
+              <a
+                href="/cpp_notes/posts/"
+                class="nav-link 
+                  text-muted-foreground hover:text-primary hover:bg-primary/10
+                 focus:ring-primary/20 relative flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 focus:ring-2 focus:outline-none"
+              >
+                
+                  <svg class="h-5 w-5" aria-label="Posts" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+</svg>
+
+                
+                <span>Posts</span>
+              </a>
+            
+          
+            
+            
+            
+            
+              
+              
+              <div class="relative">
+                <button
+                  class="nav-link nav-submenu-toggle text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 relative flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 focus:ring-2 focus:outline-none"
+                  data-submenu-id="more"
+                  aria-expanded="false"
+                  aria-haspopup="true"
+                >
+                  
+                    <svg class="h-5 w-5" aria-label="More" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3.09 6.26L22 9l-5.91.74L12 16l-4.09-6.26L2 9l5.91-.74L12 2z" />
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 17l10 5 10-5" />
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 12l10 5 10-5" />
+</svg>
+                  
+                  <span>More</span>
+                  <svg class="h-4 w-4 submenu-chevron transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+                </button>
+                <div
+                  class="nav-submenu border-border bg-popover/95 absolute top-full left-0 z-50 mt-2 hidden min-w-44 space-y-1.5 rounded-xl border p-1.5 shadow-lg backdrop-blur-sm"
+                  data-submenu-id="more"
+                  role="menu"
+                >
+                  
+                    
+                    
+                      
+                        
+                      
+                    
+                    
+                    <a
+                      href="/cpp_notes/categories/"
+                      class="nav-link 
+                        text-muted-foreground hover:text-primary hover:bg-primary/10
+                       focus:ring-primary/20 flex items-center gap-2 rounded-lg px-2 py-2 text-sm leading-snug transition-colors duration-200 focus:ring-2 focus:outline-none"
+                      role="menuitem"
+                      
+                    >
+                      
+                        <svg class="h-4 w-4" aria-label="Categories" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+</svg>
+
+                      
+                      <span>Categories</span>
+                    </a>
+                  
+                    
+                    
+                      
+                        
+                      
+                    
+                    
+                    <a
+                      href="/cpp_notes/tags/"
+                      class="nav-link 
+                        text-muted-foreground hover:text-primary hover:bg-primary/10
+                       focus:ring-primary/20 flex items-center gap-2 rounded-lg px-2 py-2 text-sm leading-snug transition-colors duration-200 focus:ring-2 focus:outline-none"
+                      role="menuitem"
+                      
+                    >
+                      
+                        <svg class="h-4 w-4" aria-label="Tags" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+</svg>
+
+                      
+                      <span>Tags</span>
+                    </a>
+                  
+                    
+                    
+                      
+                        
+                      
+                    
+                    
+                    <a
+                      href="/cpp_notes/projects/"
+                      class="nav-link 
+                        text-muted-foreground hover:text-primary hover:bg-primary/10
+                       focus:ring-primary/20 flex items-center gap-2 rounded-lg px-2 py-2 text-sm leading-snug transition-colors duration-200 focus:ring-2 focus:outline-none"
+                      role="menuitem"
+                      
+                    >
+                      
+                        <svg class="h-4 w-4" aria-label="Projects" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="6" r="1" fill="currentColor"/><path fill="currentColor" d="M6 17h12v2H6zm4-5.17l2.792 2.794l3.932-3.935L18 12V8h-4l1.31 1.275l-2.519 2.519L10 9l-4 4l1.414 1.414z"/><path fill="currentColor" d="M19 3h-3.298a5 5 0 0 0-.32-.425l-.01-.012a4.43 4.43 0 0 0-2.89-1.518a2.6 2.6 0 0 0-.964 0a4.43 4.43 0 0 0-2.89 1.518l-.01.012a5 5 0 0 0-.32.424V3H5a3.003 3.003 0 0 0-3 3v14a3.003 3.003 0 0 0 3 3h14a3.003 3.003 0 0 0 3-3V6a3.003 3.003 0 0 0-3-3m1 17a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h4.55a2.5 2.5 0 0 1 4.9 0H19a1 1 0 0 1 1 1Z"/></svg>
+
+
+                      
+                      <span>Projects</span>
+                    </a>
+                  
+                    
+                    
+                      
+                        
+                      
+                    
+                    
+                    <a
+                      href="/cpp_notes/archives/"
+                      class="nav-link 
+                        text-muted-foreground hover:text-primary hover:bg-primary/10
+                       focus:ring-primary/20 flex items-center gap-2 rounded-lg px-2 py-2 text-sm leading-snug transition-colors duration-200 focus:ring-2 focus:outline-none"
+                      role="menuitem"
+                      
+                    >
+                      
+                        <svg class="h-4 w-4" aria-label="Archives" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+</svg>
+
+                      
+                      <span>Archives</span>
+                    </a>
+                  
+                </div>
+              </div>
+            
+          
+        </div>
+      </nav>
+
+      
+      <div class="flex items-center space-x-2">
+        
+        <div class="hidden lg:block"><div class="relative">
+    <button
+      id="content-width-toggle"
+      class="dropdown-toggle border-border bg-background text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex h-10 w-10 items-center justify-center rounded-lg border transition-all duration-300 ease-out hover:scale-105 focus:ring-2 focus:outline-none active:scale-95"
+      data-dropdown-type="content-width"
+      aria-label="Adjust page width"
+      aria-expanded="false"
+      aria-haspopup="true"
+    ><svg class="h-5 w-5 relative z-10" aria-label="Adjust page width" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+	<path d="M0 0h24v24H0z" fill="none" />
+	<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 12H3l3-3m0 6l-3-3m11 0h7l-3-3m0 6l3-3M3 6V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v1M3 18v1a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-1" />
+</svg>
+</button>
+
+    <div
+      id="content-width-dropdown"
+      class="dropdown-menu border-border bg-popover/95 w-64 absolute top-12 right-0 z-60 hidden rounded-lg border p-1 shadow-lg backdrop-blur-sm transition-all duration-200 ease-out"
+      data-dropdown-type="content-width"
+      
+    >
+    <div class="space-y-3 p-3">
+    <div class="flex items-center justify-between gap-4">
+    <label for="content-width-range" class="text-foreground text-sm font-medium">Page width</label>
+    <output id="content-width-value" for="content-width-range" class="text-muted-foreground min-w-12 text-right text-sm tabular-nums"></output>
+    </div>
+    <input id="content-width-range" class="accent-primary w-full cursor-pointer" type="range" min="40" max="90" step="1" aria-label="Page width" />
+    <button id="content-width-reset" type="button" class="border-border text-muted-foreground hover:bg-accent hover:text-accent-foreground focus:ring-primary/20 w-full rounded-md border px-3 py-2 text-sm transition-colors focus:ring-2 focus:outline-none">Restore default</button>
+    </div></div>
+  </div></div>
+
+
+        
+        
+
+
+        
+        <div class="relative">
+    <button
+      id="color-scheme-toggle"
+      class="dropdown-toggle border-border bg-background text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex h-10 w-10 items-center justify-center rounded-lg border transition-all duration-300 ease-out hover:scale-105 focus:ring-2 focus:outline-none active:scale-95"
+      data-dropdown-type="color-scheme"
+      aria-label="Toggle theme"
+      aria-expanded="false"
+      aria-haspopup="true"
+    ><svg class="h-5 w-5 relative z-10" aria-label="Toggle theme" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v6a2 2 0 002 2h4a2 2 0 002-2V5z" />
+</svg>
+</button>
+
+    <div
+      id="color-scheme-dropdown"
+      class="dropdown-menu border-border bg-popover/95 w-44 absolute top-12 right-0 z-60 hidden rounded-lg border p-1 shadow-lg backdrop-blur-sm transition-all duration-200 ease-out"
+      data-dropdown-type="color-scheme"
+      
+    ><button data-color-scheme="default" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Default</span></button><button data-color-scheme="claude" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Claude</span></button><button data-color-scheme="bumblebee" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Bumblebee</span></button><button data-color-scheme="emerald" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Emerald</span></button><button data-color-scheme="nord" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Nord</span></button><button data-color-scheme="sunset" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Sunset</span></button><button data-color-scheme="abyss" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Abyss</span></button><button data-color-scheme="dracula" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Dracula</span></button><button data-color-scheme="amethyst" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Amethyst</span></button><button data-color-scheme="slate" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Slate</span></button><button data-color-scheme="twitter" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Twitter</span></button><button data-color-scheme="minimal" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Minimal</span></button></div>
+  </div>
+
+
+        
+        <div class="relative">
+    <button
+      id="theme-toggle"
+      class="dropdown-toggle border-border bg-background text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex h-10 w-10 items-center justify-center rounded-lg border transition-all duration-300 ease-out hover:scale-105 focus:ring-2 focus:outline-none active:scale-95"
+      data-dropdown-type="theme"
+      aria-label="Toggle theme"
+      aria-expanded="false"
+      aria-haspopup="true"
+    ><svg class="h-5 w-5 sun-icon hidden relative z-10" aria-label="Light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+</svg>
+
+        <svg class="h-5 w-5 moon-icon hidden relative z-10" aria-label="Dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+</svg>
+
+        <svg class="h-5 w-5 system-icon hidden relative z-10" aria-label="System" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+</svg>
+</button>
+
+    <div
+      id="theme-dropdown"
+      class="dropdown-menu border-border bg-popover/95 w-40 absolute top-12 right-0 z-60 hidden rounded-lg border p-1 shadow-lg backdrop-blur-sm transition-all duration-200 ease-out"
+      data-dropdown-type="theme"
+      
+    ><button data-theme="light" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><svg class="h-5 w-5 mr-3 h-4 w-4" aria-label="Light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+</svg>
+<span>Light</span></button><button data-theme="dark" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><svg class="h-5 w-5 mr-3 h-4 w-4" aria-label="Dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+</svg>
+<span>Dark</span></button><button data-theme="system" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><svg class="h-5 w-5 mr-3 h-4 w-4" aria-label="System" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+</svg>
+<span>System</span></button></div>
+  </div>
+
+
+        
+        
+<button
+  id="header-search"
+  class="border-border bg-background text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex h-10 w-10 items-center justify-center rounded-lg border transition-all duration-300 ease-out hover:scale-105 focus:ring-2 focus:outline-none active:scale-95"
+  title="Search"
+  aria-label="Search"
+>
+  <svg class="h-5 w-5 relative z-10" aria-label="Search" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+</svg>
+
+</button>
+
+      </div>
+    </div>
+
+    
+    <div class="flex w-full items-center justify-between md:hidden">
+      
+      
+<button
+  id="mobile-nav-toggle"
+  class="nav-panel-toggle border-border bg-background text-muted-foreground hover:bg-accent hover:text-foreground flex h-10 w-10 items-center justify-center rounded-lg border transition-colors duration-200"
+  aria-label="Menu"
+  aria-expanded="false"
+  aria-controls="mobile-nav-panel"
+>
+  <svg class="h-5 w-5" aria-label="Menu" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+</svg>
+
+</button>
+
+
+
+      
+      <div class="flex items-center space-x-2">
+        
+        
+
+
+        
+        <div class="relative">
+    <button
+      id="color-scheme-toggle"
+      class="dropdown-toggle border-border bg-background text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex h-10 w-10 items-center justify-center rounded-lg border transition-all duration-300 ease-out hover:scale-105 focus:ring-2 focus:outline-none active:scale-95"
+      data-dropdown-type="color-scheme"
+      aria-label="Toggle theme"
+      aria-expanded="false"
+      aria-haspopup="true"
+    ><svg class="h-5 w-5 relative z-10" aria-label="Toggle theme" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v6a2 2 0 002 2h4a2 2 0 002-2V5z" />
+</svg>
+</button>
+
+    <div
+      id="color-scheme-dropdown"
+      class="dropdown-menu border-border bg-popover/95 w-44 absolute top-12 right-0 z-60 hidden rounded-lg border p-1 shadow-lg backdrop-blur-sm transition-all duration-200 ease-out"
+      data-dropdown-type="color-scheme"
+      
+    ><button data-color-scheme="default" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Default</span></button><button data-color-scheme="claude" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Claude</span></button><button data-color-scheme="bumblebee" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Bumblebee</span></button><button data-color-scheme="emerald" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Emerald</span></button><button data-color-scheme="nord" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Nord</span></button><button data-color-scheme="sunset" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Sunset</span></button><button data-color-scheme="abyss" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Abyss</span></button><button data-color-scheme="dracula" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Dracula</span></button><button data-color-scheme="amethyst" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Amethyst</span></button><button data-color-scheme="slate" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Slate</span></button><button data-color-scheme="twitter" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Twitter</span></button><button data-color-scheme="minimal" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Minimal</span></button></div>
+  </div>
+
+
+        
+        <div class="relative">
+    <button
+      id="theme-toggle"
+      class="dropdown-toggle border-border bg-background text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex h-10 w-10 items-center justify-center rounded-lg border transition-all duration-300 ease-out hover:scale-105 focus:ring-2 focus:outline-none active:scale-95"
+      data-dropdown-type="theme"
+      aria-label="Toggle theme"
+      aria-expanded="false"
+      aria-haspopup="true"
+    ><svg class="h-5 w-5 sun-icon hidden relative z-10" aria-label="Light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+</svg>
+
+        <svg class="h-5 w-5 moon-icon hidden relative z-10" aria-label="Dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+</svg>
+
+        <svg class="h-5 w-5 system-icon hidden relative z-10" aria-label="System" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+</svg>
+</button>
+
+    <div
+      id="theme-dropdown"
+      class="dropdown-menu border-border bg-popover/95 w-40 absolute top-12 right-0 z-60 hidden rounded-lg border p-1 shadow-lg backdrop-blur-sm transition-all duration-200 ease-out"
+      data-dropdown-type="theme"
+      
+    ><button data-theme="light" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><svg class="h-5 w-5 mr-3 h-4 w-4" aria-label="Light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+</svg>
+<span>Light</span></button><button data-theme="dark" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><svg class="h-5 w-5 mr-3 h-4 w-4" aria-label="Dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+</svg>
+<span>Dark</span></button><button data-theme="system" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><svg class="h-5 w-5 mr-3 h-4 w-4" aria-label="System" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+</svg>
+<span>System</span></button></div>
+  </div>
+
+
+        
+        
+<button
+  id="header-search"
+  class="border-border bg-background text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex h-10 w-10 items-center justify-center rounded-lg border transition-all duration-300 ease-out hover:scale-105 focus:ring-2 focus:outline-none active:scale-95"
+  title="Search"
+  aria-label="Search"
+>
+  <svg class="h-5 w-5 relative z-10" aria-label="Search" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+</svg>
+
+</button>
+
+      </div>
+    </div>
+  </div>
+
+  
+  
+<div
+  id="mobile-nav-panel"
+  class="mt-2 hidden md:hidden"
+  role="navigation"
+  aria-label="Menu"
+  aria-hidden="true"
+  tabindex="-1"
+>
+  <div
+    class="border-border bg-popover/95 overflow-hidden rounded-xl border shadow-lg backdrop-blur-sm"
+  >
+    
+    <nav class="flex flex-col p-2">
+      
+      
+        
+        
+        
+          
+            
+          
+        
+        
+          
+          <a
+            href="/cpp_notes/series/"
+            class="nav-panel-link 
+              text-muted-foreground hover:text-primary hover:bg-primary/10
+             focus:ring-primary/20 flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+            role="menuitem"
+            
+          >
+            
+              <svg class="h-5 w-5" aria-label="Series" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="m12 18l-4.2 1.8q-1 .425-1.9-.162T5 17.975V5q0-.825.588-1.412T7 3h10q.825 0 1.413.588T19 5v12.975q0 1.075-.9 1.663t-1.9.162zm0-2.2l5 2.15V5H7v12.95zM12 5H7h10z"/></svg>
+            
+            <span>Series</span>
+          </a>
+        
+      
+        
+        
+        
+          
+            
+          
+        
+        
+          
+          <a
+            href="/cpp_notes/posts/"
+            class="nav-panel-link 
+              text-muted-foreground hover:text-primary hover:bg-primary/10
+             focus:ring-primary/20 flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+            role="menuitem"
+            
+          >
+            
+              <svg class="h-5 w-5" aria-label="Posts" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+</svg>
+
+            
+            <span>Posts</span>
+          </a>
+        
+      
+        
+        
+        
+        
+          
+          
+          <div class="nav-accordion-group">
+            <button
+              class="nav-accordion-toggle text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex w-full items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+              data-accordion-id="more"
+              aria-expanded="false"
+              aria-controls="accordion-more"
+            >
+              
+                <svg class="h-5 w-5" aria-label="More" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3.09 6.26L22 9l-5.91.74L12 16l-4.09-6.26L2 9l5.91-.74L12 2z" />
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 17l10 5 10-5" />
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 12l10 5 10-5" />
+</svg>
+              
+              <span class="flex-1 text-left">More</span>
+              <svg class="h-4 w-4 accordion-chevron transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+            </button>
+            
+            <div
+              id="accordion-more"
+              class="nav-accordion-panel grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out"
+              data-accordion-id="more"
+              aria-hidden="true"
+            >
+              <div class="overflow-hidden">
+                <div class="border-primary/20 ml-4 space-y-0.5 border-l-2 py-1 pl-3">
+                  
+                    
+                    
+                      
+                        
+                      
+                    
+                    
+                    <a
+                      href="/cpp_notes/categories/"
+                      class="nav-panel-link 
+                        text-muted-foreground hover:text-primary hover:bg-primary/10
+                       focus:ring-primary/20 flex items-center gap-3 rounded-md px-3 py-2.5 text-sm transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+                      role="menuitem"
+                      
+                    >
+                      
+                        <svg class="h-4 w-4" aria-label="Categories" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+</svg>
+
+                      
+                      <span>Categories</span>
+                    </a>
+                  
+                    
+                    
+                      
+                        
+                      
+                    
+                    
+                    <a
+                      href="/cpp_notes/tags/"
+                      class="nav-panel-link 
+                        text-muted-foreground hover:text-primary hover:bg-primary/10
+                       focus:ring-primary/20 flex items-center gap-3 rounded-md px-3 py-2.5 text-sm transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+                      role="menuitem"
+                      
+                    >
+                      
+                        <svg class="h-4 w-4" aria-label="Tags" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+</svg>
+
+                      
+                      <span>Tags</span>
+                    </a>
+                  
+                    
+                    
+                      
+                        
+                      
+                    
+                    
+                    <a
+                      href="/cpp_notes/projects/"
+                      class="nav-panel-link 
+                        text-muted-foreground hover:text-primary hover:bg-primary/10
+                       focus:ring-primary/20 flex items-center gap-3 rounded-md px-3 py-2.5 text-sm transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+                      role="menuitem"
+                      
+                    >
+                      
+                        <svg class="h-4 w-4" aria-label="Projects" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="6" r="1" fill="currentColor"/><path fill="currentColor" d="M6 17h12v2H6zm4-5.17l2.792 2.794l3.932-3.935L18 12V8h-4l1.31 1.275l-2.519 2.519L10 9l-4 4l1.414 1.414z"/><path fill="currentColor" d="M19 3h-3.298a5 5 0 0 0-.32-.425l-.01-.012a4.43 4.43 0 0 0-2.89-1.518a2.6 2.6 0 0 0-.964 0a4.43 4.43 0 0 0-2.89 1.518l-.01.012a5 5 0 0 0-.32.424V3H5a3.003 3.003 0 0 0-3 3v14a3.003 3.003 0 0 0 3 3h14a3.003 3.003 0 0 0 3-3V6a3.003 3.003 0 0 0-3-3m1 17a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h4.55a2.5 2.5 0 0 1 4.9 0H19a1 1 0 0 1 1 1Z"/></svg>
+
+
+                      
+                      <span>Projects</span>
+                    </a>
+                  
+                    
+                    
+                      
+                        
+                      
+                    
+                    
+                    <a
+                      href="/cpp_notes/archives/"
+                      class="nav-panel-link 
+                        text-muted-foreground hover:text-primary hover:bg-primary/10
+                       focus:ring-primary/20 flex items-center gap-3 rounded-md px-3 py-2.5 text-sm transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+                      role="menuitem"
+                      
+                    >
+                      
+                        <svg class="h-4 w-4" aria-label="Archives" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+</svg>
+
+                      
+                      <span>Archives</span>
+                    </a>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        
+      
+    </nav>
+  </div>
+</div>
+
+</header>
+
+
+
+      <div class="px-4 py-6">
+        
+  <nav class="breadcrumb mb-4 py-1 md:mb-6" aria-label="Breadcrumb">
+    <ol
+      class="text-muted-foreground scrollbar-hide flex items-center space-x-1 overflow-x-auto py-1 text-sm whitespace-nowrap md:space-x-2"
+    >
+      
+        
+          
+          <li class="shrink-0">
+            <a
+              href="/cpp_notes/"
+              class="text-muted-foreground hover:text-primary hover:bg-primary/10 flex items-center gap-1 rounded-lg px-1 py-0.5 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-[1.02] md:py-1.5"
+            >
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m3 12 2-2m0 0 7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+</svg>
+
+              <span class="max-w-16 truncate md:max-w-none">Home</span>
+            </a>
+          </li>
+        
+      
+        
+          
+          <li class="flex min-w-0 items-center gap-1 md:gap-2">
+            <span class="text-muted-foreground/50 shrink-0"
+              ><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+</svg>
+            </span>
+            <a
+              href="/cpp_notes/posts/"
+              class="text-muted-foreground hover:text-primary hover:bg-primary/10 flex shrink-0 items-center gap-1 rounded-lg px-1 py-0.5 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-[1.02] md:px-3 md:py-1.5"
+            >
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+</svg>
+              <span class="max-w-16 truncate md:max-w-none">Posts</span>
+            </a>
+          </li>
+        
+      
+        
+          
+          <li class="flex min-w-0 items-center gap-1 md:gap-2">
+            <span class="text-muted-foreground/50 shrink-0"
+              ><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+</svg>
+            </span>
+            <a
+              href="/cpp_notes/posts/systeamdesign/"
+              class="text-muted-foreground hover:text-primary hover:bg-primary/10 flex shrink-0 items-center gap-1 rounded-lg px-1 py-0.5 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-[1.02] md:px-3 md:py-1.5"
+            >
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+</svg>
+              <span class="max-w-16 truncate md:max-w-none">系统设计方案</span>
+            </a>
+          </li>
+        
+      
+
+
+      
+      <li class="flex min-w-0 items-center gap-1 md:gap-2">
+        <span class="text-muted-foreground/50 shrink-0"
+          ><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+</svg>
+        </span>
+        <span class="text-foreground flex min-w-0 items-center gap-1 font-medium">
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+</svg>
+          <span class="max-w-32 truncate md:max-w-[16rem] lg:max-w-none">行为树</span>
+        </span>
+      </li>
+    </ol>
+  </nav>
+
+
+        
+  
+
+
+  
+  <header class="mb-8">
+    
+
+
+
+
+<div class="post-meta mb-8">
+  
+  
+    <h1 class="text-foreground mb-6 text-3xl leading-tight font-bold md:text-4xl">
+      行为树
+    </h1>
+  
+
+  
+  
+
+  
+  <div class="bg-card border-border rounded-xl border">
+
+    
+        
+        <div class="p-6">
+
+          
+          <div class="text-muted-foreground flex flex-wrap items-center gap-3 text-sm mb-4">
+            
+            
+            <div class="flex items-center gap-2">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+</svg>
+
+              <time datetime="2026-03-08">
+                March 8, 2026
+              </time>
+            </div>
+            
+
+            
+            
+            <div class="flex items-center gap-2">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+</svg>
+
+              <span>7 min</span>
+            </div>
+            
+
+            
+            
+            <div class="flex items-center gap-2">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
+</svg>
+
+              <span>3275 words</span>
+            </div>
+            
+          </div>
+
+          
+          <div class="text-muted-foreground space-y-3 pt-4 border-t border-border">
+            <div class="flex items-center gap-2">
+              <div class="shrink-0">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+</svg>
+
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex flex-wrap items-center gap-1.5">
+                  <span class="text-muted-foreground text-sm font-medium">
+                    Categories:
+                  </span>
+                  <a href="/cpp_notes/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"
+                    class="inline-flex items-center rounded-full px-2.5 py-1 text-sm font-medium transition-all duration-200 bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground">
+                    设计模式
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="shrink-0">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+</svg>
+
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex flex-wrap items-center gap-1.5">
+                  <span class="text-muted-foreground text-sm font-medium">
+                    Tags:
+                  </span>
+                  <a href="/cpp_notes/tags/%E8%A1%8C%E4%B8%BA%E6%A0%91/"
+                    class="inline-flex items-center rounded-full px-2.5 py-1 text-sm font-medium transition-all duration-200 bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground">
+                    行为树
+                  </a>
+                  <a href="/cpp_notes/tags/ai%E5%86%B3%E7%AD%96/"
+                    class="inline-flex items-center rounded-full px-2.5 py-1 text-sm font-medium transition-all duration-200 bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground">
+                    AI决策
+                  </a>
+                  <a href="/cpp_notes/tags/%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91/"
+                    class="inline-flex items-center rounded-full px-2.5 py-1 text-sm font-medium transition-all duration-200 bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground">
+                    游戏开发
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+  </div>
+</div>
+
+  </header>
+
+  
+  <article class="prose prose-neutral dark:prose-invert mb-12 max-w-none">
+    <h1 id="概念">概念<a href="#%e6%a6%82%e5%bf%b5" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h1><p><strong>行为树 <code>Behavior Tree</code></strong>: 是一种广泛应用于游戏AI和机器人系统中的行为决策模型。它以树状结构组织行为逻辑，具有模块化、易扩展和高复用性的特点。行为树通过从根节点开始的递归遍历，逐步执行节点的逻辑，直到完成任务或遇到失败条件。</p>
+<ul>
+<li><strong>树</strong>：行为树是一个树形结构，其中每个节点代表一个行为或决策点。</li>
+<li><strong>行为树执行</strong>
+<ul>
+<li><strong>行为状态</strong>：行为给出执行结果后，便会退出节点，将状态返回给父节点处理
+<ul>
+<li><strong>成功<code>Success</code></strong>: 行为执行成功</li>
+<li><strong>失败<code>Failure</code></strong>: 行为执行失败</li>
+<li><strong>运行中<code>Running</code></strong>: 行为还未执行完成</li>
+</ul>
+</li>
+<li><strong>整体调度流程</strong>
+<ol>
+<li>最外层会用一个 <code>while</code> 循环执行 <code>root</code> 节点的 <code>tick()/run()</code></li>
+<li>父节点的 <code>tick()/run()</code> 递归调度子节点的 <code>tick()/run()</code></li>
+<li><code>tick()/run()</code> 执行完成后，返回的状态由父节点处理</li>
+<li>通常当 <code>root</code> 节点的 <code>tick()/run()</code> 返回时，满足<code>while</code>退出条件，则调度结束</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><strong>行为</strong>: 树的<strong>节点</strong>，代表具体的动作或操作
+<ul>
+<li>
+<p><strong>读写行为</strong>: 基本行为，<strong>树的叶子节点</strong></p>
+<ul>
+<li><strong>条件/读行为<code>condition</code></strong>：仅读取环境信息，不改变环境状态，例如：感知环境、判断条件等。
+<ul>
+<li>成功：条件满足</li>
+<li>失败：条件不满足</li>
+<li>运行中：无</li>
+</ul>
+</li>
+<li><strong>动作/写行为<code>action</code></strong>：读取环境信息，并改变环境状态，例如：移动、攻击、跳跃等。
+<ul>
+<li>成功：执行成功</li>
+<li>失败：执行不成功</li>
+<li>运行中：正在执行中</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>控制行为</strong>: 组合行为，<strong>树的枝干节点</strong></p>
+<ul>
+<li><strong>与行为(序列行为)<code>sequence</code></strong>: 按顺序执行子节点
+<ul>
+<li>成功：所有子行为都成功</li>
+<li>失败：任一子行为失败</li>
+<li>运行中：任一子行为正在执行</li>
+</ul>
+</li>
+<li><strong>或行为(选择行为)<code>fallback</code></strong>: 按顺序执行子节点
+<ul>
+<li>成功：任一子行为成功</li>
+<li>失败：所有子行为都失败</li>
+<li>运行中：任一子行为正在执行</li>
+</ul>
+</li>
+<li><strong>并行行为<code>parallel</code></strong>: 子节点&quot;并行&quot;执行
+<ul>
+<li>成功：<code>m</code> 个子行为成功则成功</li>
+<li>失败：<code>n</code> 个子行为失败则失败</li>
+<li>运行中：其他情况</li>
+</ul>
+</li>
+<li><strong>装饰器<code>decorator</code></strong>: 装饰子行为，自定义规则且可修改子行为状态，例如：限制次数、倒计时、随机选择等</li>
+</ul>
+<p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="806"
+  data-image-height="305"
+  data-image-src="/cpp_notes/posts/systeamdesign/behaviortree/resources/bt_nodes.png"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/systeamdesign/behaviortree/resources/bt_nodes.png"
+    alt="alt"
+    
+    
+      
+      
+        
+          width="806" height="305"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/systeamdesign/behaviortree/resources/bt_nodes.png"
+    data-gallery-alt="alt"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+</li>
+</ul>
+</li>
+</ul>
+<div
+    class="alert alert-tip my-6 overflow-hidden rounded-lg transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md"
+    style="background-color: color-mix(in srgb, var(--color-tip) 10%, transparent);
+              border-left-color: var(--color-tip);
+              --hover-bg: color-mix(in srgb, var(--color-tip) 15%, transparent);"
+    onmouseover="this.style.backgroundColor = this.style.getPropertyValue('--hover-bg')"
+    onmouseout="this.style.backgroundColor = 'color-mix(in srgb, var(--color-tip) 10%, transparent)'"
+    role="alert"
+    aria-labelledby="alert-0-title"
+  >
+    
+    <div
+      class=" flex items-center justify-between px-6 py-6"
+      
+    >
+      <div class="flex items-center gap-3">
+        
+        <h4 id="alert-0-title" class="text-foreground/90 m-0 font-semibold">
+          Tip
+        </h4>
+      </div>
+
+      
+      
+    </div>
+
+    
+    <div
+      id="alert-0-content"
+      class="alert-content  px-6 pb-6"
+    >
+      <div class="prose prose-sm text-foreground/90 max-w-none">
+        <ul>
+<li>行为树最开始是为游戏设计，每个节点的 <code>tick()/run()</code> 是在一个 <code>while</code> 中被依次执行，因此，每个节点 <code>tick()/run()</code> 中应当执行的是非阻塞式且执行时间短的代码逻辑。</li>
+<li>若只是使用行为树来编排业务流程，只用从根节点开始只执行一次，则可以在 <code>tick()/run()</code> 中使用阻塞式逻辑</li>
+</ul>
+      </div>
+    </div>
+  </div><script>
+  function toggleAlert(alertId) {
+    const content = document.getElementById(alertId + "-content");
+    const chevron = document.getElementById(alertId + "-chevron");
+    const header = content.previousElementSibling;
+
+    if (content.classList.contains("hidden")) {
+      content.classList.remove("hidden");
+      chevron.style.transform = "rotate(0deg)";
+      header.setAttribute("aria-expanded", "true");
+    } else {
+      content.classList.add("hidden");
+      chevron.style.transform = "rotate(-90deg)";
+      header.setAttribute("aria-expanded", "false");
+    }
+  }
+
+  
+  document.addEventListener("DOMContentLoaded", function () {
+    const collapsedAlerts = document.querySelectorAll(".alert-content.hidden");
+    collapsedAlerts.forEach(function (content) {
+      const alertId = content.id.replace("-content", "");
+      const chevron = document.getElementById(alertId + "-chevron");
+      if (chevron) {
+        chevron.style.transform = "rotate(-90deg)";
+      }
+    });
+  });
+</script>
+<p><strong>案例</strong>：实现一个机器人搜索特定物品的控制逻辑</p>
+<p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="623"
+  data-image-height="414"
+  data-image-src="/cpp_notes/posts/systeamdesign/behaviortree/resources/bt_robot.png"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/systeamdesign/behaviortree/resources/bt_robot.png"
+    alt="alt"
+    
+    
+      
+      
+        
+          width="623" height="414"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/systeamdesign/behaviortree/resources/bt_robot.png"
+    data-gallery-alt="alt"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+<ol>
+<li>
+<p>走到位置 <code>A</code>，然后找到物体</p>
+<p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="310"
+  data-image-height="185"
+  data-image-src="/cpp_notes/posts/systeamdesign/behaviortree/resources/bt_toa.png"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/systeamdesign/behaviortree/resources/bt_toa.png"
+    alt="alt"
+    
+    
+      
+      
+        
+          width="310" height="185"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/systeamdesign/behaviortree/resources/bt_toa.png"
+    data-gallery-alt="alt"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+</li>
+<li>
+<p>在抵达 <code>A</code> 的过程中，机器人肯定要实时检测是否到达了 <code>A</code>，因此，还需加入是否抵达位置的判断</p>
+<p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="385"
+  data-image-height="320"
+  data-image-src="/cpp_notes/posts/systeamdesign/behaviortree/resources/bt_check_toa.png"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/systeamdesign/behaviortree/resources/bt_check_toa.png"
+    alt="alt"
+    
+    
+      
+      
+        
+          width="385" height="320"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/systeamdesign/behaviortree/resources/bt_check_toa.png"
+    data-gallery-alt="alt"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+</li>
+<li>
+<p>添加其他待检测地点</p>
+<p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="893"
+  data-image-height="366"
+  data-image-src="/cpp_notes/posts/systeamdesign/behaviortree/resources/bt_locations.png"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/systeamdesign/behaviortree/resources/bt_locations.png"
+    alt="alt"
+    
+    
+      
+      
+        
+          width="893" height="366"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/systeamdesign/behaviortree/resources/bt_locations.png"
+    data-gallery-alt="alt"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+</li>
+<li>
+<p>增加被搜索物品</p>
+<p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="907"
+  data-image-height="376"
+  data-image-src="/cpp_notes/posts/systeamdesign/behaviortree/resources/bt_objects.png"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/systeamdesign/behaviortree/resources/bt_objects.png"
+    alt="alt"
+    
+    
+      
+      
+        
+          width="907" height="376"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/systeamdesign/behaviortree/resources/bt_objects.png"
+    data-gallery-alt="alt"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+</li>
+<li>
+<p>上述行为树虽然实现了功能，但是流程太冗余，例如新增地点后，就需要重新添加大量行为。可引入 <code>repeat</code> 装饰器进行流程复用</p>
+<ul>
+<li><code>blackboard</code>: 行为树的上下文数据存放区域，可存储能被所有行为访问的共享数据</li>
+<li>实现流程
+<ol>
+<li>使用 <code>GetLoc</code> 从 <code>LocationQueue</code> 中读取地点并写入 <code>blackboard</code>，实现外部输入地址</li>
+<li>后续流程均通过 <code>blackboard</code> 动态获取地点</li>
+<li><code>repeat</code> 重复上述流程，实现流程复用</li>
+</ol>
+</li>
+</ul>
+<p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="889"
+  data-image-height="479"
+  data-image-src="/cpp_notes/posts/systeamdesign/behaviortree/resources/bt_repeat.png"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/systeamdesign/behaviortree/resources/bt_repeat.png"
+    alt="alt"
+    
+    
+      
+      
+        
+          width="889" height="479"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/systeamdesign/behaviortree/resources/bt_repeat.png"
+    data-gallery-alt="alt"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+</li>
+</ol>
+<h1 id="行为树-vs-状态机">行为树 vs 状态机<a href="#%e8%a1%8c%e4%b8%ba%e6%a0%91-vs-%e7%8a%b6%e6%80%81%e6%9c%ba" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h1><p>行为树与状态机各有优势，二者适用于不同的场景，选择时需要根据具体需求进行权衡。</p>
+<ul>
+<li><strong>模块化<code>modularity</code></strong>: 行为树代码结构清晰，易于维护和扩展</li>
+<li><strong>反应性<code>reactivity</code></strong>: 状态机决策链路简单，能快速完成状态转移</li>
+</ul>
+<div
+    class="alert alert-note my-6 overflow-hidden rounded-lg transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md"
+    style="background-color: color-mix(in srgb, var(--color-note) 10%, transparent);
+              border-left-color: var(--color-note);
+              --hover-bg: color-mix(in srgb, var(--color-note) 15%, transparent);"
+    onmouseover="this.style.backgroundColor = this.style.getPropertyValue('--hover-bg')"
+    onmouseout="this.style.backgroundColor = 'color-mix(in srgb, var(--color-note) 10%, transparent)'"
+    role="alert"
+    aria-labelledby="alert-1-title"
+  >
+    
+    <div
+      class=" flex items-center justify-between px-6 py-6"
+      
+    >
+      <div class="flex items-center gap-3">
+        
+        <h4 id="alert-1-title" class="text-foreground/90 m-0 font-semibold">
+          Note
+        </h4>
+      </div>
+
+      
+      
+    </div>
+
+    
+    <div
+      id="alert-1-content"
+      class="alert-content  px-6 pb-6"
+    >
+      <div class="prose prose-sm text-foreground/90 max-w-none">
+        <ul>
+<li><strong>状态机</strong>：由外部输入激励，使得系统状态改变，用于角色控制、NPC 决策</li>
+<li><strong>行为树</strong>：系统按流程自动处理任务，主要用于 NPC 决策</li>
+</ul>
+      </div>
+    </div>
+  </div><script>
+  function toggleAlert(alertId) {
+    const content = document.getElementById(alertId + "-content");
+    const chevron = document.getElementById(alertId + "-chevron");
+    const header = content.previousElementSibling;
+
+    if (content.classList.contains("hidden")) {
+      content.classList.remove("hidden");
+      chevron.style.transform = "rotate(0deg)";
+      header.setAttribute("aria-expanded", "true");
+    } else {
+      content.classList.add("hidden");
+      chevron.style.transform = "rotate(-90deg)";
+      header.setAttribute("aria-expanded", "false");
+    }
+  }
+
+  
+  document.addEventListener("DOMContentLoaded", function () {
+    const collapsedAlerts = document.querySelectorAll(".alert-content.hidden");
+    collapsedAlerts.forEach(function (content) {
+      const alertId = content.id.replace("-content", "");
+      const chevron = document.getElementById(alertId + "-chevron");
+      if (chevron) {
+        chevron.style.transform = "rotate(-90deg)";
+      }
+    });
+  });
+</script>
+<p><strong>案例1</strong>：实现一个机器人从<code>A</code>前往<code>B</code>夹取物品，然后返回<code>A</code></p>
+<p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="924"
+  data-image-height="493"
+  data-image-src="/cpp_notes/posts/systeamdesign/behaviortree/resources/robot_grip.png"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/systeamdesign/behaviortree/resources/robot_grip.png"
+    alt="alt"
+    
+    
+      
+      
+        
+          width="924" height="493"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/systeamdesign/behaviortree/resources/robot_grip.png"
+    data-gallery-alt="alt"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+<p>现在追加一个流程，机器人夹取物品时，需要检测夹取是否有效，且必要时进行修正</p>
+<p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="911"
+  data-image-height="499"
+  data-image-src="/cpp_notes/posts/systeamdesign/behaviortree/resources/robot_correct.png"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/systeamdesign/behaviortree/resources/robot_correct.png"
+    alt="alt"
+    
+    
+      
+      
+        
+          width="911" height="499"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/systeamdesign/behaviortree/resources/robot_correct.png"
+    data-gallery-alt="alt"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+<p>可以看出行为树流程更加清晰，符合直觉，且便于拓展。</p>
+<p><strong>案例2</strong>：机器人增加充电功能</p>
+<p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="801"
+  data-image-height="322"
+  data-image-src="/cpp_notes/posts/systeamdesign/behaviortree/resources/robot_charge_bt.png"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/systeamdesign/behaviortree/resources/robot_charge_bt.png"
+    alt="alt"
+    
+    
+      
+      
+        
+          width="801" height="322"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/systeamdesign/behaviortree/resources/robot_charge_bt.png"
+    data-gallery-alt="alt"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+
+
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="566"
+  data-image-height="598"
+  data-image-src="/cpp_notes/posts/systeamdesign/behaviortree/resources/robot_charge_state.png"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/systeamdesign/behaviortree/resources/robot_charge_state.png"
+    alt="alt"
+    
+    
+      
+      
+        
+          width="566" height="598"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/systeamdesign/behaviortree/resources/robot_charge_state.png"
+    data-gallery-alt="alt"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+<p>行为树虽然能马上实现功能，但要保证机器人在任何状态发现电量过低时都能及时充电，就需要在每个行为中添加电量检测的条件，导致冗余。相反，层次状态机则能快速实现机器人无论在哪个状态都能及时检测电量并进行充电。</p>
+<p>为解决实际问题，行为树与状态机并不是互斥的，结合各自优势，设计混合架构反而是最优解</p>
+<ul>
+<li><strong>行为树</strong>: 适用于复杂的行为逻辑，尤其是需要频繁修改和扩展的场景, <strong>重点关注业务流程实现</strong></li>
+<li><strong>状态机</strong>: 适用于状态转移关系复杂且需要快速响应的场景, <strong>重点关注高层级状态管理</strong></li>
+</ul>
+<p>结合行为树与状态机可设计出一个更为合理的充电流程</p>
+<p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="915"
+  data-image-height="328"
+  data-image-src="/cpp_notes/posts/systeamdesign/behaviortree/resources/robot_charge_mix.png"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/systeamdesign/behaviortree/resources/robot_charge_mix.png"
+    alt="alt"
+    
+    
+      
+      
+        
+          width="915" height="328"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/systeamdesign/behaviortree/resources/robot_charge_mix.png"
+    data-gallery-alt="alt"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+<h1 id="实现">实现<a href="#%e5%ae%9e%e7%8e%b0" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h1><ul>
+<li><code>cpp</code>
+<ul>
+<li><a
+    href="https://www.behaviortree.dev/"target="_blank"
+    class="inline-flex items-center gap-1"
+  >behaviortree<svg class="h-3 w-3 flex-shrink-0" id="external-link" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 3h6v6m-11 5L21 3m-3 10v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
+  </a> : 最成熟的行为树库，但是体量较大，且依赖较多</li>
+<li><a
+    href="https://github.com/cleverpo/behavior3cpp"target="_blank"
+    class="inline-flex items-center gap-1"
+  >behavior3cpp<svg class="h-3 w-3 flex-shrink-0" id="external-link" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 3h6v6m-11 5L21 3m-3 10v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
+  </a>: 轻量级，<code>behavior3</code> 的 <code>c++</code> 实现，功能全</li>
+<li><a
+    href="https://jishuzhan.net/article/1978291782287949826"target="_blank"
+    class="inline-flex items-center gap-1"
+  >用C++实现一个高效可扩展的行为树（Behavior Tree）框架<svg class="h-3 w-3 flex-shrink-0" id="external-link" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 3h6v6m-11 5L21 3m-3 10v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
+  </a>: 纯手搓，最简单</li>
+</ul>
+</li>
+<li><code>python</code>
+<ul>
+<li><a
+    href="https://py-trees.readthedocs.io/en/devel/"target="_blank"
+    class="inline-flex items-center gap-1"
+  >py_trees<svg class="h-3 w-3 flex-shrink-0" id="external-link" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 3h6v6m-11 5L21 3m-3 10v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
+  </a>: 最成熟的行为树库，功能完善，且易于使用</li>
+<li><a
+    href="https://github.com/behavior3/behavior3py"target="_blank"
+    class="inline-flex items-center gap-1"
+  >behavior3py<svg class="h-3 w-3 flex-shrink-0" id="external-link" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 3h6v6m-11 5L21 3m-3 10v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
+  </a>: <code>behavior3</code> 的 <code>python</code> 实现，轻量级，功能全</li>
+</ul>
+</li>
+</ul>
+<p><strong>案例</strong>：实现机器人捡苹果</p>
+<p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="1086"
+  data-image-height="516"
+  data-image-src="/cpp_notes/posts/systeamdesign/behaviortree/resources/robot_apple.png"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/systeamdesign/behaviortree/resources/robot_apple.png"
+    alt="alt"
+    
+    
+      
+      
+        
+          width="1086" height="516"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/systeamdesign/behaviortree/resources/robot_apple.png"
+    data-gallery-alt="alt"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+<div
+    class="alert alert-note my-6 overflow-hidden rounded-lg transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md"
+    style="background-color: color-mix(in srgb, var(--color-note) 10%, transparent);
+              border-left-color: var(--color-note);
+              --hover-bg: color-mix(in srgb, var(--color-note) 15%, transparent);"
+    onmouseover="this.style.backgroundColor = this.style.getPropertyValue('--hover-bg')"
+    onmouseout="this.style.backgroundColor = 'color-mix(in srgb, var(--color-note) 10%, transparent)'"
+    role="alert"
+    aria-labelledby="alert-2-title"
+  >
+    
+    <div
+      class=" flex items-center justify-between px-6 py-6"
+      
+    >
+      <div class="flex items-center gap-3">
+        
+        <h4 id="alert-2-title" class="text-foreground/90 m-0 font-semibold">
+          Note
+        </h4>
+      </div>
+
+      
+      
+    </div>
+
+    
+    <div
+      id="alert-2-content"
+      class="alert-content  px-6 pb-6"
+    >
+      <div class="prose prose-sm text-foreground/90 max-w-none">
+        <p>该行为树正常执行的前提是<strong>控制行为</strong>能记住状态，即 <code>memory=True</code>。</p>
+<ul>
+<li><code>memory == true</code>: 当子节点返回 <code>RUNNING</code> 后，父组合节点能记住该节点，并在下一轮 <code>tick()</code> 时，父节点从该子节点继续执行</li>
+<li><code>memory == false</code>: 当子节点返回 <code>RUNNING</code> 后，父组合节点不会记住该节点，并在下一轮 <code>tick()</code> 时，父节点从第一个子节点开始运行</li>
+</ul>
+      </div>
+    </div>
+  </div><script>
+  function toggleAlert(alertId) {
+    const content = document.getElementById(alertId + "-content");
+    const chevron = document.getElementById(alertId + "-chevron");
+    const header = content.previousElementSibling;
+
+    if (content.classList.contains("hidden")) {
+      content.classList.remove("hidden");
+      chevron.style.transform = "rotate(0deg)";
+      header.setAttribute("aria-expanded", "true");
+    } else {
+      content.classList.add("hidden");
+      chevron.style.transform = "rotate(-90deg)";
+      header.setAttribute("aria-expanded", "false");
+    }
+  }
+
+  
+  document.addEventListener("DOMContentLoaded", function () {
+    const collapsedAlerts = document.querySelectorAll(".alert-content.hidden");
+    collapsedAlerts.forEach(function (content) {
+      const alertId = content.id.replace("-content", "");
+      const chevron = document.getElementById(alertId + "-chevron");
+      if (chevron) {
+        chevron.style.transform = "rotate(-90deg)";
+      }
+    });
+  });
+</script>
+<div
+  class="code-block-container border-border bg-card my-6 overflow-hidden rounded-xl border shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md"
+  data-code-block
+  data-code-id="code-0"
+  data-collapsible="true"
+  data-default-state="expanded"
+  data-collapsed="false"
+  data-auto-collapse-lines="30"
+  data-auto-collapse-height="400"
+  data-collapsed-height="120"
+>
+  
+  <div
+    class="code-block-header bg-muted/30 border-border flex items-center justify-between border-b px-4 py-3"
+  >
+    
+    <div class="flex items-center gap-2">
+      <div class="text-muted-foreground shrink-0">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+</svg>
+      </div>
+      <span class="text-muted-foreground text-sm font-medium">
+        PYTHON
+      </span>
+    </div>
+
+    
+    <div class="flex items-center gap-2">
+      <button
+          class="collapse-code-btn text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+          type="button"
+          data-code-action="toggle-collapse"
+          data-label-expand="Expand"
+          data-label-collapse="Collapse"
+          title="Collapse"
+          aria-label="Collapse"
+          aria-controls="code-0"
+          aria-expanded="true"
+        >
+          <span class="collapse-chevron transition-transform duration-200 ease-out">
+            <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+          </span>
+          <span class="collapse-text hidden sm:inline">Collapse</span>
+        </button>
+      <button
+        class="copy-code-btn text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+        type="button"
+        data-code-action="copy"
+        data-label-copy="Copy"
+        data-label-copied="Copied"
+        title="Copy"
+        aria-label="Copy"
+      >
+        <span class="copy-icon">
+          <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+</svg>
+        </span>
+        <span class="copy-text hidden sm:inline">Copy</span>
+      </button>
+    </div>
+  </div>
+
+  
+  <div class="code-block-content relative" id="code-0">
+    <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">py_trees</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span><span class="n">field</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 环境定义</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nd">@dataclass</span>
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Location</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">name</span><span class="p">:</span><span class="nb">str</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">object</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span></span><span class="line"><span class="cl">    <span class="n">position</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nd">@dataclass</span>
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Enviroment</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">home_location</span><span class="p">:</span> <span class="n">Location</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">Location</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&#34;home&#34;</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span> 
+</span></span><span class="line"><span class="cl">    <span class="n">patrol_locations</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Location</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">apple_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nd">@dataclass</span>
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Robot</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">patrol_index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+</span></span><span class="line"><span class="cl">    <span class="n">has_apple</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+</span></span><span class="line"><span class="cl">    <span class="n">position</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">    <span class="n">target_position</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">world</span> <span class="o">=</span> <span class="n">Enviroment</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="n">robot</span> <span class="o">=</span> <span class="n">Robot</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 行为定义</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">TargetLocation</span><span class="p">(</span><span class="n">py_trees</span><span class="o">.</span><span class="n">behaviour</span><span class="o">.</span><span class="n">Behaviour</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="n">robot</span><span class="o">.</span><span class="n">patrol_index</span> <span class="o">=</span> <span class="p">(</span><span class="n">robot</span><span class="o">.</span><span class="n">patrol_index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">world</span><span class="o">.</span><span class="n">patrol_locations</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">robot</span><span class="o">.</span><span class="n">target_position</span> <span class="o">=</span> <span class="n">world</span><span class="o">.</span><span class="n">patrol_locations</span><span class="p">[</span><span class="n">robot</span><span class="o">.</span><span class="n">patrol_index</span><span class="p">]</span><span class="o">.</span><span class="n">position</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;指定目标 </span><span class="si">{</span><span class="n">robot</span><span class="o">.</span><span class="n">target_position</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span>  <span class="n">py_trees</span><span class="o">.</span><span class="n">common</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">SUCCESS</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">HomeLocation</span><span class="p">(</span><span class="n">py_trees</span><span class="o">.</span><span class="n">behaviour</span><span class="o">.</span><span class="n">Behaviour</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="n">robot</span><span class="o">.</span><span class="n">target_position</span> <span class="o">=</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;准备回家&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span>  <span class="n">py_trees</span><span class="o">.</span><span class="n">common</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">SUCCESS</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">MoveToTarget</span><span class="p">(</span><span class="n">py_trees</span><span class="o">.</span><span class="n">behaviour</span><span class="o">.</span><span class="n">Behaviour</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> 
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">robot</span><span class="o">.</span><span class="n">target_position</span> <span class="o">==</span> <span class="n">robot</span><span class="o">.</span><span class="n">position</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;抵达目标 </span><span class="si">{</span><span class="n">robot</span><span class="o">.</span><span class="n">target_position</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="n">py_trees</span><span class="o">.</span><span class="n">common</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">SUCCESS</span>
+</span></span><span class="line"><span class="cl">        <span class="k">elif</span> <span class="n">robot</span><span class="o">.</span><span class="n">target_position</span> <span class="o">&gt;</span> <span class="n">robot</span><span class="o">.</span><span class="n">position</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">robot</span><span class="o">.</span><span class="n">position</span> <span class="o">+=</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">        <span class="k">elif</span> <span class="n">robot</span><span class="o">.</span><span class="n">target_position</span> <span class="o">&lt;</span> <span class="n">robot</span><span class="o">.</span><span class="n">position</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">robot</span><span class="o">.</span><span class="n">position</span> <span class="o">-=</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">py_trees</span><span class="o">.</span><span class="n">common</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">RUNNING</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">PickUpApple</span><span class="p">(</span><span class="n">py_trees</span><span class="o">.</span><span class="n">behaviour</span><span class="o">.</span><span class="n">Behaviour</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="n">loc</span> <span class="o">=</span> <span class="n">world</span><span class="o">.</span><span class="n">patrol_locations</span><span class="p">[</span><span class="n">robot</span><span class="o">.</span><span class="n">patrol_index</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">loc</span><span class="o">.</span><span class="n">object</span> <span class="o">==</span> <span class="s2">&#34;Apple&#34;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">robot</span><span class="o">.</span><span class="n">has_apple</span> <span class="o">=</span> <span class="kc">True</span>
+</span></span><span class="line"><span class="cl">            <span class="n">loc</span><span class="o">.</span><span class="n">object</span> <span class="o">=</span> <span class="kc">None</span>
+</span></span><span class="line"><span class="cl">            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;捡起苹果，位置 </span><span class="si">{</span><span class="n">loc</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="n">py_trees</span><span class="o">.</span><span class="n">common</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">SUCCESS</span>
+</span></span><span class="line"><span class="cl">        <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;没有苹果，位置 </span><span class="si">{</span><span class="n">loc</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="n">py_trees</span><span class="o">.</span><span class="n">common</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">FAILURE</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">PutDownApple</span><span class="p">(</span><span class="n">py_trees</span><span class="o">.</span><span class="n">behaviour</span><span class="o">.</span><span class="n">Behaviour</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="n">robot</span><span class="o">.</span><span class="n">has_apple</span> <span class="o">=</span> <span class="kc">False</span>
+</span></span><span class="line"><span class="cl">        <span class="n">world</span><span class="o">.</span><span class="n">apple_count</span> <span class="o">+=</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;放下苹果，位置 </span><span class="si">{</span><span class="n">world</span><span class="o">.</span><span class="n">home_location</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">py_trees</span><span class="o">.</span><span class="n">common</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">SUCCESS</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 行为树定影</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">create_robot_tree</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 根节点</span>
+</span></span><span class="line"><span class="cl">    <span class="n">root</span> <span class="o">=</span> <span class="n">py_trees</span><span class="o">.</span><span class="n">composites</span><span class="o">.</span><span class="n">Sequence</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&#34;robot&#34;</span><span class="p">,</span> <span class="n">memory</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c1"># 前往目标</span>
+</span></span><span class="line"><span class="cl">    <span class="n">move_sequence</span> <span class="o">=</span> <span class="n">py_trees</span><span class="o">.</span><span class="n">composites</span><span class="o">.</span><span class="n">Sequence</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&#34;move&#34;</span><span class="p">,</span> <span class="n">memory</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">move_sequence</span><span class="o">.</span><span class="n">add_child</span><span class="p">(</span><span class="n">TargetLocation</span><span class="p">(</span><span class="s2">&#34;target location&#34;</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">    <span class="n">move_sequence</span><span class="o">.</span><span class="n">add_child</span><span class="p">(</span><span class="n">MoveToTarget</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&#34;move to target&#34;</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 回家 </span>
+</span></span><span class="line"><span class="cl">    <span class="n">home_sequence</span> <span class="o">=</span> <span class="n">py_trees</span><span class="o">.</span><span class="n">composites</span><span class="o">.</span><span class="n">Sequence</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&#34;home&#34;</span><span class="p">,</span> <span class="n">memory</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">home_sequence</span><span class="o">.</span><span class="n">add_child</span><span class="p">(</span><span class="n">HomeLocation</span><span class="p">(</span><span class="s2">&#34;home location&#34;</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">    <span class="n">home_sequence</span><span class="o">.</span><span class="n">add_child</span><span class="p">(</span><span class="n">MoveToTarget</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&#34;move to target&#34;</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 流程整合</span>
+</span></span><span class="line"><span class="cl">    <span class="n">root</span><span class="o">.</span><span class="n">add_children</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="p">[</span>
+</span></span><span class="line"><span class="cl">            <span class="n">move_sequence</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="n">PickUpApple</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&#34;pick up&#34;</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">            <span class="n">home_sequence</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="n">PutDownApple</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&#34;put down&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="p">)</span> 
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">root</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 环境初始化</span>
+</span></span><span class="line"><span class="cl">    <span class="n">world</span><span class="o">.</span><span class="n">patrol_locations</span> <span class="o">=</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Location</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&#34;A&#34;</span><span class="p">,</span> <span class="nb">object</span><span class="o">=</span><span class="s2">&#34;Banana&#34;</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Location</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&#34;B&#34;</span><span class="p">,</span> <span class="nb">object</span><span class="o">=</span><span class="s2">&#34;Apple&#34;</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="mi">7</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Location</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&#34;C&#34;</span><span class="p">,</span> <span class="nb">object</span><span class="o">=</span><span class="s2">&#34;Apple&#34;</span><span class="p">,</span> <span class="n">position</span><span class="o">=-</span><span class="mi">5</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">    <span class="p">]</span> 
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 创建树</span>
+</span></span><span class="line"><span class="cl">    <span class="n">root</span> <span class="o">=</span> <span class="n">create_robot_tree</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c1"># 打印树的结构</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;</span><span class="se">\n</span><span class="s2">树的结构：&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="n">py_trees</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">unicode_tree</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">show_status</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c1"># 执行树</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;</span><span class="se">\n</span><span class="s2">执行树的过程：&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">while</span> <span class="n">world</span><span class="o">.</span><span class="n">apple_count</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">root</span><span class="o">.</span><span class="n">tick_once</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;机器人位置: </span><span class="si">{</span><span class="n">robot</span><span class="o">.</span><span class="n">position</span><span class="si">}</span><span class="s2">, 苹果数量: </span><span class="si">{</span><span class="n">world</span><span class="o">.</span><span class="n">apple_count</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&#34;__main__&#34;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">main</span><span class="p">()</span></span></span></code></pre></div>
+    <div hidden data-code-source>import py_trees
+from dataclasses import dataclass,field
+from typing import Optional
+
+# 环境定义
+
+@dataclass
+class Location:
+    name:str
+    object: Optional[str] = None
+    position: int = 0
+
+
+@dataclass
+class Enviroment:
+    home_location: Location = field(default_factory=lambda: Location(name=&#34;home&#34;, position=0)) 
+    patrol_locations: list[Location] = field(default_factory=list)
+    apple_count: int = 0
+
+@dataclass
+class Robot:
+    patrol_index: int = -1
+    has_apple: bool = False
+    position: int = 0
+    target_position: int = 0
+
+world = Enviroment()
+robot = Robot()
+
+# 行为定义
+
+class TargetLocation(py_trees.behaviour.Behaviour):
+
+    def update(self):
+        robot.patrol_index = (robot.patrol_index &#43; 1) % len(world.patrol_locations)
+        robot.target_position = world.patrol_locations[robot.patrol_index].position
+        print(f&#34;指定目标 {robot.target_position}&#34;)
+        return  py_trees.common.Status.SUCCESS
+
+class HomeLocation(py_trees.behaviour.Behaviour):
+
+    def update(self):
+        robot.target_position = 0
+        print(f&#34;准备回家&#34;)
+        return  py_trees.common.Status.SUCCESS
+
+class MoveToTarget(py_trees.behaviour.Behaviour):
+    def update(self): 
+
+        if robot.target_position == robot.position:
+            print(f&#34;抵达目标 {robot.target_position}&#34;)
+            return py_trees.common.Status.SUCCESS
+        elif robot.target_position &gt; robot.position:
+            robot.position &#43;= 1
+        elif robot.target_position &lt; robot.position:
+            robot.position -= 1
+        
+        return py_trees.common.Status.RUNNING
+
+class PickUpApple(py_trees.behaviour.Behaviour):
+
+    def update(self):
+        loc = world.patrol_locations[robot.patrol_index]
+
+        if loc.object == &#34;Apple&#34;:
+            robot.has_apple = True
+            loc.object = None
+            print(f&#34;捡起苹果，位置 {loc.name}&#34;)
+            return py_trees.common.Status.SUCCESS
+        else:
+            print(f&#34;没有苹果，位置 {loc.name}&#34;)
+            return py_trees.common.Status.FAILURE
+
+class PutDownApple(py_trees.behaviour.Behaviour):
+
+    def update(self):
+        robot.has_apple = False
+        world.apple_count &#43;= 1
+        print(f&#34;放下苹果，位置 {world.home_location.name}&#34;)
+        return py_trees.common.Status.SUCCESS
+
+# 行为树定影
+
+def create_robot_tree():
+
+    # 根节点
+    root = py_trees.composites.Sequence(name=&#34;robot&#34;, memory=True)
+    
+    # 前往目标
+    move_sequence = py_trees.composites.Sequence(name=&#34;move&#34;, memory=True)
+    move_sequence.add_child(TargetLocation(&#34;target location&#34;))
+    move_sequence.add_child(MoveToTarget(name=&#34;move to target&#34;))
+
+    # 回家 
+    home_sequence = py_trees.composites.Sequence(name=&#34;home&#34;, memory=True)
+    home_sequence.add_child(HomeLocation(&#34;home location&#34;))
+    home_sequence.add_child(MoveToTarget(name=&#34;move to target&#34;))
+
+    # 流程整合
+    root.add_children(
+        [
+            move_sequence,
+            PickUpApple(name=&#34;pick up&#34;),
+            home_sequence,
+            PutDownApple(name=&#34;put down&#34;)
+        ]
+    ) 
+    
+    return root
+
+
+def main():
+    # 环境初始化
+    world.patrol_locations = [
+        Location(name=&#34;A&#34;, object=&#34;Banana&#34;, position=5),
+        Location(name=&#34;B&#34;, object=&#34;Apple&#34;, position=7),
+        Location(name=&#34;C&#34;, object=&#34;Apple&#34;, position=-5),
+    ] 
+
+
+    # 创建树
+    root = create_robot_tree()
+    
+    # 打印树的结构
+    print(&#34;\n树的结构：&#34;)
+    print(py_trees.display.unicode_tree(root, show_status=True))
+    
+    # 执行树
+    print(&#34;\n执行树的过程：&#34;)
+    while world.apple_count &lt; 2:
+        root.tick_once()
+        print(f&#34;机器人位置: {robot.position}, 苹果数量: {world.apple_count}&#34;)
+
+if __name__ == &#34;__main__&#34;:
+    main()</div>
+    
+    <div
+      class="collapse-overlay to-card/90 pointer-events-none absolute inset-0 bg-linear-to-b from-transparent via-transparent opacity-0 transition-opacity duration-300"
+      hidden
+    >
+      <button
+        class="collapse-overlay-btn text-muted-foreground bg-card/80 border-border/50 hover:bg-primary/10 hover:text-primary hover:border-primary/30 absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center justify-center rounded-full border p-2 backdrop-blur-sm transition-all duration-200"
+        type="button"
+        data-code-action="expand"
+        aria-label="Expand"
+        title="Expand"
+      >
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+      </button>
+    </div>
+  </div>
+</div>
+<div
+  class="term-block my-6 overflow-hidden rounded-xl border shadow-sm"
+  data-term-block
+  data-term-id="term-1"
+>
+  <div class="term-header flex items-center justify-between border-b px-4 py-3">
+    <div class="flex items-center gap-3">
+      <span class="flex items-center gap-1.5" aria-hidden="true">
+        <span class="h-3 w-3 rounded-full bg-[#ff5f57]"></span>
+        <span class="h-3 w-3 rounded-full bg-[#febc2e]"></span>
+        <span class="h-3 w-3 rounded-full bg-[#28c840]"></span>
+      </span>
+      <span class="term-title text-sm font-medium">Terminal</span>
+    </div>
+  </div>
+  <div class="overflow-x-auto p-4">
+    <div class="term-body font-mono text-sm leading-relaxed"><div class="group relative pr-10" data-term-group data-copy="python demo.py">
+            <button
+              class="term-copy-btn absolute top-0 right-0 z-10 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium opacity-0 transition-all duration-200 ease-out group-hover:opacity-100 focus:ring-2 focus:ring-[#3fb950]/20 focus:outline-none"
+              type="button"
+              data-term-copy
+              data-label-copy="Copy"
+              data-label-copied="Copied"
+              title="Copy"
+              aria-label="Copy"
+            >
+              <span class="copy-icon">
+                <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+</svg>
+              </span>
+              <span class="copy-text hidden sm:inline">Copy</span>
+            </button>
+            <div class="whitespace-pre"><div><span class="term-prompt font-semibold select-none">$</span
+                    ><span class="pl-2">python demo.py</span></div></div>
+          </div><div class="term-output whitespace-pre">树的结构：</div><div class="term-output whitespace-pre">{-} robot [-]</div><div class="term-output whitespace-pre">    {-} move [-]</div><div class="term-output whitespace-pre">        --&gt; target location [-]</div><div class="term-output whitespace-pre">        --&gt; move to target [-] </div><div class="term-output whitespace-pre">    --&gt; pick up [-]</div><div class="term-output whitespace-pre">    {-} home [-]</div><div class="term-output whitespace-pre">        --&gt; home location [-]  </div><div class="term-output whitespace-pre">        --&gt; move to target [-] </div><div class="term-output whitespace-pre">    --&gt; put down [-]</div><div class="term-output whitespace-pre"></div><div class="term-output whitespace-pre"></div><div class="term-output whitespace-pre">执行树的过程：</div><div class="term-output whitespace-pre">指定目标 5</div><div class="term-output whitespace-pre">机器人位置: 1, 苹果数量: 0     </div><div class="term-output whitespace-pre">机器人位置: 2, 苹果数量: 0     </div><div class="term-output whitespace-pre">机器人位置: 3, 苹果数量: 0     </div><div class="term-output whitespace-pre">机器人位置: 4, 苹果数量: 0     </div><div class="term-output whitespace-pre">机器人位置: 5, 苹果数量: 0     </div><div class="term-output whitespace-pre">抵达目标 5</div><div class="term-output whitespace-pre">没有苹果，位置 A</div><div class="term-output whitespace-pre">机器人位置: 5, 苹果数量: 0     </div><div class="term-output whitespace-pre">指定目标 7</div><div class="term-output whitespace-pre">机器人位置: 6, 苹果数量: 0</div><div class="term-output whitespace-pre">机器人位置: 7, 苹果数量: 0</div><div class="term-output whitespace-pre">抵达目标 7</div><div class="term-output whitespace-pre">捡起苹果，位置 B</div><div class="term-output whitespace-pre">准备回家</div><div class="term-output whitespace-pre">机器人位置: 6, 苹果数量: 0</div><div class="term-output whitespace-pre">机器人位置: 5, 苹果数量: 0</div><div class="term-output whitespace-pre">机器人位置: 4, 苹果数量: 0</div><div class="term-output whitespace-pre">机器人位置: 3, 苹果数量: 0</div><div class="term-output whitespace-pre">机器人位置: 2, 苹果数量: 0</div><div class="term-output whitespace-pre">机器人位置: 1, 苹果数量: 0</div><div class="term-output whitespace-pre">机器人位置: 0, 苹果数量: 0</div><div class="term-output whitespace-pre">抵达目标 0</div><div class="term-output whitespace-pre">放下苹果，位置 home</div><div class="term-output whitespace-pre">机器人位置: 0, 苹果数量: 1</div><div class="term-output whitespace-pre">指定目标 -5</div><div class="term-output whitespace-pre">机器人位置: -1, 苹果数量: 1</div><div class="term-output whitespace-pre">机器人位置: -2, 苹果数量: 1</div><div class="term-output whitespace-pre">机器人位置: -3, 苹果数量: 1</div><div class="term-output whitespace-pre">机器人位置: -4, 苹果数量: 1</div><div class="term-output whitespace-pre">机器人位置: -5, 苹果数量: 1</div><div class="term-output whitespace-pre">抵达目标 -5</div><div class="term-output whitespace-pre">捡起苹果，位置 C</div><div class="term-output whitespace-pre">准备回家</div><div class="term-output whitespace-pre">机器人位置: -4, 苹果数量: 1</div><div class="term-output whitespace-pre">机器人位置: -3, 苹果数量: 1</div><div class="term-output whitespace-pre">机器人位置: -2, 苹果数量: 1</div><div class="term-output whitespace-pre">机器人位置: -1, 苹果数量: 1</div><div class="term-output whitespace-pre">机器人位置: 0, 苹果数量: 1</div><div class="term-output whitespace-pre">抵达目标 0</div><div class="term-output whitespace-pre">放下苹果，位置 home</div><div class="term-output whitespace-pre">机器人位置: 0, 苹果数量: 2</div></div>
+  </div>
+</div>
+
+  </article>
+
+  
+  
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  <div class="post-license bg-muted/30 border-border mb-8 rounded-xl border p-6">
+    <div class="flex items-start gap-4">
+      
+      <div class="bg-primary/10 flex h-12 w-12 shrink-0 items-center justify-center rounded-lg">
+        <svg class="h-6 w-6" aria-label="许可证" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+</svg>
+      </div>
+
+      
+      <div class="min-w-0 flex-1">
+        <h3 class="text-foreground mb-2 text-lg font-semibold">
+          License
+        </h3>
+
+        <div class="text-muted-foreground space-y-2 text-sm">
+          
+          
+            <p>
+              <strong>Author:</strong>
+              海拉鲁的三角
+            </p>
+          
+
+
+          
+          <p>
+            <strong>Link:</strong>
+            <a
+              href="https://spite-triangle.github.io/cpp_notes/posts/systeamdesign/behaviortree/"
+              class="text-primary hover:text-primary/80 break-all hyphens-auto transition-colors duration-200"
+            >
+              https://spite-triangle.github.io/cpp_notes/posts/systeamdesign/behaviortree/
+            </a>
+          </p>
+
+          
+          <p>
+            <strong>License:</strong>
+            
+              <a
+                href="https://mit-license.org/"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-primary hover:text-primary/80 transition-colors duration-200"
+              >
+                MIT
+              </a>
+            
+          </p>
+
+          
+          
+            <p class="text-xs">
+              只要学不死，就往死里学
+            </p>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  
+  
+
+
+
+
+
+  <nav class="post-navigation mb-12">
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+      
+      <div class="nav-item">
+        
+          <a
+            href="/cpp_notes/posts/systeamdesign/eventloop/"
+            class="group bg-card border-border hover:bg-primary/5 hover:border-primary/20 focus:ring-primary/20 flex min-h-[140px] flex-col justify-between rounded-xl border p-6 transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.02] hover:shadow-lg focus:ring-2 focus:outline-none"
+          >
+            <div>
+              <div class="mb-3 flex items-center gap-3">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+</svg>
+                <span class="text-muted-foreground text-sm font-medium">
+                  Previous
+                </span>
+              </div>
+
+              <h3
+                class="text-foreground group-hover:text-primary mb-3 line-clamp-2 text-lg leading-tight font-semibold transition-colors duration-200"
+              >
+                事件循环
+              </h3>
+            </div>
+
+            <div class="text-muted-foreground mt-auto flex items-center gap-2 text-xs">
+              <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+</svg>
+
+              <time datetime="2026-03-08">
+                3/8/26
+              </time>
+            </div>
+          </a>
+        
+      </div>
+
+      
+      <div class="nav-item">
+        
+          <a
+            href="/cpp_notes/posts/systeamdesign/databasestore/"
+            class="group bg-card border-border hover:bg-primary/5 hover:border-primary/20 focus:ring-primary/20 flex min-h-[140px] flex-col justify-between rounded-xl border p-6 transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.02] hover:shadow-lg focus:ring-2 focus:outline-none"
+          >
+            <div>
+              <div class="mb-3 flex items-center justify-end gap-3">
+                <span class="text-muted-foreground text-sm font-medium">
+                  Next
+                </span>
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+</svg>
+              </div>
+
+              <h3
+                class="text-foreground group-hover:text-primary mb-3 line-clamp-2 text-right text-lg leading-tight font-semibold transition-colors duration-200"
+              >
+                数据存储设计模式
+              </h3>
+            </div>
+
+            <div class="text-muted-foreground mt-auto flex items-center justify-end gap-2 text-xs">
+              <time datetime="2026-06-10">
+                6/10/26
+              </time>
+              <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+</svg>
+
+            </div>
+          </a>
+        
+      </div>
+    </div>
+  </nav>
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+  <section class="related-posts mb-12">
+    
+    <div class="mb-6 flex items-center gap-3">
+      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+</svg>
+      <h2 class="text-foreground text-2xl font-bold">
+        Related content
+      </h2>
+    </div>
+
+    
+    <div class="grid w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+      
+        <article class="group">
+          <a href="/cpp_notes/posts/autoupdate/vpk/" class="block">
+            <div
+              class="bg-card border-border hover:bg-primary/5 hover:border-primary/20 focus:ring-primary/20 flex min-h-[120px] items-center rounded-xl border p-5 transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.02] hover:shadow-lg focus:ring-2 focus:outline-none"
+            >
+              <h3
+                class="text-foreground group-hover:text-primary line-clamp-3 w-full text-lg leading-snug font-semibold"
+              >
+                VPK
+              </h3>
+            </div>
+          </a>
+        </article>
+      
+    </div>
+  </section>
+
+
+
+
+  
+  
+
+
+      </div>
+
+      <footer class="px-4 py-6">
+  
+  
+    <nav class="mb-6">
+      <div class="flex flex-wrap items-center justify-center gap-1">
+        
+          
+          
+          
+            
+              
+            
+          
+          <a
+            href="/cpp_notes/projects/"
+            
+            class="nav-link hover:text-primary hover:bg-primary/10 text-muted-foreground flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 hover:scale-105"
+          >
+            
+              <svg class="h-5 w-5" aria-label="Projects" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="m8.85 16.825l3.15-1.9l3.15 1.925l-.825-3.6l2.775-2.4l-3.65-.325l-1.45-3.4l-1.45 3.375l-3.65.325l2.775 2.425zm3.15.45l-4.15 2.5q-.275.175-.575.15t-.525-.2t-.35-.437t-.05-.588l1.1-4.725L3.775 10.8q-.25-.225-.312-.513t.037-.562t.3-.45t.55-.225l4.85-.425l1.875-4.45q.125-.3.388-.45t.537-.15t.537.15t.388.45l1.875 4.45l4.85.425q.35.05.55.225t.3.45t.038.563t-.313.512l-3.675 3.175l1.1 4.725q.075.325-.05.588t-.35.437t-.525.2t-.575-.15zm0-5.025"/></svg>
+            
+            <span>Projects</span>
+          </a>
+        
+          
+          
+          
+            
+              
+            
+          
+          <a
+            href="/cpp_notes/about/"
+            
+            class="nav-link hover:text-primary hover:bg-primary/10 text-muted-foreground flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 hover:scale-105"
+          >
+            
+              <svg class="h-5 w-5" aria-label="About" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+</svg>
+
+            
+            <span>About</span>
+          </a>
+        
+      </div>
+    </nav>
+  
+
+
+  
+  
+    <div class="border-border mb-6 border-t"></div>
+  
+
+
+  
+  <div class="flex flex-col items-center justify-between gap-4 md:flex-row">
+    
+    <div class="text-muted-foreground text-center text-sm md:text-left">
+      <p class="mb-2">
+        &copy;
+        2026
+        Hugo Narrow
+      </p>
+      <p class="flex flex-wrap items-center justify-center gap-1 md:justify-start">
+        <span>Powered by</span>
+        <a
+          href="https://gohugo.io/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-primary hover:text-primary/80 font-medium transition-colors duration-200 hover:underline"
+        >
+          Hugo
+        </a>
+        <span>&</span>
+        <a
+          href="https://github.com/tom2almighty/hugo-narrow"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-primary hover:text-primary/80 font-medium transition-colors duration-200 hover:underline"
+        >
+          Narrow
+        </a>
+      </p>
+    </div>
+
+    
+    
+      <div class="flex items-center gap-3">
+        
+          <a
+            href="https://github.com/spite-triangle"
+            
+              target="_blank" rel="noopener noreferrer"
+            
+            class="text-muted-foreground hover:text-primary focus:ring-primary/20 rounded-lg p-1 transition-all duration-300 ease-out hover:scale-110 focus:ring-2 focus:outline-none"
+            title="GitHub"
+            aria-label="GitHub"
+          >
+            
+              <svg class="h-6 w-6" aria-label="GitHub" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5c.08-1.25-.27-2.48-1-3.5c.28-1.15.28-2.35 0-3.5c0 0-1 0-3 1.5c-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5c-.39.49-.68 1.05-.85 1.65S8.93 17.38 9 18v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></g></svg>
+            
+          </a>
+        
+          <a
+            href="https://space.bilibili.com/27206875"
+            
+              target="_blank" rel="noopener noreferrer"
+            
+            class="text-muted-foreground hover:text-primary focus:ring-primary/20 rounded-lg p-1 transition-all duration-300 ease-out hover:scale-110 focus:ring-2 focus:outline-none"
+            title="Bilibili"
+            aria-label="Bilibili"
+          >
+            
+              <svg class="h-6 w-6" aria-label="Bilibili" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+  <path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.653 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0-.373.129-.689.386-.947.258-.257.574-.386.947-.386zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373Z"/>
+</svg>
+            
+          </a>
+        
+      </div>
+    
+
+  </div>
+</footer>
+
+      
+
+
+
+
+
+<div
+  id="dock"
+  class="pointer-events-none fixed bottom-4 left-1/2 z-9999 w-fit -translate-x-1/2 translate-y-24 opacity-0 transition-all duration-300 ease-out sm:right-0 sm:left-0 sm:mx-auto sm:translate-x-0"
+  data-dock-mode="scroll"
+  role="toolbar"
+  aria-label="Quick actions toolbar"
+>
+  <nav
+    class="border-border bg-card/80 scrollbar-hide xs:px-3 xs:py-2 mx-auto flex max-w-[calc(100vw-2rem)] min-w-fit items-center justify-center overflow-x-auto rounded-2xl border px-4 py-3 shadow-lg backdrop-blur-sm sm:px-4 sm:py-3"
+  >
+    
+    
+      <button
+        id="dock-back"
+        class="text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 xs:px-2 xs:py-1.5 flex shrink-0 items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 focus:ring-2 focus:outline-none sm:px-3 sm:py-2"
+        title="Back"
+        aria-label="Back"
+      >
+        <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="m12 19-7-7 7-7"/>
+  <path d="M19 12H5"/>
+</svg>
+
+        <span class="hidden sm:inline">Back</span>
+      </button>
+
+      
+      <div class="bg-border xs:mx-1 mx-2 h-6 w-px sm:mx-2"></div>
+    
+
+
+    
+
+    
+    
+
+    
+    
+    
+
+
+    
+    <button
+      id="dock-top"
+      class="text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 xs:px-2 xs:py-1.5 flex shrink-0 items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 focus:ring-2 focus:outline-none sm:px-3 sm:py-2"
+      title="Back to top"
+      aria-label="Back to top"
+    >
+      <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="m18 15-6-6-6 6"/>
+</svg>
+
+      <span class="hidden sm:inline">Top</span>
+    </button>
+  </nav>
+</div>
+
+
+
+
+      <aside
+    id="toc-container"
+    class="toc-left"
+    data-position="left"
+  >
+      <div id="toc-center" class="pointer-events-none fixed top-28 ml-auto w-full max-w-4xl px-4">
+        <div class="pointer-events-auto fixed flex">
+          <div class="pointer-events-auto relative ml-auto w-fit">
+            <button
+              id="section-center-toggle"
+              class="bg-card/80 border-border text-muted-foreground hover:text-primary hover:bg-primary/10 ring-offset-background focus-visible:ring-ring flex cursor-pointer items-center gap-2 rounded-full border px-4 py-1.5 text-sm shadow-sm backdrop-blur-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+            >
+              <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <line x1="8" x2="21" y1="6" y2="6"/>
+  <line x1="8" x2="21" y1="12" y2="12"/>
+  <line x1="8" x2="21" y1="18" y2="18"/>
+  <line x1="3" x2="3.01" y1="6" y2="6"/>
+  <line x1="3" x2="3.01" y1="12" y2="12"/>
+  <line x1="3" x2="3.01" y1="18" y2="18"/>
+</svg>
+
+              <span id="section-center-title" class="max-w-[200px] truncate">行为树</span>
+              <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+            </button>
+
+            
+            <div
+              id="section-center-dropdown"
+              class="bg-card border-border scrollbar-hide absolute top-full left-0 mt-2 hidden max-h-[60vh] w-[280px] origin-top scale-95 overflow-y-auto rounded-xl border p-4 opacity-0 shadow-lg transition-all"
+            >
+              <div
+                id="section-center-content"
+                class="[&_a]:text-muted-foreground [&_a:hover]:bg-primary/10 [&_a:hover]:text-primary [&_a.active]:bg-primary/10 [&_a.active]:text-primary text-sm [&_a]:block [&_a]:truncate [&_a]:rounded-md [&_a]:px-2 [&_a]:py-1 [&_a]:transition-colors [&_a.active]:font-medium [&_li]:my-1.5 [&_nav>ul]:pl-0 [&_ul]:list-none [&_ul]:pl-4"
+              >
+                
+                
+                
+                  
+                    <h2>
+                      <a href="/cpp_notes/posts/systeamdesign/databasedesign/">数据库设计</a>
+                    </h2>
+                  
+                
+                  
+                    <h2>
+                      <a href="/cpp_notes/posts/systeamdesign/databaseprivilege/">权限管理</a>
+                    </h2>
+                  
+                
+                  
+                    <h2>
+                      <a href="/cpp_notes/posts/systeamdesign/treedatabase/">树状/层次结构数据的数据库表</a>
+                    </h2>
+                  
+                
+                  
+                    <h2>
+                      <a href="/cpp_notes/posts/systeamdesign/statemachine/">状态机</a>
+                    </h2>
+                  
+                
+                  
+                    <h2>
+                      <a href="/cpp_notes/posts/systeamdesign/eventloop/">事件循环</a>
+                    </h2>
+                  
+                
+                  
+                    <h2 class="active">
+                      <a href="/cpp_notes/posts/systeamdesign/behaviortree/" class="active font-medium">行为树</a>
+                    </h2>
+                  
+                
+                  
+                    <h2>
+                      <a href="/cpp_notes/posts/systeamdesign/databasestore/">数据存储设计模式</a>
+                    </h2>
+                  
+                
+              </div>
+            </div>
+          </div>
+
+          <div class="pointer-events-auto relative ml-auto w-fit"><button
+                id="toc-center-toggle"
+                class="bg-card/80 border-border text-muted-foreground hover:text-primary hover:bg-primary/10 ring-offset-background focus-visible:ring-ring flex cursor-pointer items-center gap-2 rounded-full border px-4 py-1.5 text-sm shadow-sm backdrop-blur-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+              >
+                <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <line x1="8" x2="21" y1="6" y2="6"/>
+  <line x1="8" x2="21" y1="12" y2="12"/>
+  <line x1="8" x2="21" y1="18" y2="18"/>
+  <line x1="3" x2="3.01" y1="6" y2="6"/>
+  <line x1="3" x2="3.01" y1="12" y2="12"/>
+  <line x1="3" x2="3.01" y1="18" y2="18"/>
+</svg>
+
+                <span id="toc-center-title" class="max-w-[200px] truncate">Table of contents</span>
+                <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+              </button>
+
+              
+              <div
+                id="toc-center-dropdown"
+                class="bg-card border-border scrollbar-hide absolute top-full left-0 mt-2 hidden max-h-[60vh] w-[280px] origin-top scale-95 overflow-y-auto rounded-xl border p-4 opacity-0 shadow-lg transition-all"
+              >
+                <div
+                  id="toc-center-content"
+                  class="[&_a]:text-muted-foreground [&_a:hover]:bg-primary/10 [&_a:hover]:text-primary [&_a.active]:bg-primary/10 [&_a.active]:text-primary text-sm [&_a]:block [&_a]:truncate [&_a]:rounded-md [&_a]:px-2 [&_a]:py-1 [&_a]:transition-colors [&_a.active]:font-medium [&_li]:my-1.5 [&_nav>ul]:pl-0 [&_ul]:list-none [&_ul]:pl-4"
+                >
+                  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#概念">概念</a></li>
+    <li><a href="#行为树-vs-状态机">行为树 vs 状态机</a></li>
+    <li><a href="#实现">实现</a></li>
+  </ul>
+</nav>
+                </div>
+              </div></div>
+        </div>
+      </div></aside>
+      
+<div
+  id="search-overlay"
+  class="pointer-events-none fixed inset-0 z-40 bg-black/50 opacity-0 transition-opacity duration-300"
+></div>
+
+
+<div
+  id="search-modal"
+  class="bg-card border-border pointer-events-none fixed top-1/2 left-1/2 z-50 max-h-[80vh] w-full max-w-2xl -translate-x-1/2 -translate-y-1/2 scale-95 transform overflow-hidden rounded-xl border opacity-0 shadow-xl transition-all duration-300"
+  role="dialog"
+  aria-modal="true"
+  aria-hidden="true"
+  aria-labelledby="search-title"
+  tabindex="-1"
+>
+  
+  <div class="border-border flex items-center gap-3 border-b p-4">
+    
+    <div class="text-muted-foreground h-5 w-5 shrink-0">
+      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+</svg>
+
+    </div>
+    <h2 id="search-title" class="sr-only">Search</h2>
+
+    
+    <div class="relative flex-1">
+      
+      <button
+        id="search-clear"
+        class="text-muted-foreground hover:text-foreground hover:bg-muted/50 pointer-events-none absolute top-1/2 left-0 z-10 h-5 w-5 -translate-y-1/2 rounded opacity-0 transition-all duration-200"
+        title="Clear"
+        aria-label="Clear"
+      >
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+</svg>
+
+      </button>
+
+      
+      <input
+        id="search-input"
+        type="text"
+        placeholder="Search posts..."
+        class="text-foreground placeholder:text-muted-foreground w-full border-none bg-transparent pl-8 text-lg outline-none"
+        autocomplete="off"
+        spellcheck="false"
+      />
+    </div>
+
+    
+    <button
+      id="search-close"
+      class="text-muted-foreground hover:text-foreground hover:bg-muted/50 flex h-6 w-6 items-center justify-center rounded-md p-0.5 transition-all duration-200"
+      title="Close"
+      aria-label="Close"
+    >
+      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+</svg>
+
+    </button>
+  </div>
+
+  
+  <div id="search-results" class="max-h-96 overflow-y-auto">
+    
+    <div id="search-empty" class="flex flex-col items-center justify-center py-12 text-center">
+      <div class="bg-muted/50 mb-4 flex h-16 w-16 items-center justify-center rounded-full">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+</svg>
+
+      </div>
+      <h3 class="text-foreground mb-2 text-lg font-semibold">
+        Start searching
+      </h3>
+    </div>
+
+    
+    <div id="search-loading" class="flex items-center justify-center py-8" hidden>
+      <div
+        class="mr-3 h-6 w-6 animate-spin rounded-full border-2 border-current border-t-transparent"
+      ></div>
+      <span class="text-muted-foreground">Searching...</span>
+    </div>
+
+    
+    <div
+      id="search-no-results"
+      class="flex flex-col items-center justify-center py-12 text-center"
+      hidden
+    >
+      <div class="bg-muted/50 mb-4 flex h-16 w-16 items-center justify-center rounded-full">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
+</svg>
+
+      </div>
+      <h3 class="text-foreground mb-2 text-lg font-semibold">
+        No results
+      </h3>
+    </div>
+
+    
+    <div id="search-results-list" hidden>
+      
+      <div
+        id="search-stats"
+        class="text-muted-foreground border-border border-b px-4 py-3 text-sm"
+        data-count-other="Found %d results"
+      ></div>
+
+      
+      <div id="search-items" class="divide-border divide-y" role="list">
+        
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="border-border bg-muted/20 border-t px-4 py-3"><div class="text-muted-foreground flex items-center justify-between text-xs">
+      <div class="flex items-center gap-2 md:gap-4">
+        <div class="flex items-center gap-1">
+          <kbd class="bg-muted border-border rounded border px-1.5 py-0.5 text-xs">↑↓</kbd>
+          <span class="hidden sm:inline">Navigate</span>
+        </div>
+        <div class="flex items-center gap-1">
+          <kbd class="bg-muted border-border rounded border px-1.5 py-0.5 text-xs">↵</kbd>
+          <span class="hidden sm:inline">Select</span>
+        </div>
+        <div class="flex items-center gap-1">
+          <kbd class="bg-muted border-border rounded border px-1.5 py-0.5 text-xs">ESC</kbd>
+          <span class="hidden sm:inline">Close</span>
+        </div>
+      </div>
+      <div class="search-hint-desktop flex items-center gap-1">
+        <kbd class="bg-muted border-border rounded border px-1.5 py-0.5 text-xs">⌘K</kbd>
+        <span>Shortcut</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+      
+
+
+      
+
+
+    </main>
+  </body>
+</html>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>操作系统 on Hugo Narrow</title>
+		<link>https://spite-triangle.github.io/cpp_notes/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/</link>
+		<description>Recent content in 操作系统 on Hugo Narrow</description>
+		<generator>Hugo</generator>
+		<language>en</language>
+		
+		
+		
+		
+			<lastBuildDate>Sun, 30 Mar 2025 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://spite-triangle.github.io/cpp_notes/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>操作系统</title>
+				<link>https://spite-triangle.github.io/cpp_notes/posts/operatesystem/</link>
+				<pubDate>Sun, 30 Mar 2025 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/posts/operatesystem/</guid>
+				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;操作系统基本原理与实践结合，从程序的并发执行开始，逐步深入内核的进程管理、内存分配策略以及 Xv6 文件系统的实现细节。&lt;/p&gt;&#xA;&lt;!-- VOLUME_OVERVIEW_END --&gt;</description>
+			</item>
+	</channel>
+</rss>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>UnionFS on Hugo Narrow</title>
+		<link>https://spite-triangle.github.io/cpp_notes/tags/unionfs/</link>
+		<description>Recent content in UnionFS on Hugo Narrow</description>
+		<generator>Hugo</generator>
+		<language>en</language>
+		
+		
+		
+		
+			<lastBuildDate>Sun, 03 Mar 2024 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://spite-triangle.github.io/cpp_notes/tags/unionfs/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>文件系统</title>
+				<link>https://spite-triangle.github.io/cpp_notes/posts/docker/filesystem/</link>
+				<pubDate>Sun, 03 Mar 2024 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/posts/docker/filesystem/</guid>
+				<description>&lt;div&#xD;&#xA;    class=&#34;alert alert-note my-6 overflow-hidden rounded-lg transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md&#34;&#xD;&#xA;    style=&#34;background-color: color-mix(in srgb, var(--color-note) 10%, transparent);&#xD;&#xA;              border-left-color: var(--color-note);&#xD;&#xA;              --hover-bg: color-mix(in srgb, var(--color-note) 15%, transparent);&#34;&#xD;&#xA;    onmouseover=&#34;this.style.backgroundColor = this.style.getPropertyValue(&#39;--hover-bg&#39;)&#34;&#xD;&#xA;    onmouseout=&#34;this.style.backgroundColor = &#39;color-mix(in srgb, var(--color-note) 10%, transparent)&#39;&#34;&#xD;&#xA;    role=&#34;alert&#34;&#xD;&#xA;    aria-labelledby=&#34;alert-0-title&#34;&#xD;&#xA;  &gt;&#xD;&#xA;    &#xD;&#xA;    &lt;div&#xD;&#xA;      class=&#34; flex items-center justify-between px-6 py-6&#34;&#xD;&#xA;      &#xD;&#xA;    &gt;&#xD;&#xA;      &lt;div class=&#34;flex items-center gap-3&#34;&gt;&#xD;&#xA;        &#xD;&#xA;        &lt;h4 id=&#34;alert-0-title&#34; class=&#34;text-foreground/90 m-0 font-semibold&#34;&gt;&#xD;&#xA;          Note&#xD;&#xA;        &lt;/h4&gt;&#xD;&#xA;      &lt;/div&gt;&#xD;&#xA;&#xD;&#xA;      &#xD;&#xA;      &#xD;&#xA;    &lt;/div&gt;&#xD;&#xA;&#xD;&#xA;    &#xD;&#xA;    &lt;div&#xD;&#xA;      id=&#34;alert-0-content&#34;&#xD;&#xA;      class=&#34;alert-content  px-6 pb-6&#34;&#xD;&#xA;    &gt;&#xD;&#xA;      &lt;div class=&#34;prose prose-sm text-foreground/90 max-w-none&#34;&gt;&#xD;&#xA;        &lt;p&gt;&lt;code&gt;Linux&lt;/code&gt; 系统哲学中：一切皆是「文件」。&lt;strong&gt;一个镜像能代表一个操作系统，其本质就是内部模拟了一个完善的 Linux 文件系统。&lt;/strong&gt;&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

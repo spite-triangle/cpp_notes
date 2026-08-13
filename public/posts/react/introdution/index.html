@@ -1,0 +1,3153 @@
+<!doctype html>
+<html
+  lang="en"
+  data-theme="default"
+>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+<title>简介 |
+    Hugo Narrow</title>
+
+<meta
+  name="description"
+  content="React 是构建用户界面的 JavaScript/TypeScript 库，基于状态驱动视图更新的核心思想"
+/>
+<meta
+  name="keywords"
+  content="React, virtual DOM, Fiber, Scheduler, Vite"
+/>
+<meta
+  name="author"
+  content="海拉鲁的三角"
+/>
+<meta name="language" content="en" />
+
+<meta
+  name="robots"
+  content="index, follow"
+/>
+<link rel="canonical" href="https://spite-triangle.github.io/cpp_notes/posts/react/introdution/" />
+
+
+  <link rel="icon" type="image/svg+xml" href="/cpp_notes/favicon.svg" />
+<link rel="manifest" href="/cpp_notes/site.webmanifest" />
+<meta property="og:url" content="https://spite-triangle.github.io/cpp_notes/posts/react/introdution/">
+	<meta property="og:site_name" content="Hugo Narrow">
+	<meta property="og:title" content="简介">
+	<meta property="og:description" content="React 是构建用户界面的 JavaScript/TypeScript 库，基于状态驱动视图更新的核心思想">
+	<meta property="og:locale" content="en">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="posts">
+		<meta property="article:published_time" content="2026-06-29T00:00:00+00:00">
+		<meta property="article:modified_time" content="2026-06-29T00:00:00+00:00">
+		<meta property="article:tag" content="React">
+		<meta property="article:tag" content="Virtual DOM">
+		<meta property="article:tag" content="Fiber">
+		<meta property="article:tag" content="Scheduler">
+		<meta property="article:tag" content="Vite">
+		<meta property="og:image" content="https://spite-triangle.github.io/images/og-default.avif">
+
+
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:image" content="https://spite-triangle.github.io/images/og-default.avif">
+	<meta name="twitter:title" content="简介">
+	<meta name="twitter:description" content="React 是构建用户界面的 JavaScript/TypeScript 库，基于状态驱动视图更新的核心思想">
+
+
+	<meta itemprop="name" content="简介">
+	<meta itemprop="description" content="React 是构建用户界面的 JavaScript/TypeScript 库，基于状态驱动视图更新的核心思想">
+	<meta itemprop="datePublished" content="2026-06-29T00:00:00+00:00">
+	<meta itemprop="dateModified" content="2026-06-29T00:00:00+00:00">
+	<meta itemprop="wordCount" content="4561">
+	<meta itemprop="image" content="https://spite-triangle.github.io/images/og-default.avif">
+	<meta itemprop="keywords" content="React,Virtual DOM,Fiber,Scheduler,Vite">
+
+
+
+
+
+<script id="search-config" type="application/json">"{\"searchIndexURL\":\"/cpp_notes/index.json\"}"</script>
+
+
+  <script id="gallery-config" type="application/json">"{\"gallery\":true,\"galleryOptions\":{\"columns\":4,\"columnwidth\":200,\"defaultlayout\":\"justified\",\"gap\":10,\"lastrowbehavior\":\"center\",\"targetrowheight\":200},\"lightbox\":true}"</script>
+
+
+
+
+
+
+  
+    
+      <link
+        rel="stylesheet"
+        href="/cpp_notes/css/compiled.min.882c8bb9b3deec5a84cddfd768d37a08c2c4dd5c6a0c0bd0b51a1b08c09c9adc.css"
+        integrity="sha256-iCyLubPe7FqEzd/XaNN6CMLE3VxqDAvQtRobCMCcmtw="
+        crossorigin="anonymous"
+      />
+    
+  
+
+
+
+
+  
+    
+      <link
+        rel="stylesheet"
+        href="/cpp_notes/css/chroma.min.491df36221f739b5948a747a0351f100ee7ccaaf466d9f46288bf06de1d59123.css"
+        integrity="sha256-SR3zYiH3ObWUinR6A1HxAO58yq9GbZ9GKIvwbeHVkSM="
+        crossorigin="anonymous"
+      />
+    
+  
+
+
+
+
+
+
+        <script
+          src="/cpp_notes/js/main.b003624716b5b9344efafc302bd75df711e73d0da196be724be6daebb2b6964d.js"
+          integrity="sha256-sANiRxa1uTRO&#43;vwwK9dd9xHnPQ2hlr5yS&#43;ba67K2lk0="
+          crossorigin="anonymous"
+          defer
+        ></script>
+
+
+
+            <script
+              src="/cpp_notes/js/toc.92c3534ee382ab7e31e364f704a91b9052ed119e89453fb6837a451b56dbef48.js"
+              integrity="sha256-ksNTTuOCq34x42T3BKkbkFLtEZ6JRT&#43;2g3pFG1bb70g="
+              crossorigin="anonymous"
+              defer
+            ></script>
+
+
+
+        <script
+          src="/cpp_notes/js/search.33fef1d91398b17cbc46483d902493b800642d25754e7ff8e998b12499c7fde3.js"
+          integrity="sha256-M/7x2ROYsXy8Rkg9kCSTuABkLSV1Tn/46ZixJJnH/eM="
+          crossorigin="anonymous"
+          defer
+        ></script>
+
+
+
+        <script
+          src="/cpp_notes/js/dock.b1c2d4314c86813f5baaa2a5b524b4613dc7803303402315d0a2c19217e13278.js"
+          integrity="sha256-scLUMUyGgT9bqqKltSS0YT3HgDMDQCMV0KLBkhfhMng="
+          crossorigin="anonymous"
+          defer
+        ></script>
+
+
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/smart-gallery@latest/dist/smart-gallery.umd.js"
+    defer
+  ></script>
+
+
+
+          <script
+            src="/cpp_notes/js/gallery.c8c99001b2f625137e3cbf8e2ecf758eabf72776a89735e56ee081a30b8fe7f5.js"
+            integrity="sha256-yMmQAbL2JRN&#43;PL&#43;OLs91jqv3J3aolzXlbuCBowuP5/U="
+            crossorigin="anonymous"
+            defer
+          ></script>
+
+
+
+
+          <script
+            src="/cpp_notes/js/term.321822a6a26efeaba2fc22150d06128515edf15d6844ac23a9c03c138877be4f.js"
+            integrity="sha256-MhgipqJu/qui/CIVDQYShRXt8V1oRKwjqcA8E4h3vk8="
+            crossorigin="anonymous"
+            defer
+          ></script>
+
+
+
+
+
+
+
+
+
+    
+    <script>(function(){const t=localStorage.getItem("theme")||"system",s=localStorage.getItem("colorScheme")||"default",e=Number.parseInt(localStorage.getItem("contentWidth"),10);Number.isInteger(e)&&e>=40&&e<=90&&document.documentElement.style.setProperty("--content-width",`${e}rem`),document.documentElement.setAttribute("data-theme",s);function n(){t==="dark"||t==="system"&&window.matchMedia("(prefers-color-scheme: dark)").matches?document.documentElement.classList.add("dark"):document.documentElement.classList.remove("dark")}n(),t==="system"&&window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",n)})()</script>
+  </head><body class="bg-background text-foreground min-h-screen antialiased">
+    <main
+      id="page-container"
+      class="mx-auto w-full"
+      style="max-width: var(--content-width, 56rem)"
+    >
+      <div
+    id="reading-progress-bar"
+    class="from-primary to-primary/80 pointer-events-none fixed top-0 left-0 z-50 h-[3px] w-0 bg-linear-to-r transition-[width] duration-150 ease-out"
+  ></div>
+
+  <script>
+    (function () {
+      const bar = document.getElementById("reading-progress-bar");
+      if (!bar) return;
+
+      function update() {
+        const scrolled = window.scrollY;
+        const total = document.documentElement.scrollHeight - window.innerHeight;
+        bar.style.width = total > 0 ? (scrolled / total) * 100 + "%" : "0%";
+      }
+
+      let ticking = false;
+      window.addEventListener(
+        "scroll",
+        () => {
+          if (!ticking) {
+            requestAnimationFrame(() => {
+              update();
+              ticking = false;
+            });
+            ticking = true;
+          }
+        },
+        { passive: true }
+      );
+
+      update();
+    })();
+  </script>
+
+      <header class="sticky top-0 z-50 px-4 py-6">
+  <div
+    class="border-border bg-card/80 flex items-center rounded-xl border px-6 py-4 shadow-sm backdrop-blur-sm"
+  >
+    
+    <div class="hidden w-full items-center md:flex md:min-w-0">
+      
+      <div class="flex items-center">
+        
+          <a
+            href="
+              /cpp_notes/
+            "
+            class="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full transition-transform duration-200 hover:scale-105"
+            aria-label="Hugo Narrow"
+          >
+            <img
+              src="/cpp_notes/images/logo.svg"
+              alt="Hugo Narrow"
+              class="h-full w-full object-cover"
+            />
+          </a>
+        
+      </div>
+
+      
+      <nav class="mx-8 flex min-w-0 flex-1 items-center justify-center">
+        <div class="flex flex-wrap items-center justify-center space-x-1">
+          
+          
+            
+            
+            
+              
+                
+              
+            
+            
+              
+              <a
+                href="/cpp_notes/series/"
+                class="nav-link 
+                  text-muted-foreground hover:text-primary hover:bg-primary/10
+                 focus:ring-primary/20 relative flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 focus:ring-2 focus:outline-none"
+              >
+                
+                  <svg class="h-5 w-5" aria-label="Series" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="m12 18l-4.2 1.8q-1 .425-1.9-.162T5 17.975V5q0-.825.588-1.412T7 3h10q.825 0 1.413.588T19 5v12.975q0 1.075-.9 1.663t-1.9.162zm0-2.2l5 2.15V5H7v12.95zM12 5H7h10z"/></svg>
+                
+                <span>Series</span>
+              </a>
+            
+          
+            
+            
+            
+              
+                
+              
+            
+            
+              
+              <a
+                href="/cpp_notes/posts/"
+                class="nav-link 
+                  text-muted-foreground hover:text-primary hover:bg-primary/10
+                 focus:ring-primary/20 relative flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 focus:ring-2 focus:outline-none"
+              >
+                
+                  <svg class="h-5 w-5" aria-label="Posts" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+</svg>
+
+                
+                <span>Posts</span>
+              </a>
+            
+          
+            
+            
+            
+            
+              
+              
+              <div class="relative">
+                <button
+                  class="nav-link nav-submenu-toggle text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 relative flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 focus:ring-2 focus:outline-none"
+                  data-submenu-id="more"
+                  aria-expanded="false"
+                  aria-haspopup="true"
+                >
+                  
+                    <svg class="h-5 w-5" aria-label="More" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3.09 6.26L22 9l-5.91.74L12 16l-4.09-6.26L2 9l5.91-.74L12 2z" />
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 17l10 5 10-5" />
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 12l10 5 10-5" />
+</svg>
+                  
+                  <span>More</span>
+                  <svg class="h-4 w-4 submenu-chevron transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+                </button>
+                <div
+                  class="nav-submenu border-border bg-popover/95 absolute top-full left-0 z-50 mt-2 hidden min-w-44 space-y-1.5 rounded-xl border p-1.5 shadow-lg backdrop-blur-sm"
+                  data-submenu-id="more"
+                  role="menu"
+                >
+                  
+                    
+                    
+                      
+                        
+                      
+                    
+                    
+                    <a
+                      href="/cpp_notes/categories/"
+                      class="nav-link 
+                        text-muted-foreground hover:text-primary hover:bg-primary/10
+                       focus:ring-primary/20 flex items-center gap-2 rounded-lg px-2 py-2 text-sm leading-snug transition-colors duration-200 focus:ring-2 focus:outline-none"
+                      role="menuitem"
+                      
+                    >
+                      
+                        <svg class="h-4 w-4" aria-label="Categories" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+</svg>
+
+                      
+                      <span>Categories</span>
+                    </a>
+                  
+                    
+                    
+                      
+                        
+                      
+                    
+                    
+                    <a
+                      href="/cpp_notes/tags/"
+                      class="nav-link 
+                        text-muted-foreground hover:text-primary hover:bg-primary/10
+                       focus:ring-primary/20 flex items-center gap-2 rounded-lg px-2 py-2 text-sm leading-snug transition-colors duration-200 focus:ring-2 focus:outline-none"
+                      role="menuitem"
+                      
+                    >
+                      
+                        <svg class="h-4 w-4" aria-label="Tags" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+</svg>
+
+                      
+                      <span>Tags</span>
+                    </a>
+                  
+                    
+                    
+                      
+                        
+                      
+                    
+                    
+                    <a
+                      href="/cpp_notes/projects/"
+                      class="nav-link 
+                        text-muted-foreground hover:text-primary hover:bg-primary/10
+                       focus:ring-primary/20 flex items-center gap-2 rounded-lg px-2 py-2 text-sm leading-snug transition-colors duration-200 focus:ring-2 focus:outline-none"
+                      role="menuitem"
+                      
+                    >
+                      
+                        <svg class="h-4 w-4" aria-label="Projects" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="6" r="1" fill="currentColor"/><path fill="currentColor" d="M6 17h12v2H6zm4-5.17l2.792 2.794l3.932-3.935L18 12V8h-4l1.31 1.275l-2.519 2.519L10 9l-4 4l1.414 1.414z"/><path fill="currentColor" d="M19 3h-3.298a5 5 0 0 0-.32-.425l-.01-.012a4.43 4.43 0 0 0-2.89-1.518a2.6 2.6 0 0 0-.964 0a4.43 4.43 0 0 0-2.89 1.518l-.01.012a5 5 0 0 0-.32.424V3H5a3.003 3.003 0 0 0-3 3v14a3.003 3.003 0 0 0 3 3h14a3.003 3.003 0 0 0 3-3V6a3.003 3.003 0 0 0-3-3m1 17a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h4.55a2.5 2.5 0 0 1 4.9 0H19a1 1 0 0 1 1 1Z"/></svg>
+
+
+                      
+                      <span>Projects</span>
+                    </a>
+                  
+                    
+                    
+                      
+                        
+                      
+                    
+                    
+                    <a
+                      href="/cpp_notes/archives/"
+                      class="nav-link 
+                        text-muted-foreground hover:text-primary hover:bg-primary/10
+                       focus:ring-primary/20 flex items-center gap-2 rounded-lg px-2 py-2 text-sm leading-snug transition-colors duration-200 focus:ring-2 focus:outline-none"
+                      role="menuitem"
+                      
+                    >
+                      
+                        <svg class="h-4 w-4" aria-label="Archives" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+</svg>
+
+                      
+                      <span>Archives</span>
+                    </a>
+                  
+                </div>
+              </div>
+            
+          
+        </div>
+      </nav>
+
+      
+      <div class="flex items-center space-x-2">
+        
+        <div class="hidden lg:block"><div class="relative">
+    <button
+      id="content-width-toggle"
+      class="dropdown-toggle border-border bg-background text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex h-10 w-10 items-center justify-center rounded-lg border transition-all duration-300 ease-out hover:scale-105 focus:ring-2 focus:outline-none active:scale-95"
+      data-dropdown-type="content-width"
+      aria-label="Adjust page width"
+      aria-expanded="false"
+      aria-haspopup="true"
+    ><svg class="h-5 w-5 relative z-10" aria-label="Adjust page width" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+	<path d="M0 0h24v24H0z" fill="none" />
+	<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 12H3l3-3m0 6l-3-3m11 0h7l-3-3m0 6l3-3M3 6V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v1M3 18v1a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-1" />
+</svg>
+</button>
+
+    <div
+      id="content-width-dropdown"
+      class="dropdown-menu border-border bg-popover/95 w-64 absolute top-12 right-0 z-60 hidden rounded-lg border p-1 shadow-lg backdrop-blur-sm transition-all duration-200 ease-out"
+      data-dropdown-type="content-width"
+      
+    >
+    <div class="space-y-3 p-3">
+    <div class="flex items-center justify-between gap-4">
+    <label for="content-width-range" class="text-foreground text-sm font-medium">Page width</label>
+    <output id="content-width-value" for="content-width-range" class="text-muted-foreground min-w-12 text-right text-sm tabular-nums"></output>
+    </div>
+    <input id="content-width-range" class="accent-primary w-full cursor-pointer" type="range" min="40" max="90" step="1" aria-label="Page width" />
+    <button id="content-width-reset" type="button" class="border-border text-muted-foreground hover:bg-accent hover:text-accent-foreground focus:ring-primary/20 w-full rounded-md border px-3 py-2 text-sm transition-colors focus:ring-2 focus:outline-none">Restore default</button>
+    </div></div>
+  </div></div>
+
+
+        
+        
+
+
+        
+        <div class="relative">
+    <button
+      id="color-scheme-toggle"
+      class="dropdown-toggle border-border bg-background text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex h-10 w-10 items-center justify-center rounded-lg border transition-all duration-300 ease-out hover:scale-105 focus:ring-2 focus:outline-none active:scale-95"
+      data-dropdown-type="color-scheme"
+      aria-label="Toggle theme"
+      aria-expanded="false"
+      aria-haspopup="true"
+    ><svg class="h-5 w-5 relative z-10" aria-label="Toggle theme" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v6a2 2 0 002 2h4a2 2 0 002-2V5z" />
+</svg>
+</button>
+
+    <div
+      id="color-scheme-dropdown"
+      class="dropdown-menu border-border bg-popover/95 w-44 absolute top-12 right-0 z-60 hidden rounded-lg border p-1 shadow-lg backdrop-blur-sm transition-all duration-200 ease-out"
+      data-dropdown-type="color-scheme"
+      
+    ><button data-color-scheme="default" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Default</span></button><button data-color-scheme="claude" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Claude</span></button><button data-color-scheme="bumblebee" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Bumblebee</span></button><button data-color-scheme="emerald" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Emerald</span></button><button data-color-scheme="nord" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Nord</span></button><button data-color-scheme="sunset" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Sunset</span></button><button data-color-scheme="abyss" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Abyss</span></button><button data-color-scheme="dracula" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Dracula</span></button><button data-color-scheme="amethyst" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Amethyst</span></button><button data-color-scheme="slate" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Slate</span></button><button data-color-scheme="twitter" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Twitter</span></button><button data-color-scheme="minimal" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Minimal</span></button></div>
+  </div>
+
+
+        
+        <div class="relative">
+    <button
+      id="theme-toggle"
+      class="dropdown-toggle border-border bg-background text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex h-10 w-10 items-center justify-center rounded-lg border transition-all duration-300 ease-out hover:scale-105 focus:ring-2 focus:outline-none active:scale-95"
+      data-dropdown-type="theme"
+      aria-label="Toggle theme"
+      aria-expanded="false"
+      aria-haspopup="true"
+    ><svg class="h-5 w-5 sun-icon hidden relative z-10" aria-label="Light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+</svg>
+
+        <svg class="h-5 w-5 moon-icon hidden relative z-10" aria-label="Dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+</svg>
+
+        <svg class="h-5 w-5 system-icon hidden relative z-10" aria-label="System" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+</svg>
+</button>
+
+    <div
+      id="theme-dropdown"
+      class="dropdown-menu border-border bg-popover/95 w-40 absolute top-12 right-0 z-60 hidden rounded-lg border p-1 shadow-lg backdrop-blur-sm transition-all duration-200 ease-out"
+      data-dropdown-type="theme"
+      
+    ><button data-theme="light" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><svg class="h-5 w-5 mr-3 h-4 w-4" aria-label="Light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+</svg>
+<span>Light</span></button><button data-theme="dark" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><svg class="h-5 w-5 mr-3 h-4 w-4" aria-label="Dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+</svg>
+<span>Dark</span></button><button data-theme="system" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><svg class="h-5 w-5 mr-3 h-4 w-4" aria-label="System" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+</svg>
+<span>System</span></button></div>
+  </div>
+
+
+        
+        
+<button
+  id="header-search"
+  class="border-border bg-background text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex h-10 w-10 items-center justify-center rounded-lg border transition-all duration-300 ease-out hover:scale-105 focus:ring-2 focus:outline-none active:scale-95"
+  title="Search"
+  aria-label="Search"
+>
+  <svg class="h-5 w-5 relative z-10" aria-label="Search" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+</svg>
+
+</button>
+
+      </div>
+    </div>
+
+    
+    <div class="flex w-full items-center justify-between md:hidden">
+      
+      
+<button
+  id="mobile-nav-toggle"
+  class="nav-panel-toggle border-border bg-background text-muted-foreground hover:bg-accent hover:text-foreground flex h-10 w-10 items-center justify-center rounded-lg border transition-colors duration-200"
+  aria-label="Menu"
+  aria-expanded="false"
+  aria-controls="mobile-nav-panel"
+>
+  <svg class="h-5 w-5" aria-label="Menu" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+</svg>
+
+</button>
+
+
+
+      
+      <div class="flex items-center space-x-2">
+        
+        
+
+
+        
+        <div class="relative">
+    <button
+      id="color-scheme-toggle"
+      class="dropdown-toggle border-border bg-background text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex h-10 w-10 items-center justify-center rounded-lg border transition-all duration-300 ease-out hover:scale-105 focus:ring-2 focus:outline-none active:scale-95"
+      data-dropdown-type="color-scheme"
+      aria-label="Toggle theme"
+      aria-expanded="false"
+      aria-haspopup="true"
+    ><svg class="h-5 w-5 relative z-10" aria-label="Toggle theme" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v6a2 2 0 002 2h4a2 2 0 002-2V5z" />
+</svg>
+</button>
+
+    <div
+      id="color-scheme-dropdown"
+      class="dropdown-menu border-border bg-popover/95 w-44 absolute top-12 right-0 z-60 hidden rounded-lg border p-1 shadow-lg backdrop-blur-sm transition-all duration-200 ease-out"
+      data-dropdown-type="color-scheme"
+      
+    ><button data-color-scheme="default" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Default</span></button><button data-color-scheme="claude" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Claude</span></button><button data-color-scheme="bumblebee" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Bumblebee</span></button><button data-color-scheme="emerald" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Emerald</span></button><button data-color-scheme="nord" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Nord</span></button><button data-color-scheme="sunset" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Sunset</span></button><button data-color-scheme="abyss" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Abyss</span></button><button data-color-scheme="dracula" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Dracula</span></button><button data-color-scheme="amethyst" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Amethyst</span></button><button data-color-scheme="slate" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Slate</span></button><button data-color-scheme="twitter" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Twitter</span></button><button data-color-scheme="minimal" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Minimal</span></button></div>
+  </div>
+
+
+        
+        <div class="relative">
+    <button
+      id="theme-toggle"
+      class="dropdown-toggle border-border bg-background text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex h-10 w-10 items-center justify-center rounded-lg border transition-all duration-300 ease-out hover:scale-105 focus:ring-2 focus:outline-none active:scale-95"
+      data-dropdown-type="theme"
+      aria-label="Toggle theme"
+      aria-expanded="false"
+      aria-haspopup="true"
+    ><svg class="h-5 w-5 sun-icon hidden relative z-10" aria-label="Light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+</svg>
+
+        <svg class="h-5 w-5 moon-icon hidden relative z-10" aria-label="Dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+</svg>
+
+        <svg class="h-5 w-5 system-icon hidden relative z-10" aria-label="System" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+</svg>
+</button>
+
+    <div
+      id="theme-dropdown"
+      class="dropdown-menu border-border bg-popover/95 w-40 absolute top-12 right-0 z-60 hidden rounded-lg border p-1 shadow-lg backdrop-blur-sm transition-all duration-200 ease-out"
+      data-dropdown-type="theme"
+      
+    ><button data-theme="light" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><svg class="h-5 w-5 mr-3 h-4 w-4" aria-label="Light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+</svg>
+<span>Light</span></button><button data-theme="dark" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><svg class="h-5 w-5 mr-3 h-4 w-4" aria-label="Dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+</svg>
+<span>Dark</span></button><button data-theme="system" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><svg class="h-5 w-5 mr-3 h-4 w-4" aria-label="System" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+</svg>
+<span>System</span></button></div>
+  </div>
+
+
+        
+        
+<button
+  id="header-search"
+  class="border-border bg-background text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex h-10 w-10 items-center justify-center rounded-lg border transition-all duration-300 ease-out hover:scale-105 focus:ring-2 focus:outline-none active:scale-95"
+  title="Search"
+  aria-label="Search"
+>
+  <svg class="h-5 w-5 relative z-10" aria-label="Search" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+</svg>
+
+</button>
+
+      </div>
+    </div>
+  </div>
+
+  
+  
+<div
+  id="mobile-nav-panel"
+  class="mt-2 hidden md:hidden"
+  role="navigation"
+  aria-label="Menu"
+  aria-hidden="true"
+  tabindex="-1"
+>
+  <div
+    class="border-border bg-popover/95 overflow-hidden rounded-xl border shadow-lg backdrop-blur-sm"
+  >
+    
+    <nav class="flex flex-col p-2">
+      
+      
+        
+        
+        
+          
+            
+          
+        
+        
+          
+          <a
+            href="/cpp_notes/series/"
+            class="nav-panel-link 
+              text-muted-foreground hover:text-primary hover:bg-primary/10
+             focus:ring-primary/20 flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+            role="menuitem"
+            
+          >
+            
+              <svg class="h-5 w-5" aria-label="Series" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="m12 18l-4.2 1.8q-1 .425-1.9-.162T5 17.975V5q0-.825.588-1.412T7 3h10q.825 0 1.413.588T19 5v12.975q0 1.075-.9 1.663t-1.9.162zm0-2.2l5 2.15V5H7v12.95zM12 5H7h10z"/></svg>
+            
+            <span>Series</span>
+          </a>
+        
+      
+        
+        
+        
+          
+            
+          
+        
+        
+          
+          <a
+            href="/cpp_notes/posts/"
+            class="nav-panel-link 
+              text-muted-foreground hover:text-primary hover:bg-primary/10
+             focus:ring-primary/20 flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+            role="menuitem"
+            
+          >
+            
+              <svg class="h-5 w-5" aria-label="Posts" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+</svg>
+
+            
+            <span>Posts</span>
+          </a>
+        
+      
+        
+        
+        
+        
+          
+          
+          <div class="nav-accordion-group">
+            <button
+              class="nav-accordion-toggle text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex w-full items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+              data-accordion-id="more"
+              aria-expanded="false"
+              aria-controls="accordion-more"
+            >
+              
+                <svg class="h-5 w-5" aria-label="More" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3.09 6.26L22 9l-5.91.74L12 16l-4.09-6.26L2 9l5.91-.74L12 2z" />
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 17l10 5 10-5" />
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 12l10 5 10-5" />
+</svg>
+              
+              <span class="flex-1 text-left">More</span>
+              <svg class="h-4 w-4 accordion-chevron transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+            </button>
+            
+            <div
+              id="accordion-more"
+              class="nav-accordion-panel grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out"
+              data-accordion-id="more"
+              aria-hidden="true"
+            >
+              <div class="overflow-hidden">
+                <div class="border-primary/20 ml-4 space-y-0.5 border-l-2 py-1 pl-3">
+                  
+                    
+                    
+                      
+                        
+                      
+                    
+                    
+                    <a
+                      href="/cpp_notes/categories/"
+                      class="nav-panel-link 
+                        text-muted-foreground hover:text-primary hover:bg-primary/10
+                       focus:ring-primary/20 flex items-center gap-3 rounded-md px-3 py-2.5 text-sm transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+                      role="menuitem"
+                      
+                    >
+                      
+                        <svg class="h-4 w-4" aria-label="Categories" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+</svg>
+
+                      
+                      <span>Categories</span>
+                    </a>
+                  
+                    
+                    
+                      
+                        
+                      
+                    
+                    
+                    <a
+                      href="/cpp_notes/tags/"
+                      class="nav-panel-link 
+                        text-muted-foreground hover:text-primary hover:bg-primary/10
+                       focus:ring-primary/20 flex items-center gap-3 rounded-md px-3 py-2.5 text-sm transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+                      role="menuitem"
+                      
+                    >
+                      
+                        <svg class="h-4 w-4" aria-label="Tags" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+</svg>
+
+                      
+                      <span>Tags</span>
+                    </a>
+                  
+                    
+                    
+                      
+                        
+                      
+                    
+                    
+                    <a
+                      href="/cpp_notes/projects/"
+                      class="nav-panel-link 
+                        text-muted-foreground hover:text-primary hover:bg-primary/10
+                       focus:ring-primary/20 flex items-center gap-3 rounded-md px-3 py-2.5 text-sm transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+                      role="menuitem"
+                      
+                    >
+                      
+                        <svg class="h-4 w-4" aria-label="Projects" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="6" r="1" fill="currentColor"/><path fill="currentColor" d="M6 17h12v2H6zm4-5.17l2.792 2.794l3.932-3.935L18 12V8h-4l1.31 1.275l-2.519 2.519L10 9l-4 4l1.414 1.414z"/><path fill="currentColor" d="M19 3h-3.298a5 5 0 0 0-.32-.425l-.01-.012a4.43 4.43 0 0 0-2.89-1.518a2.6 2.6 0 0 0-.964 0a4.43 4.43 0 0 0-2.89 1.518l-.01.012a5 5 0 0 0-.32.424V3H5a3.003 3.003 0 0 0-3 3v14a3.003 3.003 0 0 0 3 3h14a3.003 3.003 0 0 0 3-3V6a3.003 3.003 0 0 0-3-3m1 17a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h4.55a2.5 2.5 0 0 1 4.9 0H19a1 1 0 0 1 1 1Z"/></svg>
+
+
+                      
+                      <span>Projects</span>
+                    </a>
+                  
+                    
+                    
+                      
+                        
+                      
+                    
+                    
+                    <a
+                      href="/cpp_notes/archives/"
+                      class="nav-panel-link 
+                        text-muted-foreground hover:text-primary hover:bg-primary/10
+                       focus:ring-primary/20 flex items-center gap-3 rounded-md px-3 py-2.5 text-sm transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+                      role="menuitem"
+                      
+                    >
+                      
+                        <svg class="h-4 w-4" aria-label="Archives" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+</svg>
+
+                      
+                      <span>Archives</span>
+                    </a>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        
+      
+    </nav>
+  </div>
+</div>
+
+</header>
+
+
+
+      <div class="px-4 py-6">
+        
+  <nav class="breadcrumb mb-4 py-1 md:mb-6" aria-label="Breadcrumb">
+    <ol
+      class="text-muted-foreground scrollbar-hide flex items-center space-x-1 overflow-x-auto py-1 text-sm whitespace-nowrap md:space-x-2"
+    >
+      
+        
+          
+          <li class="shrink-0">
+            <a
+              href="/cpp_notes/"
+              class="text-muted-foreground hover:text-primary hover:bg-primary/10 flex items-center gap-1 rounded-lg px-1 py-0.5 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-[1.02] md:py-1.5"
+            >
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m3 12 2-2m0 0 7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+</svg>
+
+              <span class="max-w-16 truncate md:max-w-none">Home</span>
+            </a>
+          </li>
+        
+      
+        
+          
+          <li class="flex min-w-0 items-center gap-1 md:gap-2">
+            <span class="text-muted-foreground/50 shrink-0"
+              ><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+</svg>
+            </span>
+            <a
+              href="/cpp_notes/posts/"
+              class="text-muted-foreground hover:text-primary hover:bg-primary/10 flex shrink-0 items-center gap-1 rounded-lg px-1 py-0.5 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-[1.02] md:px-3 md:py-1.5"
+            >
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+</svg>
+              <span class="max-w-16 truncate md:max-w-none">Posts</span>
+            </a>
+          </li>
+        
+      
+        
+          
+          <li class="flex min-w-0 items-center gap-1 md:gap-2">
+            <span class="text-muted-foreground/50 shrink-0"
+              ><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+</svg>
+            </span>
+            <a
+              href="/cpp_notes/posts/react/"
+              class="text-muted-foreground hover:text-primary hover:bg-primary/10 flex shrink-0 items-center gap-1 rounded-lg px-1 py-0.5 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-[1.02] md:px-3 md:py-1.5"
+            >
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+</svg>
+              <span class="max-w-16 truncate md:max-w-none">React</span>
+            </a>
+          </li>
+        
+      
+
+
+      
+      <li class="flex min-w-0 items-center gap-1 md:gap-2">
+        <span class="text-muted-foreground/50 shrink-0"
+          ><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+</svg>
+        </span>
+        <span class="text-foreground flex min-w-0 items-center gap-1 font-medium">
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+</svg>
+          <span class="max-w-32 truncate md:max-w-[16rem] lg:max-w-none">简介</span>
+        </span>
+      </li>
+    </ol>
+  </nav>
+
+
+        
+  
+
+
+  
+  <header class="mb-8">
+    
+
+
+
+
+<div class="post-meta mb-8">
+  
+  
+    <h1 class="text-foreground mb-6 text-3xl leading-tight font-bold md:text-4xl">
+      简介
+    </h1>
+  
+
+  
+  
+
+  
+  <div class="bg-card border-border rounded-xl border">
+
+    
+        
+        <div class="p-6">
+
+          
+          <div class="text-muted-foreground flex flex-wrap items-center gap-3 text-sm mb-4">
+            
+            
+            <div class="flex items-center gap-2">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+</svg>
+
+              <time datetime="2026-06-29">
+                June 29, 2026
+              </time>
+            </div>
+            
+
+            
+            
+            <div class="flex items-center gap-2">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+</svg>
+
+              <span>10 min</span>
+            </div>
+            
+
+            
+            
+            <div class="flex items-center gap-2">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
+</svg>
+
+              <span>4561 words</span>
+            </div>
+            
+          </div>
+
+          
+          <div class="text-muted-foreground space-y-3 pt-4 border-t border-border">
+            <div class="flex items-center gap-2">
+              <div class="shrink-0">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+</svg>
+
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex flex-wrap items-center gap-1.5">
+                  <span class="text-muted-foreground text-sm font-medium">
+                    Categories:
+                  </span>
+                  <a href="/cpp_notes/categories/react%E5%9F%BA%E7%A1%80/"
+                    class="inline-flex items-center rounded-full px-2.5 py-1 text-sm font-medium transition-all duration-200 bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground">
+                    React基础
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="shrink-0">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+</svg>
+
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex flex-wrap items-center gap-1.5">
+                  <span class="text-muted-foreground text-sm font-medium">
+                    Tags:
+                  </span>
+                  <a href="/cpp_notes/tags/react/"
+                    class="inline-flex items-center rounded-full px-2.5 py-1 text-sm font-medium transition-all duration-200 bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground">
+                    React
+                  </a>
+                  <a href="/cpp_notes/tags/virtual-dom/"
+                    class="inline-flex items-center rounded-full px-2.5 py-1 text-sm font-medium transition-all duration-200 bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground">
+                    Virtual DOM
+                  </a>
+                  <a href="/cpp_notes/tags/fiber/"
+                    class="inline-flex items-center rounded-full px-2.5 py-1 text-sm font-medium transition-all duration-200 bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground">
+                    Fiber
+                  </a>
+                  <a href="/cpp_notes/tags/scheduler/"
+                    class="inline-flex items-center rounded-full px-2.5 py-1 text-sm font-medium transition-all duration-200 bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground">
+                    Scheduler
+                  </a>
+                  <a href="/cpp_notes/tags/vite/"
+                    class="inline-flex items-center rounded-full px-2.5 py-1 text-sm font-medium transition-all duration-200 bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground">
+                    Vite
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+  </div>
+</div>
+
+  </header>
+
+  
+  <article class="prose prose-neutral dark:prose-invert mb-12 max-w-none">
+    <h1 id="react">React<a href="#react" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h1><p><a
+    href="https://reactjs.org/"target="_blank"
+    class="inline-flex items-center gap-1"
+  >React<svg class="h-3 w-3 flex-shrink-0" id="external-link" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 3h6v6m-11 5L21 3m-3 10v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
+  </a> 是一个用于构建用户界面的 <code>JavaScript/TypeScript</code> 库。它由 <code>Facebook</code> 开发并维护，广泛应用于前端开发中</p>
+<ul>
+<li><strong>定位</strong>: 是一个库，而非框架</li>
+<li><strong>核心思想</strong>：基于状态驱动试图更新，即 <code>UI = fcn(state, props)</code></li>
+</ul>
+<h1 id="项目">项目<a href="#%e9%a1%b9%e7%9b%ae" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h1><ul>
+<li>
+<p><strong>项目创建</strong>：基于 <code>Vite</code> 的项目可实现快速热重载</p>
+<div
+  class="term-block my-6 overflow-hidden rounded-xl border shadow-sm"
+  data-term-block
+  data-term-id="term-0"
+>
+  <div class="term-header flex items-center justify-between border-b px-4 py-3">
+    <div class="flex items-center gap-3">
+      <span class="flex items-center gap-1.5" aria-hidden="true">
+        <span class="h-3 w-3 rounded-full bg-[#ff5f57]"></span>
+        <span class="h-3 w-3 rounded-full bg-[#febc2e]"></span>
+        <span class="h-3 w-3 rounded-full bg-[#28c840]"></span>
+      </span>
+      <span class="term-title text-sm font-medium">Terminal</span>
+    </div>
+  </div>
+  <div class="overflow-x-auto p-4">
+    <div class="term-body font-mono text-sm leading-relaxed"><div class="term-output whitespace-pre">triangle@learn$ npm create vite@latest</div></div>
+  </div>
+</div>
+</li>
+<li>
+<p><strong>项目结构</strong></p>
+<div
+  class="code-block-container border-border bg-card my-6 overflow-hidden rounded-xl border shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md"
+  data-code-block
+  data-code-id="code-1"
+  data-collapsible="true"
+  data-default-state="expanded"
+  data-collapsed="false"
+  data-auto-collapse-lines="30"
+  data-auto-collapse-height="400"
+  data-collapsed-height="120"
+>
+  
+  <div
+    class="code-block-header bg-muted/30 border-border flex items-center justify-between border-b px-4 py-3"
+  >
+    
+    <div class="flex items-center gap-2">
+      <div class="text-muted-foreground shrink-0">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+</svg>
+      </div>
+      <span class="text-muted-foreground text-sm font-medium">
+        PLAINTEXT
+      </span>
+    </div>
+
+    
+    <div class="flex items-center gap-2">
+      <button
+          class="collapse-code-btn text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+          type="button"
+          data-code-action="toggle-collapse"
+          data-label-expand="Expand"
+          data-label-collapse="Collapse"
+          title="Collapse"
+          aria-label="Collapse"
+          aria-controls="code-1"
+          aria-expanded="true"
+        >
+          <span class="collapse-chevron transition-transform duration-200 ease-out">
+            <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+          </span>
+          <span class="collapse-text hidden sm:inline">Collapse</span>
+        </button>
+      <button
+        class="copy-code-btn text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+        type="button"
+        data-code-action="copy"
+        data-label-copy="Copy"
+        data-label-copied="Copied"
+        title="Copy"
+        aria-label="Copy"
+      >
+        <span class="copy-icon">
+          <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+</svg>
+        </span>
+        <span class="copy-text hidden sm:inline">Copy</span>
+      </button>
+    </div>
+  </div>
+
+  
+  <div class="code-block-content relative" id="code-1">
+    <pre tabindex="0"><code>.
+├── node_modules                    依赖
+├── public                          静态资源  
+│   ├── favicon.svg
+│   └── icons.svg
+├── src                             源代码
+│   ├── App.css
+│   ├── App.tsx                     根组件
+│   ├── assets
+│   ├── index.css                   程序样式文件
+│   └── main.tsx                    程序入口文件
+├── index.html                      界面入口文件
+├── package-lock.json
+├── package.json                    项目依赖管理，项目命令等
+├── eslint.config.js                代码格式规范化配置
+├── tsconfig.json                   TypeScript 配置文件
+├── tsconfig.app.json               应用程序的 TypeScript 配置文件
+├── tsconfig.node.json              Node.js 的 TypeScript 配置文件
+├── vite.config.ts                  vite 构建配置文件
+└── README.md</code></pre>
+    <div hidden data-code-source>.
+├── node_modules                    依赖
+├── public                          静态资源  
+│   ├── favicon.svg
+│   └── icons.svg
+├── src                             源代码
+│   ├── App.css
+│   ├── App.tsx                     根组件
+│   ├── assets
+│   ├── index.css                   程序样式文件
+│   └── main.tsx                    程序入口文件
+├── index.html                      界面入口文件
+├── package-lock.json
+├── package.json                    项目依赖管理，项目命令等
+├── eslint.config.js                代码格式规范化配置
+├── tsconfig.json                   TypeScript 配置文件
+├── tsconfig.app.json               应用程序的 TypeScript 配置文件
+├── tsconfig.node.json              Node.js 的 TypeScript 配置文件
+├── vite.config.ts                  vite 构建配置文件
+└── README.md</div>
+    
+    <div
+      class="collapse-overlay to-card/90 pointer-events-none absolute inset-0 bg-linear-to-b from-transparent via-transparent opacity-0 transition-opacity duration-300"
+      hidden
+    >
+      <button
+        class="collapse-overlay-btn text-muted-foreground bg-card/80 border-border/50 hover:bg-primary/10 hover:text-primary hover:border-primary/30 absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center justify-center rounded-full border p-2 backdrop-blur-sm transition-all duration-200"
+        type="button"
+        data-code-action="expand"
+        aria-label="Expand"
+        title="Expand"
+      >
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+      </button>
+    </div>
+  </div>
+</div>
+</li>
+<li>
+<p><strong>命令</strong></p>
+<div
+  class="term-block my-6 overflow-hidden rounded-xl border shadow-sm"
+  data-term-block
+  data-term-id="term-2"
+>
+  <div class="term-header flex items-center justify-between border-b px-4 py-3">
+    <div class="flex items-center gap-3">
+      <span class="flex items-center gap-1.5" aria-hidden="true">
+        <span class="h-3 w-3 rounded-full bg-[#ff5f57]"></span>
+        <span class="h-3 w-3 rounded-full bg-[#febc2e]"></span>
+        <span class="h-3 w-3 rounded-full bg-[#28c840]"></span>
+      </span>
+      <span class="term-title text-sm font-medium">Terminal</span>
+    </div>
+  </div>
+  <div class="overflow-x-auto p-4">
+    <div class="term-body font-mono text-sm leading-relaxed"><div class="term-output whitespace-pre">triangle@learn$ npm run dev     // 启动开发服务，代码修改后自动刷新</div><div class="term-output whitespace-pre">triangle@learn$ npm run build   // 构建生产环境代码</div></div>
+  </div>
+</div>
+</li>
+</ul>
+<h1 id="jsxtsx">JSX/TSX<a href="#jsxtsx" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h1><p>扩展代码文件 <code>.jsx/.tsx</code></p>
+<ul>
+<li><code>JSX, JavaScript XML</code>：一种在 <code>JavaScript</code> 中编写类似 <code>HTML</code> 语法的扩展语法。<code>React</code> 使用 <code>JSX</code> 来描述 <code>UI</code> 结构。</li>
+<li><code>TSX, TypeScript XML</code>：即 <code>TypeScript</code> 版的 <code>JSX</code></li>
+</ul>
+<p>下列代码是使用 <code>JSX</code> 描述一个简单的 <code>h1</code> 元素</p>
+<div
+  class="code-block-container border-border bg-card my-6 overflow-hidden rounded-xl border shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md"
+  data-code-block
+  data-code-id="code-3"
+  data-collapsible="true"
+  data-default-state="expanded"
+  data-collapsed="false"
+  data-auto-collapse-lines="30"
+  data-auto-collapse-height="400"
+  data-collapsed-height="120"
+>
+  
+  <div
+    class="code-block-header bg-muted/30 border-border flex items-center justify-between border-b px-4 py-3"
+  >
+    
+    <div class="flex items-center gap-2">
+      <div class="text-muted-foreground shrink-0">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+</svg>
+      </div>
+      <span class="text-muted-foreground text-sm font-medium">
+        JSX
+      </span>
+    </div>
+
+    
+    <div class="flex items-center gap-2">
+      <button
+          class="collapse-code-btn text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+          type="button"
+          data-code-action="toggle-collapse"
+          data-label-expand="Expand"
+          data-label-collapse="Collapse"
+          title="Collapse"
+          aria-label="Collapse"
+          aria-controls="code-3"
+          aria-expanded="true"
+        >
+          <span class="collapse-chevron transition-transform duration-200 ease-out">
+            <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+          </span>
+          <span class="collapse-text hidden sm:inline">Collapse</span>
+        </button>
+      <button
+        class="copy-code-btn text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+        type="button"
+        data-code-action="copy"
+        data-label-copy="Copy"
+        data-label-copied="Copied"
+        title="Copy"
+        aria-label="Copy"
+      >
+        <span class="copy-icon">
+          <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+</svg>
+        </span>
+        <span class="copy-text hidden sm:inline">Copy</span>
+      </button>
+    </div>
+  </div>
+
+  
+  <div class="code-block-content relative" id="code-3">
+    <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-jsx" data-lang="jsx"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">element</span> <span class="o">=</span> <span class="p">&lt;</span><span class="nt">h1</span> <span class="na">className</span><span class="o">=</span><span class="s">&#34;greeting&#34;</span><span class="p">&gt;</span><span class="nx">Hello</span><span class="p">,</span> <span class="nx">world</span><span class="o">!</span><span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span></span></span></code></pre></div>
+    <div hidden data-code-source>const element = &lt;h1 className=&#34;greeting&#34;&gt;Hello, world!&lt;/h1&gt;</div>
+    
+    <div
+      class="collapse-overlay to-card/90 pointer-events-none absolute inset-0 bg-linear-to-b from-transparent via-transparent opacity-0 transition-opacity duration-300"
+      hidden
+    >
+      <button
+        class="collapse-overlay-btn text-muted-foreground bg-card/80 border-border/50 hover:bg-primary/10 hover:text-primary hover:border-primary/30 absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center justify-center rounded-full border p-2 backdrop-blur-sm transition-all duration-200"
+        type="button"
+        data-code-action="expand"
+        aria-label="Expand"
+        title="Expand"
+      >
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+      </button>
+    </div>
+  </div>
+</div>
+<p>在经过编译后，<code>JSX</code> 会被转换为 <code>React.createElement()</code> 函数调用</p>
+<div
+  class="code-block-container border-border bg-card my-6 overflow-hidden rounded-xl border shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md"
+  data-code-block
+  data-code-id="code-4"
+  data-collapsible="true"
+  data-default-state="expanded"
+  data-collapsed="false"
+  data-auto-collapse-lines="30"
+  data-auto-collapse-height="400"
+  data-collapsed-height="120"
+>
+  
+  <div
+    class="code-block-header bg-muted/30 border-border flex items-center justify-between border-b px-4 py-3"
+  >
+    
+    <div class="flex items-center gap-2">
+      <div class="text-muted-foreground shrink-0">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+</svg>
+      </div>
+      <span class="text-muted-foreground text-sm font-medium">
+        JS
+      </span>
+    </div>
+
+    
+    <div class="flex items-center gap-2">
+      <button
+          class="collapse-code-btn text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+          type="button"
+          data-code-action="toggle-collapse"
+          data-label-expand="Expand"
+          data-label-collapse="Collapse"
+          title="Collapse"
+          aria-label="Collapse"
+          aria-controls="code-4"
+          aria-expanded="true"
+        >
+          <span class="collapse-chevron transition-transform duration-200 ease-out">
+            <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+          </span>
+          <span class="collapse-text hidden sm:inline">Collapse</span>
+        </button>
+      <button
+        class="copy-code-btn text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+        type="button"
+        data-code-action="copy"
+        data-label-copy="Copy"
+        data-label-copied="Copied"
+        title="Copy"
+        aria-label="Copy"
+      >
+        <span class="copy-icon">
+          <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+</svg>
+        </span>
+        <span class="copy-text hidden sm:inline">Copy</span>
+      </button>
+    </div>
+  </div>
+
+  
+  <div class="code-block-content relative" id="code-4">
+    <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">element</span> <span class="o">=</span> <span class="nx">React</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">  <span class="s1">&#39;h1&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="p">{</span> <span class="nx">className</span><span class="o">:</span> <span class="s1">&#39;greeting&#39;</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">  <span class="s1">&#39;Hello, world!&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span></span></span></code></pre></div>
+    <div hidden data-code-source>const element = React.createElement(
+  &#39;h1&#39;,
+  { className: &#39;greeting&#39; },
+  &#39;Hello, world!&#39;
+)</div>
+    
+    <div
+      class="collapse-overlay to-card/90 pointer-events-none absolute inset-0 bg-linear-to-b from-transparent via-transparent opacity-0 transition-opacity duration-300"
+      hidden
+    >
+      <button
+        class="collapse-overlay-btn text-muted-foreground bg-card/80 border-border/50 hover:bg-primary/10 hover:text-primary hover:border-primary/30 absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center justify-center rounded-full border p-2 backdrop-blur-sm transition-all duration-200"
+        type="button"
+        data-code-action="expand"
+        aria-label="Expand"
+        title="Expand"
+      >
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+      </button>
+    </div>
+  </div>
+</div>
+<h1 id="实现原理">实现原理<a href="#%e5%ae%9e%e7%8e%b0%e5%8e%9f%e7%90%86" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h1><h2 id="渲染流程">渲染流程<a href="#%e6%b8%b2%e6%9f%93%e6%b5%81%e7%a8%8b" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h2><p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="1288"
+  data-image-height="555"
+  data-image-src="/cpp_notes/posts/react/introdution/resources/react_pipeline.png"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/react/introdution/resources/react_pipeline.png"
+    alt="alt"
+    
+    
+      
+      
+        
+          width="1288" height="555"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/react/introdution/resources/react_pipeline.png"
+    data-gallery-alt="alt"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+<p><code>React</code> 的渲染流程主要包括以下几个步骤：</p>
+<ol>
+<li>根据 <code>JSX/TSX</code> 代码生成虚拟 <code>DOM</code></li>
+<li>将虚拟 <code>DOM</code> 转换为 <code>fiber</code> 链表结构</li>
+<li>通过 <code>diff</code> 算法比较新旧 <code>fiber</code> 结构，找到变化节点</li>
+<li>通过调度器 <code>Scheduler</code> 实现任务切片，分段实现虚拟 <code>DOM</code> 到真实 <code>DOM</code> 的转换</li>
+<li>得到最终的 <code>DOM</code> 后，提交 <code>DOM</code> 给浏览器渲染</li>
+</ol>
+<h2 id="虚拟-dom">虚拟 DOM<a href="#%e8%99%9a%e6%8b%9f-dom" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h2><p><strong>虚拟<code>DOM,Virtual DOM</code></strong>: 是一个 <code>JavaScript</code> 对象，它是真实 <code>DOM</code> 的轻量级副本，即 <code>React.createElement()</code> 返回的 <code>React.ReactNode</code> 对象</p>
+<div
+  class="code-block-container border-border bg-card my-6 overflow-hidden rounded-xl border shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md"
+  data-code-block
+  data-code-id="code-5"
+  data-collapsible="true"
+  data-default-state="expanded"
+  data-collapsed="false"
+  data-auto-collapse-lines="30"
+  data-auto-collapse-height="400"
+  data-collapsed-height="120"
+>
+  
+  <div
+    class="code-block-header bg-muted/30 border-border flex items-center justify-between border-b px-4 py-3"
+  >
+    
+    <div class="flex items-center gap-2">
+      <div class="text-muted-foreground shrink-0">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+</svg>
+      </div>
+      <span class="text-muted-foreground text-sm font-medium">
+        JAVASCRIPT
+      </span>
+    </div>
+
+    
+    <div class="flex items-center gap-2">
+      <button
+          class="collapse-code-btn text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+          type="button"
+          data-code-action="toggle-collapse"
+          data-label-expand="Expand"
+          data-label-collapse="Collapse"
+          title="Collapse"
+          aria-label="Collapse"
+          aria-controls="code-5"
+          aria-expanded="true"
+        >
+          <span class="collapse-chevron transition-transform duration-200 ease-out">
+            <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+          </span>
+          <span class="collapse-text hidden sm:inline">Collapse</span>
+        </button>
+      <button
+        class="copy-code-btn text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+        type="button"
+        data-code-action="copy"
+        data-label-copy="Copy"
+        data-label-copied="Copied"
+        title="Copy"
+        aria-label="Copy"
+      >
+        <span class="copy-icon">
+          <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+</svg>
+        </span>
+        <span class="copy-text hidden sm:inline">Copy</span>
+      </button>
+    </div>
+  </div>
+
+  
+  <div class="code-block-content relative" id="code-5">
+    <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="c1">// 嵌套的虚拟DOM树
+</span></span></span><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">complexVNode</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;div&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">props</span><span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">className</span><span class="o">:</span> <span class="s1">&#39;app&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">children</span><span class="o">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">            <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;header&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                <span class="nx">props</span><span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="nx">children</span><span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                        <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;h1&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                        <span class="nx">props</span><span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                        <span class="nx">children</span><span class="o">:</span> <span class="s1">&#39;标题&#39;</span>
+</span></span><span class="line"><span class="cl">                        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">                    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">                <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="p">},</span>
+</span></span><span class="line"><span class="cl">            <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;main&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                <span class="nx">props</span><span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="nx">children</span><span class="o">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">                        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                            <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;p&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                            <span class="nx">props</span><span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                                <span class="nx">children</span><span class="o">:</span> <span class="s1">&#39;段落1&#39;</span>
+</span></span><span class="line"><span class="cl">                            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">                        <span class="p">},</span>
+</span></span><span class="line"><span class="cl">                        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                            <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;p&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                            <span class="nx">props</span><span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                                <span class="nx">children</span><span class="o">:</span> <span class="s1">&#39;段落2&#39;</span>
+</span></span><span class="line"><span class="cl">                            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">                        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">                    <span class="p">]</span>
+</span></span><span class="line"><span class="cl">                <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span></span></span></code></pre></div>
+    <div hidden data-code-source>// 嵌套的虚拟DOM树
+const complexVNode = {
+    type: &#39;div&#39;,
+    props: {
+        className: &#39;app&#39;,
+        children: [
+            {
+                type: &#39;header&#39;,
+                props: {
+                    children: {
+                        type: &#39;h1&#39;,
+                        props: {
+                        children: &#39;标题&#39;
+                        }
+                    }
+                }
+            },
+            {
+                type: &#39;main&#39;,
+                props: {
+                    children: [
+                        {
+                            type: &#39;p&#39;,
+                            props: {
+                                children: &#39;段落1&#39;
+                            }
+                        },
+                        {
+                            type: &#39;p&#39;,
+                            props: {
+                                children: &#39;段落2&#39;
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+};</div>
+    
+    <div
+      class="collapse-overlay to-card/90 pointer-events-none absolute inset-0 bg-linear-to-b from-transparent via-transparent opacity-0 transition-opacity duration-300"
+      hidden
+    >
+      <button
+        class="collapse-overlay-btn text-muted-foreground bg-card/80 border-border/50 hover:bg-primary/10 hover:text-primary hover:border-primary/30 absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center justify-center rounded-full border p-2 backdrop-blur-sm transition-all duration-200"
+        type="button"
+        data-code-action="expand"
+        aria-label="Expand"
+        title="Expand"
+      >
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+      </button>
+    </div>
+  </div>
+</div>
+<h2 id="fiber">Fiber<a href="#fiber" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h2><p>虚拟 <code>DOM</code> 是按照树结构组织的，但不利于新旧 <code>DOM</code> 的比较，对此，<code>React</code> 先将虚拟 <code>DOM</code> 转换为 <code>fiber</code> 链表结构，再通过 <code>diff</code> 算法实现差异查找。</p>
+<ul>
+<li><code>fiber</code> 链表上一个节点就调度器中的一个子任务</li>
+</ul>
+<p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="648"
+  data-image-height="800"
+  data-image-src="/cpp_notes/posts/react/introdution/resources/fiber.png"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/react/introdution/resources/fiber.png"
+    alt="alt"
+    
+    
+      
+      
+        
+          width="648" height="800"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/react/introdution/resources/fiber.png"
+    data-gallery-alt="alt"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+<h2 id="requestidlecallback">requestIdleCallback<a href="#requestidlecallback" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h2><p>浏览器界面渲染按照 <code>60fps</code> 的帧率进行实时渲染，每一帧执行的执行流程</p>
+<ol>
+<li>处理事件的回调<code>click...</code>事件</li>
+<li>处理计时器的回调</li>
+<li>开始帧</li>
+<li>执行<code>requestAnimationFrame</code> 动画的回调</li>
+<li>计算机页面布局计算 合并到主线程</li>
+<li>绘制</li>
+<li>如果此时还有空闲时间，执行<code>requestIdleCallback</code></li>
+</ol>
+<p><code>React</code> 的 <code>Scheduler</code> 就是为了实现类似 <code>requestIdleCallback</code> 的能力，将界面元素的生成任务拆分为多个子任务，然后放到多帧中执行，从而避免复杂渲染任务阻塞主线程。<code>React</code> 真正的 <code>Scheduler</code> 的实现方案有以下两套</p>
+<ul>
+<li><code>MessageChannel</code></li>
+<li><code>setTimeout</code></li>
+</ul>
+<h2 id="库实现">库实现<a href="#%e5%ba%93%e5%ae%9e%e7%8e%b0" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h2><ul>
+<li>
+<p><code>react.js</code></p>
+<div
+  class="code-block-container border-border bg-card my-6 overflow-hidden rounded-xl border shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md"
+  data-code-block
+  data-code-id="code-6"
+  data-collapsible="true"
+  data-default-state="expanded"
+  data-collapsed="false"
+  data-auto-collapse-lines="30"
+  data-auto-collapse-height="400"
+  data-collapsed-height="120"
+>
+  
+  <div
+    class="code-block-header bg-muted/30 border-border flex items-center justify-between border-b px-4 py-3"
+  >
+    
+    <div class="flex items-center gap-2">
+      <div class="text-muted-foreground shrink-0">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+</svg>
+      </div>
+      <span class="text-muted-foreground text-sm font-medium">
+        JS
+      </span>
+    </div>
+
+    
+    <div class="flex items-center gap-2">
+      <button
+          class="collapse-code-btn text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+          type="button"
+          data-code-action="toggle-collapse"
+          data-label-expand="Expand"
+          data-label-collapse="Collapse"
+          title="Collapse"
+          aria-label="Collapse"
+          aria-controls="code-6"
+          aria-expanded="true"
+        >
+          <span class="collapse-chevron transition-transform duration-200 ease-out">
+            <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+          </span>
+          <span class="collapse-text hidden sm:inline">Collapse</span>
+        </button>
+      <button
+        class="copy-code-btn text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+        type="button"
+        data-code-action="copy"
+        data-label-copy="Copy"
+        data-label-copied="Copied"
+        title="Copy"
+        aria-label="Copy"
+      >
+        <span class="copy-icon">
+          <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+</svg>
+        </span>
+        <span class="copy-text hidden sm:inline">Copy</span>
+      </button>
+    </div>
+  </div>
+
+  
+  <div class="code-block-content relative" id="code-6">
+    <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="cm">/* 
+</span></span></span><span class="line"><span class="cl"><span class="cm">==============================
+</span></span></span><span class="line"><span class="cl"><span class="cm">* 虚拟 DOM 节点构建器
+</span></span></span><span class="line"><span class="cl"><span class="cm">==============================
+</span></span></span><span class="line"><span class="cl"><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">*/</span>
+</span></span><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">React</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">createElement</span><span class="p">(</span><span class="nx">type</span><span class="p">,</span> <span class="nx">props</span> <span class="o">=</span> <span class="p">{},</span> <span class="p">...</span><span class="nx">children</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">type</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">props</span><span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="p">...</span><span class="nx">props</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                <span class="nx">children</span><span class="o">:</span> <span class="nx">children</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">child</span> <span class="p">=&gt;</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">typeof</span> <span class="nx">child</span> <span class="o">===</span> <span class="s1">&#39;object&#39;</span>
+</span></span><span class="line"><span class="cl">                        <span class="o">?</span> <span class="nx">child</span>
+</span></span><span class="line"><span class="cl">                        <span class="o">:</span> <span class="nx">React</span><span class="p">.</span><span class="nx">createTextElement</span><span class="p">(</span><span class="nx">child</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="p">),</span>
+</span></span><span class="line"><span class="cl">            <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">};</span>
+</span></span><span class="line"><span class="cl">    <span class="p">},</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nx">createTextElement</span><span class="p">(</span><span class="nx">text</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;TEXT_ELEMENT&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">props</span><span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="nx">nodeValue</span><span class="o">:</span> <span class="nx">text</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                <span class="nx">children</span><span class="o">:</span> <span class="p">[],</span>
+</span></span><span class="line"><span class="cl">            <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">};</span>
+</span></span><span class="line"><span class="cl">    <span class="p">},</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="cm">/* 
+</span></span></span><span class="line"><span class="cl"><span class="cm">==============================
+</span></span></span><span class="line"><span class="cl"><span class="cm">* diff, Fiber 架构
+</span></span></span><span class="line"><span class="cl"><span class="cm">==============================
+</span></span></span><span class="line"><span class="cl"><span class="cm">*/</span>
+</span></span><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">nextUnitOfWork</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span> <span class="c1">// 下一个工作单元
+</span></span></span><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">currentRoot</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span> <span class="c1">// 当前 Fiber 树的根
+</span></span></span><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">wipRoot</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span> <span class="c1">// 正在工作的 Fiber 树
+</span></span></span><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">deletions</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span> <span class="c1">// 存储需要删除的 Fiber
+</span></span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 渲染入口
+</span></span></span><span class="line"><span class="cl"><span class="c1">// - element: 虚拟 DOM 节点
+</span></span></span><span class="line"><span class="cl"><span class="c1">// - container: 容器 DOM 节点
+</span></span></span><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">render</span><span class="p">(</span><span class="nx">element</span><span class="p">,</span> <span class="nx">container</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//wipRoot 表示“正在进行的工作根”，它是 Fiber 架构中渲染任务的起点
+</span></span></span><span class="line"><span class="cl">    <span class="nx">wipRoot</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">dom</span><span class="o">:</span> <span class="nx">container</span><span class="p">,</span> <span class="c1">//渲染目标的 DOM 容器
+</span></span></span><span class="line"><span class="cl">        <span class="nx">props</span><span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">children</span><span class="o">:</span> <span class="p">[</span><span class="nx">element</span><span class="p">],</span> <span class="c1">//要渲染的元素（例如 React 元素）
+</span></span></span><span class="line"><span class="cl">        <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">alternate</span><span class="o">:</span> <span class="nx">currentRoot</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">//alternate 是 React Fiber 树中的一个关键概念，用于双缓冲机制（双缓冲 Fiber Tree）。currentRoot 是之前已经渲染过的 Fiber 树的根，wipRoot 是新一轮更新的根 Fiber 节点。
+</span></span></span><span class="line"><span class="cl">        <span class="c1">//它们通过 alternate 属性相互关联
+</span></span></span><span class="line"><span class="cl">        <span class="c1">//旧的fiber树
+</span></span></span><span class="line"><span class="cl">    <span class="p">};</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">nextUnitOfWork</span> <span class="o">=</span> <span class="nx">wipRoot</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//nextUnitOfWork 是下一个要执行的工作单元（即 Fiber 节点）。在这里，将其设置为 wipRoot，表示渲染工作从根节点开始
+</span></span></span><span class="line"><span class="cl">    <span class="nx">deletions</span> <span class="o">=</span> <span class="p">[];</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//专门用于存放在更新过程中需要删除的节点。在 Fiber 更新机制中，如果某些节点不再需要，就会将它们放入 deletions，
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//最后在 commitRoot 阶段将它们从 DOM 中删除
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 创建 Fiber 节点
+</span></span></span><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">createFiber</span><span class="p">(</span><span class="nx">element</span><span class="p">,</span> <span class="nx">parent</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">type</span><span class="o">:</span> <span class="nx">element</span><span class="p">.</span><span class="nx">type</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">props</span><span class="o">:</span> <span class="nx">element</span><span class="p">.</span><span class="nx">props</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">parent</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">dom</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span> <span class="c1">// 关联的 DOM 节点
+</span></span></span><span class="line"><span class="cl">        <span class="nx">child</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span> <span class="c1">// 子节点
+</span></span></span><span class="line"><span class="cl">        <span class="nx">sibling</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span> <span class="c1">// 兄弟节点
+</span></span></span><span class="line"><span class="cl">        <span class="nx">alternate</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span> <span class="c1">// 对应的前一次 Fiber 节点
+</span></span></span><span class="line"><span class="cl">        <span class="nx">effectTag</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span> <span class="c1">// &#39;PLACEMENT&#39;, &#39;UPDATE&#39;, &#39;DELETION&#39;
+</span></span></span><span class="line"><span class="cl">    <span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// Diff 算法: 将子节点与之前的 Fiber 树进行比较
+</span></span></span><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">reconcileChildren</span><span class="p">(</span><span class="nx">wipFiber</span><span class="p">,</span> <span class="nx">elements</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">let</span> <span class="nx">index</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span><span class="c1">//
+</span></span></span><span class="line"><span class="cl">    <span class="kd">let</span> <span class="nx">oldFiber</span> <span class="o">=</span> <span class="nx">wipFiber</span><span class="p">.</span><span class="nx">alternate</span> <span class="o">&amp;&amp;</span> <span class="nx">wipFiber</span><span class="p">.</span><span class="nx">alternate</span><span class="p">.</span><span class="nx">child</span><span class="p">;</span> <span class="c1">// 旧的 Fiber 树
+</span></span></span><span class="line"><span class="cl">    <span class="kd">let</span> <span class="nx">prevSibling</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">while</span> <span class="p">(</span><span class="nx">index</span> <span class="o">&lt;</span> <span class="nx">elements</span><span class="p">.</span><span class="nx">length</span> <span class="o">||</span> <span class="nx">oldFiber</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="kr">const</span> <span class="nx">element</span> <span class="o">=</span> <span class="nx">elements</span><span class="p">[</span><span class="nx">index</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">        <span class="kd">let</span> <span class="nx">newFiber</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1">// 比较旧 Fiber 和新元素
+</span></span></span><span class="line"><span class="cl">        <span class="kr">const</span> <span class="nx">sameType</span> <span class="o">=</span> <span class="nx">oldFiber</span> <span class="o">&amp;&amp;</span> <span class="nx">element</span> <span class="o">&amp;&amp;</span> <span class="nx">element</span><span class="p">.</span><span class="nx">type</span> <span class="o">===</span> <span class="nx">oldFiber</span><span class="p">.</span><span class="nx">type</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1">//如果是同类型的节点，复用
+</span></span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="nx">sameType</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">newFiber</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="nx">type</span><span class="o">:</span> <span class="nx">oldFiber</span><span class="p">.</span><span class="nx">type</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                <span class="nx">props</span><span class="o">:</span> <span class="nx">element</span><span class="p">.</span><span class="nx">props</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                <span class="nx">dom</span><span class="o">:</span> <span class="nx">oldFiber</span><span class="p">.</span><span class="nx">dom</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                <span class="nx">parent</span><span class="o">:</span> <span class="nx">wipFiber</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                <span class="nx">alternate</span><span class="o">:</span> <span class="nx">oldFiber</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                <span class="nx">effectTag</span><span class="o">:</span> <span class="s1">&#39;UPDATE&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1">//如果新节点存在，但类型不同，新增fiber节点
+</span></span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="nx">element</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="nx">sameType</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">newFiber</span> <span class="o">=</span> <span class="nx">createFiber</span><span class="p">(</span><span class="nx">element</span><span class="p">,</span> <span class="nx">wipFiber</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">newFiber</span><span class="p">.</span><span class="nx">effectTag</span> <span class="o">=</span> <span class="s1">&#39;PLACEMENT&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1">//如果旧节点存在，但新节点不存在，删除旧节点
+</span></span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="nx">oldFiber</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="nx">sameType</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">oldFiber</span><span class="p">.</span><span class="nx">effectTag</span> <span class="o">=</span> <span class="s1">&#39;DELETION&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">deletions</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">oldFiber</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1">//移动旧fiber指针到下一个兄弟节点
+</span></span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="nx">oldFiber</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">oldFiber</span> <span class="o">=</span> <span class="nx">oldFiber</span><span class="p">.</span><span class="nx">sibling</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1">// 将新fiber节点插入到DOM树中
+</span></span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="nx">index</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="c1">//将第一个子节点设置为父节点的子节点
+</span></span></span><span class="line"><span class="cl">            <span class="nx">wipFiber</span><span class="p">.</span><span class="nx">child</span> <span class="o">=</span> <span class="nx">newFiber</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">element</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="c1">//将后续子节点作为前一个兄弟节点的兄弟
+</span></span></span><span class="line"><span class="cl">            <span class="nx">prevSibling</span><span class="p">.</span><span class="nx">sibling</span> <span class="o">=</span> <span class="nx">newFiber</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1">//更新兄弟节点
+</span></span></span><span class="line"><span class="cl">        <span class="nx">prevSibling</span> <span class="o">=</span> <span class="nx">newFiber</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">index</span><span class="o">++</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 创建 DOM 节点
+</span></span></span><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">createDom</span><span class="p">(</span><span class="nx">fiber</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">dom</span> <span class="o">=</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">fiber</span><span class="p">.</span><span class="nx">type</span> <span class="o">===</span> <span class="s1">&#39;TEXT_ELEMENT&#39;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">?</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createTextNode</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="o">:</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="nx">fiber</span><span class="p">.</span><span class="nx">type</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nx">updateDom</span><span class="p">(</span><span class="nx">dom</span><span class="p">,</span> <span class="p">{},</span> <span class="nx">fiber</span><span class="p">.</span><span class="nx">props</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">dom</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 更新 DOM 节点属性
+</span></span></span><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">updateDom</span><span class="p">(</span><span class="nx">dom</span><span class="p">,</span> <span class="nx">prevProps</span><span class="p">,</span> <span class="nx">nextProps</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 移除旧属性
+</span></span></span><span class="line"><span class="cl">    <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">prevProps</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="nx">name</span> <span class="p">=&gt;</span> <span class="nx">name</span> <span class="o">!==</span> <span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">name</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">dom</span><span class="p">[</span><span class="nx">name</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">});</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 添加新属性
+</span></span></span><span class="line"><span class="cl">    <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">nextProps</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="nx">name</span> <span class="p">=&gt;</span> <span class="nx">name</span> <span class="o">!==</span> <span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="nx">name</span> <span class="p">=&gt;</span> <span class="nx">prevProps</span><span class="p">[</span><span class="nx">name</span><span class="p">]</span> <span class="o">!==</span> <span class="nx">nextProps</span><span class="p">[</span><span class="nx">name</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">        <span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">name</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">dom</span><span class="p">[</span><span class="nx">name</span><span class="p">]</span> <span class="o">=</span> <span class="nx">nextProps</span><span class="p">[</span><span class="nx">name</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">        <span class="p">});</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 执行一个子任务, fiber 链表上一个节点就一个子任务
+</span></span></span><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">performUnitOfWork</span><span class="p">(</span><span class="nx">fiber</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 如果没有 DOM 节点，为当前 Fiber 创建 DOM 节点
+</span></span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">fiber</span><span class="p">.</span><span class="nx">dom</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">fiber</span><span class="p">.</span><span class="nx">dom</span> <span class="o">=</span> <span class="nx">createDom</span><span class="p">(</span><span class="nx">fiber</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//确保每个 Fiber 节点都在内存中有一个对应的 DOM 节点准备好，以便后续在提交阶段更新到实际的 DOM 树中
+</span></span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 创建子节点的 Fiber
+</span></span></span><span class="line"><span class="cl">    <span class="c1">// const vdom = React.createElement(&#39;div&#39;, { id: 1 }, React.createElement(&#39;span&#39;, null, &#39;小满zs&#39;));
+</span></span></span><span class="line"><span class="cl">    <span class="c1">// 子节点在children中
+</span></span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">elements</span> <span class="o">=</span> <span class="nx">fiber</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">children</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">reconcileChildren</span><span class="p">(</span><span class="nx">fiber</span><span class="p">,</span> <span class="nx">elements</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 遍历 fiber 链表
+</span></span></span><span class="line"><span class="cl">    <span class="c1">// 返回下一个工作单元（child, sibling, or parent）
+</span></span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="nx">fiber</span><span class="p">.</span><span class="nx">child</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="nx">fiber</span><span class="p">.</span><span class="nx">child</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="kd">let</span> <span class="nx">nextFiber</span> <span class="o">=</span> <span class="nx">fiber</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">while</span> <span class="p">(</span><span class="nx">nextFiber</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="nx">nextFiber</span><span class="p">.</span><span class="nx">sibling</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="nx">nextFiber</span><span class="p">.</span><span class="nx">sibling</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">nextFiber</span> <span class="o">=</span> <span class="nx">nextFiber</span><span class="p">.</span><span class="nx">parent</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 将 Fiber 生成的 DOM 更新到实际的 DOM 树中
+</span></span></span><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">commitWork</span><span class="p">(</span><span class="nx">fiber</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">fiber</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">domParent</span> <span class="o">=</span> <span class="nx">fiber</span><span class="p">.</span><span class="nx">parent</span><span class="p">.</span><span class="nx">dom</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="nx">fiber</span><span class="p">.</span><span class="nx">effectTag</span> <span class="o">===</span> <span class="s1">&#39;PLACEMENT&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">fiber</span><span class="p">.</span><span class="nx">dom</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">domParent</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">fiber</span><span class="p">.</span><span class="nx">dom</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">fiber</span><span class="p">.</span><span class="nx">effectTag</span> <span class="o">===</span> <span class="s1">&#39;UPDATE&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">fiber</span><span class="p">.</span><span class="nx">dom</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">updateDom</span><span class="p">(</span><span class="nx">fiber</span><span class="p">.</span><span class="nx">dom</span><span class="p">,</span> <span class="nx">fiber</span><span class="p">.</span><span class="nx">alternate</span><span class="p">.</span><span class="nx">props</span><span class="p">,</span> <span class="nx">fiber</span><span class="p">.</span><span class="nx">props</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">fiber</span><span class="p">.</span><span class="nx">effectTag</span> <span class="o">===</span> <span class="s1">&#39;DELETION&#39;</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">domParent</span><span class="p">.</span><span class="nx">removeChild</span><span class="p">(</span><span class="nx">fiber</span><span class="p">.</span><span class="nx">dom</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nx">commitWork</span><span class="p">(</span><span class="nx">fiber</span><span class="p">.</span><span class="nx">child</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">commitWork</span><span class="p">(</span><span class="nx">fiber</span><span class="p">.</span><span class="nx">sibling</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">commitRoot</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">deletions</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">commitWork</span><span class="p">);</span> <span class="c1">// 删除需要删除的 Fiber 节点
+</span></span></span><span class="line"><span class="cl">    <span class="nx">commitWork</span><span class="p">(</span><span class="nx">wipRoot</span><span class="p">.</span><span class="nx">child</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">currentRoot</span> <span class="o">=</span> <span class="nx">wipRoot</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">wipRoot</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="cm">/* 
+</span></span></span><span class="line"><span class="cl"><span class="cm">==================================
+</span></span></span><span class="line"><span class="cl"><span class="cm">* 基于 requestIdleCallback 实现的简易调度器，递归实现，从而会在浏览器中一直运行
+</span></span></span><span class="line"><span class="cl"><span class="cm">==================================
+</span></span></span><span class="line"><span class="cl"><span class="cm">*/</span>
+</span></span><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">workLoop</span><span class="p">(</span><span class="nx">deadline</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//deadline 表示浏览器空闲时间
+</span></span></span><span class="line"><span class="cl">    <span class="kd">let</span> <span class="nx">shouldYield</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//是一个标志，用来指示是否需要让出控制权给浏览器。如果时间快用完了，则设为 true，以便及时暂停任务，避免阻塞主线程
+</span></span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">while</span> <span class="p">(</span><span class="nx">nextUnitOfWork</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="nx">shouldYield</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">nextUnitOfWork</span> <span class="o">=</span> <span class="nx">performUnitOfWork</span><span class="p">(</span><span class="nx">nextUnitOfWork</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">//performUnitOfWork 是一个函数，它处理当前的工作单元，并返回下一个要执行的工作单元。每次循环会更新 nextUnitOfWork 为下一个工作单元
+</span></span></span><span class="line"><span class="cl">        <span class="nx">shouldYield</span> <span class="o">=</span> <span class="nx">deadline</span><span class="p">.</span><span class="nx">timeRemaining</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">//使用 deadline.timeRemaining() 来检查剩余的空闲时间。如果时间少于 1 毫秒，就设置 shouldYield 为 true，表示没有空闲时间了，就让出控制权
+</span></span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">nextUnitOfWork</span> <span class="o">&amp;&amp;</span> <span class="nx">wipRoot</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">//当没有下一个工作单元时（nextUnitOfWork 为 null），并且有一个待提交的“工作根”（wipRoot），就会调用 commitRoot() 将最终的结果应用到 DOM 中
+</span></span></span><span class="line"><span class="cl">        <span class="nx">commitRoot</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">//使用 requestIdleCallback 来安排下一个空闲时间段继续执行 workLoop，让任务在浏览器空闲时继续进行
+</span></span></span><span class="line"><span class="cl">    <span class="nx">requestIdleCallback</span><span class="p">(</span><span class="nx">workLoop</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// requestIdleCallback 会跟随浏览器空闲时间执行，不会阻塞主线程
+</span></span></span><span class="line"><span class="cl"><span class="nx">requestIdleCallback</span><span class="p">(</span><span class="nx">workLoop</span><span class="p">);</span></span></span></code></pre></div>
+    <div hidden data-code-source>/* 
+==============================
+* 虚拟 DOM 节点构建器
+==============================
+
+*/
+const React = {
+    createElement(type, props = {}, ...children) {
+        return {
+            type,
+            props: {
+                ...props,
+                children: children.map(child =&gt;
+                    typeof child === &#39;object&#39;
+                        ? child
+                        : React.createTextElement(child)
+                ),
+            },
+        };
+    },
+
+    createTextElement(text) {
+        return {
+            type: &#39;TEXT_ELEMENT&#39;,
+            props: {
+                nodeValue: text,
+                children: [],
+            },
+        };
+    },
+};
+
+
+/* 
+==============================
+* diff, Fiber 架构
+==============================
+*/
+let nextUnitOfWork = null; // 下一个工作单元
+let currentRoot = null; // 当前 Fiber 树的根
+let wipRoot = null; // 正在工作的 Fiber 树
+let deletions = null; // 存储需要删除的 Fiber
+
+// 渲染入口
+// - element: 虚拟 DOM 节点
+// - container: 容器 DOM 节点
+function render(element, container) {
+    //wipRoot 表示“正在进行的工作根”，它是 Fiber 架构中渲染任务的起点
+    wipRoot = {
+        dom: container, //渲染目标的 DOM 容器
+        props: {
+            children: [element], //要渲染的元素（例如 React 元素）
+        },
+        alternate: currentRoot,
+        //alternate 是 React Fiber 树中的一个关键概念，用于双缓冲机制（双缓冲 Fiber Tree）。currentRoot 是之前已经渲染过的 Fiber 树的根，wipRoot 是新一轮更新的根 Fiber 节点。
+        //它们通过 alternate 属性相互关联
+        //旧的fiber树
+    };
+    nextUnitOfWork = wipRoot;
+    //nextUnitOfWork 是下一个要执行的工作单元（即 Fiber 节点）。在这里，将其设置为 wipRoot，表示渲染工作从根节点开始
+    deletions = [];
+    //专门用于存放在更新过程中需要删除的节点。在 Fiber 更新机制中，如果某些节点不再需要，就会将它们放入 deletions，
+    //最后在 commitRoot 阶段将它们从 DOM 中删除
+}
+
+// 创建 Fiber 节点
+function createFiber(element, parent) {
+    return {
+        type: element.type,
+        props: element.props,
+        parent,
+        dom: null, // 关联的 DOM 节点
+        child: null, // 子节点
+        sibling: null, // 兄弟节点
+        alternate: null, // 对应的前一次 Fiber 节点
+        effectTag: null, // &#39;PLACEMENT&#39;, &#39;UPDATE&#39;, &#39;DELETION&#39;
+    };
+}
+
+// Diff 算法: 将子节点与之前的 Fiber 树进行比较
+function reconcileChildren(wipFiber, elements) {
+    let index = 0;//
+    let oldFiber = wipFiber.alternate &amp;&amp; wipFiber.alternate.child; // 旧的 Fiber 树
+    let prevSibling = null;
+
+    while (index &lt; elements.length || oldFiber != null) {
+        const element = elements[index];
+        let newFiber = null;
+
+        // 比较旧 Fiber 和新元素
+        const sameType = oldFiber &amp;&amp; element &amp;&amp; element.type === oldFiber.type
+
+        //如果是同类型的节点，复用
+        if (sameType) {
+            newFiber = {
+                type: oldFiber.type,
+                props: element.props,
+                dom: oldFiber.dom,
+                parent: wipFiber,
+                alternate: oldFiber,
+                effectTag: &#39;UPDATE&#39;,
+            };
+
+        }
+
+        //如果新节点存在，但类型不同，新增fiber节点
+        if (element &amp;&amp; !sameType) {
+            newFiber = createFiber(element, wipFiber);
+            newFiber.effectTag = &#39;PLACEMENT&#39;;
+        }
+
+        //如果旧节点存在，但新节点不存在，删除旧节点
+        if (oldFiber &amp;&amp; !sameType) {
+            oldFiber.effectTag = &#39;DELETION&#39;;
+            deletions.push(oldFiber);
+        }
+
+        //移动旧fiber指针到下一个兄弟节点
+        if (oldFiber) {
+            oldFiber = oldFiber.sibling;
+        }
+
+        // 将新fiber节点插入到DOM树中
+        if (index === 0) {
+            //将第一个子节点设置为父节点的子节点
+            wipFiber.child = newFiber;
+        } else if (element) {
+            //将后续子节点作为前一个兄弟节点的兄弟
+            prevSibling.sibling = newFiber;
+        }
+
+        //更新兄弟节点
+        prevSibling = newFiber;
+        index&#43;&#43;;
+    }
+}
+
+// 创建 DOM 节点
+function createDom(fiber) {
+    const dom =
+        fiber.type === &#39;TEXT_ELEMENT&#39;
+            ? document.createTextNode(&#39;&#39;)
+            : document.createElement(fiber.type);
+
+    updateDom(dom, {}, fiber.props);
+    return dom;
+}
+
+// 更新 DOM 节点属性
+function updateDom(dom, prevProps, nextProps) {
+    // 移除旧属性
+    Object.keys(prevProps)
+        .filter(name =&gt; name !== &#39;children&#39;)
+        .forEach(name =&gt; {
+            dom[name] = &#39;&#39;;
+        });
+
+    // 添加新属性
+    Object.keys(nextProps)
+        .filter(name =&gt; name !== &#39;children&#39;)
+        .filter(name =&gt; prevProps[name] !== nextProps[name])
+        .forEach(name =&gt; {
+            dom[name] = nextProps[name];
+        });
+}
+
+// 执行一个子任务, fiber 链表上一个节点就一个子任务
+function performUnitOfWork(fiber) {
+    // 如果没有 DOM 节点，为当前 Fiber 创建 DOM 节点
+    if (!fiber.dom) {
+        fiber.dom = createDom(fiber);
+    }
+    //确保每个 Fiber 节点都在内存中有一个对应的 DOM 节点准备好，以便后续在提交阶段更新到实际的 DOM 树中
+
+    // 创建子节点的 Fiber
+    // const vdom = React.createElement(&#39;div&#39;, { id: 1 }, React.createElement(&#39;span&#39;, null, &#39;小满zs&#39;));
+    // 子节点在children中
+    const elements = fiber.props.children;
+    reconcileChildren(fiber, elements);
+
+    // 遍历 fiber 链表
+    // 返回下一个工作单元（child, sibling, or parent）
+    if (fiber.child) {
+        return fiber.child;
+    }
+
+    let nextFiber = fiber;
+    while (nextFiber) {
+        if (nextFiber.sibling) {
+            return nextFiber.sibling;
+        }
+        nextFiber = nextFiber.parent;
+    }
+    return null;
+}
+
+
+// 将 Fiber 生成的 DOM 更新到实际的 DOM 树中
+function commitWork(fiber) {
+    if (!fiber) {
+        return;
+    }
+
+    const domParent = fiber.parent.dom;
+
+    if (fiber.effectTag === &#39;PLACEMENT&#39; &amp;&amp; fiber.dom != null) {
+        domParent.appendChild(fiber.dom);
+    } else if (fiber.effectTag === &#39;UPDATE&#39; &amp;&amp; fiber.dom != null) {
+        updateDom(fiber.dom, fiber.alternate.props, fiber.props);
+    } else if (fiber.effectTag === &#39;DELETION&#39;) {
+        domParent.removeChild(fiber.dom);
+    }
+
+    commitWork(fiber.child);
+    commitWork(fiber.sibling);
+}
+
+
+function commitRoot() {
+    deletions.forEach(commitWork); // 删除需要删除的 Fiber 节点
+    commitWork(wipRoot.child);
+    currentRoot = wipRoot;
+    wipRoot = null;
+}
+
+/* 
+==================================
+* 基于 requestIdleCallback 实现的简易调度器，递归实现，从而会在浏览器中一直运行
+==================================
+*/
+function workLoop(deadline) {
+    //deadline 表示浏览器空闲时间
+    let shouldYield = false;
+    //是一个标志，用来指示是否需要让出控制权给浏览器。如果时间快用完了，则设为 true，以便及时暂停任务，避免阻塞主线程
+
+    while (nextUnitOfWork &amp;&amp; !shouldYield) {
+        nextUnitOfWork = performUnitOfWork(nextUnitOfWork);
+        //performUnitOfWork 是一个函数，它处理当前的工作单元，并返回下一个要执行的工作单元。每次循环会更新 nextUnitOfWork 为下一个工作单元
+        shouldYield = deadline.timeRemaining() &lt; 1;
+        //使用 deadline.timeRemaining() 来检查剩余的空闲时间。如果时间少于 1 毫秒，就设置 shouldYield 为 true，表示没有空闲时间了，就让出控制权
+    }
+
+    if (!nextUnitOfWork &amp;&amp; wipRoot) {
+        //当没有下一个工作单元时（nextUnitOfWork 为 null），并且有一个待提交的“工作根”（wipRoot），就会调用 commitRoot() 将最终的结果应用到 DOM 中
+        commitRoot();
+    }
+
+    //使用 requestIdleCallback 来安排下一个空闲时间段继续执行 workLoop，让任务在浏览器空闲时继续进行
+    requestIdleCallback(workLoop);
+}
+
+// requestIdleCallback 会跟随浏览器空闲时间执行，不会阻塞主线程
+requestIdleCallback(workLoop);</div>
+    
+    <div
+      class="collapse-overlay to-card/90 pointer-events-none absolute inset-0 bg-linear-to-b from-transparent via-transparent opacity-0 transition-opacity duration-300"
+      hidden
+    >
+      <button
+        class="collapse-overlay-btn text-muted-foreground bg-card/80 border-border/50 hover:bg-primary/10 hover:text-primary hover:border-primary/30 absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center justify-center rounded-full border p-2 backdrop-blur-sm transition-all duration-200"
+        type="button"
+        data-code-action="expand"
+        aria-label="Expand"
+        title="Expand"
+      >
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+      </button>
+    </div>
+  </div>
+</div>
+</li>
+<li>
+<p><code>index.html</code></p>
+<div
+  class="code-block-container border-border bg-card my-6 overflow-hidden rounded-xl border shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md"
+  data-code-block
+  data-code-id="code-7"
+  data-collapsible="true"
+  data-default-state="expanded"
+  data-collapsed="false"
+  data-auto-collapse-lines="30"
+  data-auto-collapse-height="400"
+  data-collapsed-height="120"
+>
+  
+  <div
+    class="code-block-header bg-muted/30 border-border flex items-center justify-between border-b px-4 py-3"
+  >
+    
+    <div class="flex items-center gap-2">
+      <div class="text-muted-foreground shrink-0">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+</svg>
+      </div>
+      <span class="text-muted-foreground text-sm font-medium">
+        HTML
+      </span>
+    </div>
+
+    
+    <div class="flex items-center gap-2">
+      <button
+          class="collapse-code-btn text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+          type="button"
+          data-code-action="toggle-collapse"
+          data-label-expand="Expand"
+          data-label-collapse="Collapse"
+          title="Collapse"
+          aria-label="Collapse"
+          aria-controls="code-7"
+          aria-expanded="true"
+        >
+          <span class="collapse-chevron transition-transform duration-200 ease-out">
+            <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+          </span>
+          <span class="collapse-text hidden sm:inline">Collapse</span>
+        </button>
+      <button
+        class="copy-code-btn text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+        type="button"
+        data-code-action="copy"
+        data-label-copy="Copy"
+        data-label-copied="Copied"
+        title="Copy"
+        aria-label="Copy"
+      >
+        <span class="copy-icon">
+          <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+</svg>
+        </span>
+        <span class="copy-text hidden sm:inline">Copy</span>
+      </button>
+    </div>
+  </div>
+
+  
+  <div class="code-block-content relative" id="code-7">
+    <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">html</span> <span class="na">lang</span><span class="o">=</span><span class="s">&#34;en&#34;</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">charset</span><span class="o">=</span><span class="s">&#34;UTF-8&#34;</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">name</span><span class="o">=</span><span class="s">&#34;viewport&#34;</span> <span class="na">content</span><span class="o">=</span><span class="s">&#34;width=device-width, initial-scale=1.0&#34;</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>Document<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="c">&lt;!-- DOM 容器根节点 --&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">div</span> <span class="na">id</span><span class="o">=</span><span class="s">&#34;root&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="c">&lt;!-- 加载 react.js  --&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&#34;./react.js&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="c">&lt;!-- 测试代码 --&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">script</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;text/javascript&#34;</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">render</span><span class="p">(</span><span class="nx">React</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s1">&#39;div&#39;</span><span class="p">,</span> <span class="p">{</span> <span class="nx">id</span><span class="o">:</span> <span class="mi">1</span> <span class="p">},</span> <span class="nx">React</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s1">&#39;span&#39;</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="s1">&#39;hello 11&#39;</span><span class="p">)),</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;root&#39;</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">render</span><span class="p">(</span><span class="nx">React</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s1">&#39;div&#39;</span><span class="p">,</span> <span class="p">{</span> <span class="nx">id</span><span class="o">:</span> <span class="mi">1</span> <span class="p">},</span> <span class="nx">React</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s1">&#39;span&#39;</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="s1">&#39;hello 22&#39;</span><span class="p">)),</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;root&#39;</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">render</span><span class="p">(</span><span class="nx">React</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s1">&#39;div&#39;</span><span class="p">,</span> <span class="p">{</span> <span class="nx">id</span><span class="o">:</span> <span class="mi">1</span> <span class="p">},</span> <span class="nx">React</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s1">&#39;span&#39;</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="s1">&#39;hello 10&#39;</span><span class="p">)),</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;root&#39;</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span></span></span></code></pre></div>
+    <div hidden data-code-source>&lt;!DOCTYPE html&gt;
+&lt;html lang=&#34;en&#34;&gt;
+&lt;head&gt;
+    &lt;meta charset=&#34;UTF-8&#34;&gt;
+    &lt;meta name=&#34;viewport&#34; content=&#34;width=device-width, initial-scale=1.0&#34;&gt;
+    &lt;title&gt;Document&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;!-- DOM 容器根节点 --&gt;
+    &lt;div id=&#34;root&#34;&gt;&lt;/div&gt;
+    &lt;!-- 加载 react.js  --&gt;
+    &lt;script src=&#34;./react.js&#34;&gt;&lt;/script&gt;
+    &lt;!-- 测试代码 --&gt;
+    &lt;script type=&#34;text/javascript&#34;&gt;
+        render(React.createElement(&#39;div&#39;, { id: 1 }, React.createElement(&#39;span&#39;, null, &#39;hello 11&#39;)), document.getElementById(&#39;root&#39;));
+        render(React.createElement(&#39;div&#39;, { id: 1 }, React.createElement(&#39;span&#39;, null, &#39;hello 22&#39;)), document.getElementById(&#39;root&#39;));
+        render(React.createElement(&#39;div&#39;, { id: 1 }, React.createElement(&#39;span&#39;, null, &#39;hello 10&#39;)), document.getElementById(&#39;root&#39;));
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</div>
+    
+    <div
+      class="collapse-overlay to-card/90 pointer-events-none absolute inset-0 bg-linear-to-b from-transparent via-transparent opacity-0 transition-opacity duration-300"
+      hidden
+    >
+      <button
+        class="collapse-overlay-btn text-muted-foreground bg-card/80 border-border/50 hover:bg-primary/10 hover:text-primary hover:border-primary/30 absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center justify-center rounded-full border p-2 backdrop-blur-sm transition-all duration-200"
+        type="button"
+        data-code-action="expand"
+        aria-label="Expand"
+        title="Expand"
+      >
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+      </button>
+    </div>
+  </div>
+</div>
+</li>
+</ul>
+
+  </article>
+
+  
+  
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  <div class="post-license bg-muted/30 border-border mb-8 rounded-xl border p-6">
+    <div class="flex items-start gap-4">
+      
+      <div class="bg-primary/10 flex h-12 w-12 shrink-0 items-center justify-center rounded-lg">
+        <svg class="h-6 w-6" aria-label="许可证" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+</svg>
+      </div>
+
+      
+      <div class="min-w-0 flex-1">
+        <h3 class="text-foreground mb-2 text-lg font-semibold">
+          License
+        </h3>
+
+        <div class="text-muted-foreground space-y-2 text-sm">
+          
+          
+            <p>
+              <strong>Author:</strong>
+              海拉鲁的三角
+            </p>
+          
+
+
+          
+          <p>
+            <strong>Link:</strong>
+            <a
+              href="https://spite-triangle.github.io/cpp_notes/posts/react/introdution/"
+              class="text-primary hover:text-primary/80 break-all hyphens-auto transition-colors duration-200"
+            >
+              https://spite-triangle.github.io/cpp_notes/posts/react/introdution/
+            </a>
+          </p>
+
+          
+          <p>
+            <strong>License:</strong>
+            
+              <a
+                href="https://mit-license.org/"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-primary hover:text-primary/80 transition-colors duration-200"
+              >
+                MIT
+              </a>
+            
+          </p>
+
+          
+          
+            <p class="text-xs">
+              只要学不死，就往死里学
+            </p>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  
+  
+
+
+
+
+
+  <nav class="post-navigation mb-12">
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+      
+      <div class="nav-item">
+        
+          <div
+            class="bg-muted/30 border-border/50 flex min-h-[140px] flex-col justify-center rounded-xl border p-6"
+          >
+            <div class="mb-3 flex items-center gap-3">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+</svg>
+              <span class="text-muted-foreground/50 text-sm font-medium">
+                No previous
+              </span>
+            </div>
+          </div>
+        
+      </div>
+
+      
+      <div class="nav-item">
+        
+          <a
+            href="/cpp_notes/posts/react/jsx/"
+            class="group bg-card border-border hover:bg-primary/5 hover:border-primary/20 focus:ring-primary/20 flex min-h-[140px] flex-col justify-between rounded-xl border p-6 transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.02] hover:shadow-lg focus:ring-2 focus:outline-none"
+          >
+            <div>
+              <div class="mb-3 flex items-center justify-end gap-3">
+                <span class="text-muted-foreground text-sm font-medium">
+                  Next
+                </span>
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+</svg>
+              </div>
+
+              <h3
+                class="text-foreground group-hover:text-primary mb-3 line-clamp-2 text-right text-lg leading-tight font-semibold transition-colors duration-200"
+              >
+                JSX/TSX
+              </h3>
+            </div>
+
+            <div class="text-muted-foreground mt-auto flex items-center justify-end gap-2 text-xs">
+              <time datetime="2026-06-27">
+                6/27/26
+              </time>
+              <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+</svg>
+
+            </div>
+          </a>
+        
+      </div>
+    </div>
+  </nav>
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+      </div>
+
+      <footer class="px-4 py-6">
+  
+  
+    <nav class="mb-6">
+      <div class="flex flex-wrap items-center justify-center gap-1">
+        
+          
+          
+          
+            
+              
+            
+          
+          <a
+            href="/cpp_notes/projects/"
+            
+            class="nav-link hover:text-primary hover:bg-primary/10 text-muted-foreground flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 hover:scale-105"
+          >
+            
+              <svg class="h-5 w-5" aria-label="Projects" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="m8.85 16.825l3.15-1.9l3.15 1.925l-.825-3.6l2.775-2.4l-3.65-.325l-1.45-3.4l-1.45 3.375l-3.65.325l2.775 2.425zm3.15.45l-4.15 2.5q-.275.175-.575.15t-.525-.2t-.35-.437t-.05-.588l1.1-4.725L3.775 10.8q-.25-.225-.312-.513t.037-.562t.3-.45t.55-.225l4.85-.425l1.875-4.45q.125-.3.388-.45t.537-.15t.537.15t.388.45l1.875 4.45l4.85.425q.35.05.55.225t.3.45t.038.563t-.313.512l-3.675 3.175l1.1 4.725q.075.325-.05.588t-.35.437t-.525.2t-.575-.15zm0-5.025"/></svg>
+            
+            <span>Projects</span>
+          </a>
+        
+          
+          
+          
+            
+              
+            
+          
+          <a
+            href="/cpp_notes/about/"
+            
+            class="nav-link hover:text-primary hover:bg-primary/10 text-muted-foreground flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 hover:scale-105"
+          >
+            
+              <svg class="h-5 w-5" aria-label="About" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+</svg>
+
+            
+            <span>About</span>
+          </a>
+        
+      </div>
+    </nav>
+  
+
+
+  
+  
+    <div class="border-border mb-6 border-t"></div>
+  
+
+
+  
+  <div class="flex flex-col items-center justify-between gap-4 md:flex-row">
+    
+    <div class="text-muted-foreground text-center text-sm md:text-left">
+      <p class="mb-2">
+        &copy;
+        2026
+        Hugo Narrow
+      </p>
+      <p class="flex flex-wrap items-center justify-center gap-1 md:justify-start">
+        <span>Powered by</span>
+        <a
+          href="https://gohugo.io/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-primary hover:text-primary/80 font-medium transition-colors duration-200 hover:underline"
+        >
+          Hugo
+        </a>
+        <span>&</span>
+        <a
+          href="https://github.com/tom2almighty/hugo-narrow"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-primary hover:text-primary/80 font-medium transition-colors duration-200 hover:underline"
+        >
+          Narrow
+        </a>
+      </p>
+    </div>
+
+    
+    
+      <div class="flex items-center gap-3">
+        
+          <a
+            href="https://github.com/spite-triangle"
+            
+              target="_blank" rel="noopener noreferrer"
+            
+            class="text-muted-foreground hover:text-primary focus:ring-primary/20 rounded-lg p-1 transition-all duration-300 ease-out hover:scale-110 focus:ring-2 focus:outline-none"
+            title="GitHub"
+            aria-label="GitHub"
+          >
+            
+              <svg class="h-6 w-6" aria-label="GitHub" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5c.08-1.25-.27-2.48-1-3.5c.28-1.15.28-2.35 0-3.5c0 0-1 0-3 1.5c-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5c-.39.49-.68 1.05-.85 1.65S8.93 17.38 9 18v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></g></svg>
+            
+          </a>
+        
+          <a
+            href="https://space.bilibili.com/27206875"
+            
+              target="_blank" rel="noopener noreferrer"
+            
+            class="text-muted-foreground hover:text-primary focus:ring-primary/20 rounded-lg p-1 transition-all duration-300 ease-out hover:scale-110 focus:ring-2 focus:outline-none"
+            title="Bilibili"
+            aria-label="Bilibili"
+          >
+            
+              <svg class="h-6 w-6" aria-label="Bilibili" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+  <path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.653 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0-.373.129-.689.386-.947.258-.257.574-.386.947-.386zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373Z"/>
+</svg>
+            
+          </a>
+        
+      </div>
+    
+
+  </div>
+</footer>
+
+      
+
+
+
+
+
+<div
+  id="dock"
+  class="pointer-events-none fixed bottom-4 left-1/2 z-9999 w-fit -translate-x-1/2 translate-y-24 opacity-0 transition-all duration-300 ease-out sm:right-0 sm:left-0 sm:mx-auto sm:translate-x-0"
+  data-dock-mode="scroll"
+  role="toolbar"
+  aria-label="Quick actions toolbar"
+>
+  <nav
+    class="border-border bg-card/80 scrollbar-hide xs:px-3 xs:py-2 mx-auto flex max-w-[calc(100vw-2rem)] min-w-fit items-center justify-center overflow-x-auto rounded-2xl border px-4 py-3 shadow-lg backdrop-blur-sm sm:px-4 sm:py-3"
+  >
+    
+    
+      <button
+        id="dock-back"
+        class="text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 xs:px-2 xs:py-1.5 flex shrink-0 items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 focus:ring-2 focus:outline-none sm:px-3 sm:py-2"
+        title="Back"
+        aria-label="Back"
+      >
+        <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="m12 19-7-7 7-7"/>
+  <path d="M19 12H5"/>
+</svg>
+
+        <span class="hidden sm:inline">Back</span>
+      </button>
+
+      
+      <div class="bg-border xs:mx-1 mx-2 h-6 w-px sm:mx-2"></div>
+    
+
+
+    
+
+    
+    
+
+    
+    
+    
+
+
+    
+    <button
+      id="dock-top"
+      class="text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 xs:px-2 xs:py-1.5 flex shrink-0 items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 focus:ring-2 focus:outline-none sm:px-3 sm:py-2"
+      title="Back to top"
+      aria-label="Back to top"
+    >
+      <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="m18 15-6-6-6 6"/>
+</svg>
+
+      <span class="hidden sm:inline">Top</span>
+    </button>
+  </nav>
+</div>
+
+
+
+
+      <aside
+    id="toc-container"
+    class="toc-left"
+    data-position="left"
+  >
+      <div id="toc-center" class="pointer-events-none fixed top-28 ml-auto w-full max-w-4xl px-4">
+        <div class="pointer-events-auto fixed flex">
+          <div class="pointer-events-auto relative ml-auto w-fit">
+            <button
+              id="section-center-toggle"
+              class="bg-card/80 border-border text-muted-foreground hover:text-primary hover:bg-primary/10 ring-offset-background focus-visible:ring-ring flex cursor-pointer items-center gap-2 rounded-full border px-4 py-1.5 text-sm shadow-sm backdrop-blur-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+            >
+              <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <line x1="8" x2="21" y1="6" y2="6"/>
+  <line x1="8" x2="21" y1="12" y2="12"/>
+  <line x1="8" x2="21" y1="18" y2="18"/>
+  <line x1="3" x2="3.01" y1="6" y2="6"/>
+  <line x1="3" x2="3.01" y1="12" y2="12"/>
+  <line x1="3" x2="3.01" y1="18" y2="18"/>
+</svg>
+
+              <span id="section-center-title" class="max-w-[200px] truncate">简介</span>
+              <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+            </button>
+
+            
+            <div
+              id="section-center-dropdown"
+              class="bg-card border-border scrollbar-hide absolute top-full left-0 mt-2 hidden max-h-[60vh] w-[280px] origin-top scale-95 overflow-y-auto rounded-xl border p-4 opacity-0 shadow-lg transition-all"
+            >
+              <div
+                id="section-center-content"
+                class="[&_a]:text-muted-foreground [&_a:hover]:bg-primary/10 [&_a:hover]:text-primary [&_a.active]:bg-primary/10 [&_a.active]:text-primary text-sm [&_a]:block [&_a]:truncate [&_a]:rounded-md [&_a]:px-2 [&_a]:py-1 [&_a]:transition-colors [&_a.active]:font-medium [&_li]:my-1.5 [&_nav>ul]:pl-0 [&_ul]:list-none [&_ul]:pl-4"
+              >
+                
+                
+                
+                  
+                    <h2 class="active">
+                      <a href="/cpp_notes/posts/react/introdution/" class="active font-medium">简介</a>
+                    </h2>
+                  
+                
+                  
+                    <h2>
+                      <a href="/cpp_notes/posts/react/jsx/">JSX/TSX</a>
+                    </h2>
+                  
+                
+                  
+                    <h2>
+                      <a href="/cpp_notes/posts/react/component/">组件</a>
+                    </h2>
+                  
+                
+                  
+                    <h2>
+                      <a href="/cpp_notes/posts/react/style/">样式</a>
+                    </h2>
+                  
+                
+                  
+                    <h2>
+                      <a href="/cpp_notes/posts/react/router/">路由</a>
+                    </h2>
+                  
+                
+                  
+                    <h2>
+                      <a href="/cpp_notes/posts/react/hooks/">Hooks</a>
+                    </h2>
+                  
+                
+                  
+                    <h2>
+                      <a href="/cpp_notes/posts/react/compiler/">编译器</a>
+                    </h2>
+                  
+                
+                  
+                    <h2>
+                      <a href="/cpp_notes/posts/react/form/">表单</a>
+                    </h2>
+                  
+                
+                  
+                    <h2>
+                      <a href="/cpp_notes/posts/react/library/">第三方库</a>
+                    </h2>
+                  
+                
+              </div>
+            </div>
+          </div>
+
+          <div class="pointer-events-auto relative ml-auto w-fit"><button
+                id="toc-center-toggle"
+                class="bg-card/80 border-border text-muted-foreground hover:text-primary hover:bg-primary/10 ring-offset-background focus-visible:ring-ring flex cursor-pointer items-center gap-2 rounded-full border px-4 py-1.5 text-sm shadow-sm backdrop-blur-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+              >
+                <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <line x1="8" x2="21" y1="6" y2="6"/>
+  <line x1="8" x2="21" y1="12" y2="12"/>
+  <line x1="8" x2="21" y1="18" y2="18"/>
+  <line x1="3" x2="3.01" y1="6" y2="6"/>
+  <line x1="3" x2="3.01" y1="12" y2="12"/>
+  <line x1="3" x2="3.01" y1="18" y2="18"/>
+</svg>
+
+                <span id="toc-center-title" class="max-w-[200px] truncate">Table of contents</span>
+                <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+              </button>
+
+              
+              <div
+                id="toc-center-dropdown"
+                class="bg-card border-border scrollbar-hide absolute top-full left-0 mt-2 hidden max-h-[60vh] w-[280px] origin-top scale-95 overflow-y-auto rounded-xl border p-4 opacity-0 shadow-lg transition-all"
+              >
+                <div
+                  id="toc-center-content"
+                  class="[&_a]:text-muted-foreground [&_a:hover]:bg-primary/10 [&_a:hover]:text-primary [&_a.active]:bg-primary/10 [&_a.active]:text-primary text-sm [&_a]:block [&_a]:truncate [&_a]:rounded-md [&_a]:px-2 [&_a]:py-1 [&_a]:transition-colors [&_a.active]:font-medium [&_li]:my-1.5 [&_nav>ul]:pl-0 [&_ul]:list-none [&_ul]:pl-4"
+                >
+                  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#react">React</a></li>
+    <li><a href="#项目">项目</a></li>
+    <li><a href="#jsxtsx">JSX/TSX</a></li>
+    <li><a href="#实现原理">实现原理</a>
+      <ul>
+        <li><a href="#渲染流程">渲染流程</a></li>
+        <li><a href="#虚拟-dom">虚拟 DOM</a></li>
+        <li><a href="#fiber">Fiber</a></li>
+        <li><a href="#requestidlecallback">requestIdleCallback</a></li>
+        <li><a href="#库实现">库实现</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                </div>
+              </div></div>
+        </div>
+      </div></aside>
+      
+<div
+  id="search-overlay"
+  class="pointer-events-none fixed inset-0 z-40 bg-black/50 opacity-0 transition-opacity duration-300"
+></div>
+
+
+<div
+  id="search-modal"
+  class="bg-card border-border pointer-events-none fixed top-1/2 left-1/2 z-50 max-h-[80vh] w-full max-w-2xl -translate-x-1/2 -translate-y-1/2 scale-95 transform overflow-hidden rounded-xl border opacity-0 shadow-xl transition-all duration-300"
+  role="dialog"
+  aria-modal="true"
+  aria-hidden="true"
+  aria-labelledby="search-title"
+  tabindex="-1"
+>
+  
+  <div class="border-border flex items-center gap-3 border-b p-4">
+    
+    <div class="text-muted-foreground h-5 w-5 shrink-0">
+      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+</svg>
+
+    </div>
+    <h2 id="search-title" class="sr-only">Search</h2>
+
+    
+    <div class="relative flex-1">
+      
+      <button
+        id="search-clear"
+        class="text-muted-foreground hover:text-foreground hover:bg-muted/50 pointer-events-none absolute top-1/2 left-0 z-10 h-5 w-5 -translate-y-1/2 rounded opacity-0 transition-all duration-200"
+        title="Clear"
+        aria-label="Clear"
+      >
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+</svg>
+
+      </button>
+
+      
+      <input
+        id="search-input"
+        type="text"
+        placeholder="Search posts..."
+        class="text-foreground placeholder:text-muted-foreground w-full border-none bg-transparent pl-8 text-lg outline-none"
+        autocomplete="off"
+        spellcheck="false"
+      />
+    </div>
+
+    
+    <button
+      id="search-close"
+      class="text-muted-foreground hover:text-foreground hover:bg-muted/50 flex h-6 w-6 items-center justify-center rounded-md p-0.5 transition-all duration-200"
+      title="Close"
+      aria-label="Close"
+    >
+      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+</svg>
+
+    </button>
+  </div>
+
+  
+  <div id="search-results" class="max-h-96 overflow-y-auto">
+    
+    <div id="search-empty" class="flex flex-col items-center justify-center py-12 text-center">
+      <div class="bg-muted/50 mb-4 flex h-16 w-16 items-center justify-center rounded-full">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+</svg>
+
+      </div>
+      <h3 class="text-foreground mb-2 text-lg font-semibold">
+        Start searching
+      </h3>
+    </div>
+
+    
+    <div id="search-loading" class="flex items-center justify-center py-8" hidden>
+      <div
+        class="mr-3 h-6 w-6 animate-spin rounded-full border-2 border-current border-t-transparent"
+      ></div>
+      <span class="text-muted-foreground">Searching...</span>
+    </div>
+
+    
+    <div
+      id="search-no-results"
+      class="flex flex-col items-center justify-center py-12 text-center"
+      hidden
+    >
+      <div class="bg-muted/50 mb-4 flex h-16 w-16 items-center justify-center rounded-full">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
+</svg>
+
+      </div>
+      <h3 class="text-foreground mb-2 text-lg font-semibold">
+        No results
+      </h3>
+    </div>
+
+    
+    <div id="search-results-list" hidden>
+      
+      <div
+        id="search-stats"
+        class="text-muted-foreground border-border border-b px-4 py-3 text-sm"
+        data-count-other="Found %d results"
+      ></div>
+
+      
+      <div id="search-items" class="divide-border divide-y" role="list">
+        
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="border-border bg-muted/20 border-t px-4 py-3"><div class="text-muted-foreground flex items-center justify-between text-xs">
+      <div class="flex items-center gap-2 md:gap-4">
+        <div class="flex items-center gap-1">
+          <kbd class="bg-muted border-border rounded border px-1.5 py-0.5 text-xs">↑↓</kbd>
+          <span class="hidden sm:inline">Navigate</span>
+        </div>
+        <div class="flex items-center gap-1">
+          <kbd class="bg-muted border-border rounded border px-1.5 py-0.5 text-xs">↵</kbd>
+          <span class="hidden sm:inline">Select</span>
+        </div>
+        <div class="flex items-center gap-1">
+          <kbd class="bg-muted border-border rounded border px-1.5 py-0.5 text-xs">ESC</kbd>
+          <span class="hidden sm:inline">Close</span>
+        </div>
+      </div>
+      <div class="search-hint-desktop flex items-center gap-1">
+        <kbd class="bg-muted border-border rounded border px-1.5 py-0.5 text-xs">⌘K</kbd>
+        <span>Shortcut</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+      
+
+
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css"
+    integrity="sha384-5TcZemv2l/9On385z///+d7MSYlvIEw9FuZTIdZ14vJLqWphw7e7ZPuOiCHJcFCP"
+    crossorigin="anonymous"
+  />
+  <script
+    defer
+    src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js"
+    integrity="sha384-cMkvdD8LoxVzGF/RPUKAcvmm49FQ0oxwDF3BGKtDXcEc+T1b2N+teh/OJfpU0jr6"
+    crossorigin="anonymous"
+  ></script>
+  <script
+    defer
+    src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js"
+    integrity="sha384-hCXGrW6PitJEwbkoStFjeJxv+fSOOQKOPbJxSfM6G5sWZjAyWhXiTIIAmQqnlLlh"
+    crossorigin="anonymous"
+  ></script>
+
+  <script>
+    function initKaTeX() {
+      if (typeof renderMathInElement === "undefined") {
+        setTimeout(initKaTeX, 100);
+        return;
+      }renderMathInElement(document.body, {
+        delimiters: [{"display":true,"left":"$$","right":"$$"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"},{"display":true,"left":"\\[","right":"\\]"}],
+        throwOnError: false,
+        errorColor: "#cc0000",
+        fleqn: false,
+        leqno: false,
+        trust: false,
+      });
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initKaTeX, { once: true });
+    } else {
+      initKaTeX();
+    }
+  </script>
+      
+
+
+    </main>
+  </body>
+</html>

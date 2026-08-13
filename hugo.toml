@@ -1,0 +1,3 @@
+baseURL = 'https://spite-triangle.github.io/cpp_notes/'
+locale = 'en-us'
+title = 'My New Hugo Project'

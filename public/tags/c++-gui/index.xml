@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>C&#43;&#43; GUI on Hugo Narrow</title>
+		<link>https://spite-triangle.github.io/cpp_notes/tags/c&#43;&#43;-gui/</link>
+		<description>Recent content in C&#43;&#43; GUI on Hugo Narrow</description>
+		<generator>Hugo</generator>
+		<language>en</language>
+		
+		
+		
+		
+			<lastBuildDate>Sun, 30 Mar 2025 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://spite-triangle.github.io/cpp_notes/tags/c++-gui/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Qt</title>
+				<link>https://spite-triangle.github.io/cpp_notes/posts/qt/</link>
+				<pubDate>Sun, 30 Mar 2025 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/posts/qt/</guid>
+				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本文档围绕 Qt 框架展开，从 I/O 设备、事件循环与元对象系统入手，深入数据持久化与界面布局技术。内容涵盖 Model/View MVC 架构设计、QPainter 绘图 API、样式表定制及 PySide6 Python 绑定开发等核心技术。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>MFC</title>
+				<link>https://spite-triangle.github.io/cpp_notes/posts/mfc/</link>
+				<pubDate>Sat, 28 Dec 2024 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/posts/mfc/</guid>
+				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本文档围绕 MFC 框架展开，从 Windows 窗口机制与消息处理入手。内容涵盖 CWinApp 应用程序入口、MFC 界面开发及 Visual Studio 工程配置等实战技能。&lt;/p&gt;&#xA;&lt;!-- VOLUME_OVERVIEW_END --&gt;</description>
+			</item>
+	</channel>
+</rss>

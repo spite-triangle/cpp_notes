@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>编译器后端 on Hugo Narrow</title>
+		<link>https://spite-triangle.github.io/cpp_notes/categories/%E7%BC%96%E8%AF%91%E5%99%A8%E5%90%8E%E7%AB%AF/</link>
+		<description>Recent content in 编译器后端 on Hugo Narrow</description>
+		<generator>Hugo</generator>
+		<language>en</language>
+		
+		
+		
+		
+			<lastBuildDate>Sun, 16 Feb 2025 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://spite-triangle.github.io/cpp_notes/categories/%E7%BC%96%E8%AF%91%E5%99%A8%E5%90%8E%E7%AB%AF/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>运行时结构</title>
+				<link>https://spite-triangle.github.io/cpp_notes/posts/compiler/runtime/</link>
+				<pubDate>Sun, 12 Jan 2025 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/posts/compiler/runtime/</guid>
+				<description>&lt;h1 id=&#34;可执行文件&#34;&gt;可执行文件&lt;a href=&#34;#%e5%8f%af%e6%89%a7%e8%a1%8c%e6%96%87%e4%bb%b6&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h1&gt;&lt;p&gt;可执行程序序需要在操作系统中运行起来，需要以下步骤&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>生成汇编</title>
+				<link>https://spite-triangle.github.io/cpp_notes/posts/compiler/assembly/</link>
+				<pubDate>Sat, 15 Feb 2025 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/posts/compiler/assembly/</guid>
+				<description>&lt;h1 id=&#34;环境描述&#34;&gt;环境描述&lt;a href=&#34;#%e7%8e%af%e5%a2%83%e6%8f%8f%e8%bf%b0&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h1&gt;&lt;h2 id=&#34;cpu-模型&#34;&gt;CPU 模型&lt;a href=&#34;#cpu-%e6%a8%a1%e5%9e%8b&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h2&gt;&lt;p&gt;在开始汇编代码生成之前，需要先定义一下 CPU 模型&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>代码优化</title>
+				<link>https://spite-triangle.github.io/cpp_notes/posts/compiler/optimization/</link>
+				<pubDate>Sun, 16 Feb 2025 00:00:00 +0000</pubDate>
+				<guid>https://spite-triangle.github.io/cpp_notes/posts/compiler/optimization/</guid>
+				<description>&lt;h1 id=&#34;概念&#34;&gt;概念&lt;a href=&#34;#%e6%a6%82%e5%bf%b5&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h1&gt;&lt;h2 id=&#34;中间语言&#34;&gt;中间语言&lt;a href=&#34;#%e4%b8%ad%e9%97%b4%e8%af%ad%e8%a8%80&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;中间语言&lt;code&gt;intermediate code&lt;/code&gt;&lt;/strong&gt; : 介于源码于编译目标直接的临时文件，例如 &lt;code&gt;.i&lt;/code&gt;、&lt;code&gt;.o&lt;/code&gt;、&lt;code&gt;.obj&lt;/code&gt;等编译过程中的临时文件&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>
