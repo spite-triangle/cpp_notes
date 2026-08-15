@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
 		<title>Atomic on Hugo Narrow</title>
-		<link>https://spite-triangle.github.io/cpp_notes/tags/atomic/</link>
+		<link>http://localhost:1313/cpp_notes/tags/atomic/</link>
 		<description>Recent content in Atomic on Hugo Narrow</description>
 		<generator>Hugo</generator>
 		<language>en</language>
@@ -12,12 +12,12 @@
 		
 			<lastBuildDate>Mon, 21 Jul 2025 00:00:00 +0000</lastBuildDate>
 		
-			<atom:link href="https://spite-triangle.github.io/cpp_notes/tags/atomic/index.xml" rel="self" type="application/rss+xml" />
+			<atom:link href="http://localhost:1313/cpp_notes/tags/atomic/index.xml" rel="self" type="application/rss+xml" />
 			<item>
 				<title>c&#43;&#43;并发编程</title>
-				<link>https://spite-triangle.github.io/cpp_notes/posts/cppconcurrency/</link>
+				<link>http://localhost:1313/cpp_notes/posts/cppconcurrency/</link>
 				<pubDate>Mon, 21 Jul 2025 00:00:00 +0000</pubDate>
-				<guid>https://spite-triangle.github.io/cpp_notes/posts/cppconcurrency/</guid>
+				<guid>http://localhost:1313/cpp_notes/posts/cppconcurrency/</guid>
 				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本文档围绕 C++11 并发编程展开，从 std::thread 的创建与生命周期管理入手，深入互斥量、条件变量、原子类型等同步原语。涵盖线程中断机制、伪共享优化、无锁数据结构设计以及线程安全容器实现等核心主题。&lt;/p&gt;</description>
 			</item>
 	</channel>

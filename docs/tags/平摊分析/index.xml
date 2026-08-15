@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
 		<title>平摊分析 on Hugo Narrow</title>
-		<link>https://spite-triangle.github.io/cpp_notes/tags/%E5%B9%B3%E6%91%8A%E5%88%86%E6%9E%90/</link>
+		<link>http://localhost:1313/cpp_notes/tags/%E5%B9%B3%E6%91%8A%E5%88%86%E6%9E%90/</link>
 		<description>Recent content in 平摊分析 on Hugo Narrow</description>
 		<generator>Hugo</generator>
 		<language>en</language>
@@ -12,12 +12,12 @@
 		
 			<lastBuildDate>Sat, 21 Sep 2024 00:00:00 +0000</lastBuildDate>
 		
-			<atom:link href="https://spite-triangle.github.io/cpp_notes/tags/%E5%B9%B3%E6%91%8A%E5%88%86%E6%9E%90/index.xml" rel="self" type="application/rss+xml" />
+			<atom:link href="http://localhost:1313/cpp_notes/tags/%E5%B9%B3%E6%91%8A%E5%88%86%E6%9E%90/index.xml" rel="self" type="application/rss+xml" />
 			<item>
 				<title>平摊分析</title>
-				<link>https://spite-triangle.github.io/cpp_notes/posts/algorithms/amortizedanalysis/</link>
+				<link>http://localhost:1313/cpp_notes/posts/algorithms/amortizedanalysis/</link>
 				<pubDate>Sat, 21 Sep 2024 00:00:00 +0000</pubDate>
-				<guid>https://spite-triangle.github.io/cpp_notes/posts/algorithms/amortizedanalysis/</guid>
+				<guid>http://localhost:1313/cpp_notes/posts/algorithms/amortizedanalysis/</guid>
 				<description>&lt;div&#xD;&#xA;    class=&#34;alert alert-note my-6 overflow-hidden rounded-lg transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md&#34;&#xD;&#xA;    style=&#34;background-color: color-mix(in srgb, var(--color-note) 10%, transparent);&#xD;&#xA;              border-left-color: var(--color-note);&#xD;&#xA;              --hover-bg: color-mix(in srgb, var(--color-note) 15%, transparent);&#34;&#xD;&#xA;    onmouseover=&#34;this.style.backgroundColor = this.style.getPropertyValue(&#39;--hover-bg&#39;)&#34;&#xD;&#xA;    onmouseout=&#34;this.style.backgroundColor = &#39;color-mix(in srgb, var(--color-note) 10%, transparent)&#39;&#34;&#xD;&#xA;    role=&#34;alert&#34;&#xD;&#xA;    aria-labelledby=&#34;alert-0-title&#34;&#xD;&#xA;  &gt;&#xD;&#xA;    &#xD;&#xA;    &lt;div&#xD;&#xA;      class=&#34; flex items-center justify-between px-6 py-6&#34;&#xD;&#xA;      &#xD;&#xA;    &gt;&#xD;&#xA;      &lt;div class=&#34;flex items-center gap-3&#34;&gt;&#xD;&#xA;        &#xD;&#xA;        &lt;h4 id=&#34;alert-0-title&#34; class=&#34;text-foreground/90 m-0 font-semibold&#34;&gt;&#xD;&#xA;          Note&#xD;&#xA;        &lt;/h4&gt;&#xD;&#xA;      &lt;/div&gt;&#xD;&#xA;&#xD;&#xA;      &#xD;&#xA;      &#xD;&#xA;    &lt;/div&gt;&#xD;&#xA;&#xD;&#xA;    &#xD;&#xA;    &lt;div&#xD;&#xA;      id=&#34;alert-0-content&#34;&#xD;&#xA;      class=&#34;alert-content  px-6 pb-6&#34;&#xD;&#xA;    &gt;&#xD;&#xA;      &lt;div class=&#34;prose prose-sm text-foreground/90 max-w-none&#34;&gt;&#xD;&#xA;        &lt;p&gt;&lt;strong&gt;平摊分析 &lt;code&gt;Amortized Analysis&lt;/code&gt;&lt;/strong&gt; 分析一个操作序列，证明每个操作的平均代价很小，即使其中的一个操作或多个操作很耗时。这里不涉及概率，其结果为操作序列最坏情况下，平均到每一个操作上的耗时&lt;/p&gt;</description>
 			</item>
 	</channel>

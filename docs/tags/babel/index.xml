@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
 		<title>Babel on Hugo Narrow</title>
-		<link>https://spite-triangle.github.io/cpp_notes/tags/babel/</link>
+		<link>http://localhost:1313/cpp_notes/tags/babel/</link>
 		<description>Recent content in Babel on Hugo Narrow</description>
 		<generator>Hugo</generator>
 		<language>en</language>
@@ -12,12 +12,12 @@
 		
 			<lastBuildDate>Sun, 28 Jun 2026 00:00:00 +0000</lastBuildDate>
 		
-			<atom:link href="https://spite-triangle.github.io/cpp_notes/tags/babel/index.xml" rel="self" type="application/rss+xml" />
+			<atom:link href="http://localhost:1313/cpp_notes/tags/babel/index.xml" rel="self" type="application/rss+xml" />
 			<item>
 				<title>编译器</title>
-				<link>https://spite-triangle.github.io/cpp_notes/posts/react/compiler/</link>
+				<link>http://localhost:1313/cpp_notes/posts/react/compiler/</link>
 				<pubDate>Sun, 28 Jun 2026 00:00:00 +0000</pubDate>
-				<guid>https://spite-triangle.github.io/cpp_notes/posts/react/compiler/</guid>
+				<guid>http://localhost:1313/cpp_notes/posts/react/compiler/</guid>
 				<description>&lt;h1 id=&#34;概念&#34;&gt;概念&lt;a href=&#34;#%e6%a6%82%e5%bf%b5&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h1&gt;&lt;p&gt;&lt;code&gt;Compiler&lt;/code&gt; 是在 &lt;code&gt;react 19&lt;/code&gt; 中引入的新机制，可在输出成功物前对原代码进行优化，在不改变原代码的情况下，提高应用的渲染性能，&lt;strong&gt;本质就是利用 &lt;code&gt;babel&lt;/code&gt; 分析用户代码后，重写 &lt;code&gt;javascript&lt;/code&gt; 脚本代码&lt;/strong&gt;。主要优化点自动添加缓存, 减少重新渲染时的重复计算（重新渲染会再次调用组件函数，不做优化的话，内部代码会重新再执行一次）&lt;/p&gt;</description>
 			</item>
 	</channel>

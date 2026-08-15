@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
 		<title>Web服务 on Hugo Narrow</title>
-		<link>https://spite-triangle.github.io/cpp_notes/tags/web%E6%9C%8D%E5%8A%A1/</link>
+		<link>http://localhost:1313/cpp_notes/tags/web%E6%9C%8D%E5%8A%A1/</link>
 		<description>Recent content in Web服务 on Hugo Narrow</description>
 		<generator>Hugo</generator>
 		<language>en</language>
@@ -12,12 +12,12 @@
 		
 			<lastBuildDate>Sat, 31 May 2025 00:00:00 +0000</lastBuildDate>
 		
-			<atom:link href="https://spite-triangle.github.io/cpp_notes/tags/web%E6%9C%8D%E5%8A%A1/index.xml" rel="self" type="application/rss+xml" />
+			<atom:link href="http://localhost:1313/cpp_notes/tags/web%E6%9C%8D%E5%8A%A1/index.xml" rel="self" type="application/rss+xml" />
 			<item>
 				<title>Nginx</title>
-				<link>https://spite-triangle.github.io/cpp_notes/posts/nginx/</link>
+				<link>http://localhost:1313/cpp_notes/posts/nginx/</link>
 				<pubDate>Sat, 31 May 2025 00:00:00 +0000</pubDate>
-				<guid>https://spite-triangle.github.io/cpp_notes/posts/nginx/</guid>
+				<guid>http://localhost:1313/cpp_notes/posts/nginx/</guid>
 				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;Nginx 是一款高性能 HTTP/反向代理服务器，本文档从基础代理服务原理入手，详解配置文件结构、Docker 部署与路由配置方法。&lt;/p&gt;&#xA;&lt;!-- VOLUME_OVERVIEW_END --&gt;</description>
 			</item>
 	</channel>

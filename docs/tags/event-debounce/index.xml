@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
 		<title>Event-Debounce on Hugo Narrow</title>
-		<link>https://spite-triangle.github.io/cpp_notes/tags/event-debounce/</link>
+		<link>http://localhost:1313/cpp_notes/tags/event-debounce/</link>
 		<description>Recent content in Event-Debounce on Hugo Narrow</description>
 		<generator>Hugo</generator>
 		<language>en</language>
@@ -12,12 +12,12 @@
 		
 			<lastBuildDate>Fri, 05 Apr 2024 00:00:00 +0000</lastBuildDate>
 		
-			<atom:link href="https://spite-triangle.github.io/cpp_notes/tags/event-debounce/index.xml" rel="self" type="application/rss+xml" />
+			<atom:link href="http://localhost:1313/cpp_notes/tags/event-debounce/index.xml" rel="self" type="application/rss+xml" />
 			<item>
 				<title>Event Emitter</title>
-				<link>https://spite-triangle.github.io/cpp_notes/posts/vscode/event/</link>
+				<link>http://localhost:1313/cpp_notes/posts/vscode/event/</link>
 				<pubDate>Fri, 05 Apr 2024 00:00:00 +0000</pubDate>
-				<guid>https://spite-triangle.github.io/cpp_notes/posts/vscode/event/</guid>
+				<guid>http://localhost:1313/cpp_notes/posts/vscode/event/</guid>
 				<description>&lt;blockquote&#xD;&#xA;    class=&#34;border-primary bg-muted/30 hover:bg-muted/40 my-6 rounded-r-lg border-l-4 py-4 pr-4 pl-6 italic transition-all duration-200 ease-out hover:translate-x-1&#34;&#xD;&#xA;  &gt;&#xD;&#xA;    &lt;div class=&#34;prose prose-sm max-w-none&#34;&gt;&#xD;&#xA;      &lt;p&gt;[!tip|style:flat]&#xA;该文档来自 &lt;a&#xD;&#xA;    href=&#34;https://github.com/wangmengHB/utilities-library/blob/master/packages/util-kit/docs/event.md&#34;target=&#34;_blank&#34;&#xD;&#xA;    class=&#34;inline-flex items-center gap-1&#34;&#xD;&#xA;  &gt;utilities-library&lt;svg class=&#34;h-3 w-3 flex-shrink-0&#34; id=&#34;external-link&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;path fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34; d=&#34;M15 3h6v6m-11 5L21 3m-3 10v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6&#34;/&gt;&lt;/svg&gt;&#xD;&#xA;  &lt;/a&gt;&lt;/p&gt;&#xA;&#xD;&#xA;    &lt;/div&gt;&#xD;&#xA;  &lt;/blockquote&gt;&lt;script&gt;&#xD;&#xA;  function toggleAlert(alertId) {&#xD;&#xA;    const content = document.getElementById(alertId + &#34;-content&#34;);&#xD;&#xA;    const chevron = document.getElementById(alertId + &#34;-chevron&#34;);&#xD;&#xA;    const header = content.previousElementSibling;&#xD;&#xA;&#xD;&#xA;    if (content.classList.contains(&#34;hidden&#34;)) {&#xD;&#xA;      content.classList.remove(&#34;hidden&#34;);&#xD;&#xA;      chevron.style.transform = &#34;rotate(0deg)&#34;;&#xD;&#xA;      header.setAttribute(&#34;aria-expanded&#34;, &#34;true&#34;);&#xD;&#xA;    } else {&#xD;&#xA;      content.classList.add(&#34;hidden&#34;);&#xD;&#xA;      chevron.style.transform = &#34;rotate(-90deg)&#34;;&#xD;&#xA;      header.setAttribute(&#34;aria-expanded&#34;, &#34;false&#34;);&#xD;&#xA;    }&#xD;&#xA;  }&#xD;&#xA;&#xD;&#xA;  &#xD;&#xA;  document.addEventListener(&#34;DOMContentLoaded&#34;, function () {&#xD;&#xA;    const collapsedAlerts = document.querySelectorAll(&#34;.alert-content.hidden&#34;);&#xD;&#xA;    collapsedAlerts.forEach(function (content) {&#xD;&#xA;      const alertId = content.id.replace(&#34;-content&#34;, &#34;&#34;);&#xD;&#xA;      const chevron = document.getElementById(alertId + &#34;-chevron&#34;);&#xD;&#xA;      if (chevron) {&#xD;&#xA;        chevron.style.transform = &#34;rotate(-90deg)&#34;;&#xD;&#xA;      }&#xD;&#xA;    });&#xD;&#xA;  });&#xD;&#xA;&lt;/script&gt;&#xD;&#xA;&lt;p&gt;The event-related utils can be found in &lt;code&gt;util-kit&lt;/code&gt; as below:&lt;/p&gt;</description>
 			</item>
 	</channel>

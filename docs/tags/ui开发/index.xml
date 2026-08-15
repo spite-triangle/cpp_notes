@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
 		<title>UI开发 on Hugo Narrow</title>
-		<link>https://spite-triangle.github.io/cpp_notes/tags/ui%E5%BC%80%E5%8F%91/</link>
+		<link>http://localhost:1313/cpp_notes/tags/ui%E5%BC%80%E5%8F%91/</link>
 		<description>Recent content in UI开发 on Hugo Narrow</description>
 		<generator>Hugo</generator>
 		<language>en</language>
@@ -12,12 +12,12 @@
 		
 			<lastBuildDate>Sat, 23 Nov 2024 00:00:00 +0000</lastBuildDate>
 		
-			<atom:link href="https://spite-triangle.github.io/cpp_notes/tags/ui%E5%BC%80%E5%8F%91/index.xml" rel="self" type="application/rss+xml" />
+			<atom:link href="http://localhost:1313/cpp_notes/tags/ui%E5%BC%80%E5%8F%91/index.xml" rel="self" type="application/rss+xml" />
 			<item>
 				<title>QML</title>
-				<link>https://spite-triangle.github.io/cpp_notes/posts/qml/</link>
+				<link>http://localhost:1313/cpp_notes/posts/qml/</link>
 				<pubDate>Sat, 23 Nov 2024 00:00:00 +0000</pubDate>
-				<guid>https://spite-triangle.github.io/cpp_notes/posts/qml/</guid>
+				<guid>http://localhost:1313/cpp_notes/posts/qml/</guid>
 				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本文档围绕 QML 语言展开，从基础语法、布局系统及信号槽机制入手，深入 UI 控件配置、Model/View 数据绑定及 Canvas 绘图技术。内容涵盖动态对象创建、C++ 集成开发与模块打包等实用开发技能。&lt;/p&gt;</description>
 			</item>
 	</channel>

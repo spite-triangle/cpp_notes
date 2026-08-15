@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
 		<title>前端开发 on Hugo Narrow</title>
-		<link>https://spite-triangle.github.io/cpp_notes/categories/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/</link>
+		<link>http://localhost:1313/cpp_notes/categories/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/</link>
 		<description>Recent content in 前端开发 on Hugo Narrow</description>
 		<generator>Hugo</generator>
 		<language>en</language>
@@ -12,19 +12,19 @@
 		
 			<lastBuildDate>Mon, 29 Jun 2026 00:00:00 +0000</lastBuildDate>
 		
-			<atom:link href="https://spite-triangle.github.io/cpp_notes/categories/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/index.xml" rel="self" type="application/rss+xml" />
+			<atom:link href="http://localhost:1313/cpp_notes/categories/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/index.xml" rel="self" type="application/rss+xml" />
 			<item>
 				<title>React</title>
-				<link>https://spite-triangle.github.io/cpp_notes/posts/react/</link>
+				<link>http://localhost:1313/cpp_notes/posts/react/</link>
 				<pubDate>Mon, 29 Jun 2026 00:00:00 +0000</pubDate>
-				<guid>https://spite-triangle.github.io/cpp_notes/posts/react/</guid>
+				<guid>http://localhost:1313/cpp_notes/posts/react/</guid>
 				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;基于组件化的前端开发框架，从 JSX 语法、Hooks 机制到状态管理与路由配置。&lt;/p&gt;&#xA;&lt;!-- VOLUME_OVERVIEW_END --&gt;</description>
 			</item>
 			<item>
 				<title>vue</title>
-				<link>https://spite-triangle.github.io/cpp_notes/posts/vue/</link>
+				<link>http://localhost:1313/cpp_notes/posts/vue/</link>
 				<pubDate>Sun, 27 Apr 2025 00:00:00 +0000</pubDate>
-				<guid>https://spite-triangle.github.io/cpp_notes/posts/vue/</guid>
+				<guid>http://localhost:1313/cpp_notes/posts/vue/</guid>
 				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本文档系统介绍了 Vue 3 渐进式前端框架的核心知识体系。从项目初始化入手，讲解基于 Vite 的 Vue 工程搭建与文件结构；随后深入模板语法、数据绑定（v-bind / v-model）及事件处理等基本概念。脚本开发部分对比选项式 API 与组合式 API，介绍 setup 语法糖与 Hooks 代码组织模式。响应式数据系统涵盖 ref / reactive / computed 等核心 API，并配套 watch 与 watchEffect 侦听器实现数据变化监听。组件章节详解生命周期、props 通信、插槽内容分发及 Teleport / Suspense 功能。进阶部分涵盖 Vue Router 单页路由配置（含嵌套路由、参数传递与导航守卫）、Pinia 状态管理（Store / Getters / Actions），以及 Vite 构建工具的路径别名、跨域代理与环境变量管理等工程化配置。&lt;/p&gt;</description>
 			</item>
 	</channel>

@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
 		<title>JavaScript on Hugo Narrow</title>
-		<link>https://spite-triangle.github.io/cpp_notes/tags/javascript/</link>
+		<link>http://localhost:1313/cpp_notes/tags/javascript/</link>
 		<description>Recent content in JavaScript on Hugo Narrow</description>
 		<generator>Hugo</generator>
 		<language>en</language>
@@ -12,12 +12,12 @@
 		
 			<lastBuildDate>Mon, 29 Jun 2026 00:00:00 +0000</lastBuildDate>
 		
-			<atom:link href="https://spite-triangle.github.io/cpp_notes/tags/javascript/index.xml" rel="self" type="application/rss+xml" />
+			<atom:link href="http://localhost:1313/cpp_notes/tags/javascript/index.xml" rel="self" type="application/rss+xml" />
 			<item>
 				<title>Web 开发</title>
-				<link>https://spite-triangle.github.io/cpp_notes/posts/web/</link>
+				<link>http://localhost:1313/cpp_notes/posts/web/</link>
 				<pubDate>Mon, 29 Jun 2026 00:00:00 +0000</pubDate>
-				<guid>https://spite-triangle.github.io/cpp_notes/posts/web/</guid>
+				<guid>http://localhost:1313/cpp_notes/posts/web/</guid>
 				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本卷系统整理 Web 开发全链路技术，内容从页面结构的 HTML 标签与表单交互起步，经 CSS 选择器、盒子模型与 Flex 布局实现视觉呈现；继而深入 JavaScript/TypeScript 核心语言特性——模块系统、类型检查与 WebSocket 实时通信，并依托 Node.js 运行时环境及 npm 包管理构建本地开发生态。工程化层面涵盖 ESLint 代码规范检测、Vite（基于原生 ESM 的极速构建）与 Webpack（模块化打包与语法转译），最后扩展至 Babel、SWC 等通用编译器原理，为前端到后端的全栈开发提供完整的工具链参考。&lt;/p&gt;</description>
 			</item>
 	</channel>

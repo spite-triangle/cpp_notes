@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
 		<title>CNCF on Hugo Narrow</title>
-		<link>https://spite-triangle.github.io/cpp_notes/tags/cncf/</link>
+		<link>http://localhost:1313/cpp_notes/tags/cncf/</link>
 		<description>Recent content in CNCF on Hugo Narrow</description>
 		<generator>Hugo</generator>
 		<language>en</language>
@@ -12,12 +12,12 @@
 		
 			<lastBuildDate>Thu, 23 Oct 2025 00:00:00 +0000</lastBuildDate>
 		
-			<atom:link href="https://spite-triangle.github.io/cpp_notes/tags/cncf/index.xml" rel="self" type="application/rss+xml" />
+			<atom:link href="http://localhost:1313/cpp_notes/tags/cncf/index.xml" rel="self" type="application/rss+xml" />
 			<item>
 				<title>k8s</title>
-				<link>https://spite-triangle.github.io/cpp_notes/posts/k8s/</link>
+				<link>http://localhost:1313/cpp_notes/posts/k8s/</link>
 				<pubDate>Thu, 23 Oct 2025 00:00:00 +0000</pubDate>
-				<guid>https://spite-triangle.github.io/cpp_notes/posts/k8s/</guid>
+				<guid>http://localhost:1313/cpp_notes/posts/k8s/</guid>
 				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xD;&#xA;&lt;p&gt;本文档围绕 Kubernetes 容器编排系统展开，从集群搭建与核心概念入手。内容涵盖 Pod 配置管理、存储体系、服务发现及 RBAC 权限控制等核心组件。&lt;/p&gt;&#xA;&lt;!-- VOLUME_OVERVIEW_END --&gt;</description>
 			</item>
 	</channel>

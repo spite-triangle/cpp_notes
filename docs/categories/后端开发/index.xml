@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
 		<title>后端开发 on Hugo Narrow</title>
-		<link>https://spite-triangle.github.io/cpp_notes/categories/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/</link>
+		<link>http://localhost:1313/cpp_notes/categories/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/</link>
 		<description>Recent content in 后端开发 on Hugo Narrow</description>
 		<generator>Hugo</generator>
 		<language>en</language>
@@ -12,61 +12,61 @@
 		
 			<lastBuildDate>Tue, 23 Jun 2026 00:00:00 +0000</lastBuildDate>
 		
-			<atom:link href="https://spite-triangle.github.io/cpp_notes/categories/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/index.xml" rel="self" type="application/rss+xml" />
+			<atom:link href="http://localhost:1313/cpp_notes/categories/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/index.xml" rel="self" type="application/rss+xml" />
 			<item>
 				<title>RabbitMQ</title>
-				<link>https://spite-triangle.github.io/cpp_notes/posts/distributecluster/rabbitmq/</link>
+				<link>http://localhost:1313/cpp_notes/posts/distributecluster/rabbitmq/</link>
 				<pubDate>Sat, 26 Jul 2025 00:00:00 +0000</pubDate>
-				<guid>https://spite-triangle.github.io/cpp_notes/posts/distributecluster/rabbitmq/</guid>
+				<guid>http://localhost:1313/cpp_notes/posts/distributecluster/rabbitmq/</guid>
 				<description>&lt;h1 id=&#34;简介&#34;&gt;简介&lt;a href=&#34;#%e7%ae%80%e4%bb%8b&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h1&gt;&lt;p&gt;&lt;a&#xD;&#xA;    href=&#34;https://www.rabbitmq.com/&#34;target=&#34;_blank&#34;&#xD;&#xA;    class=&#34;inline-flex items-center gap-1&#34;&#xD;&#xA;  &gt;RabbitMQ&lt;svg class=&#34;h-3 w-3 flex-shrink-0&#34; id=&#34;external-link&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;path fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34; d=&#34;M15 3h6v6m-11 5L21 3m-3 10v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6&#34;/&gt;&lt;/svg&gt;&#xD;&#xA;  &lt;/a&gt;： 是实现了高级消息队列协议（AMQP）的开源消息代理软件（亦称面向消息的中间件）。RabbitMQ 服务器是用 &lt;code&gt;Erlang&lt;/code&gt; 语言编写的，所有主要的编程语言均有与代理接口通讯的客户端库。&lt;/p&gt;</description>
 			</item>
 			<item>
 				<title>Redis</title>
-				<link>https://spite-triangle.github.io/cpp_notes/posts/distributecluster/redis/</link>
+				<link>http://localhost:1313/cpp_notes/posts/distributecluster/redis/</link>
 				<pubDate>Thu, 18 Sep 2025 00:00:00 +0000</pubDate>
-				<guid>https://spite-triangle.github.io/cpp_notes/posts/distributecluster/redis/</guid>
+				<guid>http://localhost:1313/cpp_notes/posts/distributecluster/redis/</guid>
 				<description>&lt;h1 id=&#34;介绍&#34;&gt;介绍&lt;a href=&#34;#%e4%bb%8b%e7%bb%8d&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h1&gt;&lt;h2 id=&#34;nosql&#34;&gt;NoSQL&lt;a href=&#34;#nosql&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h2&gt;&lt;p&gt;数据库分类主要为&lt;/p&gt;</description>
 			</item>
 			<item>
 				<title>Celery</title>
-				<link>https://spite-triangle.github.io/cpp_notes/posts/distributecluster/celery/</link>
+				<link>http://localhost:1313/cpp_notes/posts/distributecluster/celery/</link>
 				<pubDate>Sun, 31 Aug 2025 00:00:00 +0000</pubDate>
-				<guid>https://spite-triangle.github.io/cpp_notes/posts/distributecluster/celery/</guid>
+				<guid>http://localhost:1313/cpp_notes/posts/distributecluster/celery/</guid>
 				<description>&lt;h1 id=&#34;简介&#34;&gt;简介&lt;a href=&#34;#%e7%ae%80%e4%bb%8b&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h1&gt;&lt;p&gt;&lt;a&#xD;&#xA;    href=&#34;https://docs.celeryq.dev/en/stable/index.html&#34;target=&#34;_blank&#34;&#xD;&#xA;    class=&#34;inline-flex items-center gap-1&#34;&#xD;&#xA;  &gt;Celery&lt;svg class=&#34;h-3 w-3 flex-shrink-0&#34; id=&#34;external-link&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;path fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34; d=&#34;M15 3h6v6m-11 5L21 3m-3 10v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6&#34;/&gt;&lt;/svg&gt;&#xD;&#xA;  &lt;/a&gt; 是一个简单、灵活且可靠的，处理大量消息的分布式系统，专注于实时处理的异步任务队列，同时也支持任务调度。&lt;/p&gt;</description>
 			</item>
 			<item>
 				<title>调度</title>
-				<link>https://spite-triangle.github.io/cpp_notes/posts/distributecluster/schedule/</link>
+				<link>http://localhost:1313/cpp_notes/posts/distributecluster/schedule/</link>
 				<pubDate>Thu, 18 Sep 2025 00:00:00 +0000</pubDate>
-				<guid>https://spite-triangle.github.io/cpp_notes/posts/distributecluster/schedule/</guid>
+				<guid>http://localhost:1313/cpp_notes/posts/distributecluster/schedule/</guid>
 				<description>&lt;p&gt;&lt;a&#xD;&#xA;    href=&#34;https://zhuanlan.zhihu.com/p/33823266&#34;target=&#34;_blank&#34;&#xD;&#xA;    class=&#34;inline-flex items-center gap-1&#34;&#xD;&#xA;  &gt;https://zhuanlan.zhihu.com/p/33823266&lt;svg class=&#34;h-3 w-3 flex-shrink-0&#34; id=&#34;external-link&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;path fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34; d=&#34;M15 3h6v6m-11 5L21 3m-3 10v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6&#34;/&gt;&lt;/svg&gt;&#xD;&#xA;  &lt;/a&gt;&lt;/p&gt;</description>
 			</item>
 			<item>
 				<title>Flask</title>
-				<link>https://spite-triangle.github.io/cpp_notes/posts/python/flask/</link>
+				<link>http://localhost:1313/cpp_notes/posts/python/flask/</link>
 				<pubDate>Sat, 08 Mar 2025 00:00:00 +0000</pubDate>
-				<guid>https://spite-triangle.github.io/cpp_notes/posts/python/flask/</guid>
+				<guid>http://localhost:1313/cpp_notes/posts/python/flask/</guid>
 				<description>&lt;h1 id=&#34;简介&#34;&gt;简介&lt;a href=&#34;#%e7%ae%80%e4%bb%8b&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h1&gt;&lt;p&gt;&lt;a&#xD;&#xA;    href=&#34;https://flask.palletsprojects.com/en/stable/&#34;target=&#34;_blank&#34;&#xD;&#xA;    class=&#34;inline-flex items-center gap-1&#34;&#xD;&#xA;  &gt;Flask&lt;svg class=&#34;h-3 w-3 flex-shrink-0&#34; id=&#34;external-link&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;path fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34; d=&#34;M15 3h6v6m-11 5L21 3m-3 10v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6&#34;/&gt;&lt;/svg&gt;&#xD;&#xA;  &lt;/a&gt; 是一个轻量级 web 开发框架，它主要面向需求简单，项目周期短的小应用。Flask 本身相当于一个内核，其他几乎所有的功能都要用到扩展，都需要用第三方的扩展来实现。用 extension 增加其他功能。Flask没有默认使用的数据库、窗体验证工具。你可以选择 MySQL，也可以用 NoSQL。其 WSGI 工具箱采用 Werkzeug（路由模块），模板引擎则使用 Jinja2。&lt;/p&gt;</description>
 			</item>
 			<item>
 				<title>Spring Boot</title>
-				<link>https://spite-triangle.github.io/cpp_notes/posts/springboot/</link>
+				<link>http://localhost:1313/cpp_notes/posts/springboot/</link>
 				<pubDate>Tue, 23 Jun 2026 00:00:00 +0000</pubDate>
-				<guid>https://spite-triangle.github.io/cpp_notes/posts/springboot/</guid>
+				<guid>http://localhost:1313/cpp_notes/posts/springboot/</guid>
 				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xD;&#xA;&lt;p&gt;Spring Boot 微服务开发全面指南，涵盖自动配置、MyBatis集成与Tomcat 部署。&lt;/p&gt;&#xA;&lt;!-- VOLUME_OVERVIEW_END --&gt;</description>
 			</item>
 			<item>
 				<title>分布式集群组件</title>
-				<link>https://spite-triangle.github.io/cpp_notes/posts/distributecluster/</link>
+				<link>http://localhost:1313/cpp_notes/posts/distributecluster/</link>
 				<pubDate>Thu, 23 Oct 2025 00:00:00 +0000</pubDate>
-				<guid>https://spite-triangle.github.io/cpp_notes/posts/distributecluster/</guid>
+				<guid>http://localhost:1313/cpp_notes/posts/distributecluster/</guid>
 				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;分布式系统从集中式走向分布式的架构演进，涉及集群部署模式、负载均衡与服务发现机制。内容涵盖主流消息中间件的选型对比与生产实践、异步任务调度方案以及高性能计算的资源管理策略。&lt;/p&gt;</description>
 			</item>
 			<item>
 				<title>FastAPI</title>
-				<link>https://spite-triangle.github.io/cpp_notes/posts/fastapi/</link>
+				<link>http://localhost:1313/cpp_notes/posts/fastapi/</link>
 				<pubDate>Sun, 22 Jun 2025 00:00:00 +0000</pubDate>
-				<guid>https://spite-triangle.github.io/cpp_notes/posts/fastapi/</guid>
+				<guid>http://localhost:1313/cpp_notes/posts/fastapi/</guid>
 				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xD;&#xA;&lt;p&gt;从基础的路由定义到数据校验、异步数据库操作，系统介绍 FastAPI 的核心功能模块与最佳实践。&lt;/p&gt;&#xA;&lt;!-- VOLUME_OVERVIEW_END --&gt;</description>
 			</item>
 	</channel>

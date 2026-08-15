@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
 		<title>空间优化 on Hugo Narrow</title>
-		<link>https://spite-triangle.github.io/cpp_notes/tags/%E7%A9%BA%E9%97%B4%E4%BC%98%E5%8C%96/</link>
+		<link>http://localhost:1313/cpp_notes/tags/%E7%A9%BA%E9%97%B4%E4%BC%98%E5%8C%96/</link>
 		<description>Recent content in 空间优化 on Hugo Narrow</description>
 		<generator>Hugo</generator>
 		<language>en</language>
@@ -12,12 +12,12 @@
 		
 			<lastBuildDate>Sat, 28 Sep 2024 00:00:00 +0000</lastBuildDate>
 		
-			<atom:link href="https://spite-triangle.github.io/cpp_notes/tags/%E7%A9%BA%E9%97%B4%E4%BC%98%E5%8C%96/index.xml" rel="self" type="application/rss+xml" />
+			<atom:link href="http://localhost:1313/cpp_notes/tags/%E7%A9%BA%E9%97%B4%E4%BC%98%E5%8C%96/index.xml" rel="self" type="application/rss+xml" />
 			<item>
 				<title>动态规划</title>
-				<link>https://spite-triangle.github.io/cpp_notes/posts/algorithms/dynamicprogramming/</link>
+				<link>http://localhost:1313/cpp_notes/posts/algorithms/dynamicprogramming/</link>
 				<pubDate>Sat, 28 Sep 2024 00:00:00 +0000</pubDate>
-				<guid>https://spite-triangle.github.io/cpp_notes/posts/algorithms/dynamicprogramming/</guid>
+				<guid>http://localhost:1313/cpp_notes/posts/algorithms/dynamicprogramming/</guid>
 				<description>&lt;h1 id=&#34;动态规划特征&#34;&gt;动态规划特征&lt;a href=&#34;#%e5%8a%a8%e6%80%81%e8%a7%84%e5%88%92%e7%89%b9%e5%be%81&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h1&gt;&lt;ol&gt;&#xA;&lt;li&gt;最优子结构：一个问题的最优解包含了子问题的最优解，即可以通过子问题的最优解一步步推算得到最终根问题的最优解&lt;/li&gt;&#xA;&lt;li&gt;重叠子问题：直接采用递归法求解，求解过程会包含许多重复的子问题&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;h1 id=&#34;最长公共子序列&#34;&gt;最长公共子序列&lt;a href=&#34;#%e6%9c%80%e9%95%bf%e5%85%ac%e5%85%b1%e5%ad%90%e5%ba%8f%e5%88%97&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h1&gt;&lt;h2 id=&#34;问题&#34;&gt;问题&lt;a href=&#34;#%e9%97%ae%e9%a2%98&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h2&gt;&lt;p&gt;问题：对比已知序列 $x[1 \dotsm m]$ 与 $y[1 \dotsm n]$，找到最长的公共子序列&lt;/p&gt;</description>
 			</item>
 	</channel>

@@ -52,7 +52,7 @@ PATH=%MAVEN_HOME%\bin
    - `vfox use maven[@version]` 终端切换
    - `vfox use -g maven[@version]` 系统默认
 
-如果是完全断网的离线环境，可以从 `https://maven.apache.org/download.cgi` 下载压缩包，然后通过[vfox-install](../../code/bash/vfox-install.sh)解压到 `vfox.exe config storage.sdkPath` 目录下，目录组织结构如下
+如果是完全断网的离线环境，可以从 `https://maven.apache.org/download.cgi` 下载压缩包，然后通过[vfox-install](code/bash/vfox-install.sh)解压到 `vfox.exe config storage.sdkPath` 目录下，目录组织结构如下
 
 ```
 ./

@@ -3,7 +3,7 @@
   lang="en"
   data-theme="default"
 >
-  <head>
+  <head><script src="/cpp_notes/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=cpp_notes/livereload" data-no-instant defer></script>
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -29,12 +29,12 @@
   name="robots"
   content="index, follow"
 />
-<link rel="canonical" href="https://spite-triangle.github.io/cpp_notes/posts/python/pyaedt/" />
+<link rel="canonical" href="http://localhost:1313/cpp_notes/posts/python/pyaedt/" />
 
 
   <link rel="icon" type="image/svg+xml" href="/cpp_notes/favicon.svg" />
 <link rel="manifest" href="/cpp_notes/site.webmanifest" />
-<meta property="og:url" content="https://spite-triangle.github.io/cpp_notes/posts/python/pyaedt/">
+<meta property="og:url" content="http://localhost:1313/cpp_notes/posts/python/pyaedt/">
 	<meta property="og:site_name" content="Hugo Narrow">
 	<meta property="og:title" content="PyAEDT">
 	<meta property="og:description" content="PyAEDT库使用笔记，介绍通过Python自动化操作Ansys AEDT进行电磁场仿真。">
@@ -46,11 +46,11 @@
 		<meta property="article:tag" content="PyAEDT">
 		<meta property="article:tag" content="安世电气">
 		<meta property="article:tag" content="EDA">
-		<meta property="og:image" content="https://spite-triangle.github.io/images/og-default.avif">
+		<meta property="og:image" content="http://localhost:1313/images/og-default.avif">
 
 
 	<meta name="twitter:card" content="summary_large_image">
-	<meta name="twitter:image" content="https://spite-triangle.github.io/images/og-default.avif">
+	<meta name="twitter:image" content="http://localhost:1313/images/og-default.avif">
 	<meta name="twitter:title" content="PyAEDT">
 	<meta name="twitter:description" content="PyAEDT库使用笔记，介绍通过Python自动化操作Ansys AEDT进行电磁场仿真。">
 
@@ -60,7 +60,7 @@
 	<meta itemprop="datePublished" content="2025-07-18T00:00:00+00:00">
 	<meta itemprop="dateModified" content="2025-07-18T00:00:00+00:00">
 	<meta itemprop="wordCount" content="3239">
-	<meta itemprop="image" content="https://spite-triangle.github.io/images/og-default.avif">
+	<meta itemprop="image" content="http://localhost:1313/images/og-default.avif">
 	<meta itemprop="keywords" content="PyAEDT,安世电气,EDA">
 
 
@@ -78,28 +78,14 @@
 
 
   
-    
-      <link
-        rel="stylesheet"
-        href="/cpp_notes/css/compiled.min.882c8bb9b3deec5a84cddfd768d37a08c2c4dd5c6a0c0bd0b51a1b08c09c9adc.css"
-        integrity="sha256-iCyLubPe7FqEzd/XaNN6CMLE3VxqDAvQtRobCMCcmtw="
-        crossorigin="anonymous"
-      />
-    
+    <link rel="stylesheet" href="/cpp_notes/css/compiled.css" />
   
 
 
 
 
   
-    
-      <link
-        rel="stylesheet"
-        href="/cpp_notes/css/chroma.min.491df36221f739b5948a747a0351f100ee7ccaaf466d9f46288bf06de1d59123.css"
-        integrity="sha256-SR3zYiH3ObWUinR6A1HxAO58yq9GbZ9GKIvwbeHVkSM="
-        crossorigin="anonymous"
-      />
-    
+    <link rel="stylesheet" href="/cpp_notes/css/chroma.css" />
   
 
 
@@ -107,39 +93,19 @@
 
 
 
-        <script
-          src="/cpp_notes/js/main.b003624716b5b9344efafc302bd75df711e73d0da196be724be6daebb2b6964d.js"
-          integrity="sha256-sANiRxa1uTRO&#43;vwwK9dd9xHnPQ2hlr5yS&#43;ba67K2lk0="
-          crossorigin="anonymous"
-          defer
-        ></script>
+      <script src="/cpp_notes/js/main.js" defer></script>
 
 
 
-            <script
-              src="/cpp_notes/js/toc.92c3534ee382ab7e31e364f704a91b9052ed119e89453fb6837a451b56dbef48.js"
-              integrity="sha256-ksNTTuOCq34x42T3BKkbkFLtEZ6JRT&#43;2g3pFG1bb70g="
-              crossorigin="anonymous"
-              defer
-            ></script>
+          <script src="/cpp_notes/js/toc.js" defer></script>
 
 
 
-        <script
-          src="/cpp_notes/js/search.33fef1d91398b17cbc46483d902493b800642d25754e7ff8e998b12499c7fde3.js"
-          integrity="sha256-M/7x2ROYsXy8Rkg9kCSTuABkLSV1Tn/46ZixJJnH/eM="
-          crossorigin="anonymous"
-          defer
-        ></script>
+      <script src="/cpp_notes/js/search.js" defer></script>
 
 
 
-        <script
-          src="/cpp_notes/js/dock.b1c2d4314c86813f5baaa2a5b524b4613dc7803303402315d0a2c19217e13278.js"
-          integrity="sha256-scLUMUyGgT9bqqKltSS0YT3HgDMDQCMV0KLBkhfhMng="
-          crossorigin="anonymous"
-          defer
-        ></script>
+      <script src="/cpp_notes/js/dock.js" defer></script>
 
 
 
@@ -150,22 +116,12 @@
 
 
 
-          <script
-            src="/cpp_notes/js/gallery.c8c99001b2f625137e3cbf8e2ecf758eabf72776a89735e56ee081a30b8fe7f5.js"
-            integrity="sha256-yMmQAbL2JRN&#43;PL&#43;OLs91jqv3J3aolzXlbuCBowuP5/U="
-            crossorigin="anonymous"
-            defer
-          ></script>
+        <script src="/cpp_notes/js/gallery.js" defer></script>
 
 
 
 
-          <script
-            src="/cpp_notes/js/term.321822a6a26efeaba2fc22150d06128515edf15d6844ac23a9c03c138877be4f.js"
-            integrity="sha256-MhgipqJu/qui/CIVDQYShRXt8V1oRKwjqcA8E4h3vk8="
-            crossorigin="anonymous"
-            defer
-          ></script>
+        <script src="/cpp_notes/js/term.js" defer></script>
 
 
 
@@ -3357,10 +3313,10 @@ solution = report.get_solution_data()</div>
           <p>
             <strong>Link:</strong>
             <a
-              href="https://spite-triangle.github.io/cpp_notes/posts/python/pyaedt/"
+              href="http://localhost:1313/cpp_notes/posts/python/pyaedt/"
               class="text-primary hover:text-primary/80 break-all hyphens-auto transition-colors duration-200"
             >
-              https://spite-triangle.github.io/cpp_notes/posts/python/pyaedt/
+              http://localhost:1313/cpp_notes/posts/python/pyaedt/
             </a>
           </p>
 

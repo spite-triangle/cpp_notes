@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
 		<title>Projects on Hugo Narrow</title>
-		<link>https://spite-triangle.github.io/cpp_notes/categories/projects/</link>
+		<link>http://localhost:1313/cpp_notes/categories/projects/</link>
 		<description>Recent content in Projects on Hugo Narrow</description>
 		<generator>Hugo</generator>
 		<language>en</language>
@@ -12,19 +12,19 @@
 		
 			<lastBuildDate>Fri, 22 May 2026 00:00:00 +0000</lastBuildDate>
 		
-			<atom:link href="https://spite-triangle.github.io/cpp_notes/categories/projects/index.xml" rel="self" type="application/rss+xml" />
+			<atom:link href="http://localhost:1313/cpp_notes/categories/projects/index.xml" rel="self" type="application/rss+xml" />
 			<item>
 				<title>Copilot Completions</title>
-				<link>https://spite-triangle.github.io/cpp_notes/projects/completion/</link>
+				<link>http://localhost:1313/cpp_notes/projects/completion/</link>
 				<pubDate>Fri, 22 May 2026 00:00:00 +0000</pubDate>
-				<guid>https://spite-triangle.github.io/cpp_notes/projects/completion/</guid>
+				<guid>http://localhost:1313/cpp_notes/projects/completion/</guid>
 				<description>基于 LLM 的 VS Code 代码补全插件 — 同时支持 GHOST 内联补全和 NES 预测性编辑。</description>
 			</item>
 			<item>
 				<title>Qt Servitor</title>
-				<link>https://spite-triangle.github.io/cpp_notes/projects/qt/</link>
+				<link>http://localhost:1313/cpp_notes/projects/qt/</link>
 				<pubDate>Sun, 24 Sep 2023 00:00:00 +0000</pubDate>
-				<guid>https://spite-triangle.github.io/cpp_notes/projects/qt/</guid>
+				<guid>http://localhost:1313/cpp_notes/projects/qt/</guid>
 				<description>在 vscode 中辅助 Qt 项目构建的友好插件。</description>
 			</item>
 	</channel>

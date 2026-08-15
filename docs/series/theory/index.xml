@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
 		<title>理论知识 on Hugo Narrow</title>
-		<link>https://spite-triangle.github.io/cpp_notes/series/theory/</link>
+		<link>http://localhost:1313/cpp_notes/series/theory/</link>
 		<description>Recent content in 理论知识 on Hugo Narrow</description>
 		<generator>Hugo</generator>
 		<language>en</language>
@@ -12,68 +12,68 @@
 		
 			<lastBuildDate>Wed, 10 Jun 2026 00:00:00 +0000</lastBuildDate>
 		
-			<atom:link href="https://spite-triangle.github.io/cpp_notes/series/theory/index.xml" rel="self" type="application/rss+xml" />
+			<atom:link href="http://localhost:1313/cpp_notes/series/theory/index.xml" rel="self" type="application/rss+xml" />
 			<item>
 				<title>系统设计方案</title>
-				<link>https://spite-triangle.github.io/cpp_notes/posts/systeamdesign/</link>
+				<link>http://localhost:1313/cpp_notes/posts/systeamdesign/</link>
 				<pubDate>Wed, 10 Jun 2026 00:00:00 +0000</pubDate>
-				<guid>https://spite-triangle.github.io/cpp_notes/posts/systeamdesign/</guid>
+				<guid>http://localhost:1313/cpp_notes/posts/systeamdesign/</guid>
 				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本文档涵盖系统设计中的核心方法论，包括有限状态机与行为树的设计实现、事件循环框架搭建、数据库设计范式以及权限管理模型。内容涉及关系型数据存储模式、树形数据结构建模及元数据驱动架构等实用技术。&lt;/p&gt;</description>
 			</item>
 			<item>
 				<title>Effective C&#43;&#43;</title>
-				<link>https://spite-triangle.github.io/cpp_notes/posts/effective/</link>
+				<link>http://localhost:1313/cpp_notes/posts/effective/</link>
 				<pubDate>Sat, 07 Mar 2026 00:00:00 +0000</pubDate>
-				<guid>https://spite-triangle.github.io/cpp_notes/posts/effective/</guid>
+				<guid>http://localhost:1313/cpp_notes/posts/effective/</guid>
 				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本文档围绕 Effective C++ 系列笔记展开，从语言基础特性、宏编程与类型推断入手，深入智能指针原理、模板元编程与现代 C++20/17 新特性。内容涵盖 Lambda 底层实现、右值引用与完美转发、异常处理及多线程安全等核心主题。&lt;/p&gt;</description>
 			</item>
 			<item>
 				<title>分布式系统</title>
-				<link>https://spite-triangle.github.io/cpp_notes/posts/distribute/</link>
+				<link>http://localhost:1313/cpp_notes/posts/distribute/</link>
 				<pubDate>Sat, 01 Nov 2025 00:00:00 +0000</pubDate>
-				<guid>https://spite-triangle.github.io/cpp_notes/posts/distribute/</guid>
+				<guid>http://localhost:1313/cpp_notes/posts/distribute/</guid>
 				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本文档围绕分布式系统核心概念展开，从基础设施与远程调用接口入手，深入 Raft 共识算法、数据复制容错及事务处理机制。内容涵盖 Google Spanner/GFS、AWS Aurora、Apache Spark/Memcache 等经典分布式系统的架构设计原理与实践分析。&lt;/p&gt;</description>
 			</item>
 			<item>
 				<title>c&#43;&#43;并发编程</title>
-				<link>https://spite-triangle.github.io/cpp_notes/posts/cppconcurrency/</link>
+				<link>http://localhost:1313/cpp_notes/posts/cppconcurrency/</link>
 				<pubDate>Mon, 21 Jul 2025 00:00:00 +0000</pubDate>
-				<guid>https://spite-triangle.github.io/cpp_notes/posts/cppconcurrency/</guid>
+				<guid>http://localhost:1313/cpp_notes/posts/cppconcurrency/</guid>
 				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本文档围绕 C++11 并发编程展开，从 std::thread 的创建与生命周期管理入手，深入互斥量、条件变量、原子类型等同步原语。涵盖线程中断机制、伪共享优化、无锁数据结构设计以及线程安全容器实现等核心主题。&lt;/p&gt;</description>
 			</item>
 			<item>
 				<title>操作系统</title>
-				<link>https://spite-triangle.github.io/cpp_notes/posts/operatesystem/</link>
+				<link>http://localhost:1313/cpp_notes/posts/operatesystem/</link>
 				<pubDate>Sun, 30 Mar 2025 00:00:00 +0000</pubDate>
-				<guid>https://spite-triangle.github.io/cpp_notes/posts/operatesystem/</guid>
+				<guid>http://localhost:1313/cpp_notes/posts/operatesystem/</guid>
 				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;操作系统基本原理与实践结合，从程序的并发执行开始，逐步深入内核的进程管理、内存分配策略以及 Xv6 文件系统的实现细节。&lt;/p&gt;&#xA;&lt;!-- VOLUME_OVERVIEW_END --&gt;</description>
 			</item>
 			<item>
 				<title>编译原理</title>
-				<link>https://spite-triangle.github.io/cpp_notes/posts/compiler/</link>
+				<link>http://localhost:1313/cpp_notes/posts/compiler/</link>
 				<pubDate>Sun, 02 Mar 2025 00:00:00 +0000</pubDate>
-				<guid>https://spite-triangle.github.io/cpp_notes/posts/compiler/</guid>
+				<guid>http://localhost:1313/cpp_notes/posts/compiler/</guid>
 				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本文档围绕编译原理展开，从词法分析、语法分析入手，深入语义分析与类型检测。内容涵盖操作语义定义、运行时内存模型、MIPS汇编代码生成、中间语言优化及垃圾回收算法等编译器各阶段的核心技术。&lt;/p&gt;</description>
 			</item>
 			<item>
 				<title>算法导论</title>
-				<link>https://spite-triangle.github.io/cpp_notes/posts/algorithms/</link>
+				<link>http://localhost:1313/cpp_notes/posts/algorithms/</link>
 				<pubDate>Sun, 24 Nov 2024 00:00:00 +0000</pubDate>
-				<guid>https://spite-triangle.github.io/cpp_notes/posts/algorithms/</guid>
+				<guid>http://localhost:1313/cpp_notes/posts/algorithms/</guid>
 				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本文档围绕算法设计与性能分析展开，从渐近复杂度记号与递归求解方法入手，逐步深入到分治策略、动态规划、图算法、随机化数据结构以及并行计算模型等核心主题。内容涵盖二叉搜索树及其平衡变体、跳表、次序统计、在线算法竞争分析等多个数据结构和算法实现细节。&lt;/p&gt;</description>
 			</item>
 			<item>
 				<title>HTTP 服务</title>
-				<link>https://spite-triangle.github.io/cpp_notes/posts/http/</link>
+				<link>http://localhost:1313/cpp_notes/posts/http/</link>
 				<pubDate>Sun, 12 May 2024 00:00:00 +0000</pubDate>
-				<guid>https://spite-triangle.github.io/cpp_notes/posts/http/</guid>
+				<guid>http://localhost:1313/cpp_notes/posts/http/</guid>
 				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本卷从网络编程的基础出发，由浅入深地讲解构建 HTTP 服务器的核心知识。首先介绍 Socket TCP 通信的基本 API，包括套接字创建、地址绑定、监听与连接等服务端和客户端的完整流程；接着详解 HTTP/1.1 协议的请求响应报文结构、常用方法（GET / POST / PUT / DELETE）及状态码含义；随后讲解 RESTful 接口设计规范，阐述以资源为核心的 URL 设计方法和 HTTP 动词映射的最佳实践。在性能与并发层面，本卷对比阻塞与非阻塞 I/O 的优劣，深入剖析 epoll 三种多路复用技术及 ET/LT 触发模式，最后介绍 Reactor 网络模型及其多线程架构变体（单 Reactor 线程池、多 Reactor 多线程），为构建高并发服务器提供完整的理论基础。&lt;/p&gt;</description>
 			</item>
 			<item>
 				<title>多媒体技术</title>
-				<link>https://spite-triangle.github.io/cpp_notes/posts/media/</link>
+				<link>http://localhost:1313/cpp_notes/posts/media/</link>
 				<pubDate>Sun, 12 May 2024 00:00:00 +0000</pubDate>
-				<guid>https://spite-triangle.github.io/cpp_notes/posts/media/</guid>
+				<guid>http://localhost:1313/cpp_notes/posts/media/</guid>
 				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;图像、音频和视频等数字媒体的编码格式与处理方法，结合 FFmpeg 命令行工具的常用操作示例。&lt;/p&gt;&#xA;&lt;!-- VOLUME_OVERVIEW_END --&gt;</description>
 			</item>
 	</channel>

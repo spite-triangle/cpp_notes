@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
 		<title>异步ORM on Hugo Narrow</title>
-		<link>https://spite-triangle.github.io/cpp_notes/tags/%E5%BC%82%E6%AD%A5orm/</link>
+		<link>http://localhost:1313/cpp_notes/tags/%E5%BC%82%E6%AD%A5orm/</link>
 		<description>Recent content in 异步ORM on Hugo Narrow</description>
 		<generator>Hugo</generator>
 		<language>en</language>
@@ -12,12 +12,12 @@
 		
 			<lastBuildDate>Sun, 22 Jun 2025 00:00:00 +0000</lastBuildDate>
 		
-			<atom:link href="https://spite-triangle.github.io/cpp_notes/tags/%E5%BC%82%E6%AD%A5orm/index.xml" rel="self" type="application/rss+xml" />
+			<atom:link href="http://localhost:1313/cpp_notes/tags/%E5%BC%82%E6%AD%A5orm/index.xml" rel="self" type="application/rss+xml" />
 			<item>
 				<title>ORM</title>
-				<link>https://spite-triangle.github.io/cpp_notes/posts/fastapi/orm/</link>
+				<link>http://localhost:1313/cpp_notes/posts/fastapi/orm/</link>
 				<pubDate>Sun, 22 Jun 2025 00:00:00 +0000</pubDate>
-				<guid>https://spite-triangle.github.io/cpp_notes/posts/fastapi/orm/</guid>
+				<guid>http://localhost:1313/cpp_notes/posts/fastapi/orm/</guid>
 				<description>&lt;h1 id=&#34;概念&#34;&gt;概念&lt;a href=&#34;#%e6%a6%82%e5%bf%b5&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h1&gt;&lt;p&gt;&lt;strong&gt;对象关系映射 &lt;code&gt;Object Relational Mapping (ORM)&lt;/code&gt;&lt;/strong&gt; : 是一种为了解决面向对象与关系数据库存在的互不匹配的现象的技术，即通过对象来完成数据库操作。&lt;code&gt;ORM&lt;/code&gt; 框架是连接数据库的桥梁，只要提供了持久化类与表的映射关系，&lt;code&gt;ORM&lt;/code&gt; 框架在运行时就能参照映射文件的信息，把对象持久化到数据库中。&lt;/p&gt;</description>
 			</item>
 	</channel>

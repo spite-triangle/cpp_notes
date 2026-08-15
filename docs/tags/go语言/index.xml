@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
 		<title>Go语言 on Hugo Narrow</title>
-		<link>https://spite-triangle.github.io/cpp_notes/tags/go%E8%AF%AD%E8%A8%80/</link>
+		<link>http://localhost:1313/cpp_notes/tags/go%E8%AF%AD%E8%A8%80/</link>
 		<description>Recent content in Go语言 on Hugo Narrow</description>
 		<generator>Hugo</generator>
 		<language>en</language>
@@ -12,12 +12,12 @@
 		
 			<lastBuildDate>Tue, 04 Aug 2026 00:00:00 +0000</lastBuildDate>
 		
-			<atom:link href="https://spite-triangle.github.io/cpp_notes/tags/go%E8%AF%AD%E8%A8%80/index.xml" rel="self" type="application/rss+xml" />
+			<atom:link href="http://localhost:1313/cpp_notes/tags/go%E8%AF%AD%E8%A8%80/index.xml" rel="self" type="application/rss+xml" />
 			<item>
 				<title>hugo</title>
-				<link>https://spite-triangle.github.io/cpp_notes/posts/hugo/</link>
+				<link>http://localhost:1313/cpp_notes/posts/hugo/</link>
 				<pubDate>Tue, 04 Aug 2026 00:00:00 +0000</pubDate>
-				<guid>https://spite-triangle.github.io/cpp_notes/posts/hugo/</guid>
+				<guid>http://localhost:1313/cpp_notes/posts/hugo/</guid>
 				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;Hugo 静态网站生成器使用教程，从安装配置到内容创作与模板开发完整流程。&lt;/p&gt;&#xA;&lt;!-- VOLUME_OVERVIEW_END --&gt;</description>
 			</item>
 	</channel>

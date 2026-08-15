@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
 		<title>协调服务 on Hugo Narrow</title>
-		<link>https://spite-triangle.github.io/cpp_notes/tags/%E5%8D%8F%E8%B0%83%E6%9C%8D%E5%8A%A1/</link>
+		<link>http://localhost:1313/cpp_notes/tags/%E5%8D%8F%E8%B0%83%E6%9C%8D%E5%8A%A1/</link>
 		<description>Recent content in 协调服务 on Hugo Narrow</description>
 		<generator>Hugo</generator>
 		<language>en</language>
@@ -12,19 +12,19 @@
 		
 			<lastBuildDate>Sat, 01 Nov 2025 00:00:00 +0000</lastBuildDate>
 		
-			<atom:link href="https://spite-triangle.github.io/cpp_notes/tags/%E5%8D%8F%E8%B0%83%E6%9C%8D%E5%8A%A1/index.xml" rel="self" type="application/rss+xml" />
+			<atom:link href="http://localhost:1313/cpp_notes/tags/%E5%8D%8F%E8%B0%83%E6%9C%8D%E5%8A%A1/index.xml" rel="self" type="application/rss+xml" />
 			<item>
 				<title>简介</title>
-				<link>https://spite-triangle.github.io/cpp_notes/posts/zookeeper/introduction/</link>
+				<link>http://localhost:1313/cpp_notes/posts/zookeeper/introduction/</link>
 				<pubDate>Sat, 01 Nov 2025 00:00:00 +0000</pubDate>
-				<guid>https://spite-triangle.github.io/cpp_notes/posts/zookeeper/introduction/</guid>
+				<guid>http://localhost:1313/cpp_notes/posts/zookeeper/introduction/</guid>
 				<description>&lt;h1 id=&#34;zookeeper&#34;&gt;zookeeper&lt;a href=&#34;#zookeeper&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h1&gt;&lt;p&gt;&lt;a&#xD;&#xA;    href=&#34;https://zookeeper.apache.org/&#34;target=&#34;_blank&#34;&#xD;&#xA;    class=&#34;inline-flex items-center gap-1&#34;&#xD;&#xA;  &gt;zookeeper&lt;svg class=&#34;h-3 w-3 flex-shrink-0&#34; id=&#34;external-link&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;path fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34; d=&#34;M15 3h6v6m-11 5L21 3m-3 10v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6&#34;/&gt;&lt;/svg&gt;&#xD;&#xA;  &lt;/a&gt;: 是一个基于观察者模式设计的分布式服务管理框架，它负责存储和管理大家都关心的数据，然后接受观察者的注册，一旦这些数据的状态发生变化，&lt;code&gt;Zookeeper&lt;/code&gt;就将负责通知已经在&lt;code&gt;Zookeeper&lt;/code&gt;上注册的那些观察者做出相应的反应。&lt;/p&gt;</description>
 			</item>
 			<item>
 				<title>Zookeeper</title>
-				<link>https://spite-triangle.github.io/cpp_notes/posts/distribute/zookeeper/</link>
+				<link>http://localhost:1313/cpp_notes/posts/distribute/zookeeper/</link>
 				<pubDate>Sat, 01 Nov 2025 00:00:00 +0000</pubDate>
-				<guid>https://spite-triangle.github.io/cpp_notes/posts/distribute/zookeeper/</guid>
+				<guid>http://localhost:1313/cpp_notes/posts/distribute/zookeeper/</guid>
 				<description>&lt;h1 id=&#34;介绍&#34;&gt;介绍&lt;a href=&#34;#%e4%bb%8b%e7%bb%8d&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h1&gt;&lt;h2 id=&#34;概述&#34;&gt;概述&lt;a href=&#34;#%e6%a6%82%e8%bf%b0&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h2&gt;&lt;p&gt;&lt;a&#xD;&#xA;    href=&#34;https://zookeeper.readthedocs.io/zh/latest/intro.html&#34;target=&#34;_blank&#34;&#xD;&#xA;    class=&#34;inline-flex items-center gap-1&#34;&#xD;&#xA;  &gt;zookeeper&lt;svg class=&#34;h-3 w-3 flex-shrink-0&#34; id=&#34;external-link&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;path fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34; d=&#34;M15 3h6v6m-11 5L21 3m-3 10v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6&#34;/&gt;&lt;/svg&gt;&#xD;&#xA;  &lt;/a&gt;: 是一个开源的分布式协调服务，广泛应用于分布式系统中。它采用树形目录结构，提供统一命名服务、配置管理、分布式锁、集群管理等功能，确保数据一致性和高可用性。&lt;/p&gt;</description>
 			</item>
 	</channel>

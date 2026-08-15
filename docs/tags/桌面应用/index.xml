@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
 		<title>桌面应用 on Hugo Narrow</title>
-		<link>https://spite-triangle.github.io/cpp_notes/tags/%E6%A1%8C%E9%9D%A2%E5%BA%94%E7%94%A8/</link>
+		<link>http://localhost:1313/cpp_notes/tags/%E6%A1%8C%E9%9D%A2%E5%BA%94%E7%94%A8/</link>
 		<description>Recent content in 桌面应用 on Hugo Narrow</description>
 		<generator>Hugo</generator>
 		<language>en</language>
@@ -12,12 +12,12 @@
 		
 			<lastBuildDate>Sun, 27 Apr 2025 00:00:00 +0000</lastBuildDate>
 		
-			<atom:link href="https://spite-triangle.github.io/cpp_notes/tags/%E6%A1%8C%E9%9D%A2%E5%BA%94%E7%94%A8/index.xml" rel="self" type="application/rss+xml" />
+			<atom:link href="http://localhost:1313/cpp_notes/tags/%E6%A1%8C%E9%9D%A2%E5%BA%94%E7%94%A8/index.xml" rel="self" type="application/rss+xml" />
 			<item>
 				<title>Electron</title>
-				<link>https://spite-triangle.github.io/cpp_notes/posts/electron/</link>
+				<link>http://localhost:1313/cpp_notes/posts/electron/</link>
 				<pubDate>Sun, 27 Apr 2025 00:00:00 +0000</pubDate>
-				<guid>https://spite-triangle.github.io/cpp_notes/posts/electron/</guid>
+				<guid>http://localhost:1313/cpp_notes/posts/electron/</guid>
 				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本文档围绕 Electron 跨平台桌面应用开发展开，从主进程与渲染进程双进程模型入手。内容涵盖窗口管理、无边框界面设计及 Electron-vite 工程配置等实用技术。&lt;/p&gt;&#xA;&lt;!-- VOLUME_OVERVIEW_END --&gt;</description>
 			</item>
 	</channel>

@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
 		<title>多媒体 on Hugo Narrow</title>
-		<link>https://spite-triangle.github.io/cpp_notes/tags/%E5%A4%9A%E5%AA%92%E4%BD%93/</link>
+		<link>http://localhost:1313/cpp_notes/tags/%E5%A4%9A%E5%AA%92%E4%BD%93/</link>
 		<description>Recent content in 多媒体 on Hugo Narrow</description>
 		<generator>Hugo</generator>
 		<language>en</language>
@@ -12,12 +12,12 @@
 		
 			<lastBuildDate>Sun, 12 May 2024 00:00:00 +0000</lastBuildDate>
 		
-			<atom:link href="https://spite-triangle.github.io/cpp_notes/tags/%E5%A4%9A%E5%AA%92%E4%BD%93/index.xml" rel="self" type="application/rss+xml" />
+			<atom:link href="http://localhost:1313/cpp_notes/tags/%E5%A4%9A%E5%AA%92%E4%BD%93/index.xml" rel="self" type="application/rss+xml" />
 			<item>
 				<title>多媒体技术</title>
-				<link>https://spite-triangle.github.io/cpp_notes/posts/media/</link>
+				<link>http://localhost:1313/cpp_notes/posts/media/</link>
 				<pubDate>Sun, 12 May 2024 00:00:00 +0000</pubDate>
-				<guid>https://spite-triangle.github.io/cpp_notes/posts/media/</guid>
+				<guid>http://localhost:1313/cpp_notes/posts/media/</guid>
 				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;图像、音频和视频等数字媒体的编码格式与处理方法，结合 FFmpeg 命令行工具的常用操作示例。&lt;/p&gt;&#xA;&lt;!-- VOLUME_OVERVIEW_END --&gt;</description>
 			</item>
 	</channel>

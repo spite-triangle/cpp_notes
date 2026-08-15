@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
 		<title>开发框架 on Hugo Narrow</title>
-		<link>https://spite-triangle.github.io/cpp_notes/series/framework/</link>
+		<link>http://localhost:1313/cpp_notes/series/framework/</link>
 		<description>Recent content in 开发框架 on Hugo Narrow</description>
 		<generator>Hugo</generator>
 		<language>en</language>
@@ -12,54 +12,54 @@
 		
 			<lastBuildDate>Sat, 07 Mar 2026 00:00:00 +0000</lastBuildDate>
 		
-			<atom:link href="https://spite-triangle.github.io/cpp_notes/series/framework/index.xml" rel="self" type="application/rss+xml" />
+			<atom:link href="http://localhost:1313/cpp_notes/series/framework/index.xml" rel="self" type="application/rss+xml" />
 			<item>
 				<title>辅助工具</title>
-				<link>https://spite-triangle.github.io/cpp_notes/posts/tools/</link>
+				<link>http://localhost:1313/cpp_notes/posts/tools/</link>
 				<pubDate>Sat, 07 Mar 2026 00:00:00 +0000</pubDate>
-				<guid>https://spite-triangle.github.io/cpp_notes/posts/tools/</guid>
+				<guid>http://localhost:1313/cpp_notes/posts/tools/</guid>
 				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本卷系统整理了开发中常用的辅助工具，涵盖代码文档、可视化绘图、&lt;code&gt;json schema&lt;/code&gt; 等多个领域。Doxygen 代码注释驱动 API 文档自动生成；Graphviz DOT 语法绘制类关系图与有向图；Graph-Easy 纯文本箭头快速生成 ASCII 流程图。&lt;/p&gt;</description>
 			</item>
 			<item>
 				<title>Vscode 插件开发</title>
-				<link>https://spite-triangle.github.io/cpp_notes/posts/vscode/</link>
+				<link>http://localhost:1313/cpp_notes/posts/vscode/</link>
 				<pubDate>Sun, 19 Oct 2025 00:00:00 +0000</pubDate>
-				<guid>https://spite-triangle.github.io/cpp_notes/posts/vscode/</guid>
+				<guid>http://localhost:1313/cpp_notes/posts/vscode/</guid>
 				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本卷系统性地梳理了 VSCode 插件开发的核心技术栈，从项目搭建到高级语言服务实现，涵盖七个关键领域。&amp;ldquo;基本概念&amp;quot;介绍扩展项目的创建、配置与发布流程；&amp;ldquo;API&amp;quot;深入解析资源管理（IDisposable）、异步处理（Promise/CancelablePromise）、事件机制（Emitter）及终端操作等通用编程模式；&amp;ldquo;Webview&amp;quot;讲解如何在编辑器内嵌入 Web 页面并实现双向通信；&amp;ldquo;Debugger&amp;quot;基于 Debug Adapter Protocol 阐述自定义调试适配器的开发与配置方法；&amp;ldquo;声明语言特性&amp;quot;聚焦无需编写代码即可实现的文本级功能，包括 TextMate 语法高亮、语义标记和主题定制；&amp;ldquo;程序语言特性&amp;quot;通过 Language Server Protocol (LSP) 实现自动补全、悬停提示等动态分析能力，并详解 LSP 通信协议与客户端/服务端开发模式；&amp;ldquo;Event Emitter&amp;quot;则系统总结了 vscode 事件系统的核心工具类（Emitter/PauseableEmitter/AsyncEmitter）及防抖、缓冲等实用函数。本卷内容从入门到进阶，为开发者提供完整的 VSCode 扩展 API 实践指南。&lt;/p&gt;</description>
 			</item>
 			<item>
 				<title>C/C&#43;&#43;工具库</title>
-				<link>https://spite-triangle.github.io/cpp_notes/posts/cpptools/</link>
+				<link>http://localhost:1313/cpp_notes/posts/cpptools/</link>
 				<pubDate>Sat, 31 May 2025 00:00:00 +0000</pubDate>
-				<guid>https://spite-triangle.github.io/cpp_notes/posts/cpptools/</guid>
+				<guid>http://localhost:1313/cpp_notes/posts/cpptools/</guid>
 				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本卷收录了 C/C++ 项目开发中常用库与技术工具，涵盖网络通信、数据序列化、嵌入式数据库、并行计算、图流程调度以及编译链工具等核心领域。其中 curl 提供 HTTP/TCP 网络请求能力；gRPC 与 protobuf 组成完整的远程过程调用方案，支持多语言跨平台通信；SQLite 作为轻量级嵌入式关系型数据库，可直接集成到应用中；Taskflow 与 CGraph 分别以有向图和节点编排的方式实现并行任务调度与流水线执行。此外还汇总了日志、JSON 解析、命令行参数等实用辅助库。&lt;/p&gt;</description>
 			</item>
 			<item>
 				<title>自动更新</title>
-				<link>https://spite-triangle.github.io/cpp_notes/posts/autoupdate/</link>
+				<link>http://localhost:1313/cpp_notes/posts/autoupdate/</link>
 				<pubDate>Sat, 18 Jan 2025 00:00:00 +0000</pubDate>
-				<guid>https://spite-triangle.github.io/cpp_notes/posts/autoupdate/</guid>
+				<guid>http://localhost:1313/cpp_notes/posts/autoupdate/</guid>
 				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本文档介绍多种桌面应用自动更新框架，包括 Squirrel.Windows、WinSparkle、Velopack 等跨平台方案。同时涵盖 NuGet 包管理、WiX Windows 安装包构建及游戏资源打包工具的使用方法与对比分析。&lt;/p&gt;</description>
 			</item>
 			<item>
 				<title>windbg</title>
-				<link>https://spite-triangle.github.io/cpp_notes/posts/windbg/</link>
+				<link>http://localhost:1313/cpp_notes/posts/windbg/</link>
 				<pubDate>Sat, 11 Jan 2025 00:00:00 +0000</pubDate>
-				<guid>https://spite-triangle.github.io/cpp_notes/posts/windbg/</guid>
+				<guid>http://localhost:1313/cpp_notes/posts/windbg/</guid>
 				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本卷系统梳理 Windows 平台下的调试与诊断技术体系，从底层原理到工具实战层层递进。理论基础章节讲解软硬件断点机制、异常分发流程及 SEH 模型；Windbg 命令篇覆盖核心语法、别名管理与远程调试配置。性能分析篇介绍 PerfView、WPA 等 ETW 工具链的使用，可调试性设计则涵盖日志记录与转储文件生成技术。此外，本卷深入线程数据结构（EPROCESS/TEB）、栈帧结构与 Cookie 保护机制、堆管理器及页堆泄漏检测，最后通过 Application Verifier 的运行时 API Hook 验证完成对内存安全问题的闭环诊断。&lt;/p&gt;</description>
 			</item>
 			<item>
 				<title>workflow</title>
-				<link>https://spite-triangle.github.io/cpp_notes/posts/workflow/</link>
+				<link>http://localhost:1313/cpp_notes/posts/workflow/</link>
 				<pubDate>Sat, 02 Mar 2024 00:00:00 +0000</pubDate>
-				<guid>https://spite-triangle.github.io/cpp_notes/posts/workflow/</guid>
+				<guid>http://localhost:1313/cpp_notes/posts/workflow/</guid>
 				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本卷系统记录了基于 Workflow 框架的任务编排与服务器开发实践，内容从基础任务创建到工程化最佳实践层层递进。首先介绍 HTTP 客户端任务的创建、请求/响应处理，以及通过 SeriesWork 实现的串行与并行任务调度机制；接着讲解计算任务的排序算法实现、自定义 WFThreadTask/WFGoTask 的输入输出模型与时序控制；然后涵盖 HTTP 服务器的搭建、参数调优、连接数限制与服务生命周期管理；最后汇总错误状态码分类、全局配置参数设置及安全退出的工程实践。整套笔记围绕 C++ 异步事件驱动架构，为高并发网络服务开发提供了可复用的模板与方案参考。&lt;/p&gt;</description>
 			</item>
 			<item>
 				<title>测试工具</title>
-				<link>https://spite-triangle.github.io/cpp_notes/posts/testtools/</link>
+				<link>http://localhost:1313/cpp_notes/posts/testtools/</link>
 				<pubDate>Sat, 02 Mar 2024 00:00:00 +0000</pubDate>
-				<guid>https://spite-triangle.github.io/cpp_notes/posts/testtools/</guid>
+				<guid>http://localhost:1313/cpp_notes/posts/testtools/</guid>
 				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;C/C++测试工具集全面指南，涵盖GTest/GMock单元测试与Wireshark抓包分析。&lt;/p&gt;&#xA;&lt;!-- VOLUME_OVERVIEW_END --&gt;</description>
 			</item>
 	</channel>

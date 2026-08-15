@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
 		<title>编程语言 on Hugo Narrow</title>
-		<link>https://spite-triangle.github.io/cpp_notes/series/programe/</link>
+		<link>http://localhost:1313/cpp_notes/series/programe/</link>
 		<description>Recent content in 编程语言 on Hugo Narrow</description>
 		<generator>Hugo</generator>
 		<language>en</language>
@@ -12,33 +12,33 @@
 		
 			<lastBuildDate>Mon, 29 Jun 2026 00:00:00 +0000</lastBuildDate>
 		
-			<atom:link href="https://spite-triangle.github.io/cpp_notes/series/programe/index.xml" rel="self" type="application/rss+xml" />
+			<atom:link href="http://localhost:1313/cpp_notes/series/programe/index.xml" rel="self" type="application/rss+xml" />
 			<item>
 				<title>Web 开发</title>
-				<link>https://spite-triangle.github.io/cpp_notes/posts/web/</link>
+				<link>http://localhost:1313/cpp_notes/posts/web/</link>
 				<pubDate>Mon, 29 Jun 2026 00:00:00 +0000</pubDate>
-				<guid>https://spite-triangle.github.io/cpp_notes/posts/web/</guid>
+				<guid>http://localhost:1313/cpp_notes/posts/web/</guid>
 				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本卷系统整理 Web 开发全链路技术，内容从页面结构的 HTML 标签与表单交互起步，经 CSS 选择器、盒子模型与 Flex 布局实现视觉呈现；继而深入 JavaScript/TypeScript 核心语言特性——模块系统、类型检查与 WebSocket 实时通信，并依托 Node.js 运行时环境及 npm 包管理构建本地开发生态。工程化层面涵盖 ESLint 代码规范检测、Vite（基于原生 ESM 的极速构建）与 Webpack（模块化打包与语法转译），最后扩展至 Babel、SWC 等通用编译器原理，为前端到后端的全栈开发提供完整的工具链参考。&lt;/p&gt;</description>
 			</item>
 			<item>
 				<title>Python</title>
-				<link>https://spite-triangle.github.io/cpp_notes/posts/python/</link>
+				<link>http://localhost:1313/cpp_notes/posts/python/</link>
 				<pubDate>Wed, 24 Sep 2025 00:00:00 +0000</pubDate>
-				<guid>https://spite-triangle.github.io/cpp_notes/posts/python/</guid>
+				<guid>http://localhost:1313/cpp_notes/posts/python/</guid>
 				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本文档围绕 Python 语言展开，从基础语法、变量传参与泛型模板入手，深入装饰器、上下文管理等进阶特性。内容涵盖并发编程、协程异步机制及项目日志记录测试部署等工程化实践技能。&lt;/p&gt;</description>
 			</item>
 			<item>
 				<title>QML</title>
-				<link>https://spite-triangle.github.io/cpp_notes/posts/qml/</link>
+				<link>http://localhost:1313/cpp_notes/posts/qml/</link>
 				<pubDate>Sat, 23 Nov 2024 00:00:00 +0000</pubDate>
-				<guid>https://spite-triangle.github.io/cpp_notes/posts/qml/</guid>
+				<guid>http://localhost:1313/cpp_notes/posts/qml/</guid>
 				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本文档围绕 QML 语言展开，从基础语法、布局系统及信号槽机制入手，深入 UI 控件配置、Model/View 数据绑定及 Canvas 绘图技术。内容涵盖动态对象创建、C++ 集成开发与模块打包等实用开发技能。&lt;/p&gt;</description>
 			</item>
 			<item>
 				<title>GoLang</title>
-				<link>https://spite-triangle.github.io/cpp_notes/posts/go/</link>
+				<link>http://localhost:1313/cpp_notes/posts/go/</link>
 				<pubDate>Sat, 02 Mar 2024 00:00:00 +0000</pubDate>
-				<guid>https://spite-triangle.github.io/cpp_notes/posts/go/</guid>
+				<guid>http://localhost:1313/cpp_notes/posts/go/</guid>
 				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本文档围绕 Go 语言核心特性展开，从基础语法、指针与面向对象编程入手，深入 GMP 并发调度模型。内容涵盖 Channel 通信机制、Module 依赖管理及反射类型推断等关键技术。&lt;/p&gt;</description>
 			</item>
 	</channel>

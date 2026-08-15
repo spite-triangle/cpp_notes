@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
 		<title>模板引擎 on Hugo Narrow</title>
-		<link>https://spite-triangle.github.io/cpp_notes/tags/%E6%A8%A1%E6%9D%BF%E5%BC%95%E6%93%8E/</link>
+		<link>http://localhost:1313/cpp_notes/tags/%E6%A8%A1%E6%9D%BF%E5%BC%95%E6%93%8E/</link>
 		<description>Recent content in 模板引擎 on Hugo Narrow</description>
 		<generator>Hugo</generator>
 		<language>en</language>
@@ -12,12 +12,12 @@
 		
 			<lastBuildDate>Sat, 29 Mar 2025 00:00:00 +0000</lastBuildDate>
 		
-			<atom:link href="https://spite-triangle.github.io/cpp_notes/tags/%E6%A8%A1%E6%9D%BF%E5%BC%95%E6%93%8E/index.xml" rel="self" type="application/rss+xml" />
+			<atom:link href="http://localhost:1313/cpp_notes/tags/%E6%A8%A1%E6%9D%BF%E5%BC%95%E6%93%8E/index.xml" rel="self" type="application/rss+xml" />
 			<item>
 				<title>模板</title>
-				<link>https://spite-triangle.github.io/cpp_notes/posts/fastapi/template/</link>
+				<link>http://localhost:1313/cpp_notes/posts/fastapi/template/</link>
 				<pubDate>Sat, 29 Mar 2025 00:00:00 +0000</pubDate>
-				<guid>https://spite-triangle.github.io/cpp_notes/posts/fastapi/template/</guid>
+				<guid>http://localhost:1313/cpp_notes/posts/fastapi/template/</guid>
 				<description>&lt;h1 id=&#34;介绍&#34;&gt;介绍&lt;a href=&#34;#%e4%bb%8b%e7%bb%8d&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h1&gt;&lt;p&gt;在前后端不分离的 web 项目中，所有的 &lt;code&gt;HTML&lt;/code&gt; 文件均是通过服务动态生成返回给浏览器渲染。但不可能次客户端请求，都重新生成一个 &lt;code&gt;HTML&lt;/code&gt; 文本返回，因此，使用「模板」来简化 &lt;code&gt;HTML&lt;/code&gt; 的生成流程，实现 &lt;code&gt;HTML&lt;/code&gt; 内容复用。&lt;/p&gt;</description>
 			</item>
 	</channel>

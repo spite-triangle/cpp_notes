@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
 		<title>DevOps on Hugo Narrow</title>
-		<link>https://spite-triangle.github.io/cpp_notes/tags/devops/</link>
+		<link>http://localhost:1313/cpp_notes/tags/devops/</link>
 		<description>Recent content in DevOps on Hugo Narrow</description>
 		<generator>Hugo</generator>
 		<language>en</language>
@@ -12,12 +12,12 @@
 		
 			<lastBuildDate>Tue, 04 Mar 2025 00:00:00 +0000</lastBuildDate>
 		
-			<atom:link href="https://spite-triangle.github.io/cpp_notes/tags/devops/index.xml" rel="self" type="application/rss+xml" />
+			<atom:link href="http://localhost:1313/cpp_notes/tags/devops/index.xml" rel="self" type="application/rss+xml" />
 			<item>
 				<title>Docker</title>
-				<link>https://spite-triangle.github.io/cpp_notes/posts/docker/</link>
+				<link>http://localhost:1313/cpp_notes/posts/docker/</link>
 				<pubDate>Tue, 04 Mar 2025 00:00:00 +0000</pubDate>
-				<guid>https://spite-triangle.github.io/cpp_notes/posts/docker/</guid>
+				<guid>http://localhost:1313/cpp_notes/posts/docker/</guid>
 				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本文档围绕 Docker 容器技术展开，从基础概念与守护进程架构入手，深入镜像构建、联合文件系统及数据持久化。内容涵盖命令行操作、Dockerfile 语法规则、网络体系配置与可视化管理工具等实用技能。&lt;/p&gt;</description>
 			</item>
 	</channel>

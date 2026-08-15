@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
 		<title>Python数据库驱动 on Hugo Narrow</title>
-		<link>https://spite-triangle.github.io/cpp_notes/tags/python%E6%95%B0%E6%8D%AE%E5%BA%93%E9%A9%B1%E5%8A%A8/</link>
+		<link>http://localhost:1313/cpp_notes/tags/python%E6%95%B0%E6%8D%AE%E5%BA%93%E9%A9%B1%E5%8A%A8/</link>
 		<description>Recent content in Python数据库驱动 on Hugo Narrow</description>
 		<generator>Hugo</generator>
 		<language>en</language>
@@ -12,12 +12,12 @@
 		
 			<lastBuildDate>Sun, 22 Jun 2025 00:00:00 +0000</lastBuildDate>
 		
-			<atom:link href="https://spite-triangle.github.io/cpp_notes/tags/python%E6%95%B0%E6%8D%AE%E5%BA%93%E9%A9%B1%E5%8A%A8/index.xml" rel="self" type="application/rss+xml" />
+			<atom:link href="http://localhost:1313/cpp_notes/tags/python%E6%95%B0%E6%8D%AE%E5%BA%93%E9%A9%B1%E5%8A%A8/index.xml" rel="self" type="application/rss+xml" />
 			<item>
 				<title>redis-py</title>
-				<link>https://spite-triangle.github.io/cpp_notes/posts/python/redis/</link>
+				<link>http://localhost:1313/cpp_notes/posts/python/redis/</link>
 				<pubDate>Sun, 22 Jun 2025 00:00:00 +0000</pubDate>
-				<guid>https://spite-triangle.github.io/cpp_notes/posts/python/redis/</guid>
+				<guid>http://localhost:1313/cpp_notes/posts/python/redis/</guid>
 				<description>&lt;div&#xD;&#xA;    class=&#34;alert alert-note my-6 overflow-hidden rounded-lg transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md&#34;&#xD;&#xA;    style=&#34;background-color: color-mix(in srgb, var(--color-note) 10%, transparent);&#xD;&#xA;              border-left-color: var(--color-note);&#xD;&#xA;              --hover-bg: color-mix(in srgb, var(--color-note) 15%, transparent);&#34;&#xD;&#xA;    onmouseover=&#34;this.style.backgroundColor = this.style.getPropertyValue(&#39;--hover-bg&#39;)&#34;&#xD;&#xA;    onmouseout=&#34;this.style.backgroundColor = &#39;color-mix(in srgb, var(--color-note) 10%, transparent)&#39;&#34;&#xD;&#xA;    role=&#34;alert&#34;&#xD;&#xA;    aria-labelledby=&#34;alert-0-title&#34;&#xD;&#xA;  &gt;&#xD;&#xA;    &#xD;&#xA;    &lt;div&#xD;&#xA;      class=&#34; flex items-center justify-between px-6 py-6&#34;&#xD;&#xA;      &#xD;&#xA;    &gt;&#xD;&#xA;      &lt;div class=&#34;flex items-center gap-3&#34;&gt;&#xD;&#xA;        &#xD;&#xA;        &lt;h4 id=&#34;alert-0-title&#34; class=&#34;text-foreground/90 m-0 font-semibold&#34;&gt;&#xD;&#xA;          Note&#xD;&#xA;        &lt;/h4&gt;&#xD;&#xA;      &lt;/div&gt;&#xD;&#xA;&#xD;&#xA;      &#xD;&#xA;      &#xD;&#xA;    &lt;/div&gt;&#xD;&#xA;&#xD;&#xA;    &#xD;&#xA;    &lt;div&#xD;&#xA;      id=&#34;alert-0-content&#34;&#xD;&#xA;      class=&#34;alert-content  px-6 pb-6&#34;&#xD;&#xA;    &gt;&#xD;&#xA;      &lt;div class=&#34;prose prose-sm text-foreground/90 max-w-none&#34;&gt;&#xD;&#xA;        &lt;p&gt;&lt;a&#xD;&#xA;    href=&#34;https://spite-triangle.github.io/cpp_notes/#/distributeCluster/chapter/redis&#34;target=&#34;_blank&#34;&#xD;&#xA;    class=&#34;inline-flex items-center gap-1&#34;&#xD;&#xA;  &gt;Redis 教程&lt;svg class=&#34;h-3 w-3 flex-shrink-0&#34; id=&#34;external-link&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;path fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34; d=&#34;M15 3h6v6m-11 5L21 3m-3 10v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6&#34;/&gt;&lt;/svg&gt;&#xD;&#xA;  &lt;/a&gt;&lt;/p&gt;</description>
 			</item>
 	</channel>

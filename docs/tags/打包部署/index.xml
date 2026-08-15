@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
 		<title>打包部署 on Hugo Narrow</title>
-		<link>https://spite-triangle.github.io/cpp_notes/tags/%E6%89%93%E5%8C%85%E9%83%A8%E7%BD%B2/</link>
+		<link>http://localhost:1313/cpp_notes/tags/%E6%89%93%E5%8C%85%E9%83%A8%E7%BD%B2/</link>
 		<description>Recent content in 打包部署 on Hugo Narrow</description>
 		<generator>Hugo</generator>
 		<language>en</language>
@@ -12,12 +12,12 @@
 		
 			<lastBuildDate>Sat, 18 Jan 2025 00:00:00 +0000</lastBuildDate>
 		
-			<atom:link href="https://spite-triangle.github.io/cpp_notes/tags/%E6%89%93%E5%8C%85%E9%83%A8%E7%BD%B2/index.xml" rel="self" type="application/rss+xml" />
+			<atom:link href="http://localhost:1313/cpp_notes/tags/%E6%89%93%E5%8C%85%E9%83%A8%E7%BD%B2/index.xml" rel="self" type="application/rss+xml" />
 			<item>
 				<title>自动更新</title>
-				<link>https://spite-triangle.github.io/cpp_notes/posts/autoupdate/</link>
+				<link>http://localhost:1313/cpp_notes/posts/autoupdate/</link>
 				<pubDate>Sat, 18 Jan 2025 00:00:00 +0000</pubDate>
-				<guid>https://spite-triangle.github.io/cpp_notes/posts/autoupdate/</guid>
+				<guid>http://localhost:1313/cpp_notes/posts/autoupdate/</guid>
 				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本文档介绍多种桌面应用自动更新框架，包括 Squirrel.Windows、WinSparkle、Velopack 等跨平台方案。同时涵盖 NuGet 包管理、WiX Windows 安装包构建及游戏资源打包工具的使用方法与对比分析。&lt;/p&gt;</description>
 			</item>
 	</channel>

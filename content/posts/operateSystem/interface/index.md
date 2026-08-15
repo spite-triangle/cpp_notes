@@ -25,7 +25,7 @@ $ main sh # 最简单的 linux shell 文档
 ## 编译
 
 > - [shell](http://jyywiki.cn/pages/OS/2022/demos/sh-xv6.c) 
-> - [back shell](../../code/operateSystem/sh-xv6.c) 
+> - [back shell](code/operateSystem/sh-xv6.c) 
 
 程序编译：
 
