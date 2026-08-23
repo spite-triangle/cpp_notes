@@ -1,0 +1,4340 @@
+<!doctype html>
+<html
+  lang="en"
+  data-theme="default"
+>
+  <head><script src="/cpp_notes/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=cpp_notes/livereload" data-no-instant defer></script>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+<title>内存管理 |
+    Hugo Narrow</title>
+
+<meta
+  name="description"
+  content="内存基础概念、逻辑地址与绝对地址转换、内存扩充、虚拟内存与分配回收算法"
+/>
+<meta
+  name="keywords"
+  content="内存管理, 逻辑地址, 虚拟内存, 连续分配, 碎片"
+/>
+<meta
+  name="author"
+  content="海拉鲁的三角"
+/>
+<meta name="language" content="en" />
+
+<meta
+  name="robots"
+  content="index, follow"
+/>
+<link rel="canonical" href="http://localhost:1313/cpp_notes/posts/os/memmory/" />
+
+
+  <link rel="icon" type="image/svg+xml" href="/cpp_notes/favicon.svg" />
+<link rel="manifest" href="/cpp_notes/site.webmanifest" />
+<meta property="og:url" content="http://localhost:1313/cpp_notes/posts/os/memmory/">
+	<meta property="og:site_name" content="Hugo Narrow">
+	<meta property="og:title" content="内存管理">
+	<meta property="og:description" content="内存基础概念、逻辑地址与绝对地址转换、内存扩充、虚拟内存与分配回收算法">
+	<meta property="og:locale" content="en">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="posts">
+		<meta property="article:published_time" content="2025-04-07T00:00:00+00:00">
+		<meta property="article:modified_time" content="2025-04-07T00:00:00+00:00">
+		<meta property="article:tag" content="内存管理">
+		<meta property="article:tag" content="逻辑地址">
+		<meta property="article:tag" content="虚拟内存">
+		<meta property="article:tag" content="连续分配">
+		<meta property="article:tag" content="碎片">
+		<meta property="og:image" content="http://localhost:1313/images/og-default.avif">
+
+
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:image" content="http://localhost:1313/images/og-default.avif">
+	<meta name="twitter:title" content="内存管理">
+	<meta name="twitter:description" content="内存基础概念、逻辑地址与绝对地址转换、内存扩充、虚拟内存与分配回收算法">
+
+
+	<meta itemprop="name" content="内存管理">
+	<meta itemprop="description" content="内存基础概念、逻辑地址与绝对地址转换、内存扩充、虚拟内存与分配回收算法">
+	<meta itemprop="datePublished" content="2025-04-07T00:00:00+00:00">
+	<meta itemprop="dateModified" content="2025-04-07T00:00:00+00:00">
+	<meta itemprop="wordCount" content="7783">
+	<meta itemprop="image" content="http://localhost:1313/images/og-default.avif">
+	<meta itemprop="keywords" content="内存管理,逻辑地址,虚拟内存,连续分配,碎片">
+
+
+
+
+
+<script id="search-config" type="application/json">"{\"searchIndexURL\":\"/cpp_notes/index.json\"}"</script>
+
+
+  <script id="gallery-config" type="application/json">"{\"gallery\":true,\"galleryOptions\":{\"columns\":4,\"columnwidth\":200,\"defaultlayout\":\"justified\",\"gap\":10,\"lastrowbehavior\":\"center\",\"targetrowheight\":200},\"lightbox\":true}"</script>
+
+
+
+
+
+
+  
+    <link rel="stylesheet" href="/cpp_notes/css/compiled.css" />
+  
+
+
+
+
+  
+    <link rel="stylesheet" href="/cpp_notes/css/chroma.css" />
+  
+
+
+
+
+
+
+      <script src="/cpp_notes/js/main.js" defer></script>
+
+
+
+          <script src="/cpp_notes/js/toc.js" defer></script>
+
+
+
+      <script src="/cpp_notes/js/search.js" defer></script>
+
+
+
+      <script src="/cpp_notes/js/dock.js" defer></script>
+
+
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/smart-gallery@latest/dist/smart-gallery.umd.js"
+    defer
+  ></script>
+
+
+
+        <script src="/cpp_notes/js/gallery.js" defer></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    <script>(function(){const t=localStorage.getItem("theme")||"system",s=localStorage.getItem("colorScheme")||"default",e=Number.parseInt(localStorage.getItem("contentWidth"),10);Number.isInteger(e)&&e>=40&&e<=90&&document.documentElement.style.setProperty("--content-width",`${e}rem`),document.documentElement.setAttribute("data-theme",s);function n(){t==="dark"||t==="system"&&window.matchMedia("(prefers-color-scheme: dark)").matches?document.documentElement.classList.add("dark"):document.documentElement.classList.remove("dark")}n(),t==="system"&&window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",n)})()</script>
+  </head><body class="bg-background text-foreground min-h-screen antialiased">
+    <main
+      id="page-container"
+      class="mx-auto w-full"
+      style="max-width: var(--content-width, 56rem)"
+    >
+      <div
+    id="reading-progress-bar"
+    class="from-primary to-primary/80 pointer-events-none fixed top-0 left-0 z-50 h-[3px] w-0 bg-linear-to-r transition-[width] duration-150 ease-out"
+  ></div>
+
+  <script>
+    (function () {
+      const bar = document.getElementById("reading-progress-bar");
+      if (!bar) return;
+
+      function update() {
+        const scrolled = window.scrollY;
+        const total = document.documentElement.scrollHeight - window.innerHeight;
+        bar.style.width = total > 0 ? (scrolled / total) * 100 + "%" : "0%";
+      }
+
+      let ticking = false;
+      window.addEventListener(
+        "scroll",
+        () => {
+          if (!ticking) {
+            requestAnimationFrame(() => {
+              update();
+              ticking = false;
+            });
+            ticking = true;
+          }
+        },
+        { passive: true }
+      );
+
+      update();
+    })();
+  </script>
+
+      <header class="sticky top-0 z-50 px-4 py-6">
+  <div
+    class="border-border bg-card/80 flex items-center rounded-xl border px-6 py-4 shadow-sm backdrop-blur-sm"
+  >
+    
+    <div class="hidden w-full items-center md:flex md:min-w-0">
+      
+      <div class="flex items-center">
+        
+          <a
+            href="
+              /cpp_notes/
+            "
+            class="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full transition-transform duration-200 hover:scale-105"
+            aria-label="Hugo Narrow"
+          >
+            <img
+              src="/cpp_notes/images/logo.svg"
+              alt="Hugo Narrow"
+              class="h-full w-full object-cover"
+            />
+          </a>
+        
+      </div>
+
+      
+      <nav class="mx-8 flex min-w-0 flex-1 items-center justify-center">
+        <div class="flex flex-wrap items-center justify-center space-x-1">
+          
+          
+            
+            
+            
+              
+                
+              
+            
+            
+              
+              <a
+                href="/cpp_notes/series/"
+                class="nav-link 
+                  text-muted-foreground hover:text-primary hover:bg-primary/10
+                 focus:ring-primary/20 relative flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 focus:ring-2 focus:outline-none"
+              >
+                
+                  <svg class="h-5 w-5" aria-label="Series" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="m12 18l-4.2 1.8q-1 .425-1.9-.162T5 17.975V5q0-.825.588-1.412T7 3h10q.825 0 1.413.588T19 5v12.975q0 1.075-.9 1.663t-1.9.162zm0-2.2l5 2.15V5H7v12.95zM12 5H7h10z"/></svg>
+                
+                <span>Series</span>
+              </a>
+            
+          
+            
+            
+            
+              
+                
+              
+            
+            
+              
+              <a
+                href="/cpp_notes/posts/"
+                class="nav-link 
+                  text-muted-foreground hover:text-primary hover:bg-primary/10
+                 focus:ring-primary/20 relative flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 focus:ring-2 focus:outline-none"
+              >
+                
+                  <svg class="h-5 w-5" aria-label="Posts" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+</svg>
+
+                
+                <span>Posts</span>
+              </a>
+            
+          
+            
+            
+            
+            
+              
+              
+              <div class="relative">
+                <button
+                  class="nav-link nav-submenu-toggle text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 relative flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 focus:ring-2 focus:outline-none"
+                  data-submenu-id="more"
+                  aria-expanded="false"
+                  aria-haspopup="true"
+                >
+                  
+                    <svg class="h-5 w-5" aria-label="More" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3.09 6.26L22 9l-5.91.74L12 16l-4.09-6.26L2 9l5.91-.74L12 2z" />
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 17l10 5 10-5" />
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 12l10 5 10-5" />
+</svg>
+                  
+                  <span>More</span>
+                  <svg class="h-4 w-4 submenu-chevron transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+                </button>
+                <div
+                  class="nav-submenu border-border bg-popover/95 absolute top-full left-0 z-50 mt-2 hidden min-w-44 space-y-1.5 rounded-xl border p-1.5 shadow-lg backdrop-blur-sm"
+                  data-submenu-id="more"
+                  role="menu"
+                >
+                  
+                    
+                    
+                      
+                        
+                      
+                    
+                    
+                    <a
+                      href="/cpp_notes/categories/"
+                      class="nav-link 
+                        text-muted-foreground hover:text-primary hover:bg-primary/10
+                       focus:ring-primary/20 flex items-center gap-2 rounded-lg px-2 py-2 text-sm leading-snug transition-colors duration-200 focus:ring-2 focus:outline-none"
+                      role="menuitem"
+                      
+                    >
+                      
+                        <svg class="h-4 w-4" aria-label="Categories" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+</svg>
+
+                      
+                      <span>Categories</span>
+                    </a>
+                  
+                    
+                    
+                      
+                        
+                      
+                    
+                    
+                    <a
+                      href="/cpp_notes/tags/"
+                      class="nav-link 
+                        text-muted-foreground hover:text-primary hover:bg-primary/10
+                       focus:ring-primary/20 flex items-center gap-2 rounded-lg px-2 py-2 text-sm leading-snug transition-colors duration-200 focus:ring-2 focus:outline-none"
+                      role="menuitem"
+                      
+                    >
+                      
+                        <svg class="h-4 w-4" aria-label="Tags" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+</svg>
+
+                      
+                      <span>Tags</span>
+                    </a>
+                  
+                    
+                    
+                      
+                        
+                      
+                    
+                    
+                    <a
+                      href="/cpp_notes/projects/"
+                      class="nav-link 
+                        text-muted-foreground hover:text-primary hover:bg-primary/10
+                       focus:ring-primary/20 flex items-center gap-2 rounded-lg px-2 py-2 text-sm leading-snug transition-colors duration-200 focus:ring-2 focus:outline-none"
+                      role="menuitem"
+                      
+                    >
+                      
+                        <svg class="h-4 w-4" aria-label="Projects" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="6" r="1" fill="currentColor"/><path fill="currentColor" d="M6 17h12v2H6zm4-5.17l2.792 2.794l3.932-3.935L18 12V8h-4l1.31 1.275l-2.519 2.519L10 9l-4 4l1.414 1.414z"/><path fill="currentColor" d="M19 3h-3.298a5 5 0 0 0-.32-.425l-.01-.012a4.43 4.43 0 0 0-2.89-1.518a2.6 2.6 0 0 0-.964 0a4.43 4.43 0 0 0-2.89 1.518l-.01.012a5 5 0 0 0-.32.424V3H5a3.003 3.003 0 0 0-3 3v14a3.003 3.003 0 0 0 3 3h14a3.003 3.003 0 0 0 3-3V6a3.003 3.003 0 0 0-3-3m1 17a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h4.55a2.5 2.5 0 0 1 4.9 0H19a1 1 0 0 1 1 1Z"/></svg>
+
+
+                      
+                      <span>Projects</span>
+                    </a>
+                  
+                    
+                    
+                      
+                        
+                      
+                    
+                    
+                    <a
+                      href="/cpp_notes/archives/"
+                      class="nav-link 
+                        text-muted-foreground hover:text-primary hover:bg-primary/10
+                       focus:ring-primary/20 flex items-center gap-2 rounded-lg px-2 py-2 text-sm leading-snug transition-colors duration-200 focus:ring-2 focus:outline-none"
+                      role="menuitem"
+                      
+                    >
+                      
+                        <svg class="h-4 w-4" aria-label="Archives" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+</svg>
+
+                      
+                      <span>Archives</span>
+                    </a>
+                  
+                </div>
+              </div>
+            
+          
+        </div>
+      </nav>
+
+      
+      <div class="flex items-center space-x-2">
+        
+        <div class="hidden lg:block"><div class="relative">
+    <button
+      id="content-width-toggle"
+      class="dropdown-toggle border-border bg-background text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex h-10 w-10 items-center justify-center rounded-lg border transition-all duration-300 ease-out hover:scale-105 focus:ring-2 focus:outline-none active:scale-95"
+      data-dropdown-type="content-width"
+      aria-label="Adjust page width"
+      aria-expanded="false"
+      aria-haspopup="true"
+    ><svg class="h-5 w-5 relative z-10" aria-label="Adjust page width" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+	<path d="M0 0h24v24H0z" fill="none" />
+	<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 12H3l3-3m0 6l-3-3m11 0h7l-3-3m0 6l3-3M3 6V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v1M3 18v1a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-1" />
+</svg>
+</button>
+
+    <div
+      id="content-width-dropdown"
+      class="dropdown-menu border-border bg-popover/95 w-64 absolute top-12 right-0 z-60 hidden rounded-lg border p-1 shadow-lg backdrop-blur-sm transition-all duration-200 ease-out"
+      data-dropdown-type="content-width"
+      
+    >
+    <div class="space-y-3 p-3">
+    <div class="flex items-center justify-between gap-4">
+    <label for="content-width-range" class="text-foreground text-sm font-medium">Page width</label>
+    <output id="content-width-value" for="content-width-range" class="text-muted-foreground min-w-12 text-right text-sm tabular-nums"></output>
+    </div>
+    <input id="content-width-range" class="accent-primary w-full cursor-pointer" type="range" min="40" max="90" step="1" aria-label="Page width" />
+    <button id="content-width-reset" type="button" class="border-border text-muted-foreground hover:bg-accent hover:text-accent-foreground focus:ring-primary/20 w-full rounded-md border px-3 py-2 text-sm transition-colors focus:ring-2 focus:outline-none">Restore default</button>
+    </div></div>
+  </div></div>
+
+
+        
+        
+
+
+        
+        <div class="relative">
+    <button
+      id="color-scheme-toggle"
+      class="dropdown-toggle border-border bg-background text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex h-10 w-10 items-center justify-center rounded-lg border transition-all duration-300 ease-out hover:scale-105 focus:ring-2 focus:outline-none active:scale-95"
+      data-dropdown-type="color-scheme"
+      aria-label="Toggle theme"
+      aria-expanded="false"
+      aria-haspopup="true"
+    ><svg class="h-5 w-5 relative z-10" aria-label="Toggle theme" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v6a2 2 0 002 2h4a2 2 0 002-2V5z" />
+</svg>
+</button>
+
+    <div
+      id="color-scheme-dropdown"
+      class="dropdown-menu border-border bg-popover/95 w-44 absolute top-12 right-0 z-60 hidden rounded-lg border p-1 shadow-lg backdrop-blur-sm transition-all duration-200 ease-out"
+      data-dropdown-type="color-scheme"
+      
+    ><button data-color-scheme="default" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Default</span></button><button data-color-scheme="claude" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Claude</span></button><button data-color-scheme="bumblebee" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Bumblebee</span></button><button data-color-scheme="emerald" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Emerald</span></button><button data-color-scheme="nord" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Nord</span></button><button data-color-scheme="sunset" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Sunset</span></button><button data-color-scheme="abyss" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Abyss</span></button><button data-color-scheme="dracula" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Dracula</span></button><button data-color-scheme="amethyst" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Amethyst</span></button><button data-color-scheme="slate" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Slate</span></button><button data-color-scheme="twitter" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Twitter</span></button><button data-color-scheme="minimal" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Minimal</span></button></div>
+  </div>
+
+
+        
+        <div class="relative">
+    <button
+      id="theme-toggle"
+      class="dropdown-toggle border-border bg-background text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex h-10 w-10 items-center justify-center rounded-lg border transition-all duration-300 ease-out hover:scale-105 focus:ring-2 focus:outline-none active:scale-95"
+      data-dropdown-type="theme"
+      aria-label="Toggle theme"
+      aria-expanded="false"
+      aria-haspopup="true"
+    ><svg class="h-5 w-5 sun-icon hidden relative z-10" aria-label="Light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+</svg>
+
+        <svg class="h-5 w-5 moon-icon hidden relative z-10" aria-label="Dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+</svg>
+
+        <svg class="h-5 w-5 system-icon hidden relative z-10" aria-label="System" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+</svg>
+</button>
+
+    <div
+      id="theme-dropdown"
+      class="dropdown-menu border-border bg-popover/95 w-40 absolute top-12 right-0 z-60 hidden rounded-lg border p-1 shadow-lg backdrop-blur-sm transition-all duration-200 ease-out"
+      data-dropdown-type="theme"
+      
+    ><button data-theme="light" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><svg class="h-5 w-5 mr-3 h-4 w-4" aria-label="Light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+</svg>
+<span>Light</span></button><button data-theme="dark" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><svg class="h-5 w-5 mr-3 h-4 w-4" aria-label="Dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+</svg>
+<span>Dark</span></button><button data-theme="system" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><svg class="h-5 w-5 mr-3 h-4 w-4" aria-label="System" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+</svg>
+<span>System</span></button></div>
+  </div>
+
+
+        
+        
+<button
+  id="header-search"
+  class="border-border bg-background text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex h-10 w-10 items-center justify-center rounded-lg border transition-all duration-300 ease-out hover:scale-105 focus:ring-2 focus:outline-none active:scale-95"
+  title="Search"
+  aria-label="Search"
+>
+  <svg class="h-5 w-5 relative z-10" aria-label="Search" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+</svg>
+
+</button>
+
+      </div>
+    </div>
+
+    
+    <div class="flex w-full items-center justify-between md:hidden">
+      
+      
+<button
+  id="mobile-nav-toggle"
+  class="nav-panel-toggle border-border bg-background text-muted-foreground hover:bg-accent hover:text-foreground flex h-10 w-10 items-center justify-center rounded-lg border transition-colors duration-200"
+  aria-label="Menu"
+  aria-expanded="false"
+  aria-controls="mobile-nav-panel"
+>
+  <svg class="h-5 w-5" aria-label="Menu" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+</svg>
+
+</button>
+
+
+
+      
+      <div class="flex items-center space-x-2">
+        
+        
+
+
+        
+        <div class="relative">
+    <button
+      id="color-scheme-toggle"
+      class="dropdown-toggle border-border bg-background text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex h-10 w-10 items-center justify-center rounded-lg border transition-all duration-300 ease-out hover:scale-105 focus:ring-2 focus:outline-none active:scale-95"
+      data-dropdown-type="color-scheme"
+      aria-label="Toggle theme"
+      aria-expanded="false"
+      aria-haspopup="true"
+    ><svg class="h-5 w-5 relative z-10" aria-label="Toggle theme" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v6a2 2 0 002 2h4a2 2 0 002-2V5z" />
+</svg>
+</button>
+
+    <div
+      id="color-scheme-dropdown"
+      class="dropdown-menu border-border bg-popover/95 w-44 absolute top-12 right-0 z-60 hidden rounded-lg border p-1 shadow-lg backdrop-blur-sm transition-all duration-200 ease-out"
+      data-dropdown-type="color-scheme"
+      
+    ><button data-color-scheme="default" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Default</span></button><button data-color-scheme="claude" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Claude</span></button><button data-color-scheme="bumblebee" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Bumblebee</span></button><button data-color-scheme="emerald" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Emerald</span></button><button data-color-scheme="nord" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Nord</span></button><button data-color-scheme="sunset" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Sunset</span></button><button data-color-scheme="abyss" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Abyss</span></button><button data-color-scheme="dracula" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Dracula</span></button><button data-color-scheme="amethyst" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Amethyst</span></button><button data-color-scheme="slate" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Slate</span></button><button data-color-scheme="twitter" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Twitter</span></button><button data-color-scheme="minimal" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><span>Minimal</span></button></div>
+  </div>
+
+
+        
+        <div class="relative">
+    <button
+      id="theme-toggle"
+      class="dropdown-toggle border-border bg-background text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex h-10 w-10 items-center justify-center rounded-lg border transition-all duration-300 ease-out hover:scale-105 focus:ring-2 focus:outline-none active:scale-95"
+      data-dropdown-type="theme"
+      aria-label="Toggle theme"
+      aria-expanded="false"
+      aria-haspopup="true"
+    ><svg class="h-5 w-5 sun-icon hidden relative z-10" aria-label="Light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+</svg>
+
+        <svg class="h-5 w-5 moon-icon hidden relative z-10" aria-label="Dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+</svg>
+
+        <svg class="h-5 w-5 system-icon hidden relative z-10" aria-label="System" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+</svg>
+</button>
+
+    <div
+      id="theme-dropdown"
+      class="dropdown-menu border-border bg-popover/95 w-40 absolute top-12 right-0 z-60 hidden rounded-lg border p-1 shadow-lg backdrop-blur-sm transition-all duration-200 ease-out"
+      data-dropdown-type="theme"
+      
+    ><button data-theme="light" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><svg class="h-5 w-5 mr-3 h-4 w-4" aria-label="Light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+</svg>
+<span>Light</span></button><button data-theme="dark" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><svg class="h-5 w-5 mr-3 h-4 w-4" aria-label="Dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+</svg>
+<span>Dark</span></button><button data-theme="system" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><svg class="h-5 w-5 mr-3 h-4 w-4" aria-label="System" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+</svg>
+<span>System</span></button></div>
+  </div>
+
+
+        
+        
+<button
+  id="header-search"
+  class="border-border bg-background text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex h-10 w-10 items-center justify-center rounded-lg border transition-all duration-300 ease-out hover:scale-105 focus:ring-2 focus:outline-none active:scale-95"
+  title="Search"
+  aria-label="Search"
+>
+  <svg class="h-5 w-5 relative z-10" aria-label="Search" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+</svg>
+
+</button>
+
+      </div>
+    </div>
+  </div>
+
+  
+  
+<div
+  id="mobile-nav-panel"
+  class="mt-2 hidden md:hidden"
+  role="navigation"
+  aria-label="Menu"
+  aria-hidden="true"
+  tabindex="-1"
+>
+  <div
+    class="border-border bg-popover/95 overflow-hidden rounded-xl border shadow-lg backdrop-blur-sm"
+  >
+    
+    <nav class="flex flex-col p-2">
+      
+      
+        
+        
+        
+          
+            
+          
+        
+        
+          
+          <a
+            href="/cpp_notes/series/"
+            class="nav-panel-link 
+              text-muted-foreground hover:text-primary hover:bg-primary/10
+             focus:ring-primary/20 flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+            role="menuitem"
+            
+          >
+            
+              <svg class="h-5 w-5" aria-label="Series" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="m12 18l-4.2 1.8q-1 .425-1.9-.162T5 17.975V5q0-.825.588-1.412T7 3h10q.825 0 1.413.588T19 5v12.975q0 1.075-.9 1.663t-1.9.162zm0-2.2l5 2.15V5H7v12.95zM12 5H7h10z"/></svg>
+            
+            <span>Series</span>
+          </a>
+        
+      
+        
+        
+        
+          
+            
+          
+        
+        
+          
+          <a
+            href="/cpp_notes/posts/"
+            class="nav-panel-link 
+              text-muted-foreground hover:text-primary hover:bg-primary/10
+             focus:ring-primary/20 flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+            role="menuitem"
+            
+          >
+            
+              <svg class="h-5 w-5" aria-label="Posts" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+</svg>
+
+            
+            <span>Posts</span>
+          </a>
+        
+      
+        
+        
+        
+        
+          
+          
+          <div class="nav-accordion-group">
+            <button
+              class="nav-accordion-toggle text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex w-full items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+              data-accordion-id="more"
+              aria-expanded="false"
+              aria-controls="accordion-more"
+            >
+              
+                <svg class="h-5 w-5" aria-label="More" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3.09 6.26L22 9l-5.91.74L12 16l-4.09-6.26L2 9l5.91-.74L12 2z" />
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 17l10 5 10-5" />
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 12l10 5 10-5" />
+</svg>
+              
+              <span class="flex-1 text-left">More</span>
+              <svg class="h-4 w-4 accordion-chevron transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+            </button>
+            
+            <div
+              id="accordion-more"
+              class="nav-accordion-panel grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out"
+              data-accordion-id="more"
+              aria-hidden="true"
+            >
+              <div class="overflow-hidden">
+                <div class="border-primary/20 ml-4 space-y-0.5 border-l-2 py-1 pl-3">
+                  
+                    
+                    
+                      
+                        
+                      
+                    
+                    
+                    <a
+                      href="/cpp_notes/categories/"
+                      class="nav-panel-link 
+                        text-muted-foreground hover:text-primary hover:bg-primary/10
+                       focus:ring-primary/20 flex items-center gap-3 rounded-md px-3 py-2.5 text-sm transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+                      role="menuitem"
+                      
+                    >
+                      
+                        <svg class="h-4 w-4" aria-label="Categories" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+</svg>
+
+                      
+                      <span>Categories</span>
+                    </a>
+                  
+                    
+                    
+                      
+                        
+                      
+                    
+                    
+                    <a
+                      href="/cpp_notes/tags/"
+                      class="nav-panel-link 
+                        text-muted-foreground hover:text-primary hover:bg-primary/10
+                       focus:ring-primary/20 flex items-center gap-3 rounded-md px-3 py-2.5 text-sm transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+                      role="menuitem"
+                      
+                    >
+                      
+                        <svg class="h-4 w-4" aria-label="Tags" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+</svg>
+
+                      
+                      <span>Tags</span>
+                    </a>
+                  
+                    
+                    
+                      
+                        
+                      
+                    
+                    
+                    <a
+                      href="/cpp_notes/projects/"
+                      class="nav-panel-link 
+                        text-muted-foreground hover:text-primary hover:bg-primary/10
+                       focus:ring-primary/20 flex items-center gap-3 rounded-md px-3 py-2.5 text-sm transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+                      role="menuitem"
+                      
+                    >
+                      
+                        <svg class="h-4 w-4" aria-label="Projects" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="6" r="1" fill="currentColor"/><path fill="currentColor" d="M6 17h12v2H6zm4-5.17l2.792 2.794l3.932-3.935L18 12V8h-4l1.31 1.275l-2.519 2.519L10 9l-4 4l1.414 1.414z"/><path fill="currentColor" d="M19 3h-3.298a5 5 0 0 0-.32-.425l-.01-.012a4.43 4.43 0 0 0-2.89-1.518a2.6 2.6 0 0 0-.964 0a4.43 4.43 0 0 0-2.89 1.518l-.01.012a5 5 0 0 0-.32.424V3H5a3.003 3.003 0 0 0-3 3v14a3.003 3.003 0 0 0 3 3h14a3.003 3.003 0 0 0 3-3V6a3.003 3.003 0 0 0-3-3m1 17a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h4.55a2.5 2.5 0 0 1 4.9 0H19a1 1 0 0 1 1 1Z"/></svg>
+
+
+                      
+                      <span>Projects</span>
+                    </a>
+                  
+                    
+                    
+                      
+                        
+                      
+                    
+                    
+                    <a
+                      href="/cpp_notes/archives/"
+                      class="nav-panel-link 
+                        text-muted-foreground hover:text-primary hover:bg-primary/10
+                       focus:ring-primary/20 flex items-center gap-3 rounded-md px-3 py-2.5 text-sm transition-all duration-200 ease-out focus:ring-2 focus:outline-none"
+                      role="menuitem"
+                      
+                    >
+                      
+                        <svg class="h-4 w-4" aria-label="Archives" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+</svg>
+
+                      
+                      <span>Archives</span>
+                    </a>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        
+      
+    </nav>
+  </div>
+</div>
+
+</header>
+
+
+
+      <div class="px-4 py-6">
+        
+  <nav class="breadcrumb mb-4 py-1 md:mb-6" aria-label="Breadcrumb">
+    <ol
+      class="text-muted-foreground scrollbar-hide flex items-center space-x-1 overflow-x-auto py-1 text-sm whitespace-nowrap md:space-x-2"
+    >
+      
+        
+          
+          <li class="shrink-0">
+            <a
+              href="/cpp_notes/"
+              class="text-muted-foreground hover:text-primary hover:bg-primary/10 flex items-center gap-1 rounded-lg px-1 py-0.5 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-[1.02] md:py-1.5"
+            >
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m3 12 2-2m0 0 7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+</svg>
+
+              <span class="max-w-16 truncate md:max-w-none">Home</span>
+            </a>
+          </li>
+        
+      
+        
+          
+          <li class="flex min-w-0 items-center gap-1 md:gap-2">
+            <span class="text-muted-foreground/50 shrink-0"
+              ><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+</svg>
+            </span>
+            <a
+              href="/cpp_notes/posts/"
+              class="text-muted-foreground hover:text-primary hover:bg-primary/10 flex shrink-0 items-center gap-1 rounded-lg px-1 py-0.5 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-[1.02] md:px-3 md:py-1.5"
+            >
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+</svg>
+              <span class="max-w-16 truncate md:max-w-none">Posts</span>
+            </a>
+          </li>
+        
+      
+        
+          
+          <li class="flex min-w-0 items-center gap-1 md:gap-2">
+            <span class="text-muted-foreground/50 shrink-0"
+              ><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+</svg>
+            </span>
+            <a
+              href="/cpp_notes/posts/os/"
+              class="text-muted-foreground hover:text-primary hover:bg-primary/10 flex shrink-0 items-center gap-1 rounded-lg px-1 py-0.5 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-[1.02] md:px-3 md:py-1.5"
+            >
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+</svg>
+              <span class="max-w-16 truncate md:max-w-none">操作系统原理</span>
+            </a>
+          </li>
+        
+      
+
+
+      
+      <li class="flex min-w-0 items-center gap-1 md:gap-2">
+        <span class="text-muted-foreground/50 shrink-0"
+          ><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+</svg>
+        </span>
+        <span class="text-foreground flex min-w-0 items-center gap-1 font-medium">
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+</svg>
+          <span class="max-w-32 truncate md:max-w-[16rem] lg:max-w-none">内存管理</span>
+        </span>
+      </li>
+    </ol>
+  </nav>
+
+
+        
+  
+
+
+  
+  <header class="mb-8">
+    
+
+
+
+
+<div class="post-meta mb-8">
+  
+  
+    <h1 class="text-foreground mb-6 text-3xl leading-tight font-bold md:text-4xl">
+      内存管理
+    </h1>
+  
+
+  
+  
+
+  
+  <div class="bg-card border-border rounded-xl border">
+
+    
+        
+        <div class="p-6">
+
+          
+          <div class="text-muted-foreground flex flex-wrap items-center gap-3 text-sm mb-4">
+            
+            
+            <div class="flex items-center gap-2">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+</svg>
+
+              <time datetime="2025-04-07">
+                April 7, 2025
+              </time>
+            </div>
+            
+
+            
+            
+            <div class="flex items-center gap-2">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+</svg>
+
+              <span>16 min</span>
+            </div>
+            
+
+            
+            
+            <div class="flex items-center gap-2">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
+</svg>
+
+              <span>7783 words</span>
+            </div>
+            
+          </div>
+
+          
+          <div class="text-muted-foreground space-y-3 pt-4 border-t border-border">
+            <div class="flex items-center gap-2">
+              <div class="shrink-0">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+</svg>
+
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex flex-wrap items-center gap-1.5">
+                  <span class="text-muted-foreground text-sm font-medium">
+                    Categories:
+                  </span>
+                  <a href="/cpp_notes/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"
+                    class="inline-flex items-center rounded-full px-2.5 py-1 text-sm font-medium transition-all duration-200 bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground">
+                    操作系统
+                  </a>
+                  <a href="/cpp_notes/categories/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/"
+                    class="inline-flex items-center rounded-full px-2.5 py-1 text-sm font-medium transition-all duration-200 bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground">
+                    内存管理
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="shrink-0">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+</svg>
+
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex flex-wrap items-center gap-1.5">
+                  <span class="text-muted-foreground text-sm font-medium">
+                    Tags:
+                  </span>
+                  <a href="/cpp_notes/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/"
+                    class="inline-flex items-center rounded-full px-2.5 py-1 text-sm font-medium transition-all duration-200 bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground">
+                    内存管理
+                  </a>
+                  <a href="/cpp_notes/tags/%E9%80%BB%E8%BE%91%E5%9C%B0%E5%9D%80/"
+                    class="inline-flex items-center rounded-full px-2.5 py-1 text-sm font-medium transition-all duration-200 bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground">
+                    逻辑地址
+                  </a>
+                  <a href="/cpp_notes/tags/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/"
+                    class="inline-flex items-center rounded-full px-2.5 py-1 text-sm font-medium transition-all duration-200 bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground">
+                    虚拟内存
+                  </a>
+                  <a href="/cpp_notes/tags/%E8%BF%9E%E7%BB%AD%E5%88%86%E9%85%8D/"
+                    class="inline-flex items-center rounded-full px-2.5 py-1 text-sm font-medium transition-all duration-200 bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground">
+                    连续分配
+                  </a>
+                  <a href="/cpp_notes/tags/%E7%A2%8E%E7%89%87/"
+                    class="inline-flex items-center rounded-full px-2.5 py-1 text-sm font-medium transition-all duration-200 bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground">
+                    碎片
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+  </div>
+</div>
+
+  </header>
+
+  
+  <article class="prose prose-neutral dark:prose-invert mb-12 max-w-none">
+    <h1 id="内存基础概念">内存基础概念<a href="#%e5%86%85%e5%ad%98%e5%9f%ba%e7%a1%80%e6%a6%82%e5%bf%b5" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h1><p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="1651"
+  data-image-height="791"
+  data-image-src="/cpp_notes/posts/os/memmory/resources/summary22.jpg"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/os/memmory/resources/summary22.jpg"
+    alt="summary"
+    
+    
+      
+      
+        
+          width="1651" height="791"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/os/memmory/resources/summary22.jpg"
+    data-gallery-alt="summary"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+<h2 id="作用">作用<a href="#%e4%bd%9c%e7%94%a8" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h2><p><strong>由于硬盘读写速度相对于<code>CPU</code>而言，太慢。所以采用更快速的内存作为<code>CPU</code>运算时数据，指令的储存工具。</strong></p>
+<ul>
+<li>内存的每个「储存单元」均有对应的「地址编号」</li>
+<li>内存中存储数据，代码二进制指令</li>
+</ul>
+<p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="866"
+  data-image-height="549"
+  data-image-src="/cpp_notes/posts/os/memmory/resources/simpleGPU.jpg"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/os/memmory/resources/simpleGPU.jpg"
+    alt="memory"
+    
+    
+      
+      
+        
+          width="866" height="549"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/os/memmory/resources/simpleGPU.jpg"
+    data-gallery-alt="memory"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+<h2 id="逻辑地址与绝对地址">逻辑地址与绝对地址<a href="#%e9%80%bb%e8%be%91%e5%9c%b0%e5%9d%80%e4%b8%8e%e7%bb%9d%e5%af%b9%e5%9c%b0%e5%9d%80" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h2><p><strong>由于程序代码在编译后，是无法知道自己的二进制指令会放在内存的哪个位置的。这样也就导致了「指针地址」操作无法正确实现。逻辑地址与绝对地址就是解决这个问题。</strong></p>
+<ul>
+<li><strong>逻辑地址（相对地址）：</strong> 该地址是编译器编译后的暂时给定的指令地址，地址值都是相对于程序「首地址」进行排序的，只要知道了程序在内存中的首地址，就能准确确定指令的地址。</li>
+<li><strong>绝对地址：</strong> 代码加载到内存后，在内存中真实的代码指令、数据地址。</li>
+</ul>
+<p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="1819"
+  data-image-height="648"
+  data-image-src="/cpp_notes/posts/os/memmory/resources/address.jpg"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/os/memmory/resources/address.jpg"
+    alt="address"
+    
+    
+      
+      
+        
+          width="1819" height="648"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/os/memmory/resources/address.jpg"
+    data-gallery-alt="address"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+<h2 id="逻辑地址转绝对地址">逻辑地址转绝对地址<a href="#%e9%80%bb%e8%be%91%e5%9c%b0%e5%9d%80%e8%bd%ac%e7%bb%9d%e5%af%b9%e5%9c%b0%e5%9d%80" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h2><ul>
+<li><strong>绝对装入：</strong> 事先已经知道程序会被加载内存中的哪个地址位置，然后在编译时，直接将「逻辑地址」设置为真实的「绝对地址」</li>
+<li><strong>静态重定位：</strong> 程序编译，链接时根据「逻辑地址」来实现。在程序被装入内存后，系统会对程序中的「逻辑地址」进行 <strong>重定位</strong> （把程序首地址修改正确就行）。</li>
+<li><strong>动态重定位：</strong> 程序编译，链接时根据「逻辑地址」来实现。系统会利用「重定位寄存器」来对程序的「逻辑地址」进行 <strong>动态重定位</strong>。</li>
+</ul>
+<h2 id="内存管理的内容">内存管理的内容<a href="#%e5%86%85%e5%ad%98%e7%ae%a1%e7%90%86%e7%9a%84%e5%86%85%e5%ae%b9" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h2><p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="1751"
+  data-image-height="732"
+  data-image-src="/cpp_notes/posts/os/memmory/resources/memoryManage.jpg"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/os/memmory/resources/memoryManage.jpg"
+    alt="memory manage"
+    
+    
+      
+      
+        
+          width="1751" height="732"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/os/memmory/resources/memoryManage.jpg"
+    data-gallery-alt="memory manage"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+<h1 id="内存空间的扩充">内存空间的扩充<a href="#%e5%86%85%e5%ad%98%e7%a9%ba%e9%97%b4%e7%9a%84%e6%89%a9%e5%85%85" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h1><p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="1565"
+  data-image-height="761"
+  data-image-src="/cpp_notes/posts/os/memmory/resources/summary23.jpg"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/os/memmory/resources/summary23.jpg"
+    alt="summary"
+    
+    
+      
+      
+        
+          width="1565" height="761"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/os/memmory/resources/summary23.jpg"
+    data-gallery-alt="summary"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+<h2 id="覆盖技术">覆盖技术<a href="#%e8%a6%86%e7%9b%96%e6%8a%80%e6%9c%af" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h2><ul>
+<li><strong>目的：</strong> 解决程序的实际大小超过了内存的大小，对程序的大小进行优化。<span style="color:red;font-weight:bold"> 针对「同一程序」内存占用的优化。 </span></li>
+<li><strong>规则：</strong> 将程序划分为多个模块，常用的模块常驻内存，不常用的等需要时再调入。
+<ol>
+<li>程序的常用模块放到「固定区」，不常用的模块放大「覆盖区」</li>
+<li>不相互依赖且程序调用层级相同的模块，可以公用一个「覆盖区」</li>
+</ol>
+</li>
+</ul>
+<p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="1664"
+  data-image-height="676"
+  data-image-src="/cpp_notes/posts/os/memmory/resources/memoryCover.jpg"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/os/memmory/resources/memoryCover.jpg"
+    alt="memory cover"
+    
+    
+      
+      
+        
+          width="1664" height="676"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/os/memmory/resources/memoryCover.jpg"
+    data-gallery-alt="memory cover"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+<ul>
+<li><strong>缺点：</strong> 程序的层级关系，需要有程序员提供，增加编程负担；属于已经淘汰的机制。</li>
+</ul>
+<h2 id="交换技术">交换技术<a href="#%e4%ba%a4%e6%8d%a2%e6%8a%80%e6%9c%af" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h2><ul>
+<li><strong>目的：</strong> 在外存（机械硬盘，固态硬盘等）中开辟一片交换区，当内存紧张时，就可以将内存中某些进程剔除内存，放入到外存的交换区中，等内存充足时，在重新调度回内存中，即 <strong>「中级调度」</strong> 的实现。<span style="color:red;font-weight:bold"> 针对「不同进程」内存占用的优化 </span></li>
+</ul>
+<p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="1507"
+  data-image-height="356"
+  data-image-src="/cpp_notes/posts/os/memmory/resources/memorySwap.jpg"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/os/memmory/resources/memorySwap.jpg"
+    alt="memory swap"
+    
+    
+      
+      
+        
+          width="1507" height="356"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/os/memmory/resources/memorySwap.jpg"
+    data-gallery-alt="memory swap"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+<p><strong>规则：</strong>
+- 对换区：内存使用采用 <strong>「连续分配」</strong> ，利于快速读取。
+- 文件区：内存使用采用 <strong>「离散分配」</strong> ，利于空间利用。</p>
+<pre><code> &lt;center&gt;
+
+ ![disk distribute](./resources/diskDisturbe.jpg)
+
+ &lt;/center&gt;
+</code></pre>
+<ol>
+<li><strong>交换：</strong> 内存吃紧时，才会交换。优先将「阻塞态」的进程交换出去。</li>
+</ol>
+
+  <blockquote
+    class="border-primary bg-muted/30 hover:bg-muted/40 my-6 rounded-r-lg border-l-4 py-4 pr-4 pl-6 italic transition-all duration-200 ease-out hover:translate-x-1"
+  >
+    <div class="prose prose-sm max-w-none">
+      <p>[!note|style:flat]
+<strong><code>PCB</code>不会换出内存，常驻在内存的「系统区」中，除非撤销了进程。</strong></p>
+
+    </div>
+  </blockquote><script>
+  function toggleAlert(alertId) {
+    const content = document.getElementById(alertId + "-content");
+    const chevron = document.getElementById(alertId + "-chevron");
+    const header = content.previousElementSibling;
+
+    if (content.classList.contains("hidden")) {
+      content.classList.remove("hidden");
+      chevron.style.transform = "rotate(0deg)";
+      header.setAttribute("aria-expanded", "true");
+    } else {
+      content.classList.add("hidden");
+      chevron.style.transform = "rotate(-90deg)";
+      header.setAttribute("aria-expanded", "false");
+    }
+  }
+
+  
+  document.addEventListener("DOMContentLoaded", function () {
+    const collapsedAlerts = document.querySelectorAll(".alert-content.hidden");
+    collapsedAlerts.forEach(function (content) {
+      const alertId = content.id.replace("-content", "");
+      const chevron = document.getElementById(alertId + "-chevron");
+      if (chevron) {
+        chevron.style.transform = "rotate(-90deg)";
+      }
+    });
+  });
+</script>
+<h2 id="虚拟内存技术">虚拟内存技术<a href="#%e8%99%9a%e6%8b%9f%e5%86%85%e5%ad%98%e6%8a%80%e6%9c%af" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h2><p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="1900"
+  data-image-height="879"
+  data-image-src="/cpp_notes/posts/os/memmory/resources/summary30.jpg"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/os/memmory/resources/summary30.jpg"
+    alt="summary"
+    
+    
+      
+      
+        
+          width="1900" height="879"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/os/memmory/resources/summary30.jpg"
+    data-gallery-alt="summary"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+<h3 id="传统内存分配算法">传统内存分配算法<a href="#%e4%bc%a0%e7%bb%9f%e5%86%85%e5%ad%98%e5%88%86%e9%85%8d%e7%ae%97%e6%b3%95" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h3><center>
+<p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="1228"
+  data-image-height="521"
+  data-image-src="/cpp_notes/posts/os/memmory/resources/traditionalManger.jpg"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/os/memmory/resources/traditionalManger.jpg"
+    alt="traditional manager"
+    
+    
+      
+      
+        
+          width="1228" height="521"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/os/memmory/resources/traditionalManger.jpg"
+    data-gallery-alt="traditional manager"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+</center>
+<p><strong>特征：</strong></p>
+<ul>
+<li><strong>一次性：</strong> 作业均为一次性全部装入内存后，然后才开始被<code>CPU</code>运行。这就导致
+<ul>
+<li><strong>作业太大时，内存不够用，无法运行</strong></li>
+<li><strong>同一作业占用的内存较多，内存容纳的作业较少，并发度低</strong></li>
+</ul>
+</li>
+<li><strong>驻留性：</strong> 一旦作业被加载入内存，就会一直驻留在内存中，直到作业运行结束。然而，对于同一作业而言，需要运行的程序只是一小部分，这就导致在内存中放入了大量用不到的数据。</li>
+</ul>
+<h3 id="局部性原理">局部性原理<a href="#%e5%b1%80%e9%83%a8%e6%80%a7%e5%8e%9f%e7%90%86" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h3><ul>
+<li><strong>时间局部性：</strong> 如果执行了程序中的某条指令，那么不久后这条指令很有可能再次执行；如果某个数据被访问过，不久之后该数据很可能再次被访问。（因为程序中存在大量的循环）</li>
+<li><strong>空间局部性：</strong> 一旦程序访问了某个存储单元，在不久之后，其附近的存储单元也很有可能被访问。（因为很多数据在内存中都是连续存放的，并且程序的指令也是顺序地在内存中存放的）</li>
+</ul>
+
+  <blockquote
+    class="border-primary bg-muted/30 hover:bg-muted/40 my-6 rounded-r-lg border-l-4 py-4 pr-4 pl-6 italic transition-all duration-200 ease-out hover:translate-x-1"
+  >
+    <div class="prose prose-sm max-w-none">
+      <p>[!tip|style:flat]
+由于「局部性原理」的存在，就可以把需要频<strong>繁访问的内容</strong>丢到<strong>读写速度更快的缓存</strong>中，进而提出了 <strong>「高速缓冲技术」</strong>。</p>
+
+    </div>
+  </blockquote><script>
+  function toggleAlert(alertId) {
+    const content = document.getElementById(alertId + "-content");
+    const chevron = document.getElementById(alertId + "-chevron");
+    const header = content.previousElementSibling;
+
+    if (content.classList.contains("hidden")) {
+      content.classList.remove("hidden");
+      chevron.style.transform = "rotate(0deg)";
+      header.setAttribute("aria-expanded", "true");
+    } else {
+      content.classList.add("hidden");
+      chevron.style.transform = "rotate(-90deg)";
+      header.setAttribute("aria-expanded", "false");
+    }
+  }
+
+  
+  document.addEventListener("DOMContentLoaded", function () {
+    const collapsedAlerts = document.querySelectorAll(".alert-content.hidden");
+    collapsedAlerts.forEach(function (content) {
+      const alertId = content.id.replace("-content", "");
+      const chevron = document.getElementById(alertId + "-chevron");
+      if (chevron) {
+        chevron.style.transform = "rotate(-90deg)";
+      }
+    });
+  });
+</script>
+<h3 id="虚拟内存的概念">虚拟内存的概念<a href="#%e8%99%9a%e6%8b%9f%e5%86%85%e5%ad%98%e7%9a%84%e6%a6%82%e5%bf%b5" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h3><p><strong>思想：</strong> 每个进程都运行在自己的「虚拟内存空间」中，但是实际上，每个进程只有部分代码和数据放入了内存，让<code>CPU</code>并发运行。将程序中很快会用到的部分装入内存，暂时用不到的部分留在外存（<strong>硬盘的<code>swap</code>区/对换区</strong>），就可以让程序开始执行。</p>
+<center>
+<p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="636"
+  data-image-height="542"
+  data-image-src="/cpp_notes/posts/os/memmory/resources/processVirtual.png"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/os/memmory/resources/processVirtual.png"
+    alt="virtual memory"
+    
+    
+      
+      
+        
+          width="636" height="542"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/os/memmory/resources/processVirtual.png"
+    data-gallery-alt="virtual memory"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+</center>
+<p><strong>规则：</strong></p>
+<ol>
+<li>在程序执行过程中，<strong>当所访问的信息不在内存时，由操作系统负责将所需信息从外存调入内存</strong>，然后继续执行程序。</li>
+<li><strong>若内存空间不够，由操作系统负责将内存中口暂时用不到的信息换出到外存</strong>。</li>
+</ol>
+
+  <blockquote
+    class="border-primary bg-muted/30 hover:bg-muted/40 my-6 rounded-r-lg border-l-4 py-4 pr-4 pl-6 italic transition-all duration-200 ease-out hover:translate-x-1"
+  >
+    <div class="prose prose-sm max-w-none">
+      <p>[!note|style:flat]</p>
+<ul>
+<li><strong>虚拟内存最大容量：</strong> <code>CPU</code>的寻址范围，地址总线的长度。</li>
+<li><strong>虚拟内存的实际容量：</strong> min(内存+外存,<code>CPU</code>寻址范围)</li>
+</ul>
+
+    </div>
+  </blockquote><script>
+  function toggleAlert(alertId) {
+    const content = document.getElementById(alertId + "-content");
+    const chevron = document.getElementById(alertId + "-chevron");
+    const header = content.previousElementSibling;
+
+    if (content.classList.contains("hidden")) {
+      content.classList.remove("hidden");
+      chevron.style.transform = "rotate(0deg)";
+      header.setAttribute("aria-expanded", "true");
+    } else {
+      content.classList.add("hidden");
+      chevron.style.transform = "rotate(-90deg)";
+      header.setAttribute("aria-expanded", "false");
+    }
+  }
+
+  
+  document.addEventListener("DOMContentLoaded", function () {
+    const collapsedAlerts = document.querySelectorAll(".alert-content.hidden");
+    collapsedAlerts.forEach(function (content) {
+      const alertId = content.id.replace("-content", "");
+      const chevron = document.getElementById(alertId + "-chevron");
+      if (chevron) {
+        chevron.style.transform = "rotate(-90deg)";
+      }
+    });
+  });
+</script>
+<h3 id="虚拟内存的特性">虚拟内存的特性<a href="#%e8%99%9a%e6%8b%9f%e5%86%85%e5%ad%98%e7%9a%84%e7%89%b9%e6%80%a7" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h3><ul>
+<li><strong>多次性：</strong> 作业并非是一次性调入内存的，允许多次调入</li>
+<li><strong>对换性：</strong> 作业的部分无需一直常驻内存，允许作业在内存与外存的交换</li>
+</ul>
+<h3 id="虚拟内存的实现">虚拟内存的实现<a href="#%e8%99%9a%e6%8b%9f%e5%86%85%e5%ad%98%e7%9a%84%e5%ae%9e%e7%8e%b0" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h3><ol>
+<li><strong>请求调页/段功能</strong>：当所访问的信息不在内存时，由操作系统负责将所需信息从外存调入内存。</li>
+<li><strong>页面/段置换功能</strong>：若内存空间不够，由操作系统负责将内存中口暂时用不到的信息换出到外存</li>
+</ol>
+<h1 id="内存分配与回收">内存分配与回收<a href="#%e5%86%85%e5%ad%98%e5%88%86%e9%85%8d%e4%b8%8e%e5%9b%9e%e6%94%b6" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h1>
+  <blockquote
+    class="border-primary bg-muted/30 hover:bg-muted/40 my-6 rounded-r-lg border-l-4 py-4 pr-4 pl-6 italic transition-all duration-200 ease-out hover:translate-x-1"
+  >
+    <div class="prose prose-sm max-w-none">
+      <p>[!tip|style:flat]</p>
+<ul>
+<li><strong>连续分配：</strong> 系统为进程分配的内存是一块「连续的内存空间」。<strong>进程的数据块与代码块都是完整地放在一块。</strong></li>
+<li><strong>非连续分配：</strong> 系统为进程分配的内存是一块「非连续的内存空间」。</li>
+</ul>
+<p><strong>注意</strong>：<span style="color:red;font-weight:bold"> 在没有引入「虚拟内存技术」之前，所有的内存分配算法都是将进程完整地放入内存中，才进行运行。 </span></p>
+
+    </div>
+  </blockquote><script>
+  function toggleAlert(alertId) {
+    const content = document.getElementById(alertId + "-content");
+    const chevron = document.getElementById(alertId + "-chevron");
+    const header = content.previousElementSibling;
+
+    if (content.classList.contains("hidden")) {
+      content.classList.remove("hidden");
+      chevron.style.transform = "rotate(0deg)";
+      header.setAttribute("aria-expanded", "true");
+    } else {
+      content.classList.add("hidden");
+      chevron.style.transform = "rotate(-90deg)";
+      header.setAttribute("aria-expanded", "false");
+    }
+  }
+
+  
+  document.addEventListener("DOMContentLoaded", function () {
+    const collapsedAlerts = document.querySelectorAll(".alert-content.hidden");
+    collapsedAlerts.forEach(function (content) {
+      const alertId = content.id.replace("-content", "");
+      const chevron = document.getElementById(alertId + "-chevron");
+      if (chevron) {
+        chevron.style.transform = "rotate(-90deg)";
+      }
+    });
+  });
+</script>
+<h2 id="内部碎片与外部碎片">内部碎片与外部碎片<a href="#%e5%86%85%e9%83%a8%e7%a2%8e%e7%89%87%e4%b8%8e%e5%a4%96%e9%83%a8%e7%a2%8e%e7%89%87" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h2><ul>
+<li><strong>内部碎片：</strong> 分配给进程的内存中，进程没有利用上的内存，例如字节对齐产生的空字节。</li>
+<li><strong>外部碎片：</strong> 在内存中，某些内存块由于太小，无法给进程用使用的内存。</li>
+</ul>
+<h2 id="连续分配管理">连续分配管理<a href="#%e8%bf%9e%e7%bb%ad%e5%88%86%e9%85%8d%e7%ae%a1%e7%90%86" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h2><p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="1724"
+  data-image-height="843"
+  data-image-src="/cpp_notes/posts/os/memmory/resources/summary24.jpg"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/os/memmory/resources/summary24.jpg"
+    alt="summary"
+    
+    
+      
+      
+        
+          width="1724" height="843"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/os/memmory/resources/summary24.jpg"
+    data-gallery-alt="summary"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+<h3 id="单一连续分配">单一连续分配<a href="#%e5%8d%95%e4%b8%80%e8%bf%9e%e7%bb%ad%e5%88%86%e9%85%8d" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h3><center>
+<p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="416"
+  data-image-height="751"
+  data-image-src="/cpp_notes/posts/os/memmory/resources/singleDistribution.jpg"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/os/memmory/resources/singleDistribution.jpg"
+    alt="single distribute"
+    
+    
+      
+      
+        
+          width="416" height="751"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/os/memmory/resources/singleDistribution.jpg"
+    data-gallery-alt="single distribute"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+</center>
+<ul>
+<li><strong>规则：</strong> 内存被分为「系统区」和「用户区」
+<ul>
+<li>系统区: 通常位于内存的低地址部分，用于存放操作系统相关数据；</li>
+<li>用户区: 用于存放用户进程相关数据。<span style="color:red;font-weight:bold"> 内存中只能有一道用户程序，用户程序独占整个用户区空间 </span> 。</li>
+</ul>
+</li>
+<li><strong>优缺点：</strong> 无外部碎片，有内部碎片。</li>
+</ul>
+<h3 id="固定分区分配">固定分区分配<a href="#%e5%9b%ba%e5%ae%9a%e5%88%86%e5%8c%ba%e5%88%86%e9%85%8d" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h3><center>
+<p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="695"
+  data-image-height="740"
+  data-image-src="/cpp_notes/posts/os/memmory/resources/fixBlockDistribute.jpg"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/os/memmory/resources/fixBlockDistribute.jpg"
+    alt="fix block distribute"
+    
+    
+      
+      
+        
+          width="695" height="740"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/os/memmory/resources/fixBlockDistribute.jpg"
+    data-gallery-alt="fix block distribute"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+</center>
+<ul>
+<li>
+<p><strong>规则：</strong></p>
+<ul>
+<li>将「用户区」非为若干内存大小相等的区域，一个分区运行一道程序。</li>
+<li>建立「分区说明表」用于管理每个分区。</li>
+</ul>
+<center>
+<p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="1234"
+  data-image-height="318"
+  data-image-src="/cpp_notes/posts/os/memmory/resources/fixBlockTable.jpg"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/os/memmory/resources/fixBlockTable.jpg"
+    alt="fix block table"
+    
+    
+      
+      
+        
+          width="1234" height="318"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/os/memmory/resources/fixBlockTable.jpg"
+    data-gallery-alt="fix block table"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+</center>
+</li>
+<li>
+<p><strong>优缺点：</strong> 无外部碎片，有内部碎片。当程序太大时，只能采用「覆盖技术」来缩减内存占用。</p>
+</li>
+</ul>
+<h3 id="动态分区分配">动态分区分配<a href="#%e5%8a%a8%e6%80%81%e5%88%86%e5%8c%ba%e5%88%86%e9%85%8d" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h3><ul>
+<li>
+<p><strong>思路：</strong>  「固定分区分配」是由操作系统来划分每个分区的大小。相对地，可以直接通过「进程」加载内存中的大小来划分每个分区的大小。</p>
+</li>
+<li>
+<p><strong>规则：</strong></p>
+  <center>
+<p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="1714"
+  data-image-height="730"
+  data-image-src="/cpp_notes/posts/os/memmory/resources/idleTable.jpg"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/os/memmory/resources/idleTable.jpg"
+    alt="idle table"
+    
+    
+      
+      
+        
+          width="1714" height="730"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/os/memmory/resources/idleTable.jpg"
+    data-gallery-alt="idle table"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+  </center>
+<p>表的更新方式为：<strong>相邻的空闲分区合并；未用来的分区更新大小，起始地址；刚好用完的分区，从空闲表中删除。</strong></p>
+<ol>
+<li>进程内存的「动态分配算法」，下一节详细描述</li>
+</ol>
+</li>
+<li>
+<p><strong>优缺点：</strong> 有外部碎片，无内部碎片。</p>
+</li>
+</ul>
+<h2 id="动态分区分配算法">动态分区分配算法<a href="#%e5%8a%a8%e6%80%81%e5%88%86%e5%8c%ba%e5%88%86%e9%85%8d%e7%ae%97%e6%b3%95" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h2><p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="1611"
+  data-image-height="796"
+  data-image-src="/cpp_notes/posts/os/memmory/resources/summary25.jpg"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/os/memmory/resources/summary25.jpg"
+    alt="summary"
+    
+    
+      
+      
+        
+          width="1611" height="796"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/os/memmory/resources/summary25.jpg"
+    data-gallery-alt="summary"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+<h3 id="首次适应算法">首次适应算法<a href="#%e9%a6%96%e6%ac%a1%e9%80%82%e5%ba%94%e7%ae%97%e6%b3%95" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h3><ul>
+<li><strong>思想：</strong> 从低地址开始查找，找到第一个能满足进程大小的空闲区间。</li>
+<li><strong>规则：</strong>
+<ol>
+<li>每次分配内存，<strong>从空闲表表头开始查找</strong>，找到满足进程大小的第一个空闲分区</li>
+</ol>
+</li>
+<li><span style="color:red;font-weight:bold"> 效果最好的 </span></li>
+</ul>
+<h3 id="邻近适应算法">邻近适应算法<a href="#%e9%82%bb%e8%bf%91%e9%80%82%e5%ba%94%e7%ae%97%e6%b3%95" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h3><ul>
+<li><strong>思想：</strong> 「首次适应算法」每次分配都是从低地址开始查找，就会导致低地址处产生许多小的空闲分区，且每次查找都要遍历这些分区，就导致开销增大。所以<strong>修改为每次都从上一次结束的位置开始查找</strong>。</li>
+<li><strong>规则：</strong>
+<ol>
+<li>每次分配内存，<strong>上一次结束的位置开始查找</strong>，找到满足进程大小的第一个空闲分区</li>
+</ol>
+</li>
+<li><strong>缺陷：</strong> 高低地址的空闲分区都被同等概率的利用，这就导致大进程无法进入。</li>
+</ul>
+<h3 id="最佳适应算法">最佳适应算法<a href="#%e6%9c%80%e4%bd%b3%e9%80%82%e5%ba%94%e7%ae%97%e6%b3%95" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h3><ul>
+<li><strong>思想：</strong> 由于动态分区分配算法中的每一个区块就是一个完整的连续内存空间，为了保证能放入大进程，所以应尽量保留大内存的空间区间，优先使用小空闲区间。</li>
+<li><strong>规则：</strong>
+<ol>
+<li>每次分配内存，从空闲表表头开始查找，找到满足进程大小的第一个空闲分区</li>
+</ol>
+</li>
+<li><strong>缺陷：</strong> 由于每次都是利用小空闲区间，就会导致外部碎片增加。</li>
+</ul>
+<h3 id="最坏适应算法">最坏适应算法<a href="#%e6%9c%80%e5%9d%8f%e9%80%82%e5%ba%94%e7%ae%97%e6%b3%95" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h3><ul>
+<li><strong>思想：</strong> 与「最佳适应算法」相反，优先使用最大空闲区间。</li>
+<li><strong>规则：</strong>
+<ol>
+<li>每次分配内存，从空闲表表头开始查找，找到满足进程大小的第一个空闲分区</li>
+</ol>
+</li>
+<li><strong>缺陷：</strong> 由于每次都是利用最大空闲区间，就会导致大进程无法进入。</li>
+</ul>
+<h2 id="非连续分配管理-基本分页存储">非连续分配管理-基本分页存储<a href="#%e9%9d%9e%e8%bf%9e%e7%bb%ad%e5%88%86%e9%85%8d%e7%ae%a1%e7%90%86-%e5%9f%ba%e6%9c%ac%e5%88%86%e9%a1%b5%e5%ad%98%e5%82%a8" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h2><p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="1854"
+  data-image-height="855"
+  data-image-src="/cpp_notes/posts/os/memmory/resources/summary26.jpg"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/os/memmory/resources/summary26.jpg"
+    alt="summary"
+    
+    
+      
+      
+        
+          width="1854" height="855"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/os/memmory/resources/summary26.jpg"
+    data-gallery-alt="summary"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+<h3 id="基本思想">基本思想<a href="#%e5%9f%ba%e6%9c%ac%e6%80%9d%e6%83%b3" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h3><p><strong>思路：</strong> 内存按照「固定分区分配」思路，将内存划分为一定大小等值的内存块。再将进程也划分为同样大小的块，这样就能将进程一块一块的放入内存中。<strong>当分块大小越小时，对内存的利用率也就越高，内部碎片越小。</strong></p>
+<center>
+<p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="1399"
+  data-image-height="889"
+  data-image-src="/cpp_notes/posts/os/memmory/resources/distributeBlock.png"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/os/memmory/resources/distributeBlock.png"
+    alt="block distribute"
+    
+    
+      
+      
+        
+          width="1399" height="889"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/os/memmory/resources/distributeBlock.png"
+    data-gallery-alt="block distribute"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+</center>
+<p><strong>概念：</strong></p>
+<ul>
+<li><strong>页框：</strong> 内存的分块，也叫页帧、内存块、物理块</li>
+<li><strong>页面：</strong> 进程的分块，也叫页</li>
+<li><strong>页号：</strong> 每一个「页」编号，从<code>0</code>开始</li>
+<li><strong>页面号：</strong> 每一个「页框」编号，从<code>0</code>开始</li>
+</ul>
+
+  <blockquote
+    class="border-primary bg-muted/30 hover:bg-muted/40 my-6 rounded-r-lg border-l-4 py-4 pr-4 pl-6 italic transition-all duration-200 ease-out hover:translate-x-1"
+  >
+    <div class="prose prose-sm max-w-none">
+      <p>[!tip|style:flat]</p>
+<ul>
+<li>操作系统是以「页框」为基本单位来为进程分配内存</li>
+<li>在内存中，「页」与「页框」是一一对应关系</li>
+<li>「页」在内存中分布，不用按照先后顺序存放。</li>
+</ul>
+
+    </div>
+  </blockquote><script>
+  function toggleAlert(alertId) {
+    const content = document.getElementById(alertId + "-content");
+    const chevron = document.getElementById(alertId + "-chevron");
+    const header = content.previousElementSibling;
+
+    if (content.classList.contains("hidden")) {
+      content.classList.remove("hidden");
+      chevron.style.transform = "rotate(0deg)";
+      header.setAttribute("aria-expanded", "true");
+    } else {
+      content.classList.add("hidden");
+      chevron.style.transform = "rotate(-90deg)";
+      header.setAttribute("aria-expanded", "false");
+    }
+  }
+
+  
+  document.addEventListener("DOMContentLoaded", function () {
+    const collapsedAlerts = document.querySelectorAll(".alert-content.hidden");
+    collapsedAlerts.forEach(function (content) {
+      const alertId = content.id.replace("-content", "");
+      const chevron = document.getElementById(alertId + "-chevron");
+      if (chevron) {
+        chevron.style.transform = "rotate(-90deg)";
+      }
+    });
+  });
+</script>
+<h3 id="地址转换逻辑">地址转换逻辑<a href="#%e5%9c%b0%e5%9d%80%e8%bd%ac%e6%8d%a2%e9%80%bb%e8%be%91" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h3>
+  <blockquote
+    class="border-primary bg-muted/30 hover:bg-muted/40 my-6 rounded-r-lg border-l-4 py-4 pr-4 pl-6 italic transition-all duration-200 ease-out hover:translate-x-1"
+  >
+    <div class="prose prose-sm max-w-none">
+      <p>[!note|style:flat]
+<strong>根据逻辑地址转绝对地址的三种方案，可以看出「动态重定位」方案是最适合的。</strong></p>
+
+    </div>
+  </blockquote><script>
+  function toggleAlert(alertId) {
+    const content = document.getElementById(alertId + "-content");
+    const chevron = document.getElementById(alertId + "-chevron");
+    const header = content.previousElementSibling;
+
+    if (content.classList.contains("hidden")) {
+      content.classList.remove("hidden");
+      chevron.style.transform = "rotate(0deg)";
+      header.setAttribute("aria-expanded", "true");
+    } else {
+      content.classList.add("hidden");
+      chevron.style.transform = "rotate(-90deg)";
+      header.setAttribute("aria-expanded", "false");
+    }
+  }
+
+  
+  document.addEventListener("DOMContentLoaded", function () {
+    const collapsedAlerts = document.querySelectorAll(".alert-content.hidden");
+    collapsedAlerts.forEach(function (content) {
+      const alertId = content.id.replace("-content", "");
+      const chevron = document.getElementById(alertId + "-chevron");
+      if (chevron) {
+        chevron.style.transform = "rotate(-90deg)";
+      }
+    });
+  });
+</script>
+<p><span style="font-size:24px;font-weight:bold" class="section2">1. 地址转换方案</span></p>
+<p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="1186"
+  data-image-height="1022"
+  data-image-src="/cpp_notes/posts/os/memmory/resources/exchangeAddressPage.jpg"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/os/memmory/resources/exchangeAddressPage.jpg"
+    alt="exchange address page"
+    
+    
+      
+      
+        
+          width="1186" height="1022"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/os/memmory/resources/exchangeAddressPage.jpg"
+    data-gallery-alt="exchange address page"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+<p><strong>问题：</strong> 计算「指令1」中逻辑地址<code>80</code>在「物理地址」中的值。</p>
+<pre><code>$$
+页号 = \lfloor 80 / 50 \rfloor = 1 
+$$
+</code></pre>
+<ol>
+<li>根据「页号」查询「页表」，得到「页面号」<code>N</code></li>
+<li>计算逻辑地址<code>80</code>在1号「页面」中的相对「偏移量」
+$$
+偏移量 = 80 % 50 = 30
+$$</li>
+<li>根据「页面号」与「偏移量」计算绝对地址
+$$
+物理地址 = N * 50 + 30
+$$</li>
+</ol>
+<p><span style="font-size:24px;font-weight:bold" class="section2">2. 页号与偏移量的计算</span></p>
+<ul>
+<li>
+<p><strong>十进制：</strong>
+$$
+\begin{aligned}
+页号 &amp;= \lfloor \frac{逻辑地址}{页大小} \rfloor \
+偏移量 &amp;= 逻辑地址 % 页大小
+\end{aligned}
+$$</p>
+</li>
+<li>
+<p><strong>二进制：</strong> 为了<code>CPU</code>处理方便，<span style="color:red;font-weight:bold"> 一般取「页大小」的值为<code>2</code>的整数幂 </span> 。取页大小为<code>4096 bit</code>，一个<code>32 bit</code>的逻辑地址<code>4097</code>的「页号」与「偏移量」的二进制表达形式如下图所示。红色部分就是「页号」，黑色部分就是「偏移量」</p>
+  <center>
+<p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="612"
+  data-image-height="35"
+  data-image-src="/cpp_notes/posts/os/memmory/resources/binaryLogicAddress.jpg"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/os/memmory/resources/binaryLogicAddress.jpg"
+    alt="binary logic address"
+    
+    
+      
+      
+        
+          width="612" height="35"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/os/memmory/resources/binaryLogicAddress.jpg"
+    data-gallery-alt="binary logic address"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+  </center>
+</li>
+</ul>
+<p><span style="font-size:24px;font-weight:bold" class="section2">3. 页表</span></p>
+<p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="1751"
+  data-image-height="701"
+  data-image-src="/cpp_notes/posts/os/memmory/resources/pageTable.jpg"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/os/memmory/resources/pageTable.jpg"
+    alt="page table"
+    
+    
+      
+      
+        
+          width="1751" height="701"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/os/memmory/resources/pageTable.jpg"
+    data-gallery-alt="page table"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+
+  <blockquote
+    class="border-primary bg-muted/30 hover:bg-muted/40 my-6 rounded-r-lg border-l-4 py-4 pr-4 pl-6 italic transition-all duration-200 ease-out hover:translate-x-1"
+  >
+    <div class="prose prose-sm max-w-none">
+      <p>[!note|style:flat]
+<strong>在「页表」中，「页号」是从<code>0</code>开始，顺序排序的，且「页号」的储存长度是一样的。这样就能将「页表」当作一个数组，对于「块号」的查询，就能把「页号」当作「索引号」来使用。</strong>
+$$
+块号地址 = 页号 * 块号项字节长度 + 页表首地址
+$$</p>
+
+    </div>
+  </blockquote><script>
+  function toggleAlert(alertId) {
+    const content = document.getElementById(alertId + "-content");
+    const chevron = document.getElementById(alertId + "-chevron");
+    const header = content.previousElementSibling;
+
+    if (content.classList.contains("hidden")) {
+      content.classList.remove("hidden");
+      chevron.style.transform = "rotate(0deg)";
+      header.setAttribute("aria-expanded", "true");
+    } else {
+      content.classList.add("hidden");
+      chevron.style.transform = "rotate(-90deg)";
+      header.setAttribute("aria-expanded", "false");
+    }
+  }
+
+  
+  document.addEventListener("DOMContentLoaded", function () {
+    const collapsedAlerts = document.querySelectorAll(".alert-content.hidden");
+    collapsedAlerts.forEach(function (content) {
+      const alertId = content.id.replace("-content", "");
+      const chevron = document.getElementById(alertId + "-chevron");
+      if (chevron) {
+        chevron.style.transform = "rotate(-90deg)";
+      }
+    });
+  });
+</script>
+<h3 id="基本地址变换机构">基本地址变换机构<a href="#%e5%9f%ba%e6%9c%ac%e5%9c%b0%e5%9d%80%e5%8f%98%e6%8d%a2%e6%9c%ba%e6%9e%84" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h3><p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="1788"
+  data-image-height="830"
+  data-image-src="/cpp_notes/posts/os/memmory/resources/summary27.jpg"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/os/memmory/resources/summary27.jpg"
+    alt="summary"
+    
+    
+      
+      
+        
+          width="1788" height="830"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/os/memmory/resources/summary27.jpg"
+    data-gallery-alt="summary"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+<p><span style="font-size:24px;font-weight:bold" class="section2">1. 基本地址变换机构的实现</span></p>
+<p><strong>作用：</strong> 基本地址变换机构可以根据进程的「页表」将逻辑地址转换为物理地址。利用「页表寄存器」来储存「页表」在内存中的位置。</p>
+<ul>
+<li><strong>页表寄存器(PTR)</strong>：存储「页表」在内存中的「页表始址」与「页表长度」</li>
+<li><strong>页表始址</strong>：「页表」在内存存放的起始地址</li>
+<li><strong>页表长度</strong>：「页表」中存放了几项数据</li>
+<li>「起始地址F」与「页表长度M」的初始值存放在<code>PCB</code>中，当进程转为「运行态」时，才会修改对应「页表寄存器」的值</li>
+</ul>
+<center>
+<p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="1851"
+  data-image-height="849"
+  data-image-src="/cpp_notes/posts/os/memmory/resources/pageAddress.jpg"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/os/memmory/resources/pageAddress.jpg"
+    alt="page address"
+    
+    
+      
+      
+        
+          width="1851" height="849"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/os/memmory/resources/pageAddress.jpg"
+    data-gallery-alt="page address"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+</center>
+<p><strong>工作原理：</strong></p>
+<ol>
+<li>根据「页表长度」检测「页号」是否越界</li>
+<li>根据「页号」从「页表」中取出「内存块号」</li>
+<li>根据「内存块号」与「页内偏移量」计算「物理地址」</li>
+</ol>
+
+  <blockquote
+    class="border-primary bg-muted/30 hover:bg-muted/40 my-6 rounded-r-lg border-l-4 py-4 pr-4 pl-6 italic transition-all duration-200 ease-out hover:translate-x-1"
+  >
+    <div class="prose prose-sm max-w-none">
+      <p>[!note|style:flat]
+对于<code>32 bit</code>的系统，内存为<code>4G</code>，取「页面」大小为<code>4KB</code>，这样「块号」的取值范围就为<code>0 ~ 2^20</code>，在内存中就需要用<code>20 bit</code>来存储「块号」，为了读取方便，就可以利用<code>3 Byte</code>来存储。<span style="color:black;font-weight:bold"> 利用<code>3B</code>来存储块号，就会导致一个<code>4KB</code>的「页框」只能存储了<code>1365</code>个「块号」，还剩余<code>4096 - 1365*3 = 1</code>个字节，这就导致对于占用多个「页框」的「页表」，并不能在内存中连续存储，所以为了编程方便，可以将「页块」所占长度设置为<code>4B</code> </span></p>
+
+    </div>
+  </blockquote><script>
+  function toggleAlert(alertId) {
+    const content = document.getElementById(alertId + "-content");
+    const chevron = document.getElementById(alertId + "-chevron");
+    const header = content.previousElementSibling;
+
+    if (content.classList.contains("hidden")) {
+      content.classList.remove("hidden");
+      chevron.style.transform = "rotate(0deg)";
+      header.setAttribute("aria-expanded", "true");
+    } else {
+      content.classList.add("hidden");
+      chevron.style.transform = "rotate(-90deg)";
+      header.setAttribute("aria-expanded", "false");
+    }
+  }
+
+  
+  document.addEventListener("DOMContentLoaded", function () {
+    const collapsedAlerts = document.querySelectorAll(".alert-content.hidden");
+    collapsedAlerts.forEach(function (content) {
+      const alertId = content.id.replace("-content", "");
+      const chevron = document.getElementById(alertId + "-chevron");
+      if (chevron) {
+        chevron.style.transform = "rotate(-90deg)";
+      }
+    });
+  });
+</script>
+<p><span style="font-size:24px;font-weight:bold" class="section2">2. 快表的实现</span></p>
+<p><strong>原因：</strong> 根据程序运行的「局部性原理」，转换「逻辑地址」将是一个很频繁的操作，为了加快这种运算，可以在计算速度更快的缓存中，建立一个「快表」，加快对「页号」对应「块号」的转换。</p>
+<p><strong>快表：</strong> 联想寄存器（TLB），<strong>一种访问速度比内存快得多的高速缓冲寄存器</strong>，可用于存放「页表」查询最近的若干「页表项」，加速地址转变过程。</p>
+<center>
+<p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="1803"
+  data-image-height="850"
+  data-image-src="/cpp_notes/posts/os/memmory/resources/fastTable.jpg"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/os/memmory/resources/fastTable.jpg"
+    alt="fast table"
+    
+    
+      
+      
+        
+          width="1803" height="850"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/os/memmory/resources/fastTable.jpg"
+    data-gallery-alt="fast table"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+</center>
+<p><strong>工作原理：</strong>
+4. 计算「逻辑地址」的「页号」与「页内偏移量」
+5. 根据「页表长度」检测「页号」是否越界
+6. 根据「页号」在「快表」中查询「块号」，若快表中有，就直接与「页内偏移量」计算「物理地址」；若无，则查询「慢表」
+7. 根据「页号」从「页表」中取出「内存块号」，并添加到「快表」中
+8. 根据「内存块号」与「页内偏移量」计算「物理地址」</p>
+
+  <blockquote
+    class="border-primary bg-muted/30 hover:bg-muted/40 my-6 rounded-r-lg border-l-4 py-4 pr-4 pl-6 italic transition-all duration-200 ease-out hover:translate-x-1"
+  >
+    <div class="prose prose-sm max-w-none">
+      <p>[!note|style:flat]
+根据「逻辑地址」访问内存中的值：「快表」只进行<strong>一次内存访问</strong>，「慢表」则需要<strong>两次内存访问</strong>。</p>
+
+    </div>
+  </blockquote><script>
+  function toggleAlert(alertId) {
+    const content = document.getElementById(alertId + "-content");
+    const chevron = document.getElementById(alertId + "-chevron");
+    const header = content.previousElementSibling;
+
+    if (content.classList.contains("hidden")) {
+      content.classList.remove("hidden");
+      chevron.style.transform = "rotate(0deg)";
+      header.setAttribute("aria-expanded", "true");
+    } else {
+      content.classList.add("hidden");
+      chevron.style.transform = "rotate(-90deg)";
+      header.setAttribute("aria-expanded", "false");
+    }
+  }
+
+  
+  document.addEventListener("DOMContentLoaded", function () {
+    const collapsedAlerts = document.querySelectorAll(".alert-content.hidden");
+    collapsedAlerts.forEach(function (content) {
+      const alertId = content.id.replace("-content", "");
+      const chevron = document.getElementById(alertId + "-chevron");
+      if (chevron) {
+        chevron.style.transform = "rotate(-90deg)";
+      }
+    });
+  });
+</script>
+<p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="1644"
+  data-image-height="694"
+  data-image-src="/cpp_notes/posts/os/memmory/resources/fastSlowTable.jpg"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/os/memmory/resources/fastSlowTable.jpg"
+    alt="fast slow table"
+    
+    
+      
+      
+        
+          width="1644" height="694"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/os/memmory/resources/fastSlowTable.jpg"
+    data-gallery-alt="fast slow table"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+<h3 id="两级页表">两级页表<a href="#%e4%b8%a4%e7%ba%a7%e9%a1%b5%e8%a1%a8" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h3>
+  <blockquote
+    class="border-primary bg-muted/30 hover:bg-muted/40 my-6 rounded-r-lg border-l-4 py-4 pr-4 pl-6 italic transition-all duration-200 ease-out hover:translate-x-1"
+  >
+    <div class="prose prose-sm max-w-none">
+      <p>[!tip|style:flat]
+<strong>单级页表存在问题：</strong></p>
+<ol>
+<li>从上述「页表」查询可以看出，「页表」在内存中的存放，必须是 <strong>完整的连续内存</strong>，这将会占用大量且连续的「页框」，这样就与「基于分页分配算法」的设计思路相违背。</li>
+<li>根据「局部性原理」，没有必要让整个「页表」都常驻内存，只用保存几个特定的「页」就行</li>
+</ol>
+<p><strong>解决方案：</strong> 第一个问题可以通过「两级页表」解决；第二个问题可以通过「虚拟内存算法」解决</p>
+
+    </div>
+  </blockquote><script>
+  function toggleAlert(alertId) {
+    const content = document.getElementById(alertId + "-content");
+    const chevron = document.getElementById(alertId + "-chevron");
+    const header = content.previousElementSibling;
+
+    if (content.classList.contains("hidden")) {
+      content.classList.remove("hidden");
+      chevron.style.transform = "rotate(0deg)";
+      header.setAttribute("aria-expanded", "true");
+    } else {
+      content.classList.add("hidden");
+      chevron.style.transform = "rotate(-90deg)";
+      header.setAttribute("aria-expanded", "false");
+    }
+  }
+
+  
+  document.addEventListener("DOMContentLoaded", function () {
+    const collapsedAlerts = document.querySelectorAll(".alert-content.hidden");
+    collapsedAlerts.forEach(function (content) {
+      const alertId = content.id.replace("-content", "");
+      const chevron = document.getElementById(alertId + "-chevron");
+      if (chevron) {
+        chevron.style.transform = "rotate(-90deg)";
+      }
+    });
+  });
+</script>
+<p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="1879"
+  data-image-height="818"
+  data-image-src="/cpp_notes/posts/os/memmory/resources/twoLevelTable.jpg"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/os/memmory/resources/twoLevelTable.jpg"
+    alt="two level table"
+    
+    
+      
+      
+        
+          width="1879" height="818"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/os/memmory/resources/twoLevelTable.jpg"
+    data-gallery-alt="two level table"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+<p><strong>思路：</strong> 模仿「基本分页存储算法」，将「页表」也拆分为多个「页」，然后再为分散的「页表」创建一个「目录页」，也叫「外层页表」、「顶层页表」。</p>
+<center>
+<p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="1066"
+  data-image-height="668"
+  data-image-src="/cpp_notes/posts/os/memmory/resources/singleTable.jpg"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/os/memmory/resources/singleTable.jpg"
+    alt="single table"
+    
+    
+      
+      
+        
+          width="1066" height="668"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/os/memmory/resources/singleTable.jpg"
+    data-gallery-alt="single table"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+<p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="1773"
+  data-image-height="906"
+  data-image-src="/cpp_notes/posts/os/memmory/resources/doubleTable.jpg"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/os/memmory/resources/doubleTable.jpg"
+    alt="double table"
+    
+    
+      
+      
+        
+          width="1773" height="906"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/os/memmory/resources/doubleTable.jpg"
+    data-gallery-alt="double table"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+</center>
+<ol start="9">
+<li>如上图所示，对于<code>32 bit</code>系统，取「页面」大小为<code>4KB</code>，最多可以拆分为<code>2^20</code>个「页」，「页表」的最大长度就为<code>2^20</code>。该「页表」在内存中的结构就可以看作是一个 <strong>四字节的数组，数组长度为<code>2^20</code></strong>。</li>
+<li>「基本分页存储算法」将内存划分成了一个个大小为<code>4KB</code>的「页框」，为了离散存放「页表」，就可以将该「页表」拆分成一个个大小为<code>4KB</code>的「小页表」</li>
+<li>一个「页」能储存<code>4KB / 4B = 1024</code>个「页表项」，长度为<code>2^20</code>的「页表」可以拆分为<code>2^20 / 1024 = 1024</code>个「小页表」</li>
+<li>再将「小页表」在内存中存放的「块号」存放到一个「目录列表」中。「目录列表」则有<code>1024</code>个「列表项」，刚好就是一「页」<strong>。这样得到的二级列表就类似于一个一维的数组转换成了一个二维的数组。「一级页号」与「二级页号」就是二维数组的索引号。</strong></li>
+<li>可以通过「一级页号」在「目录列表」中查询出「小页表」，然后通过「二级页号」在「小页表」中查询出内存的「块号」。</li>
+</ol>
+
+  <blockquote
+    class="border-primary bg-muted/30 hover:bg-muted/40 my-6 rounded-r-lg border-l-4 py-4 pr-4 pl-6 italic transition-all duration-200 ease-out hover:translate-x-1"
+  >
+    <div class="prose prose-sm max-w-none">
+      <p>[!note|style:flat]</p>
+<ul>
+<li><strong>各级页表的大小不能超过一个页的大小</strong></li>
+<li><strong>根据需要可以设计多级页表</strong></li>
+<li><strong>二级列表会进行三次内存访问</strong></li>
+</ul>
+
+    </div>
+  </blockquote><script>
+  function toggleAlert(alertId) {
+    const content = document.getElementById(alertId + "-content");
+    const chevron = document.getElementById(alertId + "-chevron");
+    const header = content.previousElementSibling;
+
+    if (content.classList.contains("hidden")) {
+      content.classList.remove("hidden");
+      chevron.style.transform = "rotate(0deg)";
+      header.setAttribute("aria-expanded", "true");
+    } else {
+      content.classList.add("hidden");
+      chevron.style.transform = "rotate(-90deg)";
+      header.setAttribute("aria-expanded", "false");
+    }
+  }
+
+  
+  document.addEventListener("DOMContentLoaded", function () {
+    const collapsedAlerts = document.querySelectorAll(".alert-content.hidden");
+    collapsedAlerts.forEach(function (content) {
+      const alertId = content.id.replace("-content", "");
+      const chevron = document.getElementById(alertId + "-chevron");
+      if (chevron) {
+        chevron.style.transform = "rotate(-90deg)";
+      }
+    });
+  });
+</script>
+<h2 id="非连续分配管理-基本分段存储">非连续分配管理-基本分段存储<a href="#%e9%9d%9e%e8%bf%9e%e7%bb%ad%e5%88%86%e9%85%8d%e7%ae%a1%e7%90%86-%e5%9f%ba%e6%9c%ac%e5%88%86%e6%ae%b5%e5%ad%98%e5%82%a8" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h2><p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="1839"
+  data-image-height="849"
+  data-image-src="/cpp_notes/posts/os/memmory/resources/summary28.jpg"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/os/memmory/resources/summary28.jpg"
+    alt="summary"
+    
+    
+      
+      
+        
+          width="1839" height="849"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/os/memmory/resources/summary28.jpg"
+    data-gallery-alt="summary"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+<h3 id="算法思路">算法思路<a href="#%e7%ae%97%e6%b3%95%e6%80%9d%e8%b7%af" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h3><p><strong>原因：</strong> 对于「基本分页存储」而言，内存和进程是被拆分成了一个个大小相等的「页」与「页框」，且该拆分过程是对用户隐藏的，不利于程序代码的控制。对此可以借鉴「动态分配算法」的思路，对于内存的划分是可变的，对于进程「页」划分是程序员可控的。</p>
+<p><strong>实现：</strong>
+14. 按照程序逻辑关系，将程序划分为若干个「段」
+15. 在内存中，每个「段」都分配<strong>连续的内存空间</strong>，且各个「段」可以随便分配，
+<center></p>
+<pre><code>![section](./resources/section.jpg)
+
+&lt;/center&gt;
+</code></pre>
+<ol start="16">
+<li>
+<p>「逻辑地址」由「段号」与「段内地址」组成。在<code>16 bit</code>的<code>CPU</code>中提出了「段」的概念，当时的「段寄存器」就是<code>16 bit</code>的，并沿用到了<code>32 bit</code>的<code>CPU</code>中。</p>
+<center>
+<p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="1273"
+  data-image-height="111"
+  data-image-src="/cpp_notes/posts/os/memmory/resources/sectionLogicAddress.jpg"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/os/memmory/resources/sectionLogicAddress.jpg"
+    alt="section logic address"
+    
+    
+      
+      
+        
+          width="1273" height="111"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/os/memmory/resources/sectionLogicAddress.jpg"
+    data-gallery-alt="section logic address"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+</center>
+</li>
+<li>
+<p>「段表」的「段表项」包含了「段长」以及该段在内存中存储的起始地址「基址」。由于「段内地址」分配的是<code>16 bit</code>，所以「段长」的长度为<code>2B</code>。「基址」存储的是内存地址，对于<code>32bit</code>的<code>CPU</code>而言，其长度就为<code>4B</code>。<strong>综上，一个「段表项」的长度就为<code>2 + 4 = 6B</code>，又由于「基本分段存储」的「段」长度是可变的，所以不用字节对齐「段表项」</strong>。</p>
+</li>
+</ol>
+<center>
+<p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="1518"
+  data-image-height="656"
+  data-image-src="/cpp_notes/posts/os/memmory/resources/sectionTable.jpg"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/os/memmory/resources/sectionTable.jpg"
+    alt="section table"
+    
+    
+      
+      
+        
+          width="1518" height="656"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/os/memmory/resources/sectionTable.jpg"
+    data-gallery-alt="section table"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+</center>
+<ol start="18">
+<li>地址转换</li>
+</ol>
+<center>
+<p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="1816"
+  data-image-height="1019"
+  data-image-src="/cpp_notes/posts/os/memmory/resources/sectionExchangeAddress.jpg"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/os/memmory/resources/sectionExchangeAddress.jpg"
+    alt="section exchange address"
+    
+    
+      
+      
+        
+          width="1816" height="1019"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/os/memmory/resources/sectionExchangeAddress.jpg"
+    data-gallery-alt="section exchange address"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+</center>
+<h3 id="基本分段存储与基本分页储存对比">基本分段存储与基本分页储存对比<a href="#%e5%9f%ba%e6%9c%ac%e5%88%86%e6%ae%b5%e5%ad%98%e5%82%a8%e4%b8%8e%e5%9f%ba%e6%9c%ac%e5%88%86%e9%a1%b5%e5%82%a8%e5%ad%98%e5%af%b9%e6%af%94" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h3><ul>
+<li><strong>页：</strong> 信息的物理单位，固定大小</li>
+<li><strong>段：</strong> 信息的逻辑单位，可变大小</li>
+<li><strong>分页：</strong> 由「操作系统」完成；地址变换只要「相对地址」，一维</li>
+<li><strong>分段：</strong> 由「程序员」指定；地址变换需要「段地址」与「段内地址」，二维</li>
+<li><strong>分段比分页更容易实现信息的共享与保护</strong>。<span style="color:red;font-weight:bold"> 不会修改内容的代码段才能共享。「页面」并非根据逻辑来划分的，提出可以共享的代码段困难。 </span></li>
+</ul>
+<p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="1600"
+  data-image-height="250"
+  data-image-src="/cpp_notes/posts/os/memmory/resources/pageSection.jpg"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/os/memmory/resources/pageSection.jpg"
+    alt="section page"
+    
+    
+      
+      
+        
+          width="1600" height="250"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/os/memmory/resources/pageSection.jpg"
+    data-gallery-alt="section page"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+<h2 id="非连续分配管理-段页式管理">非连续分配管理-段页式管理<a href="#%e9%9d%9e%e8%bf%9e%e7%bb%ad%e5%88%86%e9%85%8d%e7%ae%a1%e7%90%86-%e6%ae%b5%e9%a1%b5%e5%bc%8f%e7%ae%a1%e7%90%86" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h2><p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="1754"
+  data-image-height="843"
+  data-image-src="/cpp_notes/posts/os/memmory/resources/summary29.jpg"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/os/memmory/resources/summary29.jpg"
+    alt="summary"
+    
+    
+      
+      
+        
+          width="1754" height="843"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/os/memmory/resources/summary29.jpg"
+    data-gallery-alt="summary"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+<p><strong>思路：</strong> 整合了「基本分段存储」与「基本分页存储」的优缺点后，提出了「段页式管理」。对代码程序进行「分段」处理；在内存中又将各个「段」进行「分页」处理。</p>
+<p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="1626"
+  data-image-height="791"
+  data-image-src="/cpp_notes/posts/os/memmory/resources/sectionPageManage.jpg"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/os/memmory/resources/sectionPageManage.jpg"
+    alt="section page manage"
+    
+    
+      
+      
+        
+          width="1626" height="791"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/os/memmory/resources/sectionPageManage.jpg"
+    data-gallery-alt="section page manage"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+<pre><code>&lt;center&gt;
+
+![section page address](./resources/sectionPageAddress.jpg)
+![section page exchange address](./resources/sectionPageAddressExchange.jpg)    
+&lt;/center&gt;
+</code></pre>
+<ol>
+<li>地址转换
+
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="1854"
+  data-image-height="1005"
+  data-image-src="/cpp_notes/posts/os/memmory/resources/sectionPageAddressExchangeDetail.jpg"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/os/memmory/resources/sectionPageAddressExchangeDetail.jpg"
+    alt="section page exchange address "
+    
+    
+      
+      
+        
+          width="1854" height="1005"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/os/memmory/resources/sectionPageAddressExchangeDetail.jpg"
+    data-gallery-alt="section page exchange address "
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</li>
+</ol>
+<h2 id="虚拟内存-请求分页管理方式">虚拟内存-请求分页管理方式<a href="#%e8%99%9a%e6%8b%9f%e5%86%85%e5%ad%98-%e8%af%b7%e6%b1%82%e5%88%86%e9%a1%b5%e7%ae%a1%e7%90%86%e6%96%b9%e5%bc%8f" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h2><p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="1819"
+  data-image-height="848"
+  data-image-src="/cpp_notes/posts/os/memmory/resources/summary31.jpg"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/os/memmory/resources/summary31.jpg"
+    alt="summary"
+    
+    
+      
+      
+        
+          width="1819" height="848"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/os/memmory/resources/summary31.jpg"
+    data-gallery-alt="summary"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+<h3 id="基础概念">基础概念<a href="#%e5%9f%ba%e7%a1%80%e6%a6%82%e5%bf%b5" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h3><p><strong>思想：</strong> 在「基本分页管理方式」中引入「虚拟内存技术」，<strong>实现同一作业不用全部装入内存，就能运行，大大提高内存的利用率。</strong>
+2. 在「请求分页管理」中，每当要访问的「页面」没有在内存中时，就会产生一个「缺页中断」，等待操作系统将所需要的「页」装入内存中。
+3. 而发出「请求中断」的进程，将被「阻塞」，放到「阻塞态队列」中。
+4. 在「页面」装入内存时，若内存空间足够，则找到一个空闲的「页框」将「页」装入；若内存空间不足，则根据「页面置换算法」将指定「页」换出内存，然后换入需要的「页」。</p>
+<p><strong>请求分页与基本分页的区别：</strong>
+5. <strong>请求调页功能</strong>：当所访问的信息不在内存时，由操作系统负责将所需信息从外存调入内存。
+6. <strong>页面置换功能</strong>：若内存空间不够，由操作系统负责将内存中口暂时用不到的信息换出到外存</p>
+<h3 id="页表机制">页表机制<a href="#%e9%a1%b5%e8%a1%a8%e6%9c%ba%e5%88%b6" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h3><p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="1763"
+  data-image-height="489"
+  data-image-src="/cpp_notes/posts/os/memmory/resources/requestPageTable.jpg"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/os/memmory/resources/requestPageTable.jpg"
+    alt="request page table"
+    
+    
+      
+      
+        
+          width="1763" height="489"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/os/memmory/resources/requestPageTable.jpg"
+    data-gallery-alt="request page table"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+<p>相对对于普通的「页表」增加了状态位、访问字段、修改字段、外存地址。</p>
+
+  <blockquote
+    class="border-primary bg-muted/30 hover:bg-muted/40 my-6 rounded-r-lg border-l-4 py-4 pr-4 pl-6 italic transition-all duration-200 ease-out hover:translate-x-1"
+  >
+    <div class="prose prose-sm max-w-none">
+      <p>[!tip|style:flat]
+<strong>只有对「页面」的「写操作」才会导致「修改位」的计数。</strong></p>
+
+    </div>
+  </blockquote><script>
+  function toggleAlert(alertId) {
+    const content = document.getElementById(alertId + "-content");
+    const chevron = document.getElementById(alertId + "-chevron");
+    const header = content.previousElementSibling;
+
+    if (content.classList.contains("hidden")) {
+      content.classList.remove("hidden");
+      chevron.style.transform = "rotate(0deg)";
+      header.setAttribute("aria-expanded", "true");
+    } else {
+      content.classList.add("hidden");
+      chevron.style.transform = "rotate(-90deg)";
+      header.setAttribute("aria-expanded", "false");
+    }
+  }
+
+  
+  document.addEventListener("DOMContentLoaded", function () {
+    const collapsedAlerts = document.querySelectorAll(".alert-content.hidden");
+    collapsedAlerts.forEach(function (content) {
+      const alertId = content.id.replace("-content", "");
+      const chevron = document.getElementById(alertId + "-chevron");
+      if (chevron) {
+        chevron.style.transform = "rotate(-90deg)";
+      }
+    });
+  });
+</script>
+<h3 id="缺页中断">缺页中断<a href="#%e7%bc%ba%e9%a1%b5%e4%b8%ad%e6%96%ad" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h3><p><strong>定义：</strong> 当前执行的指令想要访问的目标页面未调入内存而产生的，属于内中断。<strong>一条指令可能产生多次中断，例如涉及两处地址访问的指令。</strong></p>
+<h3 id="地址变换">地址变换<a href="#%e5%9c%b0%e5%9d%80%e5%8f%98%e6%8d%a2" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h3><p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="1806"
+  data-image-height="1000"
+  data-image-src="/cpp_notes/posts/os/memmory/resources/requestPageAddressExchange.jpg"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/os/memmory/resources/requestPageAddressExchange.jpg"
+    alt="request page address exchange"
+    
+    
+      
+      
+        
+          width="1806" height="1000"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/os/memmory/resources/requestPageAddressExchange.jpg"
+    data-gallery-alt="request page address exchange"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+<p><strong>相对于「基本分页管理」：</strong>
+7. 没有指定「页」时，<strong>页面中断</strong>
+8. 内存装满时，<strong>页面置换</strong>
+9. 更新「请求页表」和「快表」</p>
+<h2 id="请求管理方式-页面置换算法">请求管理方式-页面置换算法<a href="#%e8%af%b7%e6%b1%82%e7%ae%a1%e7%90%86%e6%96%b9%e5%bc%8f-%e9%a1%b5%e9%9d%a2%e7%bd%ae%e6%8d%a2%e7%ae%97%e6%b3%95" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h2><p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="1529"
+  data-image-height="781"
+  data-image-src="/cpp_notes/posts/os/memmory/resources/summary32.jpg"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/os/memmory/resources/summary32.jpg"
+    alt="summary"
+    
+    
+      
+      
+        
+          width="1529" height="781"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/os/memmory/resources/summary32.jpg"
+    data-gallery-alt="summary"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+<h3 id="最佳置换算法opt">最佳置换算法（OPT）<a href="#%e6%9c%80%e4%bd%b3%e7%bd%ae%e6%8d%a2%e7%ae%97%e6%b3%95opt" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h3><ul>
+<li>
+<p><strong>思路：</strong> 每次淘汰的「页面」都是之后不会再使用，或者长时间都不会使用。</p>
+</li>
+<li>
+<p><strong>实现：</strong></p>
+<ol>
+<li>接下来要使用页<code>2</code>时，需要淘汰<code>7、0、1</code>中的一个</li>
+<li>从「访问页面顺序」可知，<code>7</code>是最后才会被使用的「页」，所以淘汰<code>7</code>，放入<code>2</code>
+
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="1665"
+  data-image-height="316"
+  data-image-src="/cpp_notes/posts/os/memmory/resources/optimalPermutation.jpg"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/os/memmory/resources/optimalPermutation.jpg"
+    alt="optimal permutation"
+    
+    
+      
+      
+        
+          width="1665" height="316"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/os/memmory/resources/optimalPermutation.jpg"
+    data-gallery-alt="optimal permutation"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</li>
+</ol>
+</li>
+<li>
+<p><strong>缺点：</strong> <span style="color:red;font-weight:bold"> 在实际操作中，无法预知「访问页面顺序」，所以该算法无法实现</span></p>
+</li>
+</ul>
+<h3 id="先进先出算法fifo">先进先出算法（FIFO）<a href="#%e5%85%88%e8%bf%9b%e5%85%88%e5%87%ba%e7%ae%97%e6%b3%95fifo" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h3><ul>
+<li><strong>思路：</strong> 先进入的「页」，最先被换出。</li>
+</ul>
+<p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="1427"
+  data-image-height="480"
+  data-image-src="/cpp_notes/posts/os/memmory/resources/requestPageFIFO.jpg"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/os/memmory/resources/requestPageFIFO.jpg"
+    alt="request page FIFO"
+    
+    
+      
+      
+        
+          width="1427" height="480"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/os/memmory/resources/requestPageFIFO.jpg"
+    data-gallery-alt="request page FIFO"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+<ul>
+<li><strong>缺点：</strong> <span style="color:red;font-weight:bold"> 当「内存块」增加时，「缺页中断」次数反而增加，即「<code>Belady</code>异常」。最垃圾的算法。</span></li>
+</ul>
+<h3 id="最近最久未使用置换算法lru">最近最久未使用置换算法（LRU）<a href="#%e6%9c%80%e8%bf%91%e6%9c%80%e4%b9%85%e6%9c%aa%e4%bd%bf%e7%94%a8%e7%bd%ae%e6%8d%a2%e7%ae%97%e6%b3%95lru" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h3><ul>
+<li><strong>思路：</strong> 淘汰当前最久没有被使用的「页」。</li>
+<li><strong>实现：</strong> 当内存装慢后，从当前位置向前查询「访问页面顺序」，找到内存中，最久没有被使用的「页」。图中，<code>7</code>是最久没有别使用的，所以淘汰掉，放入<code>3</code>。</li>
+</ul>
+<p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="1552"
+  data-image-height="492"
+  data-image-src="/cpp_notes/posts/os/memmory/resources/requestPageLRU.jpg"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/os/memmory/resources/requestPageLRU.jpg"
+    alt="request page LRU"
+    
+    
+      
+      
+        
+          width="1552" height="492"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/os/memmory/resources/requestPageLRU.jpg"
+    data-gallery-alt="request page LRU"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+<ul>
+<li><strong>缺点：</strong> <span style="color:red;font-weight:bold"> 开销较大，需要专门的硬件来实现对「访问时间」进行记录。 </span></li>
+</ul>
+<h3 id="时钟置换算法clock">时钟置换算法（clock）<a href="#%e6%97%b6%e9%92%9f%e7%bd%ae%e6%8d%a2%e7%ae%97%e6%b3%95clock" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h3><p><span style="font-size:24px;font-weight:bold" class="section2">1. 简单时钟置换</span></p>
+<p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="592"
+  data-image-height="431"
+  data-image-src="/cpp_notes/posts/os/memmory/resources/requestPageClock.jpg"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/os/memmory/resources/requestPageClock.jpg"
+    alt="clock"
+    
+    
+      
+      
+        
+          width="592" height="431"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/os/memmory/resources/requestPageClock.jpg"
+    data-gallery-alt="clock"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+<p><strong>规则：</strong></p>
+<ol>
+<li>需要淘汰一个「页面」时，就从队首，顺时针扫描队列，检查「页表」中的「访问位」，若「访问位」是<code>1</code>，则置为<code>0</code>；若找到一个<code>0</code>访问就将其换出。</li>
+</ol>
+<p><span style="font-size:24px;font-weight:bold" class="section2">2. 改进时钟算法</span></p>
+<ul>
+<li>
+<p><strong>思路：</strong> 「简单时钟」只考虑了「页面」最近是否被访问过，而没有考虑要淘汰的「页面」是否被 <strong>修改</strong>。若「页面」被修改，则换出内存后，还要将该「页面」放入外存的「交换区」；若「页面」未被修改，则可以直接覆盖，下一次就直接从外存原位置复制。</p>
+</li>
+<li>
+<p><strong>实现：</strong> 增加对「页表」中「修改位」的利用。<strong>换出内存的内存块的顺序为：</strong></p>
+<ol>
+<li>第二轮：最近没被访问，最近被修改</li>
+<li>第三轮：最近被访问，最近没被修改</li>
+<li>第四轮：最近被访问，最近被修改</li>
+</ol>
+</li>
+</ul>
+<p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="1800"
+  data-image-height="626"
+  data-image-src="/cpp_notes/posts/os/memmory/resources/improveClock.jpg"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/os/memmory/resources/improveClock.jpg"
+    alt="improve clock"
+    
+    
+      
+      
+        
+          width="1800" height="626"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/os/memmory/resources/improveClock.jpg"
+    data-gallery-alt="improve clock"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+<h2 id="请求管理方式-内存页框分配">请求管理方式-内存页框分配<a href="#%e8%af%b7%e6%b1%82%e7%ae%a1%e7%90%86%e6%96%b9%e5%bc%8f-%e5%86%85%e5%ad%98%e9%a1%b5%e6%a1%86%e5%88%86%e9%85%8d" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h2><p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="1854"
+  data-image-height="873"
+  data-image-src="/cpp_notes/posts/os/memmory/resources/summary33.jpg"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/os/memmory/resources/summary33.jpg"
+    alt="summmary"
+    
+    
+      
+      
+        
+          width="1854" height="873"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/os/memmory/resources/summary33.jpg"
+    data-gallery-alt="summmary"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+<h3 id="基本概念">基本概念<a href="#%e5%9f%ba%e6%9c%ac%e6%a6%82%e5%bf%b5" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h3><ul>
+<li><strong>驻留集：</strong> 「请求分页管理」中，操作系统分配给进程的「页框」集合，即操作系统分给进程的所有「页框」。</li>
+<li><strong>工作集：</strong> 某段时间间隔内，进程实际访问页面的集合。</li>
+<li><strong>固定分配：</strong> 再创建进程时，操作系统就确定了「驻留集」的大小，运行中不在改变。</li>
+<li><strong>可变分配：</strong> 再创建进程时，操作系统就确定了「驻留集」的初始大小，运行中会根据需求改变。</li>
+<li><strong>局部置换：</strong> 发生「缺页」时，操作系统只在 <strong>进程的「页框」</strong> 中进行交换。</li>
+<li><strong>全局置换：</strong> 发生「缺页」时，操作系统在 <strong>所有能用的「页框」</strong> 中进行交换。</li>
+</ul>
+<h3 id="分配策略">分配策略<a href="#%e5%88%86%e9%85%8d%e7%ad%96%e7%95%a5" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h3><p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="1082"
+  data-image-height="295"
+  data-image-src="/cpp_notes/posts/os/memmory/resources/permutaionMethod.jpg"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/os/memmory/resources/permutaionMethod.jpg"
+    alt="permutation method"
+    
+    
+      
+      
+        
+          width="1082" height="295"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/os/memmory/resources/permutaionMethod.jpg"
+    data-gallery-alt="permutation method"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+<ul>
+<li><strong>固定分配局部置换</strong>：系统为每个进程分配一定数量的物理块，在整个运行期间都不改变。若进程在运行中发生缺页，则只能从该进程在内存中的页面中选出一页换出，然后再调入需要的页面。<span style="color:red;font-weight:bold"> 不好确定，给多少才合适。 </span></li>
+<li><strong>可变分配全局置换</strong>：刚开始会为每个进程分配一定数量的物理块。操作系统会保持一个空闲物理块队列。当某进程发生缺页时，从空闲物理块中取出一块分配给该进程；若已无空闲物理块，则可选择一个<strong>未锁定</strong>的页面换出外存，再将该物理块分配给缺页的进程。<span style="color:red;font-weight:bold"> 只要缺页就分配「页框」，会直接抢占其他进程的「页框」 </span></li>
+<li><strong>可变分配局部置换</strong>：刚开始会为每个进程分配一定数量的物理块。当某进程发生缺页时，只允许从该进程自己的物理块中选出一个进行换出外存。如果进程在运行中<strong>频繁地缺页</strong>，系统会为该进程多分配几个物理块，直至该进程缺页率趋势适当程度；反之，如果进程在运行中<strong>缺页率特别低</strong>，则可适当减少分配给该进程的物理块。<span style="color:red;font-weight:bold"> 先给定固定的「页框」运行，然后根据「缺页率」决定之后「页框」的增减。 </span></li>
+</ul>
+<h3 id="交换的方式">交换的方式<a href="#%e4%ba%a4%e6%8d%a2%e7%9a%84%e6%96%b9%e5%bc%8f" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h3><p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="888"
+  data-image-height="722"
+  data-image-src="/cpp_notes/posts/os/memmory/resources/swapMethod.jpg"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/os/memmory/resources/swapMethod.jpg"
+    alt="swap method"
+    
+    
+      
+      
+        
+          width="888" height="722"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/os/memmory/resources/swapMethod.jpg"
+    data-gallery-alt="swap method"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+<ul>
+<li><strong>系统拥有足够的「交换区」：</strong> 内存与外存的交换，都是通过「交换区」进行，「交换区」连续存储，读写快。</li>
+<li><strong>系统没有足够的「交换区」：</strong> 没有被修改的「页面」，直接从「文件区」换入，而内存中的直接覆盖掉。对于可能被修改的「页面」则放入「对换区」。</li>
+</ul>
+<h3 id="工作集">工作集<a href="#%e5%b7%a5%e4%bd%9c%e9%9b%86" class="heading-anchor" aria-label="Link to this section"><svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></svg></a></h3><ul>
+<li><strong>针对问题：</strong> 防止「抖动现象」的产生，刚刚换出的「页面」被马上换入内存，刚刚换入的「页面」又被马上换出。<span style="color:red;font-weight:bold"> 主要原因是分配给进程的「页框」小于了频繁访问的「页面」，即「页框」给得太少了。 </span></li>
+<li><strong>计算：</strong></li>
+</ul>
+<p>
+<figure
+  class="image-figure not-prose my-8"
+  data-lightbox-enabled="
+    true
+  "
+  data-gallery-type="auto"
+  data-image-width="1063"
+  data-image-height="315"
+  data-image-src="/cpp_notes/posts/os/memmory/resources/workSet.jpg"
+>
+  <div class="image-container">
+    <img
+    src="/cpp_notes/posts/os/memmory/resources/workSet.jpg"
+    alt="work set"
+    
+    
+      
+      
+        
+          width="1063" height="315"
+        
+      
+    
+    loading="lazy"
+    decoding="async"
+    data-gallery-src="/cpp_notes/posts/os/memmory/resources/workSet.jpg"
+    data-gallery-alt="work set"
+    data-gallery-title=""
+  /></div>
+
+  </figure>
+</p>
+<ul>
+<li><strong>作用：</strong> <span style="color:red;font-weight:bold"> 根据「工作集」来确定「驻留集」的大小 </span></li>
+</ul>
+
+  </article>
+
+  
+  
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  <div class="post-license bg-muted/30 border-border mb-8 rounded-xl border p-6">
+    <div class="flex items-start gap-4">
+      
+      <div class="bg-primary/10 flex h-12 w-12 shrink-0 items-center justify-center rounded-lg">
+        <svg class="h-6 w-6" aria-label="许可证" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+</svg>
+      </div>
+
+      
+      <div class="min-w-0 flex-1">
+        <h3 class="text-foreground mb-2 text-lg font-semibold">
+          License
+        </h3>
+
+        <div class="text-muted-foreground space-y-2 text-sm">
+          
+          
+            <p>
+              <strong>Author:</strong>
+              海拉鲁的三角
+            </p>
+          
+
+
+          
+          <p>
+            <strong>Link:</strong>
+            <a
+              href="http://localhost:1313/cpp_notes/posts/os/memmory/"
+              class="text-primary hover:text-primary/80 break-all hyphens-auto transition-colors duration-200"
+            >
+              http://localhost:1313/cpp_notes/posts/os/memmory/
+            </a>
+          </p>
+
+          
+          <p>
+            <strong>License:</strong>
+            
+              <a
+                href="https://mit-license.org/"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-primary hover:text-primary/80 transition-colors duration-200"
+              >
+                MIT
+              </a>
+            
+          </p>
+
+          
+          
+            <p class="text-xs">
+              只要学不死，就往死里学
+            </p>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  
+  
+
+
+
+
+
+  <nav class="post-navigation mb-12">
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+      
+      <div class="nav-item">
+        
+          <a
+            href="/cpp_notes/posts/os/mutex_synchronous/"
+            class="group bg-card border-border hover:bg-primary/5 hover:border-primary/20 focus:ring-primary/20 flex min-h-[140px] flex-col justify-between rounded-xl border p-6 transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.02] hover:shadow-lg focus:ring-2 focus:outline-none"
+          >
+            <div>
+              <div class="mb-3 flex items-center gap-3">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+</svg>
+                <span class="text-muted-foreground text-sm font-medium">
+                  Previous
+                </span>
+              </div>
+
+              <h3
+                class="text-foreground group-hover:text-primary mb-3 line-clamp-2 text-lg leading-tight font-semibold transition-colors duration-200"
+              >
+                互斥与同步
+              </h3>
+            </div>
+
+            <div class="text-muted-foreground mt-auto flex items-center gap-2 text-xs">
+              <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+</svg>
+
+              <time datetime="2025-04-07">
+                4/7/25
+              </time>
+            </div>
+          </a>
+        
+      </div>
+
+      
+      <div class="nav-item">
+        
+          <a
+            href="/cpp_notes/posts/os/filesystem/"
+            class="group bg-card border-border hover:bg-primary/5 hover:border-primary/20 focus:ring-primary/20 flex min-h-[140px] flex-col justify-between rounded-xl border p-6 transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.02] hover:shadow-lg focus:ring-2 focus:outline-none"
+          >
+            <div>
+              <div class="mb-3 flex items-center justify-end gap-3">
+                <span class="text-muted-foreground text-sm font-medium">
+                  Next
+                </span>
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+</svg>
+              </div>
+
+              <h3
+                class="text-foreground group-hover:text-primary mb-3 line-clamp-2 text-right text-lg leading-tight font-semibold transition-colors duration-200"
+              >
+                文件系统
+              </h3>
+            </div>
+
+            <div class="text-muted-foreground mt-auto flex items-center justify-end gap-2 text-xs">
+              <time datetime="2025-04-07">
+                4/7/25
+              </time>
+              <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+</svg>
+
+            </div>
+          </a>
+        
+      </div>
+    </div>
+  </nav>
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+  <section class="related-posts mb-12">
+    
+    <div class="mb-6 flex items-center gap-3">
+      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+</svg>
+      <h2 class="text-foreground text-2xl font-bold">
+        Related content
+      </h2>
+    </div>
+
+    
+    <div class="grid w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+      
+        <article class="group">
+          <a href="/cpp_notes/posts/compiler/memorymanager/" class="block">
+            <div
+              class="bg-card border-border hover:bg-primary/5 hover:border-primary/20 focus:ring-primary/20 flex min-h-[120px] items-center rounded-xl border p-5 transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.02] hover:shadow-lg focus:ring-2 focus:outline-none"
+            >
+              <h3
+                class="text-foreground group-hover:text-primary line-clamp-3 w-full text-lg leading-snug font-semibold"
+              >
+                内存管理
+              </h3>
+            </div>
+          </a>
+        </article>
+      
+        <article class="group">
+          <a href="/cpp_notes/posts/operatesystem/xv6/" class="block">
+            <div
+              class="bg-card border-border hover:bg-primary/5 hover:border-primary/20 focus:ring-primary/20 flex min-h-[120px] items-center rounded-xl border p-5 transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.02] hover:shadow-lg focus:ring-2 focus:outline-none"
+            >
+              <h3
+                class="text-foreground group-hover:text-primary line-clamp-3 w-full text-lg leading-snug font-semibold"
+              >
+                XV6
+              </h3>
+            </div>
+          </a>
+        </article>
+      
+        <article class="group">
+          <a href="/cpp_notes/posts/effective/smartpointer/" class="block">
+            <div
+              class="bg-card border-border hover:bg-primary/5 hover:border-primary/20 focus:ring-primary/20 flex min-h-[120px] items-center rounded-xl border p-5 transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.02] hover:shadow-lg focus:ring-2 focus:outline-none"
+            >
+              <h3
+                class="text-foreground group-hover:text-primary line-clamp-3 w-full text-lg leading-snug font-semibold"
+              >
+                智能指针
+              </h3>
+            </div>
+          </a>
+        </article>
+      
+    </div>
+  </section>
+
+
+
+
+  
+  
+
+
+      </div>
+
+      <footer class="px-4 py-6">
+  
+  
+    <nav class="mb-6">
+      <div class="flex flex-wrap items-center justify-center gap-1">
+        
+          
+          
+          
+            
+              
+            
+          
+          <a
+            href="/cpp_notes/projects/"
+            
+            class="nav-link hover:text-primary hover:bg-primary/10 text-muted-foreground flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 hover:scale-105"
+          >
+            
+              <svg class="h-5 w-5" aria-label="Projects" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="m8.85 16.825l3.15-1.9l3.15 1.925l-.825-3.6l2.775-2.4l-3.65-.325l-1.45-3.4l-1.45 3.375l-3.65.325l2.775 2.425zm3.15.45l-4.15 2.5q-.275.175-.575.15t-.525-.2t-.35-.437t-.05-.588l1.1-4.725L3.775 10.8q-.25-.225-.312-.513t.037-.562t.3-.45t.55-.225l4.85-.425l1.875-4.45q.125-.3.388-.45t.537-.15t.537.15t.388.45l1.875 4.45l4.85.425q.35.05.55.225t.3.45t.038.563t-.313.512l-3.675 3.175l1.1 4.725q.075.325-.05.588t-.35.437t-.525.2t-.575-.15zm0-5.025"/></svg>
+            
+            <span>Projects</span>
+          </a>
+        
+          
+          
+          
+            
+              
+            
+          
+          <a
+            href="/cpp_notes/about/"
+            
+            class="nav-link hover:text-primary hover:bg-primary/10 text-muted-foreground flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 hover:scale-105"
+          >
+            
+              <svg class="h-5 w-5" aria-label="About" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+</svg>
+
+            
+            <span>About</span>
+          </a>
+        
+      </div>
+    </nav>
+  
+
+
+  
+  
+    <div class="border-border mb-6 border-t"></div>
+  
+
+
+  
+  <div class="flex flex-col items-center justify-between gap-4 md:flex-row">
+    
+    <div class="text-muted-foreground text-center text-sm md:text-left">
+      <p class="mb-2">
+        &copy;
+        2026
+        Hugo Narrow
+      </p>
+      <p class="flex flex-wrap items-center justify-center gap-1 md:justify-start">
+        <span>Powered by</span>
+        <a
+          href="https://gohugo.io/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-primary hover:text-primary/80 font-medium transition-colors duration-200 hover:underline"
+        >
+          Hugo
+        </a>
+        <span>&</span>
+        <a
+          href="https://github.com/tom2almighty/hugo-narrow"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-primary hover:text-primary/80 font-medium transition-colors duration-200 hover:underline"
+        >
+          Narrow
+        </a>
+      </p>
+    </div>
+
+    
+    
+      <div class="flex items-center gap-3">
+        
+          <a
+            href="https://github.com/spite-triangle"
+            
+              target="_blank" rel="noopener noreferrer"
+            
+            class="text-muted-foreground hover:text-primary focus:ring-primary/20 rounded-lg p-1 transition-all duration-300 ease-out hover:scale-110 focus:ring-2 focus:outline-none"
+            title="GitHub"
+            aria-label="GitHub"
+          >
+            
+              <svg class="h-6 w-6" aria-label="GitHub" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5c.08-1.25-.27-2.48-1-3.5c.28-1.15.28-2.35 0-3.5c0 0-1 0-3 1.5c-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5c-.39.49-.68 1.05-.85 1.65S8.93 17.38 9 18v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></g></svg>
+            
+          </a>
+        
+          <a
+            href="https://space.bilibili.com/27206875"
+            
+              target="_blank" rel="noopener noreferrer"
+            
+            class="text-muted-foreground hover:text-primary focus:ring-primary/20 rounded-lg p-1 transition-all duration-300 ease-out hover:scale-110 focus:ring-2 focus:outline-none"
+            title="Bilibili"
+            aria-label="Bilibili"
+          >
+            
+              <svg class="h-6 w-6" aria-label="Bilibili" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+  <path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.653 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0-.373.129-.689.386-.947.258-.257.574-.386.947-.386zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373Z"/>
+</svg>
+            
+          </a>
+        
+      </div>
+    
+
+  </div>
+</footer>
+
+      
+
+
+
+
+
+<div
+  id="dock"
+  class="pointer-events-none fixed bottom-4 left-1/2 z-9999 w-fit -translate-x-1/2 translate-y-24 opacity-0 transition-all duration-300 ease-out sm:right-0 sm:left-0 sm:mx-auto sm:translate-x-0"
+  data-dock-mode="scroll"
+  role="toolbar"
+  aria-label="Quick actions toolbar"
+>
+  <nav
+    class="border-border bg-card/80 scrollbar-hide xs:px-3 xs:py-2 mx-auto flex max-w-[calc(100vw-2rem)] min-w-fit items-center justify-center overflow-x-auto rounded-2xl border px-4 py-3 shadow-lg backdrop-blur-sm sm:px-4 sm:py-3"
+  >
+    
+    
+      <button
+        id="dock-back"
+        class="text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 xs:px-2 xs:py-1.5 flex shrink-0 items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 focus:ring-2 focus:outline-none sm:px-3 sm:py-2"
+        title="Back"
+        aria-label="Back"
+      >
+        <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="m12 19-7-7 7-7"/>
+  <path d="M19 12H5"/>
+</svg>
+
+        <span class="hidden sm:inline">Back</span>
+      </button>
+
+      
+      <div class="bg-border xs:mx-1 mx-2 h-6 w-px sm:mx-2"></div>
+    
+
+
+    
+
+    
+    
+
+    
+    
+    
+
+
+    
+    <button
+      id="dock-top"
+      class="text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 xs:px-2 xs:py-1.5 flex shrink-0 items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 focus:ring-2 focus:outline-none sm:px-3 sm:py-2"
+      title="Back to top"
+      aria-label="Back to top"
+    >
+      <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="m18 15-6-6-6 6"/>
+</svg>
+
+      <span class="hidden sm:inline">Top</span>
+    </button>
+  </nav>
+</div>
+
+
+
+
+      <aside
+    id="toc-container"
+    class="toc-left"
+    data-position="left"
+  >
+      <div id="toc-center" class="pointer-events-none fixed top-28 ml-auto w-full max-w-4xl px-4">
+        <div class="pointer-events-auto fixed flex">
+          <div class="pointer-events-auto relative ml-auto w-fit">
+            <button
+              id="section-center-toggle"
+              class="bg-card/80 border-border text-muted-foreground hover:text-primary hover:bg-primary/10 ring-offset-background focus-visible:ring-ring flex cursor-pointer items-center gap-2 rounded-full border px-4 py-1.5 text-sm shadow-sm backdrop-blur-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+            >
+              <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <line x1="8" x2="21" y1="6" y2="6"/>
+  <line x1="8" x2="21" y1="12" y2="12"/>
+  <line x1="8" x2="21" y1="18" y2="18"/>
+  <line x1="3" x2="3.01" y1="6" y2="6"/>
+  <line x1="3" x2="3.01" y1="12" y2="12"/>
+  <line x1="3" x2="3.01" y1="18" y2="18"/>
+</svg>
+
+              <span id="section-center-title" class="max-w-[200px] truncate">内存管理</span>
+              <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+            </button>
+
+            
+            <div
+              id="section-center-dropdown"
+              class="bg-card border-border scrollbar-hide absolute top-full left-0 mt-2 hidden max-h-[60vh] w-[280px] origin-top scale-95 overflow-y-auto rounded-xl border p-4 opacity-0 shadow-lg transition-all"
+            >
+              <div
+                id="section-center-content"
+                class="[&_a]:text-muted-foreground [&_a:hover]:bg-primary/10 [&_a:hover]:text-primary [&_a.active]:bg-primary/10 [&_a.active]:text-primary text-sm [&_a]:block [&_a]:truncate [&_a]:rounded-md [&_a]:px-2 [&_a]:py-1 [&_a]:transition-colors [&_a.active]:font-medium [&_li]:my-1.5 [&_nav>ul]:pl-0 [&_ul]:list-none [&_ul]:pl-4"
+              >
+                
+                
+                
+                  
+                    <h2>
+                      <a href="/cpp_notes/posts/os/operationsystem/">操作系统介绍</a>
+                    </h2>
+                  
+                
+                  
+                    <h2>
+                      <a href="/cpp_notes/posts/os/process/">进程</a>
+                    </h2>
+                  
+                
+                  
+                    <h2>
+                      <a href="/cpp_notes/posts/os/mutex_synchronous/">互斥与同步</a>
+                    </h2>
+                  
+                
+                  
+                    <h2 class="active">
+                      <a href="/cpp_notes/posts/os/memmory/" class="active font-medium">内存管理</a>
+                    </h2>
+                  
+                
+                  
+                    <h2>
+                      <a href="/cpp_notes/posts/os/filesystem/">文件系统</a>
+                    </h2>
+                  
+                
+                  
+                    <h2>
+                      <a href="/cpp_notes/posts/os/io/">I/O设备管理</a>
+                    </h2>
+                  
+                
+              </div>
+            </div>
+          </div>
+
+          <div class="pointer-events-auto relative ml-auto w-fit"><button
+                id="toc-center-toggle"
+                class="bg-card/80 border-border text-muted-foreground hover:text-primary hover:bg-primary/10 ring-offset-background focus-visible:ring-ring flex cursor-pointer items-center gap-2 rounded-full border px-4 py-1.5 text-sm shadow-sm backdrop-blur-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+              >
+                <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <line x1="8" x2="21" y1="6" y2="6"/>
+  <line x1="8" x2="21" y1="12" y2="12"/>
+  <line x1="8" x2="21" y1="18" y2="18"/>
+  <line x1="3" x2="3.01" y1="6" y2="6"/>
+  <line x1="3" x2="3.01" y1="12" y2="12"/>
+  <line x1="3" x2="3.01" y1="18" y2="18"/>
+</svg>
+
+                <span id="toc-center-title" class="max-w-[200px] truncate">Table of contents</span>
+                <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+</svg>
+              </button>
+
+              
+              <div
+                id="toc-center-dropdown"
+                class="bg-card border-border scrollbar-hide absolute top-full left-0 mt-2 hidden max-h-[60vh] w-[280px] origin-top scale-95 overflow-y-auto rounded-xl border p-4 opacity-0 shadow-lg transition-all"
+              >
+                <div
+                  id="toc-center-content"
+                  class="[&_a]:text-muted-foreground [&_a:hover]:bg-primary/10 [&_a:hover]:text-primary [&_a.active]:bg-primary/10 [&_a.active]:text-primary text-sm [&_a]:block [&_a]:truncate [&_a]:rounded-md [&_a]:px-2 [&_a]:py-1 [&_a]:transition-colors [&_a.active]:font-medium [&_li]:my-1.5 [&_nav>ul]:pl-0 [&_ul]:list-none [&_ul]:pl-4"
+                >
+                  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#内存基础概念">内存基础概念</a>
+      <ul>
+        <li><a href="#作用">作用</a></li>
+        <li><a href="#逻辑地址与绝对地址">逻辑地址与绝对地址</a></li>
+        <li><a href="#逻辑地址转绝对地址">逻辑地址转绝对地址</a></li>
+        <li><a href="#内存管理的内容">内存管理的内容</a></li>
+      </ul>
+    </li>
+    <li><a href="#内存空间的扩充">内存空间的扩充</a>
+      <ul>
+        <li><a href="#覆盖技术">覆盖技术</a></li>
+        <li><a href="#交换技术">交换技术</a></li>
+        <li><a href="#虚拟内存技术">虚拟内存技术</a>
+          <ul>
+            <li><a href="#传统内存分配算法">传统内存分配算法</a></li>
+            <li><a href="#局部性原理">局部性原理</a></li>
+            <li><a href="#虚拟内存的概念">虚拟内存的概念</a></li>
+            <li><a href="#虚拟内存的特性">虚拟内存的特性</a></li>
+            <li><a href="#虚拟内存的实现">虚拟内存的实现</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#内存分配与回收">内存分配与回收</a>
+      <ul>
+        <li><a href="#内部碎片与外部碎片">内部碎片与外部碎片</a></li>
+        <li><a href="#连续分配管理">连续分配管理</a>
+          <ul>
+            <li><a href="#单一连续分配">单一连续分配</a></li>
+            <li><a href="#固定分区分配">固定分区分配</a></li>
+            <li><a href="#动态分区分配">动态分区分配</a></li>
+          </ul>
+        </li>
+        <li><a href="#动态分区分配算法">动态分区分配算法</a>
+          <ul>
+            <li><a href="#首次适应算法">首次适应算法</a></li>
+            <li><a href="#邻近适应算法">邻近适应算法</a></li>
+            <li><a href="#最佳适应算法">最佳适应算法</a></li>
+            <li><a href="#最坏适应算法">最坏适应算法</a></li>
+          </ul>
+        </li>
+        <li><a href="#非连续分配管理-基本分页存储">非连续分配管理-基本分页存储</a>
+          <ul>
+            <li><a href="#基本思想">基本思想</a></li>
+            <li><a href="#地址转换逻辑">地址转换逻辑</a></li>
+            <li><a href="#基本地址变换机构">基本地址变换机构</a></li>
+            <li><a href="#两级页表">两级页表</a></li>
+          </ul>
+        </li>
+        <li><a href="#非连续分配管理-基本分段存储">非连续分配管理-基本分段存储</a>
+          <ul>
+            <li><a href="#算法思路">算法思路</a></li>
+            <li><a href="#基本分段存储与基本分页储存对比">基本分段存储与基本分页储存对比</a></li>
+          </ul>
+        </li>
+        <li><a href="#非连续分配管理-段页式管理">非连续分配管理-段页式管理</a></li>
+        <li><a href="#虚拟内存-请求分页管理方式">虚拟内存-请求分页管理方式</a>
+          <ul>
+            <li><a href="#基础概念">基础概念</a></li>
+            <li><a href="#页表机制">页表机制</a></li>
+            <li><a href="#缺页中断">缺页中断</a></li>
+            <li><a href="#地址变换">地址变换</a></li>
+          </ul>
+        </li>
+        <li><a href="#请求管理方式-页面置换算法">请求管理方式-页面置换算法</a>
+          <ul>
+            <li><a href="#最佳置换算法opt">最佳置换算法（OPT）</a></li>
+            <li><a href="#先进先出算法fifo">先进先出算法（FIFO）</a></li>
+            <li><a href="#最近最久未使用置换算法lru">最近最久未使用置换算法（LRU）</a></li>
+            <li><a href="#时钟置换算法clock">时钟置换算法（clock）</a></li>
+          </ul>
+        </li>
+        <li><a href="#请求管理方式-内存页框分配">请求管理方式-内存页框分配</a>
+          <ul>
+            <li><a href="#基本概念">基本概念</a></li>
+            <li><a href="#分配策略">分配策略</a></li>
+            <li><a href="#交换的方式">交换的方式</a></li>
+            <li><a href="#工作集">工作集</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                </div>
+              </div></div>
+        </div>
+      </div></aside>
+      
+<div
+  id="search-overlay"
+  class="pointer-events-none fixed inset-0 z-40 bg-black/50 opacity-0 transition-opacity duration-300"
+></div>
+
+
+<div
+  id="search-modal"
+  class="bg-card border-border pointer-events-none fixed top-1/2 left-1/2 z-50 max-h-[80vh] w-full max-w-2xl -translate-x-1/2 -translate-y-1/2 scale-95 transform overflow-hidden rounded-xl border opacity-0 shadow-xl transition-all duration-300"
+  role="dialog"
+  aria-modal="true"
+  aria-hidden="true"
+  aria-labelledby="search-title"
+  tabindex="-1"
+>
+  
+  <div class="border-border flex items-center gap-3 border-b p-4">
+    
+    <div class="text-muted-foreground h-5 w-5 shrink-0">
+      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+</svg>
+
+    </div>
+    <h2 id="search-title" class="sr-only">Search</h2>
+
+    
+    <div class="relative flex-1">
+      
+      <button
+        id="search-clear"
+        class="text-muted-foreground hover:text-foreground hover:bg-muted/50 pointer-events-none absolute top-1/2 left-0 z-10 h-5 w-5 -translate-y-1/2 rounded opacity-0 transition-all duration-200"
+        title="Clear"
+        aria-label="Clear"
+      >
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+</svg>
+
+      </button>
+
+      
+      <input
+        id="search-input"
+        type="text"
+        placeholder="Search posts..."
+        class="text-foreground placeholder:text-muted-foreground w-full border-none bg-transparent pl-8 text-lg outline-none"
+        autocomplete="off"
+        spellcheck="false"
+      />
+    </div>
+
+    
+    <button
+      id="search-close"
+      class="text-muted-foreground hover:text-foreground hover:bg-muted/50 flex h-6 w-6 items-center justify-center rounded-md p-0.5 transition-all duration-200"
+      title="Close"
+      aria-label="Close"
+    >
+      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+</svg>
+
+    </button>
+  </div>
+
+  
+  <div id="search-results" class="max-h-96 overflow-y-auto">
+    
+    <div id="search-empty" class="flex flex-col items-center justify-center py-12 text-center">
+      <div class="bg-muted/50 mb-4 flex h-16 w-16 items-center justify-center rounded-full">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+</svg>
+
+      </div>
+      <h3 class="text-foreground mb-2 text-lg font-semibold">
+        Start searching
+      </h3>
+    </div>
+
+    
+    <div id="search-loading" class="flex items-center justify-center py-8" hidden>
+      <div
+        class="mr-3 h-6 w-6 animate-spin rounded-full border-2 border-current border-t-transparent"
+      ></div>
+      <span class="text-muted-foreground">Searching...</span>
+    </div>
+
+    
+    <div
+      id="search-no-results"
+      class="flex flex-col items-center justify-center py-12 text-center"
+      hidden
+    >
+      <div class="bg-muted/50 mb-4 flex h-16 w-16 items-center justify-center rounded-full">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
+</svg>
+
+      </div>
+      <h3 class="text-foreground mb-2 text-lg font-semibold">
+        No results
+      </h3>
+    </div>
+
+    
+    <div id="search-results-list" hidden>
+      
+      <div
+        id="search-stats"
+        class="text-muted-foreground border-border border-b px-4 py-3 text-sm"
+        data-count-other="Found %d results"
+      ></div>
+
+      
+      <div id="search-items" class="divide-border divide-y" role="list">
+        
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="border-border bg-muted/20 border-t px-4 py-3"><div class="text-muted-foreground flex items-center justify-between text-xs">
+      <div class="flex items-center gap-2 md:gap-4">
+        <div class="flex items-center gap-1">
+          <kbd class="bg-muted border-border rounded border px-1.5 py-0.5 text-xs">↑↓</kbd>
+          <span class="hidden sm:inline">Navigate</span>
+        </div>
+        <div class="flex items-center gap-1">
+          <kbd class="bg-muted border-border rounded border px-1.5 py-0.5 text-xs">↵</kbd>
+          <span class="hidden sm:inline">Select</span>
+        </div>
+        <div class="flex items-center gap-1">
+          <kbd class="bg-muted border-border rounded border px-1.5 py-0.5 text-xs">ESC</kbd>
+          <span class="hidden sm:inline">Close</span>
+        </div>
+      </div>
+      <div class="search-hint-desktop flex items-center gap-1">
+        <kbd class="bg-muted border-border rounded border px-1.5 py-0.5 text-xs">⌘K</kbd>
+        <span>Shortcut</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+      
+
+
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css"
+    integrity="sha384-5TcZemv2l/9On385z///+d7MSYlvIEw9FuZTIdZ14vJLqWphw7e7ZPuOiCHJcFCP"
+    crossorigin="anonymous"
+  />
+  <script
+    defer
+    src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js"
+    integrity="sha384-cMkvdD8LoxVzGF/RPUKAcvmm49FQ0oxwDF3BGKtDXcEc+T1b2N+teh/OJfpU0jr6"
+    crossorigin="anonymous"
+  ></script>
+  <script
+    defer
+    src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js"
+    integrity="sha384-hCXGrW6PitJEwbkoStFjeJxv+fSOOQKOPbJxSfM6G5sWZjAyWhXiTIIAmQqnlLlh"
+    crossorigin="anonymous"
+  ></script>
+
+  <script>
+    function initKaTeX() {
+      if (typeof renderMathInElement === "undefined") {
+        setTimeout(initKaTeX, 100);
+        return;
+      }renderMathInElement(document.body, {
+        delimiters: [{"display":true,"left":"$$","right":"$$"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"},{"display":true,"left":"\\[","right":"\\]"}],
+        throwOnError: false,
+        errorColor: "#cc0000",
+        fleqn: false,
+        leqno: false,
+        trust: false,
+      });
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initKaTeX, { once: true });
+    } else {
+      initKaTeX();
+    }
+  </script>
+      
+
+
+    </main>
+  </body>
+</html>

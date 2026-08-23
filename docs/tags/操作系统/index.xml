@@ -10,9 +10,23 @@
 		
 		
 		
-			<lastBuildDate>Sun, 30 Mar 2025 00:00:00 +0000</lastBuildDate>
+			<lastBuildDate>Mon, 07 Apr 2025 00:00:00 +0000</lastBuildDate>
 		
 			<atom:link href="http://localhost:1313/cpp_notes/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>操作系统介绍</title>
+				<link>http://localhost:1313/cpp_notes/posts/os/operationsystem/</link>
+				<pubDate>Mon, 07 Apr 2025 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/cpp_notes/posts/os/operationsystem/</guid>
+				<description>&lt;h1 id=&#34;概念与功能&#34;&gt;概念与功能&lt;a href=&#34;#%e6%a6%82%e5%bf%b5%e4%b8%8e%e5%8a%9f%e8%83%bd&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h1&gt;&lt;p&gt;&#xD;&#xA;&lt;figure&#xD;&#xA;  class=&#34;image-figure not-prose my-8&#34;&#xD;&#xA;  data-lightbox-enabled=&#34;&#xD;&#xA;    true&#xD;&#xA;  &#34;&#xD;&#xA;  data-gallery-type=&#34;auto&#34;&#xD;&#xA;  data-image-width=&#34;1581&#34;&#xD;&#xA;  data-image-height=&#34;896&#34;&#xD;&#xA;  data-image-src=&#34;http://localhost:1313/cpp_notes/posts/os/operationsystem/resources/summary1.png&#34;&#xD;&#xA;&gt;&#xD;&#xA;  &lt;div class=&#34;image-container&#34;&gt;&#xD;&#xA;    &lt;img&#xD;&#xA;    src=&#34;http://localhost:1313/cpp_notes/posts/os/operationsystem/resources/summary1.png&#34;&#xD;&#xA;    alt=&#34;img&#34;&#xD;&#xA;    &#xD;&#xA;    &#xD;&#xA;      &#xD;&#xA;      &#xD;&#xA;        &#xD;&#xA;          width=&#34;1581&#34; height=&#34;896&#34;&#xD;&#xA;        &#xD;&#xA;      &#xD;&#xA;    &#xD;&#xA;    loading=&#34;lazy&#34;&#xD;&#xA;    decoding=&#34;async&#34;&#xD;&#xA;    data-gallery-src=&#34;http://localhost:1313/cpp_notes/posts/os/operationsystem/resources/summary1.png&#34;&#xD;&#xA;    data-gallery-alt=&#34;img&#34;&#xD;&#xA;    data-gallery-title=&#34;&#34;&#xD;&#xA;  /&gt;&lt;/div&gt;&#xD;&#xA;&#xD;&#xA;  &lt;/figure&gt;&#xD;&#xA;&lt;/p&gt;&#xA;&lt;h2 id=&#34;概念&#34;&gt;概念&lt;a href=&#34;#%e6%a6%82%e5%bf%b5&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h2&gt;&lt;center&gt;&#xA;&lt;p&gt;&#xD;&#xA;&lt;figure&#xD;&#xA;  class=&#34;image-figure not-prose my-8&#34;&#xD;&#xA;  data-lightbox-enabled=&#34;&#xD;&#xA;    true&#xD;&#xA;  &#34;&#xD;&#xA;  data-gallery-type=&#34;auto&#34;&#xD;&#xA;  data-image-width=&#34;419&#34;&#xD;&#xA;  data-image-height=&#34;388&#34;&#xD;&#xA;  data-image-src=&#34;http://localhost:1313/cpp_notes/posts/os/operationsystem/resources/systemStructure.png&#34;&#xD;&#xA;&gt;&#xD;&#xA;  &lt;div class=&#34;image-container&#34;&gt;&#xD;&#xA;    &lt;img&#xD;&#xA;    src=&#34;http://localhost:1313/cpp_notes/posts/os/operationsystem/resources/systemStructure.png&#34;&#xD;&#xA;    alt=&#34;img&#34;&#xD;&#xA;    &#xD;&#xA;    &#xD;&#xA;      &#xD;&#xA;      &#xD;&#xA;        &#xD;&#xA;          width=&#34;419&#34; height=&#34;388&#34;&#xD;&#xA;        &#xD;&#xA;      &#xD;&#xA;    &#xD;&#xA;    loading=&#34;lazy&#34;&#xD;&#xA;    decoding=&#34;async&#34;&#xD;&#xA;    data-gallery-src=&#34;http://localhost:1313/cpp_notes/posts/os/operationsystem/resources/systemStructure.png&#34;&#xD;&#xA;    data-gallery-alt=&#34;img&#34;&#xD;&#xA;    data-gallery-title=&#34;&#34;&#xD;&#xA;  /&gt;&lt;/div&gt;&#xD;&#xA;&#xD;&#xA;  &lt;/figure&gt;&#xD;&#xA;&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>操作系统原理</title>
+				<link>http://localhost:1313/cpp_notes/posts/os/</link>
+				<pubDate>Mon, 07 Apr 2025 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/cpp_notes/posts/os/</guid>
+				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本卷系统介绍操作系统的概念、结构与运行机制，围绕进程管理、互斥与同步、内存管理与文件系统四大核心展开。内容涵盖操作系统概述、进程与线程、临界区与 Peterson 算法、虚拟内存与页面置换、文件目录与索引结构，以及 I/O 设备与缓冲区管理，帮助读者理解操作系统如何管理与调度计算机资源。&lt;/p&gt;</description>
+			</item>
 			<item>
 				<title>操作系统</title>
 				<link>http://localhost:1313/cpp_notes/posts/operatesystem/</link>

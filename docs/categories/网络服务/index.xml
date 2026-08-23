@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>网络服务 on Hugo Narrow</title>
+		<link>http://localhost:1313/cpp_notes/categories/%E7%BD%91%E7%BB%9C%E6%9C%8D%E5%8A%A1/</link>
+		<description>Recent content in 网络服务 on Hugo Narrow</description>
+		<generator>Hugo</generator>
+		<language>en</language>
+		
+		
+		
+		
+			<lastBuildDate>Mon, 07 Apr 2025 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="http://localhost:1313/cpp_notes/categories/%E7%BD%91%E7%BB%9C%E6%9C%8D%E5%8A%A1/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>DNS</title>
+				<link>http://localhost:1313/cpp_notes/posts/linuxcommand/dns/</link>
+				<pubDate>Mon, 07 Apr 2025 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/cpp_notes/posts/linuxcommand/dns/</guid>
+				<description>&lt;h1 id=&#34;概念&#34;&gt;概念&lt;a href=&#34;#%e6%a6%82%e5%bf%b5&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h1&gt;&lt;p&gt;&#xD;&#xA;&lt;figure&#xD;&#xA;  class=&#34;image-figure not-prose my-8&#34;&#xD;&#xA;  data-lightbox-enabled=&#34;&#xD;&#xA;    true&#xD;&#xA;  &#34;&#xD;&#xA;  data-gallery-type=&#34;auto&#34;&#xD;&#xA;  data-image-width=&#34;665&#34;&#xD;&#xA;  data-image-height=&#34;545&#34;&#xD;&#xA;  data-image-src=&#34;http://localhost:1313/cpp_notes/posts/linuxcommand/dns/resources/dns.png&#34;&#xD;&#xA;&gt;&#xD;&#xA;  &lt;div class=&#34;image-container&#34;&gt;&#xD;&#xA;    &lt;img&#xD;&#xA;    src=&#34;http://localhost:1313/cpp_notes/posts/linuxcommand/dns/resources/dns.png&#34;&#xD;&#xA;    alt=&#34;dns&#34;&#xD;&#xA;    &#xD;&#xA;    &#xD;&#xA;      &#xD;&#xA;      &#xD;&#xA;        &#xD;&#xA;          width=&#34;665&#34; height=&#34;545&#34;&#xD;&#xA;        &#xD;&#xA;      &#xD;&#xA;    &#xD;&#xA;    loading=&#34;lazy&#34;&#xD;&#xA;    decoding=&#34;async&#34;&#xD;&#xA;    data-gallery-src=&#34;http://localhost:1313/cpp_notes/posts/linuxcommand/dns/resources/dns.png&#34;&#xD;&#xA;    data-gallery-alt=&#34;dns&#34;&#xD;&#xA;    data-gallery-title=&#34;&#34;&#xD;&#xA;  /&gt;&lt;/div&gt;&#xD;&#xA;&#xD;&#xA;  &lt;/figure&gt;&#xD;&#xA;&lt;/p&gt;&#xA;&lt;p&gt;DNS (Domain Name System)，即域名系统，将「域名」转换为「IP地址」的服务器，例如用户输入网址 &lt;code&gt;wwww.example.com&lt;/code&gt;，浏览器首先会去 DNS 服务器拿到域名对应的 IP 地址 &lt;code&gt;12.34.56.78&lt;/code&gt;，然后通过 IP 地址才能正确的访问到对应网站。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>FTP</title>
+				<link>http://localhost:1313/cpp_notes/posts/linuxcommand/ftp/</link>
+				<pubDate>Mon, 07 Apr 2025 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/cpp_notes/posts/linuxcommand/ftp/</guid>
+				<description>&lt;h1 id=&#34;基本概念&#34;&gt;基本概念&lt;a href=&#34;#%e5%9f%ba%e6%9c%ac%e6%a6%82%e5%bf%b5&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h1&gt;&lt;p&gt;FTP (File Transfer Protocol)，文件传输协议，用于在网络中进行文件传输，属于应用层且基于TCP协议实现，允许用户以文件操作的方式（如文件的增、删、改、查、传送等）与另一主机相互通信。在 linux 上 vsftpd 软件实现了FTP 服务协议。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>iptables</title>
+				<link>http://localhost:1313/cpp_notes/posts/linuxcommand/iptables/</link>
+				<pubDate>Mon, 07 Apr 2025 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/cpp_notes/posts/linuxcommand/iptables/</guid>
+				<description>&lt;h1 id=&#34;防火墙&#34;&gt;防火墙&lt;a href=&#34;#%e9%98%b2%e7%81%ab%e5%a2%99&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h1&gt;&lt;p&gt;防火墙分为两类：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;硬件防火墙：在硬件级别实现流量过滤，成本高&lt;/li&gt;&#xA;&lt;li&gt;软件防火墙：系统内核级别实现流量过滤，成本低&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;Linux 在软件层面实现的防火墙主要靠 &lt;code&gt;iptables&lt;/code&gt; 与 &lt;code&gt;netfilter&lt;/code&gt; 实现&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>NFS</title>
+				<link>http://localhost:1313/cpp_notes/posts/linuxcommand/nfs/</link>
+				<pubDate>Mon, 07 Apr 2025 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/cpp_notes/posts/linuxcommand/nfs/</guid>
+				<description>&lt;h1 id=&#34;基本概念&#34;&gt;基本概念&lt;a href=&#34;#%e5%9f%ba%e6%9c%ac%e6%a6%82%e5%bf%b5&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h1&gt;&lt;p&gt;NFS (Network File System)，网络文件系统，可以通过网络，让不同的机器、不同的操作系统可以共享彼此的文件，以文件夹挂载的方式实现。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>SSH</title>
+				<link>http://localhost:1313/cpp_notes/posts/linuxcommand/ssh/</link>
+				<pubDate>Mon, 07 Apr 2025 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/cpp_notes/posts/linuxcommand/ssh/</guid>
+				<description>&lt;h1 id=&#34;基本概念&#34;&gt;基本概念&lt;a href=&#34;#%e5%9f%ba%e6%9c%ac%e6%a6%82%e5%bf%b5&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h1&gt;&lt;h2 id=&#34;ssh-协议&#34;&gt;SSH 协议&lt;a href=&#34;#ssh-%e5%8d%8f%e8%ae%ae&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;SSH&lt;/strong&gt; (Secure Shell) 是由 IETF (The Internet Engineering Task Force) 制定的建立在应用层基础上的安全网络协议，采用非对称加密方式，专为远程登录会话和其他网络服务提供安全性保障。SSH 会对传输的数据进行加密，并能防止DNS欺骗和IP欺骗。该协议的主流实现是 openssl 项目，并以 sshd 服务运行在 linux 系统上。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

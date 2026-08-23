@@ -10,9 +10,16 @@
 		
 		
 		
-			<lastBuildDate>Wed, 10 Jun 2026 00:00:00 +0000</lastBuildDate>
+			<lastBuildDate>Sat, 22 Aug 2026 00:00:00 +0000</lastBuildDate>
 		
 			<atom:link href="http://localhost:1313/cpp_notes/series/theory/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>x86从实模式到保护模式</title>
+				<link>http://localhost:1313/cpp_notes/posts/x86/</link>
+				<pubDate>Sat, 22 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/cpp_notes/posts/x86/</guid>
+				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;从&lt;code&gt;8086&lt;/code&gt;实模式出发，系统讲解处理器与内存、指令与寄存器、计算机硬件与BIOS启动、汇编语言与标志寄存器、栈、硬盘与显卡的访问控制、中断机制以及32位处理器的流水线与缓存等底层原理，帮助读者建立从硬件到软件的完整计算机体系结构认知。&lt;/p&gt;</description>
+			</item>
 			<item>
 				<title>系统设计方案</title>
 				<link>http://localhost:1313/cpp_notes/posts/systeamdesign/</link>
@@ -40,6 +47,20 @@
 				<pubDate>Mon, 21 Jul 2025 00:00:00 +0000</pubDate>
 				<guid>http://localhost:1313/cpp_notes/posts/cppconcurrency/</guid>
 				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本文档围绕 C++11 并发编程展开，从 std::thread 的创建与生命周期管理入手，深入互斥量、条件变量、原子类型等同步原语。涵盖线程中断机制、伪共享优化、无锁数据结构设计以及线程安全容器实现等核心主题。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>操作系统原理</title>
+				<link>http://localhost:1313/cpp_notes/posts/os/</link>
+				<pubDate>Mon, 07 Apr 2025 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/cpp_notes/posts/os/</guid>
+				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本卷系统介绍操作系统的概念、结构与运行机制，围绕进程管理、互斥与同步、内存管理与文件系统四大核心展开。内容涵盖操作系统概述、进程与线程、临界区与 Peterson 算法、虚拟内存与页面置换、文件目录与索引结构，以及 I/O 设备与缓冲区管理，帮助读者理解操作系统如何管理与调度计算机资源。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>计算机网络基础</title>
+				<link>http://localhost:1313/cpp_notes/posts/internet/</link>
+				<pubDate>Mon, 07 Apr 2025 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/cpp_notes/posts/internet/</guid>
+				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本卷系统讲解计算机网络的体系结构、协议与通信原理，从物理层、链路层、网络层、传输层到应用层逐层剖析数据在网络中的传输机制。内容覆盖 OSI 参考模型与 TCP/IP 模型、信号与编码、帧同步与差错控制、IP 寻址与路由协议、TCP/UDP 传输机制，以及 DNS、FTP 等常见应用协议，帮助读者建立完整的网络知识框架。&lt;/p&gt;</description>
 			</item>
 			<item>
 				<title>操作系统</title>

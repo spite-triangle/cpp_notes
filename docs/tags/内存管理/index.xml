@@ -10,9 +10,16 @@
 		
 		
 		
-			<lastBuildDate>Sun, 16 Feb 2025 00:00:00 +0000</lastBuildDate>
+			<lastBuildDate>Mon, 07 Apr 2025 00:00:00 +0000</lastBuildDate>
 		
 			<atom:link href="http://localhost:1313/cpp_notes/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>内存管理</title>
+				<link>http://localhost:1313/cpp_notes/posts/os/memmory/</link>
+				<pubDate>Mon, 07 Apr 2025 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/cpp_notes/posts/os/memmory/</guid>
+				<description>&lt;h1 id=&#34;内存基础概念&#34;&gt;内存基础概念&lt;a href=&#34;#%e5%86%85%e5%ad%98%e5%9f%ba%e7%a1%80%e6%a6%82%e5%bf%b5&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h1&gt;&lt;p&gt;&#xD;&#xA;&lt;figure&#xD;&#xA;  class=&#34;image-figure not-prose my-8&#34;&#xD;&#xA;  data-lightbox-enabled=&#34;&#xD;&#xA;    true&#xD;&#xA;  &#34;&#xD;&#xA;  data-gallery-type=&#34;auto&#34;&#xD;&#xA;  data-image-width=&#34;1651&#34;&#xD;&#xA;  data-image-height=&#34;791&#34;&#xD;&#xA;  data-image-src=&#34;http://localhost:1313/cpp_notes/posts/os/memmory/resources/summary22.jpg&#34;&#xD;&#xA;&gt;&#xD;&#xA;  &lt;div class=&#34;image-container&#34;&gt;&#xD;&#xA;    &lt;img&#xD;&#xA;    src=&#34;http://localhost:1313/cpp_notes/posts/os/memmory/resources/summary22.jpg&#34;&#xD;&#xA;    alt=&#34;summary&#34;&#xD;&#xA;    &#xD;&#xA;    &#xD;&#xA;      &#xD;&#xA;      &#xD;&#xA;        &#xD;&#xA;          width=&#34;1651&#34; height=&#34;791&#34;&#xD;&#xA;        &#xD;&#xA;      &#xD;&#xA;    &#xD;&#xA;    loading=&#34;lazy&#34;&#xD;&#xA;    decoding=&#34;async&#34;&#xD;&#xA;    data-gallery-src=&#34;http://localhost:1313/cpp_notes/posts/os/memmory/resources/summary22.jpg&#34;&#xD;&#xA;    data-gallery-alt=&#34;summary&#34;&#xD;&#xA;    data-gallery-title=&#34;&#34;&#xD;&#xA;  /&gt;&lt;/div&gt;&#xD;&#xA;&#xD;&#xA;  &lt;/figure&gt;&#xD;&#xA;&lt;/p&gt;&#xA;&lt;h2 id=&#34;作用&#34;&gt;作用&lt;a href=&#34;#%e4%bd%9c%e7%94%a8&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;由于硬盘读写速度相对于&lt;code&gt;CPU&lt;/code&gt;而言，太慢。所以采用更快速的内存作为&lt;code&gt;CPU&lt;/code&gt;运算时数据，指令的储存工具。&lt;/strong&gt;&lt;/p&gt;</description>
+			</item>
 			<item>
 				<title>智能指针</title>
 				<link>http://localhost:1313/cpp_notes/posts/effective/smartpointertheory/</link>
@@ -33,6 +40,13 @@
 				<pubDate>Sun, 16 Feb 2025 00:00:00 +0000</pubDate>
 				<guid>http://localhost:1313/cpp_notes/posts/compiler/memorymanager/</guid>
 				<description>&lt;h1 id=&#34;缓存&#34;&gt;缓存&lt;a href=&#34;#%e7%bc%93%e5%ad%98&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h1&gt;&lt;p&gt;&#xD;&#xA;&lt;figure&#xD;&#xA;  class=&#34;image-figure not-prose my-8&#34;&#xD;&#xA;  data-lightbox-enabled=&#34;&#xD;&#xA;    true&#xD;&#xA;  &#34;&#xD;&#xA;  data-gallery-type=&#34;auto&#34;&#xD;&#xA;  data-image-width=&#34;854&#34;&#xD;&#xA;  data-image-height=&#34;534&#34;&#xD;&#xA;  data-image-src=&#34;http://localhost:1313/cpp_notes/posts/compiler/memorymanager/resources/cache.png&#34;&#xD;&#xA;&gt;&#xD;&#xA;  &lt;div class=&#34;image-container&#34;&gt;&#xD;&#xA;    &lt;img&#xD;&#xA;    src=&#34;http://localhost:1313/cpp_notes/posts/compiler/memorymanager/resources/cache.png&#34;&#xD;&#xA;    alt=&#34;alt&#34;&#xD;&#xA;    &#xD;&#xA;    &#xD;&#xA;      &#xD;&#xA;      &#xD;&#xA;        &#xD;&#xA;          width=&#34;854&#34; height=&#34;534&#34;&#xD;&#xA;        &#xD;&#xA;      &#xD;&#xA;    &#xD;&#xA;    loading=&#34;lazy&#34;&#xD;&#xA;    decoding=&#34;async&#34;&#xD;&#xA;    data-gallery-src=&#34;http://localhost:1313/cpp_notes/posts/compiler/memorymanager/resources/cache.png&#34;&#xD;&#xA;    data-gallery-alt=&#34;alt&#34;&#xD;&#xA;    data-gallery-title=&#34;&#34;&#xD;&#xA;  /&gt;&lt;/div&gt;&#xD;&#xA;&#xD;&#xA;  &lt;/figure&gt;&#xD;&#xA;&lt;/p&gt;&#xA;&lt;p&gt;对于 CPU 而言，内存的读写速度要远比寄存器的速度慢，为了提升性能，又在寄存器与内存之间添加了「缓存&lt;code&gt;cache&lt;/code&gt;」。内存中的数据会预先读取到缓存中，CPU 会首先查询缓存中是否有目标数据，若有则直接使用缓存，否则再读取内存。缓存的加入虽然能加快了内存访问速度，但缓存无法命中 &lt;code&gt;hit&lt;/code&gt; 也不能提升计算速度。&lt;strong&gt;事实上，目前编译器只能做一小部分优化工作，要想真正利用好缓存，提供缓存命中率，还是得靠编码。&lt;/strong&gt;&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>操作系统原理</title>
+				<link>http://localhost:1313/cpp_notes/posts/os/</link>
+				<pubDate>Mon, 07 Apr 2025 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/cpp_notes/posts/os/</guid>
+				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本卷系统介绍操作系统的概念、结构与运行机制，围绕进程管理、互斥与同步、内存管理与文件系统四大核心展开。内容涵盖操作系统概述、进程与线程、临界区与 Peterson 算法、虚拟内存与页面置换、文件目录与索引结构，以及 I/O 设备与缓冲区管理，帮助读者理解操作系统如何管理与调度计算机资源。&lt;/p&gt;</description>
 			</item>
 	</channel>
 </rss>

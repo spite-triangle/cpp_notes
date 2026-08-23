@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>命令行 on Hugo Narrow</title>
+		<link>http://localhost:1313/cpp_notes/tags/%E5%91%BD%E4%BB%A4%E8%A1%8C/</link>
+		<description>Recent content in 命令行 on Hugo Narrow</description>
+		<generator>Hugo</generator>
+		<language>en</language>
+		
+		
+		
+		
+			<lastBuildDate>Sun, 23 Aug 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="http://localhost:1313/cpp_notes/tags/%E5%91%BD%E4%BB%A4%E8%A1%8C/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Bash</title>
+				<link>http://localhost:1313/cpp_notes/posts/linuxcommand/bash/</link>
+				<pubDate>Mon, 07 Apr 2025 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/cpp_notes/posts/linuxcommand/bash/</guid>
+				<description>&lt;h1 id=&#34;基本概念&#34;&gt;基本概念&lt;a href=&#34;#%e5%9f%ba%e6%9c%ac%e6%a6%82%e5%bf%b5&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h1&gt;&lt;p&gt;Bash 是一个命令处理器，运行在文本窗口中，可以用来执行用户输入的指令，例如用户在 Linux 终端中输入的指令，就是靠 Bash 翻译文本，然后去执行对应的程序。将多个指令写到一个文本文件中，让 Bash 批量解析运行，这就是 shell 脚本。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>Linux 指令</title>
+				<link>http://localhost:1313/cpp_notes/posts/linuxcommand/</link>
+				<pubDate>Sun, 23 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/cpp_notes/posts/linuxcommand/</guid>
+				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本卷系统讲解 Linux 命令行基础与常用工具，从 Bash 的基本概念、命令展开、别名设置与快捷键入手，深入 grep、sed、awk 三剑客的用法及正则表达式技巧，最后介绍 GDB 调试器的启动执行、断点管理与源码查看方法。还涵盖 DNS 域名解析、SSH 安全远程登录与文件传输、FTP 文件传输协议、NFS 网络文件系统以及 iptables 防火墙等核心内容。内容循序渐进，帮助读者熟练使用 Linux 命令行进行开发与调试。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

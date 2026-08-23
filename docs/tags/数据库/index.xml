@@ -10,7 +10,7 @@
 		
 		
 		
-			<lastBuildDate>Wed, 10 Jun 2026 00:00:00 +0000</lastBuildDate>
+			<lastBuildDate>Sun, 23 Aug 2026 00:00:00 +0000</lastBuildDate>
 		
 			<atom:link href="http://localhost:1313/cpp_notes/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/index.xml" rel="self" type="application/rss+xml" />
 			<item>
@@ -35,11 +35,25 @@
 				<description>&lt;h1 id=&#34;概念&#34;&gt;概念&lt;a href=&#34;#%e6%a6%82%e5%bf%b5&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h1&gt;&lt;p&gt;&lt;strong&gt;对象关系映射 &lt;code&gt;Object Relational Mapping (ORM)&lt;/code&gt;&lt;/strong&gt; : 是一种为了解决面向对象与关系数据库存在的互不匹配的现象的技术，即通过对象来完成数据库操作。&lt;code&gt;ORM&lt;/code&gt; 框架是连接数据库的桥梁，只要提供了持久化类与表的映射关系，&lt;code&gt;ORM&lt;/code&gt; 框架在运行时就能参照映射文件的信息，把对象持久化到数据库中。&lt;/p&gt;</description>
 			</item>
 			<item>
+				<title>数据库</title>
+				<link>http://localhost:1313/cpp_notes/posts/mysql/</link>
+				<pubDate>Sun, 23 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/cpp_notes/posts/mysql/</guid>
+				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;涵盖 MySQL 数据库的基本概念、命令行连接与库表操作、SQL 语法与数据类型、数据表的增删改查查询、事务的 ACID 原则与并发隔离问题、索引的分类与应用、用户权限管理以及数据库备份等核心知识。&lt;/p&gt;</description>
+			</item>
+			<item>
 				<title>系统设计方案</title>
 				<link>http://localhost:1313/cpp_notes/posts/systeamdesign/</link>
 				<pubDate>Wed, 10 Jun 2026 00:00:00 +0000</pubDate>
 				<guid>http://localhost:1313/cpp_notes/posts/systeamdesign/</guid>
 				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本文档涵盖系统设计中的核心方法论，包括有限状态机与行为树的设计实现、事件循环框架搭建、数据库设计范式以及权限管理模型。内容涉及关系型数据存储模式、树形数据结构建模及元数据驱动架构等实用技术。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>PostgreSQL</title>
+				<link>http://localhost:1313/cpp_notes/posts/postgresql/</link>
+				<pubDate>Mon, 07 Apr 2025 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/cpp_notes/posts/postgresql/</guid>
+				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本卷面向 PostgreSQL 数据库，从安装与环境变量配置、服务启停与登录讲起，逐步深入到客户端-服务器架构、进程划分与内存结构等体系结构知识，并详解范围、列表、哈希三种分区表的创建、分区裁剪与维护方法。内容兼顾基础操作与进阶应用，帮助读者掌握 PostgreSQL 的部署与优化技巧。&lt;/p&gt;</description>
 			</item>
 	</channel>
 </rss>

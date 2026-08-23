@@ -10,7 +10,7 @@
 		
 		
 		
-			<lastBuildDate>Wed, 24 Jun 2026 00:00:00 +0000</lastBuildDate>
+			<lastBuildDate>Sun, 23 Aug 2026 00:00:00 +0000</lastBuildDate>
 		
 			<atom:link href="http://localhost:1313/cpp_notes/series/backend/index.xml" rel="self" type="application/rss+xml" />
 			<item>
@@ -19,6 +19,20 @@
 				<pubDate>Sat, 08 Mar 2025 00:00:00 +0000</pubDate>
 				<guid>http://localhost:1313/cpp_notes/posts/python/flask/</guid>
 				<description>&lt;h1 id=&#34;简介&#34;&gt;简介&lt;a href=&#34;#%e7%ae%80%e4%bb%8b&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h1&gt;&lt;p&gt;&lt;a&#xD;&#xA;    href=&#34;https://flask.palletsprojects.com/en/stable/&#34;target=&#34;_blank&#34;&#xD;&#xA;    class=&#34;inline-flex items-center gap-1&#34;&#xD;&#xA;  &gt;Flask&lt;svg class=&#34;h-3 w-3 flex-shrink-0&#34; id=&#34;external-link&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;path fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34; d=&#34;M15 3h6v6m-11 5L21 3m-3 10v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6&#34;/&gt;&lt;/svg&gt;&#xD;&#xA;  &lt;/a&gt; 是一个轻量级 web 开发框架，它主要面向需求简单，项目周期短的小应用。Flask 本身相当于一个内核，其他几乎所有的功能都要用到扩展，都需要用第三方的扩展来实现。用 extension 增加其他功能。Flask没有默认使用的数据库、窗体验证工具。你可以选择 MySQL，也可以用 NoSQL。其 WSGI 工具箱采用 Werkzeug（路由模块），模板引擎则使用 Jinja2。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>Linux 指令</title>
+				<link>http://localhost:1313/cpp_notes/posts/linuxcommand/</link>
+				<pubDate>Sun, 23 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/cpp_notes/posts/linuxcommand/</guid>
+				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本卷系统讲解 Linux 命令行基础与常用工具，从 Bash 的基本概念、命令展开、别名设置与快捷键入手，深入 grep、sed、awk 三剑客的用法及正则表达式技巧，最后介绍 GDB 调试器的启动执行、断点管理与源码查看方法。还涵盖 DNS 域名解析、SSH 安全远程登录与文件传输、FTP 文件传输协议、NFS 网络文件系统以及 iptables 防火墙等核心内容。内容循序渐进，帮助读者熟练使用 Linux 命令行进行开发与调试。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>MySQL</title>
+				<link>http://localhost:1313/cpp_notes/posts/mysql/</link>
+				<pubDate>Sun, 23 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/cpp_notes/posts/mysql/</guid>
+				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;涵盖 MySQL 数据库的基本概念、命令行连接与库表操作、SQL 语法与数据类型、数据表的增删改查查询、事务的 ACID 原则与并发隔离问题、索引的分类与应用、用户权限管理以及数据库备份等核心知识。&lt;/p&gt;</description>
 			</item>
 			<item>
 				<title>Java SDK</title>
@@ -54,6 +68,13 @@
 				<pubDate>Sat, 31 May 2025 00:00:00 +0000</pubDate>
 				<guid>http://localhost:1313/cpp_notes/posts/nginx/</guid>
 				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;Nginx 是一款高性能 HTTP/反向代理服务器，本文档从基础代理服务原理入手，详解配置文件结构、Docker 部署与路由配置方法。&lt;/p&gt;&#xA;&lt;!-- VOLUME_OVERVIEW_END --&gt;</description>
+			</item>
+			<item>
+				<title>PostgreSQL</title>
+				<link>http://localhost:1313/cpp_notes/posts/postgresql/</link>
+				<pubDate>Mon, 07 Apr 2025 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/cpp_notes/posts/postgresql/</guid>
+				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本卷面向 PostgreSQL 数据库，从安装与环境变量配置、服务启停与登录讲起，逐步深入到客户端-服务器架构、进程划分与内存结构等体系结构知识，并详解范围、列表、哈希三种分区表的创建、分区裁剪与维护方法。内容兼顾基础操作与进阶应用，帮助读者掌握 PostgreSQL 的部署与优化技巧。&lt;/p&gt;</description>
 			</item>
 			<item>
 				<title>Django</title>

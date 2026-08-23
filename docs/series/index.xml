@@ -10,9 +10,30 @@
 		
 		
 		
-			<lastBuildDate>Tue, 04 Aug 2026 00:00:00 +0000</lastBuildDate>
+			<lastBuildDate>Sun, 23 Aug 2026 00:00:00 +0000</lastBuildDate>
 		
 			<atom:link href="http://localhost:1313/cpp_notes/series/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>后端技术</title>
+				<link>http://localhost:1313/cpp_notes/series/backend/</link>
+				<pubDate>Sun, 23 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/cpp_notes/series/backend/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>开发框架</title>
+				<link>http://localhost:1313/cpp_notes/series/framework/</link>
+				<pubDate>Sun, 23 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/cpp_notes/series/framework/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>理论知识</title>
+				<link>http://localhost:1313/cpp_notes/series/theory/</link>
+				<pubDate>Sat, 22 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/cpp_notes/series/theory/</guid>
+				<description></description>
+			</item>
 			<item>
 				<title>前端技术</title>
 				<link>http://localhost:1313/cpp_notes/series/frontend/</link>
@@ -25,27 +46,6 @@
 				<link>http://localhost:1313/cpp_notes/series/programe/</link>
 				<pubDate>Mon, 29 Jun 2026 00:00:00 +0000</pubDate>
 				<guid>http://localhost:1313/cpp_notes/series/programe/</guid>
-				<description></description>
-			</item>
-			<item>
-				<title>后端技术</title>
-				<link>http://localhost:1313/cpp_notes/series/backend/</link>
-				<pubDate>Wed, 24 Jun 2026 00:00:00 +0000</pubDate>
-				<guid>http://localhost:1313/cpp_notes/series/backend/</guid>
-				<description></description>
-			</item>
-			<item>
-				<title>理论知识</title>
-				<link>http://localhost:1313/cpp_notes/series/theory/</link>
-				<pubDate>Wed, 10 Jun 2026 00:00:00 +0000</pubDate>
-				<guid>http://localhost:1313/cpp_notes/series/theory/</guid>
-				<description></description>
-			</item>
-			<item>
-				<title>开发框架</title>
-				<link>http://localhost:1313/cpp_notes/series/framework/</link>
-				<pubDate>Sat, 07 Mar 2026 00:00:00 +0000</pubDate>
-				<guid>http://localhost:1313/cpp_notes/series/framework/</guid>
 				<description></description>
 			</item>
 			<item>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>计算机科学 on Hugo Narrow</title>
+		<link>http://localhost:1313/cpp_notes/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6/</link>
+		<description>Recent content in 计算机科学 on Hugo Narrow</description>
+		<generator>Hugo</generator>
+		<language>en</language>
+		
+		
+		
+		
+			<lastBuildDate>Mon, 07 Apr 2025 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="http://localhost:1313/cpp_notes/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>操作系统原理</title>
+				<link>http://localhost:1313/cpp_notes/posts/os/</link>
+				<pubDate>Mon, 07 Apr 2025 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/cpp_notes/posts/os/</guid>
+				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本卷系统介绍操作系统的概念、结构与运行机制，围绕进程管理、互斥与同步、内存管理与文件系统四大核心展开。内容涵盖操作系统概述、进程与线程、临界区与 Peterson 算法、虚拟内存与页面置换、文件目录与索引结构，以及 I/O 设备与缓冲区管理，帮助读者理解操作系统如何管理与调度计算机资源。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>计算机网络基础</title>
+				<link>http://localhost:1313/cpp_notes/posts/internet/</link>
+				<pubDate>Mon, 07 Apr 2025 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/cpp_notes/posts/internet/</guid>
+				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本卷系统讲解计算机网络的体系结构、协议与通信原理，从物理层、链路层、网络层、传输层到应用层逐层剖析数据在网络中的传输机制。内容覆盖 OSI 参考模型与 TCP/IP 模型、信号与编码、帧同步与差错控制、IP 寻址与路由协议、TCP/UDP 传输机制，以及 DNS、FTP 等常见应用协议，帮助读者建立完整的网络知识框架。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

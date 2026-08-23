@@ -10,7 +10,7 @@
 		
 		
 		
-			<lastBuildDate>Sun, 12 May 2024 00:00:00 +0000</lastBuildDate>
+			<lastBuildDate>Mon, 07 Apr 2025 00:00:00 +0000</lastBuildDate>
 		
 			<atom:link href="http://localhost:1313/cpp_notes/tags/tcp/ip/index.xml" rel="self" type="application/rss+xml" />
 			<item>
@@ -19,6 +19,13 @@
 				<pubDate>Sun, 12 May 2024 00:00:00 +0000</pubDate>
 				<guid>http://localhost:1313/cpp_notes/posts/http/socket_tcp/</guid>
 				<description>&lt;h1 id=&#34;介绍&#34;&gt;介绍&lt;a href=&#34;#%e4%bb%8b%e7%bb%8d&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h1&gt;&lt;p&gt;套接字是一种网络API，提供一种进程间的通信方法，使得相同主机或者不同主机上的进程能够使用socket定义的规范进行双向的数据通信。可以实现TCP与UDP方式的通信。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>计算机网络基础</title>
+				<link>http://localhost:1313/cpp_notes/posts/internet/</link>
+				<pubDate>Mon, 07 Apr 2025 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/cpp_notes/posts/internet/</guid>
+				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本卷系统讲解计算机网络的体系结构、协议与通信原理，从物理层、链路层、网络层、传输层到应用层逐层剖析数据在网络中的传输机制。内容覆盖 OSI 参考模型与 TCP/IP 模型、信号与编码、帧同步与差错控制、IP 寻址与路由协议、TCP/UDP 传输机制，以及 DNS、FTP 等常见应用协议，帮助读者建立完整的网络知识框架。&lt;/p&gt;</description>
 			</item>
 			<item>
 				<title>HTTP 服务</title>

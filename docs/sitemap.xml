@@ -2,6 +2,9 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>http://localhost:1313/cpp_notes/posts/mysql/introduction/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>http://localhost:1313/cpp_notes/posts/hugo/introduction/</loc>
     <lastmod>2026-08-03T00:00:00+00:00</lastmod>
   </url><url>
@@ -46,6 +49,18 @@
   </url><url>
     <loc>http://localhost:1313/cpp_notes/posts/vue/introduction/</loc>
     <lastmod>2025-04-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/posts/linuxcommand/bash/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/posts/postgresql/baseoperation/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/posts/internet/foundation/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/posts/os/operationsystem/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/cpp_notes/posts/django/introdution/</loc>
     <lastmod>2025-03-06T00:00:00+00:00</lastmod>
@@ -119,6 +134,12 @@
     <loc>http://localhost:1313/cpp_notes/posts/cppconcurrency/managethread/</loc>
     <lastmod>2024-03-02T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>http://localhost:1313/cpp_notes/posts/mysql/cli/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/posts/x86/processormemory/</loc>
+    <lastmod>2026-08-22T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>http://localhost:1313/cpp_notes/posts/hugo/content/</loc>
     <lastmod>2026-08-04T00:00:00+00:00</lastmod>
   </url><url>
@@ -166,6 +187,18 @@
   </url><url>
     <loc>http://localhost:1313/cpp_notes/posts/electron/model/</loc>
     <lastmod>2025-04-27T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/posts/linuxcommand/regular/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/posts/postgresql/division/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/posts/internet/physicallayer/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/posts/os/process/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/cpp_notes/posts/cpptools/serialization/</loc>
     <lastmod>2025-03-30T00:00:00+00:00</lastmod>
@@ -227,6 +260,12 @@
     <loc>http://localhost:1313/cpp_notes/posts/workflow/computtask/</loc>
     <lastmod>2024-03-02T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>http://localhost:1313/cpp_notes/posts/mysql/operatordb/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/posts/x86/computerhardware/</loc>
+    <lastmod>2026-08-22T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>http://localhost:1313/cpp_notes/posts/hugo/organization/</loc>
     <lastmod>2026-08-03T00:00:00+00:00</lastmod>
   </url><url>
@@ -268,6 +307,18 @@
   </url><url>
     <loc>http://localhost:1313/cpp_notes/posts/vue/script/</loc>
     <lastmod>2025-04-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/posts/linuxcommand/gdb/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/posts/os/mutex_synchronous/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/posts/postgresql/pgsqlstructure/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/posts/internet/linklayer/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/cpp_notes/posts/fastapi/route/</loc>
     <lastmod>2025-03-29T00:00:00+00:00</lastmod>
@@ -329,6 +380,12 @@
     <loc>http://localhost:1313/cpp_notes/posts/testtools/coverage/</loc>
     <lastmod>2024-03-02T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>http://localhost:1313/cpp_notes/posts/mysql/operatordata/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/posts/x86/assembly/</loc>
+    <lastmod>2026-08-22T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>http://localhost:1313/cpp_notes/posts/hugo/taxonomies/</loc>
     <lastmod>2026-08-03T00:00:00+00:00</lastmod>
   </url><url>
@@ -376,6 +433,15 @@
   </url><url>
     <loc>http://localhost:1313/cpp_notes/posts/vue/data/</loc>
     <lastmod>2025-04-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/posts/linuxcommand/dns/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/posts/os/memmory/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/posts/internet/network/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/cpp_notes/posts/django/route/</loc>
     <lastmod>2025-03-06T00:00:00+00:00</lastmod>
@@ -428,6 +494,12 @@
     <loc>http://localhost:1313/cpp_notes/posts/http/blockingio/</loc>
     <lastmod>2024-03-02T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>http://localhost:1313/cpp_notes/posts/mysql/transaction/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/posts/x86/stack/</loc>
+    <lastmod>2026-08-22T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>http://localhost:1313/cpp_notes/posts/hugo/template/</loc>
     <lastmod>2026-08-03T00:00:00+00:00</lastmod>
   </url><url>
@@ -463,6 +535,15 @@
   </url><url>
     <loc>http://localhost:1313/cpp_notes/posts/vue/watch/</loc>
     <lastmod>2025-04-19T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/posts/linuxcommand/ftp/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/posts/internet/transport/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/posts/os/filesystem/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/cpp_notes/posts/django/view/</loc>
     <lastmod>2025-03-08T00:00:00+00:00</lastmod>
@@ -509,6 +590,12 @@
     <loc>http://localhost:1313/cpp_notes/posts/http/reactor/</loc>
     <lastmod>2024-03-02T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>http://localhost:1313/cpp_notes/posts/mysql/indexs/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/posts/x86/diskgpu/</loc>
+    <lastmod>2026-08-22T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>http://localhost:1313/cpp_notes/posts/hugo/web/</loc>
     <lastmod>2026-08-04T00:00:00+00:00</lastmod>
   </url><url>
@@ -532,6 +619,15 @@
   </url><url>
     <loc>http://localhost:1313/cpp_notes/posts/vue/component/</loc>
     <lastmod>2025-04-26T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/posts/os/io/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/posts/linuxcommand/iptables/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/posts/internet/application/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/cpp_notes/posts/distributecluster/ansys/</loc>
     <lastmod>2025-03-30T00:00:00+00:00</lastmod>
@@ -575,6 +671,12 @@
     <loc>http://localhost:1313/cpp_notes/posts/effective/smartpointer/</loc>
     <lastmod>2024-03-02T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>http://localhost:1313/cpp_notes/posts/mysql/authority/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/posts/x86/interrupt/</loc>
+    <lastmod>2026-08-22T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>http://localhost:1313/cpp_notes/posts/hugo/config/</loc>
     <lastmod>2026-08-03T00:00:00+00:00</lastmod>
   </url><url>
@@ -607,6 +709,9 @@
   </url><url>
     <loc>http://localhost:1313/cpp_notes/posts/vue/route/</loc>
     <lastmod>2025-04-27T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/posts/linuxcommand/nfs/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/cpp_notes/posts/django/orm/</loc>
     <lastmod>2025-03-08T00:00:00+00:00</lastmod>
@@ -650,6 +755,12 @@
     <loc>http://localhost:1313/cpp_notes/posts/cppconcurrency/adcancethreadmanage/</loc>
     <lastmod>2024-03-02T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>http://localhost:1313/cpp_notes/posts/mysql/backup/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/posts/x86/processor32/</loc>
+    <lastmod>2026-08-22T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>http://localhost:1313/cpp_notes/posts/react/form/</loc>
     <lastmod>2026-06-28T00:00:00+00:00</lastmod>
   </url><url>
@@ -679,6 +790,9 @@
   </url><url>
     <loc>http://localhost:1313/cpp_notes/posts/vue/pinia/</loc>
     <lastmod>2025-04-21T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/posts/linuxcommand/ssh/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/cpp_notes/posts/django/form/</loc>
     <lastmod>2025-03-09T00:00:00+00:00</lastmod>
@@ -905,8 +1019,245 @@
     <loc>http://localhost:1313/cpp_notes/posts/algorithms/skiiplists/</loc>
     <lastmod>2024-09-08T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/acid/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/bash/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>http://localhost:1313/cpp_notes/categories/</loc>
-    <lastmod>2026-08-04T00:00:00+00:00</lastmod>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/dml/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/dql/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/explain/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/find/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/grant/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/grep/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/categories/linux/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/linux/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/posts/linuxcommand/command/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/posts/linuxcommand/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/categories/mysql/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/mysql/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/mysqldump/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/posts/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/sed/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/series/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/sql/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/tar/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E4%BA%8B%E5%8A%A1/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/series/backend/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E5%91%BD%E4%BB%A4%E8%A1%8C/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/categories/%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%B7%A5%E5%85%B7/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E5%A4%87%E4%BB%BD/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E5%A4%96%E9%94%AE/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E5%AF%BC%E5%85%A5%E5%AF%BC%E5%87%BA/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/series/framework/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E6%8E%A7%E5%88%B6%E5%8F%B0/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/posts/mysql/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%AE%A1%E7%90%86/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AE%BE%E8%AE%A1%E8%8C%83%E5%BC%8F/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E6%9D%83%E9%99%90/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E7%B4%A2%E5%BC%95/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E7%BA%A6%E6%9D%9F/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E7%BB%84%E5%90%88%E7%B4%A2%E5%BC%95/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E8%A1%8C%E7%BA%A7%E9%94%81/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/32%E4%BD%8D/</loc>
+    <lastmod>2026-08-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/8086/</loc>
+    <lastmod>2026-08-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/bios/</loc>
+    <lastmod>2026-08-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/eip/</loc>
+    <lastmod>2026-08-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/intr/</loc>
+    <lastmod>2026-08-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/io%E7%AB%AF%E5%8F%A3/</loc>
+    <lastmod>2026-08-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/lba/</loc>
+    <lastmod>2026-08-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/nasm/</loc>
+    <lastmod>2026-08-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/nmi/</loc>
+    <lastmod>2026-08-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/sp/</loc>
+    <lastmod>2026-08-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/ss/</loc>
+    <lastmod>2026-08-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/x86/</loc>
+    <lastmod>2026-08-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/posts/x86/</loc>
+    <lastmod>2026-08-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E4%B8%AD%E6%96%AD/</loc>
+    <lastmod>2026-08-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E4%B8%AD%E6%96%AD%E5%90%91%E9%87%8F%E8%A1%A8/</loc>
+    <lastmod>2026-08-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E5%86%85%E5%AD%98/</loc>
+    <lastmod>2026-08-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D/</loc>
+    <lastmod>2026-08-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E5%8E%8B%E6%A0%88/</loc>
+    <lastmod>2026-08-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E5%A4%84%E7%90%86%E5%99%A8/</loc>
+    <lastmod>2026-08-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E5%AE%9E%E6%A8%A1%E5%BC%8F/</loc>
+    <lastmod>2026-08-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E5%AF%84%E5%AD%98%E5%99%A8/</loc>
+    <lastmod>2026-08-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F/</loc>
+    <lastmod>2026-08-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E6%98%BE%E5%8D%A1/</loc>
+    <lastmod>2026-08-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E6%A0%87%E5%BF%97%E5%AF%84%E5%AD%98%E5%99%A8/</loc>
+    <lastmod>2026-08-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E6%A0%88/</loc>
+    <lastmod>2026-08-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/categories/%E6%B1%87%E7%BC%96/</loc>
+    <lastmod>2026-08-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E6%B1%87%E7%BC%96/</loc>
+    <lastmod>2026-08-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/categories/%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80/</loc>
+    <lastmod>2026-08-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E6%B5%81%E6%B0%B4%E7%BA%BF/</loc>
+    <lastmod>2026-08-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/series/theory/</loc>
+    <lastmod>2026-08-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E7%A1%AC%E7%9B%98/</loc>
+    <lastmod>2026-08-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E7%A8%8B%E5%BA%8F%E5%8A%A0%E8%BD%BD/</loc>
+    <lastmod>2026-08-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/categories/%E7%B3%BB%E7%BB%9F%E5%90%AF%E5%8A%A8/</loc>
+    <lastmod>2026-08-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E7%BC%93%E5%AD%98/</loc>
+    <lastmod>2026-08-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90/</loc>
+    <lastmod>2026-08-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90/</loc>
+    <lastmod>2026-08-22T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/cpp_notes/tags/frontmatter/</loc>
     <lastmod>2026-08-04T00:00:00+00:00</lastmod>
@@ -924,15 +1275,6 @@
     <lastmod>2026-08-04T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/cpp_notes/tags/markdown/</loc>
-    <lastmod>2026-08-04T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/cpp_notes/posts/</loc>
-    <lastmod>2026-08-04T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/cpp_notes/series/</loc>
-    <lastmod>2026-08-04T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/cpp_notes/tags/</loc>
     <lastmod>2026-08-04T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/cpp_notes/tags/url%E8%B7%AF%E7%94%B1/</loc>
@@ -1271,9 +1613,6 @@
     <loc>http://localhost:1313/cpp_notes/tags/temurin/</loc>
     <lastmod>2026-06-24T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/cpp_notes/series/backend/</loc>
-    <lastmod>2026-06-24T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>http://localhost:1313/cpp_notes/categories/%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/</loc>
     <lastmod>2026-06-24T00:00:00+00:00</lastmod>
   </url><url>
@@ -1338,9 +1677,6 @@
     <lastmod>2026-06-23T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/cpp_notes/categories/%E7%BC%93%E5%AD%98/</loc>
-    <lastmod>2026-06-23T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/cpp_notes/tags/%E7%BC%93%E5%AD%98/</loc>
     <lastmod>2026-06-23T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/cpp_notes/tags/@conditional/</loc>
@@ -1502,9 +1838,6 @@
     <loc>http://localhost:1313/cpp_notes/tags/%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8/</loc>
     <lastmod>2026-06-10T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/cpp_notes/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/</loc>
-    <lastmod>2026-06-10T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>http://localhost:1313/cpp_notes/tags/%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86/</loc>
     <lastmod>2026-06-10T00:00:00+00:00</lastmod>
   </url><url>
@@ -1512,9 +1845,6 @@
     <lastmod>2026-06-10T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/cpp_notes/tags/%E7%8A%B6%E6%80%81%E6%9C%BA/</loc>
-    <lastmod>2026-06-10T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/cpp_notes/series/theory/</loc>
     <lastmod>2026-06-10T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/cpp_notes/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/</loc>
@@ -1602,9 +1932,6 @@
     <lastmod>2026-03-07T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/cpp_notes/tags/%E5%B1%82%E6%AC%A1%E6%95%B0%E6%8D%AE/</loc>
-    <lastmod>2026-03-07T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/cpp_notes/series/framework/</loc>
     <lastmod>2026-03-07T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/cpp_notes/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AE%BE%E8%AE%A1/</loc>
@@ -2654,6 +2981,321 @@
     <loc>http://localhost:1313/cpp_notes/tags/%E4%BE%A6%E5%90%AC%E5%99%A8/</loc>
     <lastmod>2025-04-19T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/awk/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/c%E8%AF%AD%E8%A8%80/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/dma/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/dns/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/fcb/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/ftp/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/gdb/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/i/o%E6%8E%A7%E5%88%B6/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/i/o%E8%AE%BE%E5%A4%87/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/categories/i/o%E8%AE%BE%E5%A4%87%E7%AE%A1%E7%90%86/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/iptables/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/netfilter/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/nfs/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/nslookup/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/osi/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/pcb/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/peterson%E7%AE%97%E6%B3%95/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/categories/postgresql/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/posts/postgresql/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/postgresql/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/psql/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/scp/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/sftp/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/shell%E8%84%9A%E6%9C%AC/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/ssh/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/tcp/ip/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/tcp%E5%8D%8F%E8%AE%AE/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/testandset/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/udp/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/vsftpd/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/wal%E6%97%A5%E5%BF%97/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E4%B8%B4%E7%95%8C%E5%8C%BA/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E4%BA%92%E6%96%A5/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E4%BC%A0%E8%BE%93%E5%B1%82/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/categories/%E4%BC%A0%E8%BE%93%E6%9C%8D%E5%8A%A1/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/categories/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E5%88%86%E5%8C%BA%E8%A1%A8/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E5%88%86%E7%BB%84%E4%BA%A4%E6%8D%A2/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E5%8A%A0%E5%AF%86/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E5%90%8C%E6%AD%A5/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E5%9F%9F%E5%90%8D%E8%A7%A3%E6%9E%90/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E5%A5%97%E6%8E%A5%E5%AD%97/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E5%AD%98%E5%82%A8%E8%BD%AC%E5%8F%91/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%A8%A1%E5%9E%8B/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E5%B8%A7%E5%AE%9A%E7%95%8C/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E5%B9%B6%E5%8F%91/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/categories/%E5%BA%94%E7%94%A8%E5%8D%8F%E8%AE%AE/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E5%BA%94%E7%94%A8%E5%B1%82/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E6%89%B9%E5%A4%84%E7%90%86/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E6%8C%82%E8%BD%BD/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/posts/os/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E6%95%B0%E5%AD%97%E4%BF%A1%E5%8F%B7/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E6%95%B0%E6%8D%AE%E6%8A%A5/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/categories/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E6%96%87%E4%BB%B6%E4%BC%A0%E8%BE%93/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E6%96%87%E4%BB%B6%E5%85%B1%E4%BA%AB/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E6%96%87%E4%BB%B6%E7%9B%AE%E5%BD%95/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/categories/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E6%9C%8D%E5%8A%A1%E7%AE%A1%E7%90%86/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E6%A0%B8%E5%BF%83%E9%83%A8%E5%88%86/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/categories/%E6%A6%82%E8%BF%B0/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E6%A8%A1%E6%8B%9F%E4%BF%A1%E5%8F%B7/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E6%AF%94%E7%89%B9%E6%B5%81/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E7%89%A9%E7%90%86%E5%B1%82/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E7%89%A9%E7%90%86%E7%BB%93%E6%9E%84/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E7%A0%81%E5%85%83/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E7%A2%8E%E7%89%87/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E7%AB%AF%E5%8F%A3%E5%8F%B7/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E7%B4%A2%E5%BC%95%E6%96%87%E4%BB%B6/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E7%BA%BF%E7%A8%8B/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E7%BB%84%E5%B8%A7/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E7%BC%93%E5%86%B2%E6%B1%A0/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/categories/%E7%BD%91%E7%BB%9C%E4%BA%92%E8%81%94/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E7%BD%91%E7%BB%9C%E5%B1%82/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/categories/%E7%BD%91%E7%BB%9C%E6%9C%8D%E5%8A%A1/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E7%BD%91%E7%BB%9C%E8%BF%87%E6%BB%A4/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E8%99%9A%E7%94%B5%E8%B7%AF/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/posts/internet/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E8%B0%83%E8%AF%95/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E8%B5%84%E6%BA%90%E5%85%B1%E4%BA%AB/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E8%BE%B9%E7%BC%98%E9%83%A8%E5%88%86/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E8%BF%9B%E7%A8%8B/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/categories/%E8%BF%9B%E7%A8%8B%E5%90%8C%E6%AD%A5/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E8%BF%9B%E7%A8%8B%E7%8A%B6%E6%80%81/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/categories/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E8%BF%9C%E7%A8%8B%E7%99%BB%E5%BD%95/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E8%BF%9E%E7%BB%AD%E5%88%86%E9%85%8D/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E9%80%8F%E6%98%8E%E4%BC%A0%E8%BE%93/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E9%80%9A%E9%81%93%E6%8E%A7%E5%88%B6/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E9%80%BB%E8%BE%91%E5%9C%B0%E5%9D%80/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/cpp_notes/tags/%E9%98%B2%E7%81%AB%E5%A2%99/</loc>
+    <lastmod>2025-04-07T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>http://localhost:1313/cpp_notes/tags/ansys/</loc>
     <lastmod>2025-03-30T00:00:00+00:00</lastmod>
   </url><url>
@@ -2729,12 +3371,6 @@
     <loc>http://localhost:1313/cpp_notes/posts/operatesystem/</loc>
     <lastmod>2025-03-30T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/cpp_notes/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/</loc>
-    <lastmod>2025-03-30T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/cpp_notes/tags/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/</loc>
-    <lastmod>2025-03-30T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>http://localhost:1313/cpp_notes/categories/%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/</loc>
     <lastmod>2025-03-30T00:00:00+00:00</lastmod>
   </url><url>
@@ -2745,9 +3381,6 @@
     <lastmod>2025-03-30T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/cpp_notes/tags/%E8%B7%A8%E5%B9%B3%E5%8F%B0/</loc>
-    <lastmod>2025-03-30T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/cpp_notes/tags/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/</loc>
     <lastmod>2025-03-30T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/cpp_notes/tags/apirouter/</loc>
@@ -2921,9 +3554,6 @@
     <loc>http://localhost:1313/cpp_notes/tags/updateview/</loc>
     <lastmod>2025-03-08T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/cpp_notes/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/</loc>
-    <lastmod>2025-03-08T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>http://localhost:1313/cpp_notes/categories/%E8%A7%86%E5%9B%BE%E5%BC%80%E5%8F%91/</loc>
     <lastmod>2025-03-08T00:00:00+00:00</lastmod>
   </url><url>
@@ -3042,9 +3672,6 @@
     <lastmod>2025-03-02T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/cpp_notes/tags/%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96/</loc>
-    <lastmod>2025-02-16T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/cpp_notes/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/</loc>
     <lastmod>2025-02-16T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/cpp_notes/tags/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/</loc>
@@ -3303,9 +3930,6 @@
     <lastmod>2024-12-28T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/cpp_notes/tags/cool%E8%AF%AD%E8%A8%80/</loc>
-    <lastmod>2024-11-30T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/cpp_notes/categories/%E6%A6%82%E8%BF%B0/</loc>
     <lastmod>2024-11-30T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/cpp_notes/tags/%E7%BC%96%E8%AF%91%E5%99%A8%E5%8E%9F%E7%90%86/</loc>
@@ -3617,9 +4241,6 @@
     <loc>http://localhost:1313/cpp_notes/categories/%E9%AB%98%E7%BA%A7%E6%8A%80%E5%B7%A7/</loc>
     <lastmod>2024-07-20T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/cpp_notes/tags/i/o%E8%AE%BE%E5%A4%87/</loc>
-    <lastmod>2024-06-02T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>http://localhost:1313/cpp_notes/tags/qt%E6%A0%B8%E5%BF%83%E6%A1%86%E6%9E%B6/</loc>
     <lastmod>2024-06-02T00:00:00+00:00</lastmod>
   </url><url>
@@ -3845,9 +4466,6 @@
     <loc>http://localhost:1313/cpp_notes/tags/swscontext/</loc>
     <lastmod>2024-05-12T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/cpp_notes/tags/tcp/ip/</loc>
-    <lastmod>2024-05-12T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>http://localhost:1313/cpp_notes/tags/wasm/</loc>
     <lastmod>2024-05-12T00:00:00+00:00</lastmod>
   </url><url>
@@ -3921,9 +4539,6 @@
     <lastmod>2024-05-12T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/cpp_notes/tags/%E5%BE%AA%E7%8E%AF/</loc>
-    <lastmod>2024-05-12T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/cpp_notes/tags/%E6%89%B9%E5%A4%84%E7%90%86/</loc>
     <lastmod>2024-05-12T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/cpp_notes/tags/%E6%92%AD%E6%94%BE%E5%99%A8/</loc>
@@ -4163,9 +4778,6 @@
     <loc>http://localhost:1313/cpp_notes/tags/benchmark/</loc>
     <lastmod>2024-03-02T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/cpp_notes/tags/bios/</loc>
-    <lastmod>2024-03-02T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>http://localhost:1313/cpp_notes/tags/buffer-cache/</loc>
     <lastmod>2024-03-02T00:00:00+00:00</lastmod>
   </url><url>
@@ -4202,9 +4814,6 @@
     <loc>http://localhost:1313/cpp_notes/tags/cuda/</loc>
     <lastmod>2024-03-02T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/cpp_notes/tags/c%E8%AF%AD%E8%A8%80/</loc>
-    <lastmod>2024-03-02T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>http://localhost:1313/cpp_notes/tags/database/</loc>
     <lastmod>2024-03-02T00:00:00+00:00</lastmod>
   </url><url>
@@ -4215,9 +4824,6 @@
     <lastmod>2024-03-02T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/cpp_notes/tags/disk-layout/</loc>
-    <lastmod>2024-03-02T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/cpp_notes/tags/dma/</loc>
     <lastmod>2024-03-02T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/cpp_notes/tags/docker-cli/</loc>
@@ -4352,9 +4958,6 @@
     <loc>http://localhost:1313/cpp_notes/tags/simt/</loc>
     <lastmod>2024-03-02T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/cpp_notes/tags/sql/</loc>
-    <lastmod>2024-03-02T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>http://localhost:1313/cpp_notes/tags/superblock/</loc>
     <lastmod>2024-03-02T00:00:00+00:00</lastmod>
   </url><url>
@@ -4403,13 +5006,7 @@
     <loc>http://localhost:1313/cpp_notes/categories/xv6%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</loc>
     <lastmod>2024-03-02T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/cpp_notes/tags/%E4%B8%AD%E6%96%AD/</loc>
-    <lastmod>2024-03-02T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>http://localhost:1313/cpp_notes/tags/%E4%B8%AD%E6%96%AD%E6%8E%A7%E5%88%B6%E5%99%A8/</loc>
-    <lastmod>2024-03-02T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/cpp_notes/tags/%E4%B8%B4%E7%95%8C%E5%8C%BA/</loc>
     <lastmod>2024-03-02T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/cpp_notes/tags/%E4%BA%92%E6%96%A5%E9%87%8F/</loc>
@@ -4614,9 +5211,6 @@
     <lastmod>2024-03-02T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/cpp_notes/tags/%E8%87%AA%E6%97%8B%E9%94%81/</loc>
-    <lastmod>2024-03-02T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/cpp_notes/tags/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/</loc>
     <lastmod>2024-03-02T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/cpp_notes/tags/%E8%A6%86%E7%9B%96%E7%8E%87/</loc>

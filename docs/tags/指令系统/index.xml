@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>指令系统 on Hugo Narrow</title>
+		<link>http://localhost:1313/cpp_notes/tags/%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F/</link>
+		<description>Recent content in 指令系统 on Hugo Narrow</description>
+		<generator>Hugo</generator>
+		<language>en</language>
+		
+		
+		
+		
+			<lastBuildDate>Sat, 22 Aug 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="http://localhost:1313/cpp_notes/tags/%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>汇编</title>
+				<link>http://localhost:1313/cpp_notes/posts/x86/assembly/</link>
+				<pubDate>Sat, 22 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/cpp_notes/posts/x86/assembly/</guid>
+				<description>&lt;h1 id=&#34;虚拟机&#34;&gt;虚拟机&lt;a href=&#34;#%e8%99%9a%e6%8b%9f%e6%9c%ba&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h1&gt;&lt;p&gt;&lt;strong&gt;为了运行通过nasm编译好汇编二进制文件，需要将程序加载到硬件的导引区，让cpu运行完bios后运行相关的汇编程序。&lt;/strong&gt; 由于该方法会覆盖掉原有的硬盘导引，操作系统就完蛋了，所以需要用虚拟机来模拟运行。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

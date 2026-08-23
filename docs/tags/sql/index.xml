@@ -1,18 +1,32 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
-		<title>Sql on Hugo Narrow</title>
+		<title>SQL on Hugo Narrow</title>
 		<link>http://localhost:1313/cpp_notes/tags/sql/</link>
-		<description>Recent content in Sql on Hugo Narrow</description>
+		<description>Recent content in SQL on Hugo Narrow</description>
 		<generator>Hugo</generator>
 		<language>en</language>
 		
 		
 		
 		
-			<lastBuildDate>Sat, 02 Mar 2024 00:00:00 +0000</lastBuildDate>
+			<lastBuildDate>Sun, 23 Aug 2026 00:00:00 +0000</lastBuildDate>
 		
 			<atom:link href="http://localhost:1313/cpp_notes/tags/sql/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>分区表</title>
+				<link>http://localhost:1313/cpp_notes/posts/postgresql/division/</link>
+				<pubDate>Mon, 07 Apr 2025 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/cpp_notes/posts/postgresql/division/</guid>
+				<description>&lt;h1 id=&#34;基本概念&#34;&gt;基本概念&lt;a href=&#34;#%e5%9f%ba%e6%9c%ac%e6%a6%82%e5%bf%b5&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h1&gt;&lt;p&gt;&lt;strong&gt;分区表&lt;/strong&gt; ： 将逻辑上的大表（数据量超过 &lt;code&gt;500&lt;/code&gt; 万行或大小超过 &lt;code&gt;2G&lt;/code&gt;），拆分为多个小的物理分片进行存储，且拆分后仍然为一张表。 &lt;strong&gt;突破&lt;code&gt;I/O&lt;/code&gt;瓶颈、提高读写能力&lt;/strong&gt;&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>SQL</title>
+				<link>http://localhost:1313/cpp_notes/posts/mysql/operatordb/</link>
+				<pubDate>Sun, 23 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/cpp_notes/posts/mysql/operatordb/</guid>
+				<description>&lt;h1 id=&#34;sql语法&#34;&gt;&lt;code&gt;SQL&lt;/code&gt;语法&lt;a href=&#34;#sql%e8%af%ad%e6%b3%95&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h1&gt;&lt;h2 id=&#34;结尾&#34;&gt;结尾&lt;a href=&#34;#%e7%bb%93%e5%b0%be&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h2&gt;&lt;p&gt;&lt;code&gt;;&lt;/code&gt; 表示一行代码解释。&lt;/p&gt;</description>
+			</item>
 			<item>
 				<title>数据库</title>
 				<link>http://localhost:1313/cpp_notes/posts/qt/database/</link>
@@ -26,6 +40,20 @@
 				<pubDate>Sat, 02 Mar 2024 00:00:00 +0000</pubDate>
 				<guid>http://localhost:1313/cpp_notes/posts/cpptools/sqlite/</guid>
 				<description>&lt;h1 id=&#34;安装&#34;&gt;安装&lt;a href=&#34;#%e5%ae%89%e8%a3%85&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h1&gt;&lt;ol&gt;&#xA;&lt;li&gt;从 &lt;a&#xD;&#xA;    href=&#34;https://www.sqlite.org/download.html&#34;target=&#34;_blank&#34;&#xD;&#xA;    class=&#34;inline-flex items-center gap-1&#34;&#xD;&#xA;  &gt;SQLite 官网&lt;svg class=&#34;h-3 w-3 flex-shrink-0&#34; id=&#34;external-link&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;path fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34; d=&#34;M15 3h6v6m-11 5L21 3m-3 10v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6&#34;/&gt;&lt;/svg&gt;&#xD;&#xA;  &lt;/a&gt; 下载源码&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;&#xD;&#xA;&lt;figure&#xD;&#xA;  class=&#34;image-figure not-prose my-8&#34;&#xD;&#xA;  data-lightbox-enabled=&#34;&#xD;&#xA;    true&#xD;&#xA;  &#34;&#xD;&#xA;  data-gallery-type=&#34;auto&#34;&#xD;&#xA;  data-image-width=&#34;1331&#34;&#xD;&#xA;  data-image-height=&#34;436&#34;&#xD;&#xA;  data-image-src=&#34;http://localhost:1313/cpp_notes/posts/cpptools/sqlite/resources/sqliteSourceCode.jpg&#34;&#xD;&#xA;&gt;&#xD;&#xA;  &lt;div class=&#34;image-container&#34;&gt;&#xD;&#xA;    &lt;img&#xD;&#xA;    src=&#34;http://localhost:1313/cpp_notes/posts/cpptools/sqlite/resources/sqliteSourceCode.jpg&#34;&#xD;&#xA;    alt=&#34;sqlite source code&#34;&#xD;&#xA;    &#xD;&#xA;    &#xD;&#xA;      &#xD;&#xA;      &#xD;&#xA;        &#xD;&#xA;          width=&#34;1331&#34; height=&#34;436&#34;&#xD;&#xA;        &#xD;&#xA;      &#xD;&#xA;    &#xD;&#xA;    loading=&#34;lazy&#34;&#xD;&#xA;    decoding=&#34;async&#34;&#xD;&#xA;    data-gallery-src=&#34;http://localhost:1313/cpp_notes/posts/cpptools/sqlite/resources/sqliteSourceCode.jpg&#34;&#xD;&#xA;    data-gallery-alt=&#34;sqlite source code&#34;&#xD;&#xA;    data-gallery-title=&#34;&#34;&#xD;&#xA;  /&gt;&lt;/div&gt;&#xD;&#xA;&#xD;&#xA;  &lt;/figure&gt;&#xD;&#xA;&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>数据库</title>
+				<link>http://localhost:1313/cpp_notes/posts/mysql/</link>
+				<pubDate>Sun, 23 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/cpp_notes/posts/mysql/</guid>
+				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;涵盖 MySQL 数据库的基本概念、命令行连接与库表操作、SQL 语法与数据类型、数据表的增删改查查询、事务的 ACID 原则与并发隔离问题、索引的分类与应用、用户权限管理以及数据库备份等核心知识。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>PostgreSQL</title>
+				<link>http://localhost:1313/cpp_notes/posts/postgresql/</link>
+				<pubDate>Mon, 07 Apr 2025 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/cpp_notes/posts/postgresql/</guid>
+				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本卷面向 PostgreSQL 数据库，从安装与环境变量配置、服务启停与登录讲起，逐步深入到客户端-服务器架构、进程划分与内存结构等体系结构知识，并详解范围、列表、哈希三种分区表的创建、分区裁剪与维护方法。内容兼顾基础操作与进阶应用，帮助读者掌握 PostgreSQL 的部署与优化技巧。&lt;/p&gt;</description>
 			</item>
 	</channel>
 </rss>

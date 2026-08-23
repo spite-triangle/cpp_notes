@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>系统启动 on Hugo Narrow</title>
+		<link>http://localhost:1313/cpp_notes/categories/%E7%B3%BB%E7%BB%9F%E5%90%AF%E5%8A%A8/</link>
+		<description>Recent content in 系统启动 on Hugo Narrow</description>
+		<generator>Hugo</generator>
+		<language>en</language>
+		
+		
+		
+		
+			<lastBuildDate>Sat, 22 Aug 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="http://localhost:1313/cpp_notes/categories/%E7%B3%BB%E7%BB%9F%E5%90%AF%E5%8A%A8/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>计算机硬件</title>
+				<link>http://localhost:1313/cpp_notes/posts/x86/computerhardware/</link>
+				<pubDate>Sat, 22 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/cpp_notes/posts/x86/computerhardware/</guid>
+				<description>&lt;h1 id=&#34;8086计算机的加电和复位&#34;&gt;8086计算机的加电和复位&lt;a href=&#34;#8086%e8%ae%a1%e7%ae%97%e6%9c%ba%e7%9a%84%e5%8a%a0%e7%94%b5%e5%92%8c%e5%a4%8d%e4%bd%8d&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h1&gt;&lt;p&gt;&#xD;&#xA;&lt;figure&#xD;&#xA;  class=&#34;image-figure not-prose my-8&#34;&#xD;&#xA;  data-lightbox-enabled=&#34;&#xD;&#xA;    true&#xD;&#xA;  &#34;&#xD;&#xA;  data-gallery-type=&#34;auto&#34;&#xD;&#xA;  data-image-width=&#34;683&#34;&#xD;&#xA;  data-image-height=&#34;574&#34;&#xD;&#xA;  data-image-src=&#34;http://localhost:1313/cpp_notes/posts/x86/computerhardware/resources/reset.jpg&#34;&#xD;&#xA;&gt;&#xD;&#xA;  &lt;div class=&#34;image-container&#34;&gt;&#xD;&#xA;    &lt;img&#xD;&#xA;    src=&#34;http://localhost:1313/cpp_notes/posts/x86/computerhardware/resources/reset.jpg&#34;&#xD;&#xA;    alt=&#34;reset&#34;&#xD;&#xA;    &#xD;&#xA;    &#xD;&#xA;      &#xD;&#xA;      &#xD;&#xA;        &#xD;&#xA;          width=&#34;683&#34; height=&#34;574&#34;&#xD;&#xA;        &#xD;&#xA;      &#xD;&#xA;    &#xD;&#xA;    loading=&#34;lazy&#34;&#xD;&#xA;    decoding=&#34;async&#34;&#xD;&#xA;    data-gallery-src=&#34;http://localhost:1313/cpp_notes/posts/x86/computerhardware/resources/reset.jpg&#34;&#xD;&#xA;    data-gallery-alt=&#34;reset&#34;&#xD;&#xA;    data-gallery-title=&#34;&#34;&#xD;&#xA;  /&gt;&lt;/div&gt;&#xD;&#xA;&#xD;&#xA;  &lt;/figure&gt;&#xD;&#xA;&lt;/p&gt;&#xA;&lt;p&gt;通过 &lt;strong&gt;rest&lt;/strong&gt; 引脚，可以对cpu进行复位操作。&lt;strong&gt;reset会使得cpu的寄存器恢复默认值，并且cpu一上电就会加载默认指定的内存段中的指令。&lt;/strong&gt; 8086一上电就会加载 FFFF:0000 处的指令。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>硬盘和显卡的访问与控制</title>
+				<link>http://localhost:1313/cpp_notes/posts/x86/diskgpu/</link>
+				<pubDate>Sat, 22 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/cpp_notes/posts/x86/diskgpu/</guid>
+				<description>&lt;h1 id=&#34;分段&#34;&gt;分段&lt;a href=&#34;#%e5%88%86%e6%ae%b5&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h1&gt;&lt;p&gt;在代码中通过 &lt;strong&gt;section&lt;/strong&gt; 进行段的声明，声明后的段能够根据 &lt;strong&gt;align&lt;/strong&gt; 自动去寻找到相应的 &lt;strong&gt;汇编地址&lt;/strong&gt;，中间空余的部分都使用 &lt;strong&gt;#0&lt;/strong&gt; 进行填充。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>中断</title>
+				<link>http://localhost:1313/cpp_notes/posts/x86/interrupt/</link>
+				<pubDate>Sat, 22 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/cpp_notes/posts/x86/interrupt/</guid>
+				<description>&lt;h1 id=&#34;外部硬件中断硬中断&#34;&gt;外部硬件中断（硬中断）&lt;a href=&#34;#%e5%a4%96%e9%83%a8%e7%a1%ac%e4%bb%b6%e4%b8%ad%e6%96%ad%e7%a1%ac%e4%b8%ad%e6%96%ad&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h1&gt;&lt;h2 id=&#34;非屏蔽中断non-maskable-interrupt-nmi&#34;&gt;非屏蔽中断（Non Maskable Interrupt: NMI）&lt;a href=&#34;#%e9%9d%9e%e5%b1%8f%e8%94%bd%e4%b8%ad%e6%96%adnon-maskable-interrupt-nmi&#34; class=&#34;heading-anchor&#34; aria-label=&#34;Link to this section&#34;&gt;&lt;svg class=&#34;h-4 w-4&#34; aria-hidden=&#34;true&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 24 24&#34;&gt;&lt;g fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; stroke-width=&#34;2&#34;&gt;&lt;path d=&#34;M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71&#34;/&gt;&lt;path d=&#34;M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/h2&gt;&lt;p&gt;&#xD;&#xA;&lt;figure&#xD;&#xA;  class=&#34;image-figure not-prose my-8&#34;&#xD;&#xA;  data-lightbox-enabled=&#34;&#xD;&#xA;    true&#xD;&#xA;  &#34;&#xD;&#xA;  data-gallery-type=&#34;auto&#34;&#xD;&#xA;  data-image-width=&#34;870&#34;&#xD;&#xA;  data-image-height=&#34;266&#34;&#xD;&#xA;  data-image-src=&#34;http://localhost:1313/cpp_notes/posts/x86/interrupt/resources/interrupt.jpg&#34;&#xD;&#xA;&gt;&#xD;&#xA;  &lt;div class=&#34;image-container&#34;&gt;&#xD;&#xA;    &lt;img&#xD;&#xA;    src=&#34;http://localhost:1313/cpp_notes/posts/x86/interrupt/resources/interrupt.jpg&#34;&#xD;&#xA;    alt=&#34;interrupt&#34;&#xD;&#xA;    &#xD;&#xA;    &#xD;&#xA;      &#xD;&#xA;      &#xD;&#xA;        &#xD;&#xA;          width=&#34;870&#34; height=&#34;266&#34;&#xD;&#xA;        &#xD;&#xA;      &#xD;&#xA;    &#xD;&#xA;    loading=&#34;lazy&#34;&#xD;&#xA;    decoding=&#34;async&#34;&#xD;&#xA;    data-gallery-src=&#34;http://localhost:1313/cpp_notes/posts/x86/interrupt/resources/interrupt.jpg&#34;&#xD;&#xA;    data-gallery-alt=&#34;interrupt&#34;&#xD;&#xA;    data-gallery-title=&#34;&#34;&#xD;&#xA;  /&gt;&lt;/div&gt;&#xD;&#xA;&#xD;&#xA;  &lt;/figure&gt;&#xD;&#xA;&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

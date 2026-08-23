@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>OSI on Hugo Narrow</title>
+		<link>http://localhost:1313/cpp_notes/tags/osi/</link>
+		<description>Recent content in OSI on Hugo Narrow</description>
+		<generator>Hugo</generator>
+		<language>en</language>
+		
+		
+		
+		
+			<lastBuildDate>Mon, 07 Apr 2025 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="http://localhost:1313/cpp_notes/tags/osi/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>计算机网络基础</title>
+				<link>http://localhost:1313/cpp_notes/posts/internet/</link>
+				<pubDate>Mon, 07 Apr 2025 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/cpp_notes/posts/internet/</guid>
+				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本卷系统讲解计算机网络的体系结构、协议与通信原理，从物理层、链路层、网络层、传输层到应用层逐层剖析数据在网络中的传输机制。内容覆盖 OSI 参考模型与 TCP/IP 模型、信号与编码、帧同步与差错控制、IP 寻址与路由协议、TCP/UDP 传输机制，以及 DNS、FTP 等常见应用协议，帮助读者建立完整的网络知识框架。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

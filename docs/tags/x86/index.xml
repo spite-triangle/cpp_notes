@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>X86 on Hugo Narrow</title>
+		<link>http://localhost:1313/cpp_notes/tags/x86/</link>
+		<description>Recent content in X86 on Hugo Narrow</description>
+		<generator>Hugo</generator>
+		<language>en</language>
+		
+		
+		
+		
+			<lastBuildDate>Sat, 22 Aug 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="http://localhost:1313/cpp_notes/tags/x86/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>x86从实模式到保护模式</title>
+				<link>http://localhost:1313/cpp_notes/posts/x86/</link>
+				<pubDate>Sat, 22 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/cpp_notes/posts/x86/</guid>
+				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;从&lt;code&gt;8086&lt;/code&gt;实模式出发，系统讲解处理器与内存、指令与寄存器、计算机硬件与BIOS启动、汇编语言与标志寄存器、栈、硬盘与显卡的访问控制、中断机制以及32位处理器的流水线与缓存等底层原理，帮助读者建立从硬件到软件的完整计算机体系结构认知。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>
