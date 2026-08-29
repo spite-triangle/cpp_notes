@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
-		<title>GTest on Hugo Narrow</title>
+		<title>Gtest on Hugo Narrow</title>
 		<link>http://localhost:1313/cpp_notes/tags/gtest/</link>
-		<description>Recent content in GTest on Hugo Narrow</description>
+		<description>Recent content in Gtest on Hugo Narrow</description>
 		<generator>Hugo</generator>
 		<language>en</language>
 		

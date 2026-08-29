@@ -10,22 +10,22 @@
 		
 		
 		
-			<lastBuildDate>Sun, 23 Aug 2026 00:00:00 +0000</lastBuildDate>
+			<lastBuildDate>Sat, 29 Aug 2026 00:00:00 +0000</lastBuildDate>
 		
 			<atom:link href="http://localhost:1313/cpp_notes/series/framework/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>辅助工具</title>
+				<link>http://localhost:1313/cpp_notes/posts/tools/</link>
+				<pubDate>Sat, 29 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/cpp_notes/posts/tools/</guid>
+				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本卷系统整理了开发中常用的辅助工具，涵盖代码文档、可视化绘图、&lt;code&gt;json schema&lt;/code&gt; 等多个领域。Doxygen 代码注释驱动 API 文档自动生成；Graphviz DOT 语法绘制类关系图与有向图；Graph-Easy 纯文本箭头快速生成 ASCII 流程图。&lt;/p&gt;</description>
+			</item>
 			<item>
 				<title>Linux 指令</title>
 				<link>http://localhost:1313/cpp_notes/posts/linuxcommand/</link>
 				<pubDate>Sun, 23 Aug 2026 00:00:00 +0000</pubDate>
 				<guid>http://localhost:1313/cpp_notes/posts/linuxcommand/</guid>
 				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本卷系统讲解 Linux 命令行基础与常用工具，从 Bash 的基本概念、命令展开、别名设置与快捷键入手，深入 grep、sed、awk 三剑客的用法及正则表达式技巧，最后介绍 GDB 调试器的启动执行、断点管理与源码查看方法。还涵盖 DNS 域名解析、SSH 安全远程登录与文件传输、FTP 文件传输协议、NFS 网络文件系统以及 iptables 防火墙等核心内容。内容循序渐进，帮助读者熟练使用 Linux 命令行进行开发与调试。&lt;/p&gt;</description>
-			</item>
-			<item>
-				<title>辅助工具</title>
-				<link>http://localhost:1313/cpp_notes/posts/tools/</link>
-				<pubDate>Sat, 07 Mar 2026 00:00:00 +0000</pubDate>
-				<guid>http://localhost:1313/cpp_notes/posts/tools/</guid>
-				<description>&lt;!-- VOLUME_OVERVIEW_START --&gt;&#xA;&lt;p&gt;本卷系统整理了开发中常用的辅助工具，涵盖代码文档、可视化绘图、&lt;code&gt;json schema&lt;/code&gt; 等多个领域。Doxygen 代码注释驱动 API 文档自动生成；Graphviz DOT 语法绘制类关系图与有向图；Graph-Easy 纯文本箭头快速生成 ASCII 流程图。&lt;/p&gt;</description>
 			</item>
 			<item>
 				<title>Vscode 插件开发</title>

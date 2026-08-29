@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
-		<title>Cors on Hugo Narrow</title>
+		<title>CORS on Hugo Narrow</title>
 		<link>http://localhost:1313/cpp_notes/tags/cors/</link>
-		<description>Recent content in Cors on Hugo Narrow</description>
+		<description>Recent content in CORS on Hugo Narrow</description>
 		<generator>Hugo</generator>
 		<language>en</language>
 		

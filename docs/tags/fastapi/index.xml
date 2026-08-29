@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
-		<title>Fastapi on Hugo Narrow</title>
+		<title>FastAPI on Hugo Narrow</title>
 		<link>http://localhost:1313/cpp_notes/tags/fastapi/</link>
-		<description>Recent content in Fastapi on Hugo Narrow</description>
+		<description>Recent content in FastAPI on Hugo Narrow</description>
 		<generator>Hugo</generator>
 		<language>en</language>
 		

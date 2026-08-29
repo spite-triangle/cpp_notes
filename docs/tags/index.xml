@@ -10,9 +10,51 @@
 		
 		
 		
-			<lastBuildDate>Sun, 23 Aug 2026 00:00:00 +0000</lastBuildDate>
+			<lastBuildDate>Sat, 29 Aug 2026 00:00:00 +0000</lastBuildDate>
 		
 			<atom:link href="http://localhost:1313/cpp_notes/tags/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Doxygen</title>
+				<link>http://localhost:1313/cpp_notes/tags/doxygen/</link>
+				<pubDate>Sat, 29 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/cpp_notes/tags/doxygen/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>JSON Schema</title>
+				<link>http://localhost:1313/cpp_notes/tags/json-schema/</link>
+				<pubDate>Sat, 29 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/cpp_notes/tags/json-schema/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>UI</title>
+				<link>http://localhost:1313/cpp_notes/tags/ui/</link>
+				<pubDate>Sat, 29 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/cpp_notes/tags/ui/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>WSL</title>
+				<link>http://localhost:1313/cpp_notes/tags/wsl/</link>
+				<pubDate>Sat, 29 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/cpp_notes/tags/wsl/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>前端</title>
+				<link>http://localhost:1313/cpp_notes/tags/%E5%89%8D%E7%AB%AF/</link>
+				<pubDate>Sat, 29 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/cpp_notes/tags/%E5%89%8D%E7%AB%AF/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>原型</title>
+				<link>http://localhost:1313/cpp_notes/tags/%E5%8E%9F%E5%9E%8B/</link>
+				<pubDate>Sat, 29 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/cpp_notes/tags/%E5%8E%9F%E5%9E%8B/</guid>
+				<description></description>
+			</item>
 			<item>
 				<title>ACID</title>
 				<link>http://localhost:1313/cpp_notes/tags/acid/</link>
@@ -1582,7 +1624,7 @@
 				<description></description>
 			</item>
 			<item>
-				<title>VSCode</title>
+				<title>Vscode</title>
 				<link>http://localhost:1313/cpp_notes/tags/vscode/</link>
 				<pubDate>Fri, 22 May 2026 00:00:00 +0000</pubDate>
 				<guid>http://localhost:1313/cpp_notes/tags/vscode/</guid>
@@ -1659,13 +1701,6 @@
 				<description></description>
 			</item>
 			<item>
-				<title>Doxygen</title>
-				<link>http://localhost:1313/cpp_notes/tags/doxygen/</link>
-				<pubDate>Sat, 07 Mar 2026 00:00:00 +0000</pubDate>
-				<guid>http://localhost:1313/cpp_notes/tags/doxygen/</guid>
-				<description></description>
-			</item>
-			<item>
 				<title>E-R模型</title>
 				<link>http://localhost:1313/cpp_notes/tags/e-r%E6%A8%A1%E5%9E%8B/</link>
 				<pubDate>Sat, 07 Mar 2026 00:00:00 +0000</pubDate>
@@ -1673,24 +1708,10 @@
 				<description></description>
 			</item>
 			<item>
-				<title>JSON Schema</title>
-				<link>http://localhost:1313/cpp_notes/tags/json-schema/</link>
-				<pubDate>Sat, 07 Mar 2026 00:00:00 +0000</pubDate>
-				<guid>http://localhost:1313/cpp_notes/tags/json-schema/</guid>
-				<description></description>
-			</item>
-			<item>
 				<title>STL</title>
 				<link>http://localhost:1313/cpp_notes/tags/stl/</link>
 				<pubDate>Sat, 07 Mar 2026 00:00:00 +0000</pubDate>
 				<guid>http://localhost:1313/cpp_notes/tags/stl/</guid>
-				<description></description>
-			</item>
-			<item>
-				<title>WSL</title>
-				<link>http://localhost:1313/cpp_notes/tags/wsl/</link>
-				<pubDate>Sat, 07 Mar 2026 00:00:00 +0000</pubDate>
-				<guid>http://localhost:1313/cpp_notes/tags/wsl/</guid>
 				<description></description>
 			</item>
 			<item>
@@ -3003,7 +3024,7 @@
 				<description></description>
 			</item>
 			<item>
-				<title>Fastapi</title>
+				<title>FastAPI</title>
 				<link>http://localhost:1313/cpp_notes/tags/fastapi/</link>
 				<pubDate>Sun, 22 Jun 2025 00:00:00 +0000</pubDate>
 				<guid>http://localhost:1313/cpp_notes/tags/fastapi/</guid>
@@ -3129,7 +3150,7 @@
 				<description></description>
 			</item>
 			<item>
-				<title>Cors</title>
+				<title>CORS</title>
 				<link>http://localhost:1313/cpp_notes/tags/cors/</link>
 				<pubDate>Sat, 31 May 2025 00:00:00 +0000</pubDate>
 				<guid>http://localhost:1313/cpp_notes/tags/cors/</guid>
@@ -3164,7 +3185,7 @@
 				<description></description>
 			</item>
 			<item>
-				<title>Http</title>
+				<title>HTTP</title>
 				<link>http://localhost:1313/cpp_notes/tags/http/</link>
 				<pubDate>Sat, 31 May 2025 00:00:00 +0000</pubDate>
 				<guid>http://localhost:1313/cpp_notes/tags/http/</guid>
@@ -4515,7 +4536,7 @@
 				<description></description>
 			</item>
 			<item>
-				<title>XV6</title>
+				<title>Xv6</title>
 				<link>http://localhost:1313/cpp_notes/tags/xv6/</link>
 				<pubDate>Sun, 30 Mar 2025 00:00:00 +0000</pubDate>
 				<guid>http://localhost:1313/cpp_notes/tags/xv6/</guid>
@@ -5702,13 +5723,6 @@
 				<link>http://localhost:1313/cpp_notes/tags/qml/</link>
 				<pubDate>Sat, 23 Nov 2024 00:00:00 +0000</pubDate>
 				<guid>http://localhost:1313/cpp_notes/tags/qml/</guid>
-				<description></description>
-			</item>
-			<item>
-				<title>UI</title>
-				<link>http://localhost:1313/cpp_notes/tags/ui/</link>
-				<pubDate>Sat, 23 Nov 2024 00:00:00 +0000</pubDate>
-				<guid>http://localhost:1313/cpp_notes/tags/ui/</guid>
 				<description></description>
 			</item>
 			<item>
@@ -7623,7 +7637,7 @@
 				<description></description>
 			</item>
 			<item>
-				<title>GTest</title>
+				<title>Gtest</title>
 				<link>http://localhost:1313/cpp_notes/tags/gtest/</link>
 				<pubDate>Sat, 02 Mar 2024 00:00:00 +0000</pubDate>
 				<guid>http://localhost:1313/cpp_notes/tags/gtest/</guid>
